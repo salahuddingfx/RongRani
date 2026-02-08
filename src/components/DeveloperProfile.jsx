@@ -24,7 +24,7 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
   const socialLinks = [
     { icon: Github, label: 'GitHub', url: 'https://github.com/salahuddingfx', bg: '#1F2937', iconBg: 'rgba(255,255,255,0.2)' },
     { icon: MessageCircle, label: 'WhatsApp', url: 'https://wa.me/8801851075537', bg: '#059669', iconBg: 'rgba(255,255,255,0.2)' },
-    { icon: Facebook, label: 'Facebook', url: 'https://facebook.com/salauddinkaderappy', bg: '#2563EB', iconBg: 'rgba(255,255,255,0.2)' },
+    { icon: Facebook, label: 'Facebook', url: 'https://facebook.com/salahuddingfx', bg: '#2563EB', iconBg: 'rgba(255,255,255,0.2)' },
     { icon: Globe, label: 'Portfolio', url: 'https://salahuddin.codes', bg: '#BE123C', iconBg: 'rgba(255,255,255,0.2)' },
     { icon: Mail, label: 'Email', url: 'mailto:salauddinkaderappy@gmail.com', bg: '#DC2626', iconBg: 'rgba(255,255,255,0.2)' }
   ];
