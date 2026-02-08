@@ -8,50 +8,58 @@ const rateLimit = require('express-rate-limit');
 
 const app = express();
 
-// Security middleware
+/* -------------------- SECURITY -------------------- */
 app.use(helmet());
-const frontendOrigin =
-  process.env.FRONTEND_URL || 'https://chirkut-ghor.vercel.app';
 
-app.use(cors({
-  origin: [frontendOrigin].filter(Boolean),
-  credentials: true
-}));
+/* -------------------- CORS (FIXED) -------------------- */
+// allow multiple origins (local + prod)
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'https://chirkut-ghor.vercel.app',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
 
-// Rate limiting - increased for development
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow server-to-server / postman / no-origin
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS blocked: ${origin}`));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
+
+// preflight support
+app.options('*', cors());
+
+/* -------------------- RATE LIMIT -------------------- */
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000 // limit each IP to 1000 requests per windowMs
+  windowMs: 15 * 60 * 1000,
+  max: process.env.NODE_ENV === 'production' ? 300 : 2000,
 });
 app.use(limiter);
 
-// Compression
+/* -------------------- CORE MIDDLEWARE -------------------- */
 app.use(compression());
-
-// Logging
-app.use(morgan('combined'));
-
-// Body parsing
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Routes
-const authRoutes = require('./routes/auth.routes');
-const userRoutes = require('./routes/user.routes');
-const productRoutes = require('./routes/product.routes');
-const orderRoutes = require('./routes/order.routes');
-const adminRoutes = require('./routes/admin.routes');
-const aiRoutes = require('./routes/ai.routes');
-const newsletterRoutes = require('./routes/newsletter.routes');
-const categoryRoutes = require('./routes/category.routes');
-const promotionRoutes = require('./routes/promotion.routes');
-const couponRoutes = require('./routes/coupon.routes');
-
-app.get('/', (req, res) => {
-  res.json({ message: 'Chirkut ঘর Backend API' });
+/* -------------------- ROUTES -------------------- */
+app.get('/', (_req, res) => {
+  res.json({ message: 'Chirkut ঘর Backend API running' });
 });
 
-app.get('/api/health', (req, res) => {
+app.get('/api/health', (_req, res) => {
   const stateMap = {
     0: 'disconnected',
     1: 'connected',
@@ -63,53 +71,49 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
-    db: {
-      state: stateMap[mongoose.connection.readyState] || 'unknown',
-    },
+    db: stateMap[mongoose.connection.readyState] || 'unknown',
   });
 });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/newsletter', newsletterRoutes);
-app.use('/api/ai', aiRoutes);
-app.use('/api/categories', categoryRoutes);
-app.use('/api/promotions', promotionRoutes);
-app.use('/api/coupons', couponRoutes);
+app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/users', require('./routes/user.routes'));
+app.use('/api/products', require('./routes/product.routes'));
+app.use('/api/orders', require('./routes/order.routes'));
+app.use('/api/admin', require('./routes/admin.routes'));
+app.use('/api/newsletter', require('./routes/newsletter.routes'));
+app.use('/api/ai', require('./routes/ai.routes'));
+app.use('/api/categories', require('./routes/category.routes'));
+app.use('/api/promotions', require('./routes/promotion.routes'));
+app.use('/api/coupons', require('./routes/coupon.routes'));
 
-// Placeholder image route
+/* -------------------- PLACEHOLDER IMAGE -------------------- */
 app.get('/api/placeholder/:width/:height', async (req, res) => {
   try {
     const { width, height } = req.params;
     const sharp = require('sharp');
 
-    // Create a simple colored rectangle as placeholder
     const svg = `
       <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
         <rect width="100%" height="100%" fill="#f3f4f6"/>
-        <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="16" fill="#6b7280" text-anchor="middle" dy=".3em">
+        <text x="50%" y="50%" font-size="16" fill="#6b7280"
+          font-family="Arial" text-anchor="middle" dy=".3em">
           ${width}×${height}
         </text>
       </svg>
     `;
 
     const buffer = await sharp(Buffer.from(svg)).png().toBuffer();
-
-    res.set('Content-Type', 'image/png');
-    res.send(buffer);
-  } catch (error) {
-    console.error('Placeholder image error:', error);
-    res.status(500).send('Error generating placeholder image');
+    res.type('png').send(buffer);
+  } catch (err) {
+    console.error('Placeholder error:', err);
+    res.status(500).send('Placeholder failed');
   }
 });
 
-// Error handling
-app.use((err, req, res, _next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
+/* -------------------- ERROR HANDLER -------------------- */
+app.use((err, _req, res, _next) => {
+  console.error('🔥 Error:', err.message);
+  res.status(500).json({ message: err.message || 'Server error' });
 });
 
 module.exports = app;
