@@ -22,9 +22,11 @@ const ProductCard = ({ product }) => {
   const productPrice = product.price || 0;
   const productImages = product.images || [];
   const firstImage = productImages[0];
+  const directImage =
+    typeof product.image === 'string' ? product.image : product.image?.url;
   const productImage =
     (typeof firstImage === 'string' ? firstImage : firstImage?.url) ||
-    product.image ||
+    directImage ||
     '/api/placeholder/300/300';
   const productCategory = product.category || 'General';
   const productStock = product.stock || 0;

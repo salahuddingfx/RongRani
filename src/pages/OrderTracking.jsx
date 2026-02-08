@@ -376,13 +376,13 @@ const OrderTracking = () => {
               <h3 className="font-bold text-charcoal mb-2">Need Help?</h3>
               <p className="text-sm text-slate mb-4">Contact our support team for any queries</p>
               <div className="space-y-2 text-sm">
-                <a href="tel:+8801711111111" className="flex items-center space-x-2 text-maroon hover:underline">
+                <a href="tel:+8801851075537" className="flex items-center space-x-2 text-maroon hover:underline">
                   <Phone className="h-4 w-4" />
-                  <span>+880 1711-111111</span>
+                  <span>+880 18510-75537</span>
                 </a>
-                <a href="mailto:support@chirkutghor.com" className="flex items-center space-x-2 text-maroon hover:underline">
+                <a href="mailto:salauddinkaderappy@gmail.com" className="flex items-center space-x-2 text-maroon hover:underline">
                   <Mail className="h-4 w-4" />
-                  <span>support@chirkutghor.com</span>
+                  <span>salauddinkaderappy@gmail.com</span>
                 </a>
               </div>
             </div>

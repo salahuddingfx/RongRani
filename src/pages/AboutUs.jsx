@@ -5,9 +5,9 @@ import Seo from '../components/Seo';
 
 const AboutUs = () => {
   const stats = [
-    { icon: ShoppingBag, value: '5000+', label: 'Products Sold', bg: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' },
-    { icon: Users, value: '10K+', label: 'Happy Customers', bg: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' },
-    { icon: Award, value: '50+', label: 'Skilled Artisans', bg: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)' },
+    { icon: ShoppingBag, value: '50+', label: 'Products Sold', bg: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' },
+    { icon: Users, value: '100+', label: 'Happy Customers', bg: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' },
+    { icon: Award, value: '05+', label: 'Skilled Artisans', bg: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)' },
     { icon: Star, value: '4.8', label: 'Average Rating', bg: 'linear-gradient(135deg, #FFD700 0%, #F59E0B 100%)' },
   ];
 
@@ -147,7 +147,7 @@ const AboutUs = () => {
                   to celebrate and preserve the rich heritage of Bangladeshi craftsmanship while making it accessible to everyone.
                 </p>
                 <p className="text-lg text-charcoal-light leading-relaxed mb-6">
-                  We started our journey in 2024 with a dream to create a platform where skilled artisans could showcase 
+                  We started our journey in 2026 with a dream to create a platform where skilled artisans could showcase 
                   their talents and customers could find authentic, handcrafted gifts for their loved ones. Every product 
                   in our collection is carefully curated and crafted with passion, ensuring that you receive nothing but the best.
                 </p>

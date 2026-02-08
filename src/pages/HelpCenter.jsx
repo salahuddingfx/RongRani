@@ -308,8 +308,8 @@ const HelpCenter = () => {
             <a href="/contact" className="btn-secondary bg-white hover:bg-white/90">
               Contact Support
             </a>
-            <a href="tel:+8801711111111" className="btn-secondary bg-white/20 hover:bg-white/30 text-white border-white">
-              Call: +880 1711-111111
+            <a href="tel:+8801851075537" className="btn-secondary bg-white/20 hover:bg-white/30 text-white border-white">
+              Call: +880 18510-75537
             </a>
           </div>
         </div>

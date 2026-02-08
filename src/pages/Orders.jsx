@@ -16,7 +16,7 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/orders/my-orders', {
+      const response = await axios.get('/api/orders/my-orders', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOrders(response.data || []);
@@ -63,7 +63,7 @@ const Orders = () => {
   const handleDownloadInvoice = async (orderId) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:5000/api/orders/${orderId}/invoice`, {
+      const response = await axios.get(`/api/orders/${orderId}/invoice`, {
         headers: { Authorization: `Bearer ${token}` },
         responseType: 'blob'
       });

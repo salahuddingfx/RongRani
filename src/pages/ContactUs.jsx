@@ -46,12 +46,12 @@ const ContactUs = () => {
             </div>
             <h3 className="text-xl font-bold text-charcoal mb-2">Call Us</h3>
             <p className="text-slate mb-3">Mon-Sat: 9AM - 9PM</p>
-            <a href="tel:+8801711111111" className="text-maroon font-semibold hover:underline">
-              +880 1711-111111
+            <a href="tel:+8801851075537" className="text-maroon font-semibold hover:underline">
+              +880 1851-075537
             </a>
             <br />
-            <a href="tel:+8801811111111" className="text-maroon font-semibold hover:underline">
-              +880 1811-111111
+            <a href="tel:+8801570249301" className="text-maroon font-semibold hover:underline">
+              +880 1570-249301
             </a>
           </div>
 
@@ -61,12 +61,12 @@ const ContactUs = () => {
             </div>
             <h3 className="text-xl font-bold text-charcoal mb-2">Email Us</h3>
             <p className="text-slate mb-3">We reply within 24 hours</p>
-            <a href="mailto:support@chirkutghor.com" className="text-maroon font-semibold hover:underline">
-              support@chirkutghor.com
+            <a href="mailto:chirkutghor@gmail.com" className="text-maroon font-semibold hover:underline">
+              chirkutghor@gmail.com
             </a>
             <br />
-            <a href="mailto:gifts@chirkutghor.com" className="text-maroon font-semibold hover:underline">
-              gifts@chirkutghor.com
+            <a href="mailto:salauddinkaderappy@gmail.com" className="text-maroon font-semibold hover:underline">
+              salauddinkaderappy@gmail.com
             </a>
           </div>
 

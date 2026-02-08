@@ -7,6 +7,7 @@ import TopNavBar from './TopNavBar';
 import WhatsAppWizard from './WhatsAppWizard';
 import AIChatFloatingWidget from './AIChatFloatingWidget';
 import Seo from './Seo';
+import ScrollRevealManager from './ScrollRevealManager';
 
 const AppLayout = () => {
   const location = useLocation();
@@ -14,6 +15,7 @@ const AppLayout = () => {
   return (
     <div className="min-h-screen bg-pink-50 text-gray-900">
       <Seo path={location.pathname} />
+      <ScrollRevealManager />
       <div className="fixed top-0 left-0 right-0 z-50">
         <TopNavBar />
         <Navbar />

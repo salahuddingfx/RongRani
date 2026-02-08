@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import ScrollRevealManager from './ScrollRevealManager';
 
 const AdminLayout = () => {
   const { user, logout } = useAuth();
@@ -28,6 +29,7 @@ const AdminLayout = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ScrollRevealManager />
       {/* Admin Header */}
       <header className="bg-maroon text-white shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">

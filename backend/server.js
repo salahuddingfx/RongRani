@@ -25,17 +25,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 const server = http.createServer(app);
 const socketOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  'http://localhost:5175',
-  'http://localhost:5176',
-  'http://localhost:5177',
-  'http://localhost:5178',
-  'http://localhost:5179',
-  'http://localhost:5180',
-  'http://localhost:5181',
-  'http://localhost:5182',
-  process.env.FRONTEND_URL,
+  process.env.FRONTEND_URL || 'https://chirkut-ghor.vercel.app',
 ].filter(Boolean);
 
 const io = new Server(server, {

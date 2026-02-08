@@ -1,34 +1,54 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { SocketContext } from './socketContextBase';
 
 const SocketProvider = ({ children }) => {
   const [connected, setConnected] = useState(false);
+  const [socket, setSocket] = useState(null);
+  const socketRef = useRef(null);
 
-  const socket = useMemo(() => {
-    const url = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
-    return io(url, {
-      autoConnect: true,
-      transports: ['websocket', 'polling'],
-      withCredentials: true,
-    });
+  useEffect(() => {
+    if (socketRef.current == null) {
+      const url =
+        import.meta.env.VITE_SOCKET_URL ||
+        import.meta.env.VITE_API_BASE_URL ||
+        'https://chirkut-ghor.onrender.com';
+
+      socketRef.current = io(url, {
+        autoConnect: false, // 🔥 important
+        transports: ['websocket'],
+        withCredentials: true,
+      });
+      setSocket(socketRef.current);
+    }
   }, []);
 
   useEffect(() => {
+    const socketInstance = socketRef.current;
+    if (!socketInstance) return;
+
+    // connect once
+    if (!socketInstance.connected) {
+      socketInstance.connect();
+    }
+
     const handleConnect = () => setConnected(true);
     const handleDisconnect = () => setConnected(false);
 
-    socket.on('connect', handleConnect);
-    socket.on('disconnect', handleDisconnect);
+    socketInstance.on('connect', handleConnect);
+    socketInstance.on('disconnect', handleDisconnect);
 
     return () => {
-      socket.off('connect', handleConnect);
-      socket.off('disconnect', handleDisconnect);
-      socket.disconnect();
+      socketInstance.off('connect', handleConnect);
+      socketInstance.off('disconnect', handleDisconnect);
+      // ❌ DO NOT disconnect in dev (StrictMode)
     };
-  }, [socket]);
+  }, []);
 
-  const value = useMemo(() => ({ socket, connected }), [socket, connected]);
+  const value = useMemo(
+    () => ({ socket, connected }),
+    [socket, connected]
+  );
 
   return (
     <SocketContext.Provider value={value}>
@@ -39,4 +59,3 @@ const SocketProvider = ({ children }) => {
 
 export { SocketProvider };
 export default SocketProvider;
-

@@ -284,13 +284,13 @@ const Home = () => {
               </div>
               <div className="text-center group cursor-pointer">
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
-                  03+
+                  05+
                 </div>
                 <div className="text-sm text-charcoal-light font-medium">Artisans</div>
               </div>
               <div className="text-center group cursor-pointer">
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
-                  none
+                  4.8
                 </div>
                 <div className="text-sm text-charcoal-light flex items-center justify-center space-x-1 font-medium">
                   <Star className="h-4 w-4 fill-current text-gold" />
@@ -489,7 +489,7 @@ const Home = () => {
       <Newsletter />
 
       {/* CTA Section */}
-      <section className="section-spacing bg-cream-light">
+      <section className="section-spacing bg-cream-light" data-reveal-ignore="true">
         <div className="section-container">
           <div className="max-w-4xl mx-auto">
             <div className="glass-card p-8 md:p-12 text-center">
