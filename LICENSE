@@ -1,0 +1,64 @@
+# License
+
+ISC License
+
+Copyright (c) 2026 Salah Uddin Kader
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+---
+
+## Third-Party Licenses
+
+This project uses several open-source packages. Here are the main ones:
+
+### Frontend Dependencies
+
+- **React** - MIT License
+- **Vite** - MIT License
+- **Tailwind CSS** - MIT License
+- **React Router** - MIT License
+- **Axios** - MIT License
+- **i18next** - MIT License
+- **Lucide React** - ISC License
+
+### Backend Dependencies
+
+- **Express** - MIT License
+- **Mongoose** - MIT License
+- **bcryptjs** - MIT License
+- **jsonwebtoken** - MIT License
+- **Passport** - MIT License
+- **Multer** - MIT License
+- **PDFKit** - MIT License
+- **Nodemailer** - MIT License
+
+For a complete list of dependencies and their licenses, see:
+- [Frontend package.json](frontend/package.json)
+- [Backend package.json](backend/package.json)
+
+---
+
+## Commercial Use
+
+This software is free to use for commercial purposes under the ISC license terms.
+
+## Attribution
+
+While not required, attribution is appreciated if you use this project:
+
+"E-commerce platform powered by Chirkut ঘর (https://github.com/yourusername/chirkut-ghor)"
+
+---
+
+For questions about licensing, contact: salauddinkaderappy@gmail.com
