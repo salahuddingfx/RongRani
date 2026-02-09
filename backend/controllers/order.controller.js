@@ -243,7 +243,7 @@ const createOrder = async (req, res) => {
       await sendEmail(
         process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
         `🛒 New Order #${order._id} - Chirkut ঘর`,
-        'adminNewOrder',
+        'adminOrderNotification',
         {
           orderId: order._id,
           customerName,

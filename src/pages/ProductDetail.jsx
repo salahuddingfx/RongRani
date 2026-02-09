@@ -16,7 +16,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { addToCart } = useCart();
-  const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'https://your-domain.com').replace(/\/+$/, '');
+  const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'http://localhost:5173').replace(/\/+$/, '');
 
   const buildDescription = (text) => {
     if (!text) {

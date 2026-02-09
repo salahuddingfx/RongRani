@@ -79,8 +79,10 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  // Clear cart after order placement
   const clearCart = () => {
     setCartItems([]);
+    localStorage.removeItem('cart');
   };
 
   const value = {

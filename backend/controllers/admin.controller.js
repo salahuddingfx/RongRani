@@ -692,6 +692,7 @@ const deleteCoupon = async (req, res) => {
 const createBanner = async (req, res) => {
   try {
     const banner = await Banner.create(req.body);
+    emitEvent(req, 'banner:created', banner);
     res.status(201).json(banner);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -719,6 +720,7 @@ const updateBanner = async (req, res) => {
     if (!banner) {
       return res.status(404).json({ message: 'Banner not found' });
     }
+    emitEvent(req, 'banner:updated', banner);
     res.json(banner);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -734,6 +736,7 @@ const deleteBanner = async (req, res) => {
     if (!banner) {
       return res.status(404).json({ message: 'Banner not found' });
     }
+    emitEvent(req, 'banner:deleted', { _id: req.params.id });
     res.json({ message: 'Banner deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });

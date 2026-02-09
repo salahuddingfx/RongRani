@@ -1,39 +1,71 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { useSocket } from '../contexts/socketContextBase';
+
+const DEFAULT_BANNERS = [
+  {
+    id: 1,
+    title: 'Handcrafted Excellence',
+    subtitle: 'Discover Traditional Bengali Crafts',
+    description: 'Each piece tells a story of heritage and craftsmanship',
+    bgColor: 'bg-gradient-to-br from-maroon via-maroon-light to-gold',
+    textColor: 'text-white',
+    image: '/api/placeholder/800/400',
+    link: '/shop'
+  },
+  {
+    id: 2,
+    title: 'Summer Collection 2026',
+    subtitle: 'New Arrivals - Up to 40% Off',
+    description: 'Premium handwoven textiles and artisan crafts',
+    bgColor: 'bg-gradient-to-br from-emerald via-emerald-light to-teal',
+    textColor: 'text-white',
+    image: '/api/placeholder/800/400',
+    link: '/shop'
+  },
+  {
+    id: 3,
+    title: 'Support Local Artisans',
+    subtitle: 'Every Purchase Makes a Difference',
+    description: 'Empowering craftspeople across Bangladesh',
+    bgColor: 'bg-gradient-to-br from-gold via-amber to-orange',
+    textColor: 'text-charcoal',
+    image: '/api/placeholder/800/400',
+    link: '/shop'
+  }
+];
 
 const BannerSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [banners, setBanners] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { socket } = useSocket() || {};
 
-  const banners = [
-    {
-      id: 1,
-      title: 'Handcrafted Excellence',
-      subtitle: 'Discover Traditional Bengali Crafts',
-      description: 'Each piece tells a story of heritage and craftsmanship',
-      bgColor: 'bg-gradient-to-br from-maroon via-maroon-light to-gold',
-      textColor: 'text-white',
-      image: '/api/placeholder/800/400'
-    },
-    {
-      id: 2,
-      title: 'Summer Collection 2026',
-      subtitle: 'New Arrivals - Up to 40% Off',
-      description: 'Premium handwoven textiles and artisan crafts',
-      bgColor: 'bg-gradient-to-br from-emerald via-emerald-light to-teal',
-      textColor: 'text-white',
-      image: '/api/placeholder/800/400'
-    },
-    {
-      id: 3,
-      title: 'Support Local Artisans',
-      subtitle: 'Every Purchase Makes a Difference',
-      description: 'Empowering craftspeople across Bangladesh',
-      bgColor: 'bg-gradient-to-br from-gold via-amber to-orange',
-      textColor: 'text-charcoal',
-      image: '/api/placeholder/800/400'
+  // Fetch banners from API
+  const fetchBanners = useCallback(async () => {
+    try {
+      const response = await axios.get('/api/admin/banners');
+      const fetchedBanners = response.data.map((banner) => ({
+        id: banner._id,
+        title: banner.title || 'Banner Title',
+        subtitle: banner.subtitle || '',
+        description: banner.description || '',
+        bgColor: banner.bgColor || 'bg-gradient-to-br from-maroon via-maroon-light to-gold',
+        textColor: banner.textColor || 'text-white',
+        image: banner.image || '/api/placeholder/800/400',
+        link: banner.link || '#'
+      }));
+      setBanners(fetchedBanners.length > 0 ? fetchedBanners : DEFAULT_BANNERS);
+    } catch (error) {
+      console.error('Error fetching banners:', error);
+      setBanners(DEFAULT_BANNERS);
+    } finally {
+      setLoading(false);
     }
-  ];
+  }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % banners.length);
@@ -49,15 +81,44 @@ const BannerSlider = () => {
     setTimeout(() => setIsAutoPlaying(true), 5000);
   };
 
+  // Initialize banners and listen for socket updates
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    fetchBanners();
+  }, [fetchBanners]);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('banner:created', () => fetchBanners());
+    socket.on('banner:updated', () => fetchBanners());
+    socket.on('banner:deleted', () => fetchBanners());
+
+    return () => {
+      socket.off('banner:created');
+      socket.off('banner:updated');
+      socket.off('banner:deleted');
+    };
+  }, [socket, fetchBanners]);
+
+  useEffect(() => {
+    if (!isAutoPlaying || banners.length === 0) return;
 
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [currentSlide, isAutoPlaying, nextSlide]);
+  }, [currentSlide, isAutoPlaying, nextSlide, banners.length]);
+
+  if (loading) {
+    return (
+      <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
+    );
+  }
+
+  if (banners.length === 0) {
+    return null;
+  }
 
   return (
     <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
@@ -90,12 +151,12 @@ const BannerSlider = () => {
                   {banner.description}
                 </p>
                 <div className="flex space-x-4 animate-fade-in-up stagger-3">
-                  <button className="btn-primary px-8 py-4 text-lg shadow-2xl">
+                  <Link to={banner.link || '/shop'} className="btn-primary px-8 py-4 text-lg shadow-2xl inline-block">
                     Shop Now
-                  </button>
-                  <button className="btn-secondary px-8 py-4 text-lg">
+                  </Link>
+                  <a href="#" className="btn-secondary px-8 py-4 text-lg inline-block">
                     Learn More
-                  </button>
+                  </a>
                 </div>
               </div>
 

@@ -271,28 +271,40 @@
 .stagger-3 { animation-delay: 0.3s; }
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
+.stagger-6 { animation-delay: 0.6s; }
+.stagger-7 { animation-delay: 0.7s; }
 
 /* Scroll reveal animations */
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(20px);
+  transition: opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
   will-change: opacity, transform;
 }
 
 .reveal-left {
-  transform: translateX(-36px);
+  transform: translateX(-40px);
+  opacity: 0;
 }
 
 .reveal-right {
-  transform: translateX(36px);
+  transform: translateX(40px);
+  opacity: 0;
 }
 
 .reveal-visible {
   opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.6s, transform 0.6s;
+  transform: translateY(0) translateX(0);
+  transition: opacity 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+.reveal-visible.stagger-1 { transition-delay: 0.1s; }
+.reveal-visible.stagger-2 { transition-delay: 0.2s; }
+.reveal-visible.stagger-3 { transition-delay: 0.3s; }
+.reveal-visible.stagger-4 { transition-delay: 0.4s; }
+.reveal-visible.stagger-5 { transition-delay: 0.5s; }
+.reveal-visible.stagger-6 { transition-delay: 0.6s; }
+.reveal-visible.stagger-7 { transition-delay: 0.7s; }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal,

@@ -7,7 +7,7 @@ import axios from 'axios'
 
 // Set up axios defaults
 axios.defaults.baseURL =
-  import.meta.env.VITE_API_BASE_URL || 'https://chirkut-ghor.onrender.com'
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

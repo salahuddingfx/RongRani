@@ -12,12 +12,9 @@ const SocketProvider = ({ children }) => {
       const url =
         import.meta.env.VITE_SOCKET_URL ||
         import.meta.env.VITE_API_BASE_URL ||
-        'https://chirkut-ghor.onrender.com';
-
+        'http://localhost:5000';
       socketRef.current = io(url, {
-        autoConnect: false, // 🔥 important
         transports: ['websocket'],
-        withCredentials: true,
       });
       setSocket(socketRef.current);
     }
