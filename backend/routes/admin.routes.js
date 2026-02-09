@@ -31,7 +31,12 @@ const { auth, authorize } = require('../middlewares/auth.middleware');
 
 const router = express.Router();
 
-// All routes require admin or super_admin
+// PUBLIC ROUTES (No authentication required)
+// Banners - public read access
+router.get('/banners', getBanners);
+
+// PROTECTED ROUTES (Admin only)
+// All remaining routes require admin or super_admin
 router.use(auth, authorize(['admin', 'super_admin']));
 
 // Dashboard
@@ -55,9 +60,8 @@ router.get('/coupons', getCoupons);
 router.put('/coupons/:id', updateCoupon);
 router.delete('/coupons/:id', deleteCoupon);
 
-// Banner management
+// Banner management (write operations)
 router.post('/banners', createBanner);
-router.get('/banners', getBanners);
 router.put('/banners/:id', updateBanner);
 router.patch('/banners/:id/toggle', updateBanner);
 router.delete('/banners/:id', deleteBanner);

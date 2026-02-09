@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, Github, Facebook, Globe, Mail, MapPin, Code2, Database, Layout, Server, MessageCircle } from 'lucide-react';
+import { X, Github, Facebook, Globe, Mail, MapPin, Code2, Database, Layout, Server, MessageCircle, GitBranch, Box, Cloud, Zap, Edit } from 'lucide-react';
 
 const DeveloperProfile = ({ isOpen, onClose }) => {
   useEffect(() => {
@@ -19,6 +19,15 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
     frontend: ['React', 'Next.js', 'Vue.js', 'Tailwind CSS', 'JavaScript', 'TypeScript'],
     backend: ['Node.js', 'Express', 'MongoDB', 'PostgreSQL', 'REST APIs', 'GraphQL'],
     tools: ['Git', 'Docker', 'AWS', 'Firebase', 'Vercel', 'VS Code']
+  };
+
+  const toolIcons = {
+    'Git': GitBranch,
+    'Docker': Box,
+    'AWS': Cloud,
+    'Firebase': Zap,
+    'Vercel': Edit,
+    'VS Code': Code2
   };
 
   const socialLinks = [
@@ -41,7 +50,7 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
         onClick={(event) => event.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative bg-maroon text-white p-6 sm:p-8 md:p-10 overflow-hidden sticky top-0 z-10">
+        <div className="bg-maroon text-white p-6 sm:p-8 md:p-10 overflow-hidden sticky top-0 z-10">
           
           <button
             onClick={onClose}
@@ -148,20 +157,27 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
               <div className="group">
                 <div className="flex items-center mb-3 sm:mb-4">
                   <div className="w-10 h-10 bg-purple-600 rounded-xl flex items-center justify-center mr-3 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    <Database className="h-5 w-5 text-white" />
+                    <Box className="h-5 w-5 text-white" />
                   </div>
-                  <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200">Tools & Technologies</h4>
+                  <h3 className="text-xl sm:text-2xl font-bold text-maroon dark:text-pink-600">Tools & Technologies</h3>
                 </div>
                 <div className="flex flex-wrap gap-2 sm:gap-3">
-                  {skills.tools.map((skill, index) => (
-                    <span
-                      key={skill}
-                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 rounded-xl text-xs sm:text-sm font-semibold border-2 border-purple-200 dark:border-purple-700 hover:scale-105 hover:shadow-lg hover:border-purple-400 transition-all duration-200 cursor-pointer"
-                      style={{animationDelay: `${index * 50}ms`}}
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                  {skills.tools.map((skill, index) => {
+                    const IconComponent = toolIcons[skill];
+                    return (
+                      <div
+                        key={skill}
+                        className="px-4 py-2 sm:px-5 sm:py-2.5 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 rounded-xl text-xs sm:text-sm font-semibold border-2 border-purple-200 dark:border-purple-700 hover:scale-105 hover:shadow-lg hover:border-purple-400 transition-all duration-200 cursor-pointer flex items-center gap-2"
+                        style={{animationDelay: `${index * 50}ms`}}
+                        title={skill}
+                      >
+                        {IconComponent && (
+                          <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                        )}
+                        <span>{skill}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>

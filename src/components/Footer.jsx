@@ -46,9 +46,9 @@ const Footer = () => {
     <>
     <footer className="bg-charcoal border-t-2 border-gold/20 mt-20">
       <div className="section-container py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           {/* Brand */}
-          <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1">
             <h3 className="text-2xl font-bold text-white mb-6">Chirkut ঘর</h3>
             <p className="text-white/80 mb-6 leading-relaxed">
               Your destination for beautiful gifts, romantic combos, and heartfelt surprises for every special occasion.

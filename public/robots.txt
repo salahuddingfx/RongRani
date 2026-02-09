@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api
+Disallow: /*.json$
+Disallow: /node_modules
 
 Sitemap: https://chirkut-ghor.vercel.app/sitemap.xml
+
+Crawl-delay: 1

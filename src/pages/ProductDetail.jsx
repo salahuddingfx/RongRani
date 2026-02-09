@@ -1,20 +1,31 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Star, ShoppingCart, Heart, Minus, Plus, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Zap, Gift, TrendingUp, Package, MessageCircle } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Minus, Plus, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Zap, Gift, TrendingUp, Package } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../contexts/AuthContext';
 import { addToRecentlyViewed } from '../utils/productUtils';
 import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
+import ReviewForm from '../components/ReviewForm';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [canReview, setCanReview] = useState(false);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const [deliverySettings, setDeliverySettings] = useState({
+    chittagongFee: 60,
+    outsideChittagongFee: 130,
+  });
   const { addToCart } = useCart();
   const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'http://localhost:5173').replace(/\/+$/, '');
 
@@ -69,9 +80,42 @@ const ProductDetail = () => {
     }
   }, [id]);
 
+  // Fetch reviews for this product
+  const fetchReviews = useCallback(async () => {
+    try {
+      setLoadingReviews(true);
+      const response = await axios.get(`/api/products/${id}/reviews`);
+      setReviews(response.data || []);
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      setReviews([]);
+    } finally {
+      setLoadingReviews(false);
+    }
+  }, [id]);
+
+  // Check if user can review
+  const checkCanReview = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+      const response = await axios.get(`/api/products/${id}/can-review`, config);
+      setCanReview(response.data.canReview);
+    } catch (error) {
+      console.error('Error checking review eligibility:', error);
+      setCanReview(false);
+    }
+  }, [id]);
+
   useEffect(() => {
     fetchProduct();
-  }, [fetchProduct]);
+    fetchReviews();
+    checkCanReview();
+  }, [fetchProduct, fetchReviews, checkCanReview]);
+
+  // Note: We use default delivery settings on product page
+  // These will be updated when admin changes settings and page reloads
+  // For real-time updates, a Socket.io listener can be added
 
   // Add to recently viewed when product is loaded
   useEffect(() => {
@@ -94,13 +138,6 @@ const ProductDetail = () => {
   const addToWishlist = () => {
     setIsWishlisted(!isWishlisted);
     toast.success(isWishlisted ? 'Removed from wishlist' : 'Added to wishlist');
-  };
-
-  const handleContactSeller = () => {
-    const phoneNumber = '8801851075537';
-    const message = `Hello! I'm interested in this product: ${product?.name || 'this item'}. Can you share details?`;
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
   };
 
   const getImageUrl = (image) => {
@@ -431,13 +468,7 @@ const ProductDetail = () => {
                   <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current animate-pulse' : ''}`} />
                   <span>{isWishlisted ? 'Saved to Wishlist ❤️' : 'Add to Wishlist 🤍'}</span>
                 </button>
-                <button
-                  onClick={handleContactSeller}
-                  className="w-full bg-green-600 text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:bg-green-700 hover:shadow-2xl hover:scale-[1.02] active:scale-95 transition-all"
-                >
-                  <MessageCircle className="h-6 w-6" />
-                  <span>Contact Seller on WhatsApp</span>
-                </button>
+
               </div>
             </div>
           </div>
@@ -506,7 +537,7 @@ const ProductDetail = () => {
                     </div>
                     <span className="text-slate font-semibold">Inside Cox's Bazar:</span>
                   </div>
-                  <span className="font-black text-green-700 text-lg">৳60</span>
+                  <span className="font-black text-green-700 text-lg">৳{deliverySettings.chittagongFee}</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-green-200 hover:shadow-md transition-all">
                   <div className="flex items-center space-x-3">
@@ -515,7 +546,7 @@ const ProductDetail = () => {
                     </div>
                     <span className="text-slate font-semibold">Outside Cox's Bazar:</span>
                   </div>
-                  <span className="font-black text-green-700 text-lg">৳130</span>
+                  <span className="font-black text-green-700 text-lg">৳{deliverySettings.outsideChittagongFee}</span>
                 </div>
                 <div className="bg-gold rounded-2xl p-4 mt-4 shadow-lg">
                   <p className="text-white font-bold text-center text-sm flex items-center justify-center space-x-2">
@@ -611,24 +642,41 @@ const ProductDetail = () => {
         <div className="mt-12 animate-fade-in-up stagger-2">
           <div className="bg-white p-8 lg:p-10 rounded-3xl shadow-2xl border border-maroon/10">
             <div className="flex items-center justify-between mb-8 pb-6 border-b-2 border-maroon/10">
-              <h2 className="text-3xl lg:text-4xl font-black text-maroon">Customer Reviews</h2>
-              <div className="flex items-center space-x-3 bg-gold/10 px-5 py-3 rounded-2xl border border-gold/30">
-                <Star className="h-6 w-6 text-gold fill-current" />
-                <span className="text-2xl font-black text-gold">{product.rating?.toFixed(1) || '0.0'}</span>
+              <div>
+                <h2 className="text-3xl lg:text-4xl font-black text-maroon">Customer Reviews</h2>
+                <p className="text-slate/60 text-sm mt-2">{reviews.length} verified reviews</p>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-3 bg-gold/10 px-5 py-3 rounded-2xl border border-gold/30">
+                  <Star className="h-6 w-6 text-gold fill-current" />
+                  <span className="text-2xl font-black text-gold">{product?.rating?.toFixed(1) || '0.0'}</span>
+                </div>
+                {canReview && (
+                  <button
+                    onClick={() => setShowReviewForm(true)}
+                    className="bg-gradient-to-r from-maroon to-pink-600 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:shadow-xl hover:scale-105 transition-all active:scale-95"
+                  >
+                    Write Review ✨
+                  </button>
+                )}
               </div>
             </div>
-            {product.reviews?.length > 0 ? (
+            {loadingReviews ? (
+              <div className="text-center py-12">
+                <p className="text-slate/60">Loading reviews...</p>
+              </div>
+            ) : reviews && reviews.length > 0 ? (
               <div className="space-y-5">
-                {product.reviews.map((review, index) => (
-                  <div key={index} className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl border border-maroon/10 hover:shadow-xl hover:scale-[1.01] transition-all">
+                {reviews.map((review) => (
+                  <div key={review._id} className="bg-white/70 backdrop-blur-sm p-6 rounded-2xl border border-maroon/10 hover:shadow-xl hover:scale-[1.01] transition-all">
                     <div className="flex items-center space-x-4 mb-4">
                       <div className="w-14 h-14 bg-maroon rounded-2xl flex items-center justify-center shadow-lg">
                         <span className="text-white font-black text-xl">
-                          {(review.user?.name || 'Anonymous').charAt(0).toUpperCase()}
+                          {(review.user?.name || review.guestName || 'A').charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="flex-1">
-                        <div className="font-bold text-maroon text-lg">{review.user?.name || 'Anonymous User'}</div>
+                        <div className="font-bold text-maroon text-lg">{review.user?.name || review.guestName || 'Anonymous User'}</div>
                         <div className="flex items-center space-x-3">
                           <div className="flex items-center">
                             {[...Array(5)].map((_, i) => (
@@ -644,6 +692,9 @@ const ProductDetail = () => {
                         </div>
                       </div>
                     </div>
+                    {review.title && (
+                      <h4 className="font-bold text-slate text-base mb-2">{review.title}</h4>
+                    )}
                     <p className="text-slate leading-relaxed text-base">{review.comment}</p>
                   </div>
                 ))}
@@ -655,14 +706,37 @@ const ProductDetail = () => {
                 </div>
                 <h3 className="text-2xl font-black text-maroon mb-3">No Reviews Yet</h3>
                 <p className="text-slate/70 text-lg mb-6">Be the first to review this beautiful product!</p>
-                <button className="bg-maroon text-white px-8 py-3 rounded-xl font-bold hover:shadow-xl hover:scale-105 transition-all">
-                  Write a Review ✨
-                </button>
+                {canReview ? (
+                  <button
+                    onClick={() => setShowReviewForm(true)}
+                    className="bg-maroon text-white px-8 py-3 rounded-2xl font-bold hover:shadow-xl hover:scale-105 transition-all active:scale-95"
+                  >
+                    Write a Review ✨
+                  </button>
+                ) : (
+                  <div className="text-center">
+                    <p className="text-slate/60 mb-4">You can only review products you've ordered and received.</p>
+                    <Link to="/shop" className="text-maroon font-bold hover:underline">
+                      Browse our collection →
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Review Form Modal */}
+      {showReviewForm && (
+        <ReviewForm
+          productId={id}
+          onReviewSubmitted={() => {
+            fetchReviews();
+          }}
+          onClose={() => setShowReviewForm(false)}
+        />
+      )}
     </div>
   );
 };

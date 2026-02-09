@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ShoppingBag, Heart, Package, User, Crown } from 'lucide-react';
+import { Home, ShoppingBag, Heart, Package, User, Crown, MessageCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 
@@ -8,12 +8,22 @@ const BottomNav = () => {
   const location = useLocation();
   const { user } = useAuth();
   const { totalItems } = useCart();
+  
+  const phoneNumber = '8801851075537';
+  const defaultMessage = 'Hello! I need help with Chirkut ঘর services.';
 
   const isActive = (path) => {
     if (path === '/') {
       return location.pathname === '/';
     }
     return location.pathname.startsWith(path);
+  };
+
+  const handleWhatsApp = (e) => {
+    e.preventDefault();
+    const encodedMessage = encodeURIComponent(defaultMessage);
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+    window.open(whatsappURL, '_blank');
   };
 
   const navItems = [
@@ -28,7 +38,7 @@ const BottomNav = () => {
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate/20 shadow-2xl">
-      <div className="grid grid-cols-5 h-16">
+      <div className="grid grid-cols-6 h-16">
         {navItems.map((item, index) => {
           const path = item.dest || item.path;
           const active = isActive(item.path);
@@ -68,6 +78,16 @@ const BottomNav = () => {
             </Link>
           );
         })}
+
+        {/* WhatsApp Button in Bottom Nav (Mobile Only) */}
+        <button
+          onClick={handleWhatsApp}
+          className="flex flex-col items-center justify-center space-y-1 transition-all duration-300 relative text-green-500 hover:text-green-600"
+          title="WhatsApp Support"
+        >
+          <MessageCircle className="h-6 w-6 transition-transform duration-300 hover:scale-110" />
+          <span className="text-xs font-semibold">Help</span>
+        </button>
       </div>
     </nav>
   );

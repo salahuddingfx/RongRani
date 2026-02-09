@@ -5,11 +5,47 @@ const User = require('../models/User');
 const DeliverySetting = require('../models/DeliverySetting');
 const { sendEmail } = require('../utils/emailService');
 const { generateInvoice } = require('../utils/pdfGenerator');
+const { calculateDelivery, getDeliveryDisplay } = require('../utils/deliveryCalculator');
 
 const emitEvent = (req, event, payload) => {
   const io = req.app?.get('io');
   if (io) {
     io.emit(event, payload);
+  }
+};
+
+/**
+ * @desc    Calculate delivery charge for checkout preview
+ * @route   POST /api/orders/calc-delivery
+ * @access  Public (allows guest and authenticated users)
+ */
+const calculateDeliveryCharge = async (req, res) => {
+  try {
+    const { subtotal, district = '', city = '' } = req.body;
+
+    // Validate subtotal
+    if (typeof subtotal !== 'number' || subtotal < 0) {
+      return res.status(400).json({
+        message: 'Valid subtotal (number >= 0) is required',
+      });
+    }
+
+    // Calculate delivery
+    const delivery = calculateDelivery({
+      subtotal,
+      district,
+      city,
+    });
+
+    // Return delivery info
+    return res.status(200).json({
+      success: true,
+      delivery,
+      display: getDeliveryDisplay(delivery),
+    });
+  } catch (error) {
+    console.error('Delivery calculation error:', error);
+    return res.status(500).json({ message: 'Error calculating delivery charge' });
   }
 };
 
@@ -114,18 +150,15 @@ const createOrder = async (req, res) => {
       await coupon.save();
     }
 
-    // Calculate final totals
+    // Calculate final totals using centralized delivery calculator
     const tax = 0; // No tax
-    const deliverySettings = await DeliverySetting.findOne();
-    const freeThreshold = deliverySettings?.freeShippingThreshold ?? 2500;
-    const baseFee = 150;
-    const cityText = (shippingAddress?.city || '').toString().trim().toLowerCase();
-    const isCoxBazar = cityText.includes('cox') && cityText.includes('bazar');
+    const deliveryResult = calculateDelivery({
+      subtotal,
+      district: shippingAddress?.district || '',
+      city: shippingAddress?.city || '',
+    });
 
-    let shipping = isCoxBazar ? 70 : baseFee;
-    if (subtotal >= freeThreshold) {
-      shipping = 0;
-    }
+    const shipping = deliveryResult.charge;
     const total = subtotal + tax + shipping - discount;
 
     if (paymentMethod !== 'cod') {
@@ -168,6 +201,13 @@ const createOrder = async (req, res) => {
       subtotal,
       tax,
       shipping,
+      delivery: {
+        charge: deliveryResult.charge,
+        label: deliveryResult.label,
+        isFree: deliveryResult.isFree,
+        provider: deliveryResult.provider,
+        threshold: deliveryResult.threshold,
+      },
       discount,
       total,
       coupon: coupon?._id,
@@ -534,6 +574,7 @@ const generateOrderInvoice = async (req, res) => {
 };
 
 module.exports = {
+  calculateDeliveryCharge,
   createOrder,
   getMyOrders,
   getOrderById,

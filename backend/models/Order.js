@@ -133,6 +133,29 @@ const orderSchema = new mongoose.Schema({
     default: 0,
     min: [0, 'Shipping cannot be negative'],
   },
+  delivery: {
+    // Centralized delivery information
+    charge: {
+      type: Number,
+      default: 0,
+      min: [0, 'Delivery charge cannot be negative'],
+    },
+    label: String, // Human-readable label (e.g., "Free Delivery (All Bangladesh)")
+    isFree: {
+      type: Boolean,
+      default: false,
+    },
+    provider: {
+      type: String,
+      enum: ['LOCAL', 'STEADFAST', 'PATHAO'],
+      default: 'STEADFAST',
+    },
+    // Threshold at time of order (for historical reference)
+    threshold: {
+      type: Number,
+      default: 2500,
+    },
+  },
   discount: {
     type: Number,
     default: 0,

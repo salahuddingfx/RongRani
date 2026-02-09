@@ -503,17 +503,17 @@ const Home = () => {
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                <div className="text-center">
+                <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
                   <Users className="h-12 w-12 text-maroon mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-charcoal mb-2">Authentic Artisans</h3>
                   <p className="text-charcoal-light">Direct from master craftsmen with decades of experience</p>
                 </div>
-                <div className="text-center">
+                <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
                   <Award className="h-12 w-12 text-maroon mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-charcoal mb-2">Quality Guarantee</h3>
                   <p className="text-charcoal-light">Every piece is inspected and comes with our quality promise</p>
                 </div>
-                <div className="text-center">
+                <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
                   <Sparkles className="h-12 w-12 text-maroon mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-charcoal mb-2">Cultural Heritage</h3>
                   <p className="text-charcoal-light">Supporting traditional crafts and cultural preservation</p>

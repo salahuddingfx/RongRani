@@ -57,10 +57,10 @@ const Login = () => {
       </div>
 
       {/* Customer Benefits Banner */}
-      <div className="max-w-4xl mx-auto px-4 mb-6">
-        <div className="bg-maroon text-white rounded-2xl p-6 shadow-xl">
-          <h3 className="text-xl font-bold mb-3 text-center">🎁 Lifetime Customer Benefits</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+      <div className="max-w-4xl mx-auto px-3 sm:px-4 mb-6">
+        <div className="bg-maroon text-white rounded-2xl p-4 sm:p-6 shadow-xl">
+          <h3 className="text-lg sm:text-xl font-bold mb-3 text-center">🎁 Lifetime Customer Benefits</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
             <div className="text-center">
               <div className="text-2xl mb-1">💝</div>
               <p className="font-semibold">Exclusive Offers</p>
@@ -81,29 +81,29 @@ const Login = () => {
       </div>
 
       {/* Centered Glass Card Form */}
-      <div className="flex items-center justify-center px-4 py-8">
-        <div className="glass-card w-full max-w-md p-8">
+      <div className="flex items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
+        <div className="glass-card w-full max-w-md p-6 sm:p-8 rounded-3xl">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-maroon mb-2">Welcome Back</h2>
-            <p className="text-slate text-sm">Sign in to access your lifetime benefits</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-maroon mb-2">Welcome Back</h2>
+            <p className="text-slate text-xs sm:text-sm">Sign in to access your lifetime benefits</p>
           </div>
 
           {message && (
-            <div className="bg-maroon/10 border border-maroon/30 text-maroon px-4 py-3 rounded-lg mb-6 text-sm flex items-center space-x-2">
-              <ShoppingCart className="h-5 w-5 flex-shrink-0" />
+            <div className="bg-maroon/10 border border-maroon/30 text-maroon px-3 sm:px-4 py-3 rounded-lg mb-6 text-xs sm:text-sm flex items-center gap-2">
+              <ShoppingCart className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0" />
               <span>{message}</span>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-3 rounded-lg mb-6 text-xs sm:text-sm">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
             <div>
-              <label className="block text-sm font-medium text-slate mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-slate mb-2">
                 Email Address
               </label>
               <div className="relative">
@@ -113,15 +113,15 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="input-field pl-12"
+                  className="input-field pl-12 sm:pl-14 text-sm"
                   placeholder="Enter your email"
                 />
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate" />
+                <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-slate flex-shrink-0" />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate mb-2">
+              <label className="block text-xs sm:text-sm font-medium text-slate mb-2">
                 Password
               </label>
               <div className="relative">
@@ -131,31 +131,31 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  className="input-field pl-12 pr-12"
+                  className="input-field pl-12 sm:pl-14 pr-12 sm:pr-14 text-sm"
                   placeholder="Enter your password"
                 />
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate" />
+                <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-slate flex-shrink-0" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate hover:text-maroon transition-colors"
+                  className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-slate hover:text-maroon transition-colors p-1"
                 >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  {showPassword ? <EyeOff className="h-4 sm:h-5 w-4 sm:w-5" /> : <Eye className="h-4 sm:h-5 w-4 sm:w-5" />}
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <label className="flex items-center space-x-2 cursor-pointer">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+              <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   className="rounded border-slate text-maroon focus:ring-maroon"
                 />
-                <span className="text-sm text-slate">Remember me</span>
+                <span className="text-xs sm:text-sm text-slate">Remember me</span>
               </label>
               <Link
                 to="/forgot-password"
-                className="text-sm text-maroon hover:text-maroon-light font-medium transition-colors"
+                className="text-xs sm:text-sm text-maroon hover:text-maroon-light font-medium transition-colors"
               >
                 Forgot password?
               </Link>
@@ -164,7 +164,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary py-3 rounded-lg font-medium hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full btn-primary py-2.5 sm:py-3 rounded-xl sm:rounded-lg font-medium hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
             >
               {loading ? (
                 <div className="flex items-center justify-center space-x-2">
@@ -177,8 +177,8 @@ const Login = () => {
             </button>
           </form>
 
-          <div className="mt-8 text-center">
-            <p className="text-slate text-sm">
+          <div className="mt-6 sm:mt-8 text-center">
+            <p className="text-xs sm:text-sm text-slate">
               Don't have an account?{' '}
               <Link to="/register" className="text-maroon hover:text-maroon-light font-medium transition-colors">
                 Sign up

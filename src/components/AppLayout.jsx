@@ -4,7 +4,6 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import BottomNav from './BottomNav';
 import TopNavBar from './TopNavBar';
-import WhatsAppWizard from './WhatsAppWizard';
 import AIChatFloatingWidget from './AIChatFloatingWidget';
 import Seo from './Seo';
 import ScrollRevealManager from './ScrollRevealManager';
@@ -24,9 +23,6 @@ const AppLayout = () => {
         <Outlet />
       </main>
       <Footer />
-      
-      {/* WhatsApp AI Wizard - All Devices */}
-      <WhatsAppWizard />
       
       {/* AI Chat Widget - All Devices */}
       <AIChatFloatingWidget />

@@ -1,8 +1,11 @@
 const express = require('express');
-const { createOrder, getOrders, getOrderById, getOrderForTracking, updateOrderStatus, cancelOrder, generateOrderInvoice } = require('../controllers/order.controller');
+const { createOrder, getOrders, getOrderById, getOrderForTracking, updateOrderStatus, cancelOrder, generateOrderInvoice, calculateDeliveryCharge } = require('../controllers/order.controller');
 const { auth, authorize, optionalAuth } = require('../middlewares/auth.middleware');
 
 const router = express.Router();
+
+// Calculate delivery charge (for checkout preview)
+router.post('/calc-delivery', optionalAuth, calculateDeliveryCharge);
 
 // Create order (guest or authenticated)
 router.post('/', optionalAuth, createOrder);

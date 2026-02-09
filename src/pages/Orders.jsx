@@ -144,7 +144,7 @@ const Orders = () => {
 
         {/* Orders List */}
         {filteredOrders.length === 0 ? (
-          <div className="card text-center py-16">
+          <div className="card rounded-3xl text-center py-16">
             <Package className="h-20 w-20 text-slate mx-auto mb-4 opacity-50" />
             <h3 className="text-2xl font-bold text-charcoal mb-2">No Orders Found</h3>
             <p className="text-slate mb-8">Start shopping and create your first order!</p>
@@ -153,39 +153,39 @@ const Orders = () => {
             </Link>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {filteredOrders.map((order) => (
-              <div key={order._id} className="card hover:shadow-large transition-shadow">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div key={order._id} className="card rounded-3xl hover:shadow-large transition-shadow">
+                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4 sm:gap-6">
                   {/* Left - Order Info */}
-                  <div className="flex-1">
-                    <div className="flex items-center space-x-4 mb-4">
+                  <div className="flex-1 w-full">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:space-x-4 mb-4">
                       <h3 className="text-2xl font-bold text-maroon">#{order._id}</h3>
-                      <span className={`px-4 py-1.5 rounded-full text-sm font-semibold border-2 flex items-center space-x-2 ${getStatusColor(order.status)}`}>
+                      <span className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold border-2 flex items-center space-x-1 flex-shrink-0 ${getStatusColor(order.status)}`}>
                         {getStatusIcon(order.status)}
-                        <span className="capitalize">{order.status}</span>
+                        <span className="capitalize hidden sm:inline">{order.status}</span>
                       </span>
                     </div>
 
                     {/* Items */}
-                    <div className="space-y-3 mb-4">
+                    <div className="space-y-2 sm:space-y-3 mb-4">
                       {order.items.map((item, idx) => (
-                        <div key={idx} className="flex items-center space-x-4">
+                        <div key={idx} className="flex items-center gap-2 sm:gap-4">
                           <img
                             src={item.product.images?.[0] || 'https://via.placeholder.com/100'}
                             alt={item.product.name}
-                            className="w-16 h-16 object-cover rounded-lg shadow-soft"
+                            className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg shadow-soft flex-shrink-0"
                           />
-                          <div className="flex-1">
-                            <p className="font-semibold text-charcoal">{item.product.name}</p>
-                            <p className="text-sm text-slate">Quantity: {item.quantity} × ৳{item.price}</p>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-charcoal text-sm sm:text-base truncate">{item.product.name}</p>
+                            <p className="text-xs sm:text-sm text-slate">Qty: {item.quantity} × ৳{item.price}</p>
                           </div>
                         </div>
                       ))}
                     </div>
 
                     {/* Dates */}
-                    <div className="flex flex-wrap gap-4 text-sm text-slate">
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-slate">
                       <div>
                         <span className="font-semibold">Ordered:</span> {new Date(order.createdAt).toLocaleDateString()}
                       </div>
@@ -196,27 +196,27 @@ const Orders = () => {
                   </div>
 
                   {/* Right - Amount & Actions */}
-                  <div className="flex flex-col items-end space-y-4 lg:border-l-2 lg:border-slate/20 lg:pl-8">
-                    <div className="text-right">
-                      <p className="text-sm text-slate mb-1">Total Amount</p>
-                      <p className="text-3xl font-bold text-maroon">৳{order.totalAmount.toLocaleString()}</p>
+                  <div className="flex flex-col sm:items-end gap-3 sm:gap-4 w-full sm:w-auto lg:border-l-2 lg:border-slate/20 lg:pl-8">
+                    <div className="text-left sm:text-right">
+                      <p className="text-xs sm:text-sm text-slate mb-1">Total Amount</p>
+                      <p className="text-2xl sm:text-3xl font-bold text-maroon">৳{order.totalAmount.toLocaleString()}</p>
                     </div>
 
-                    <div className="flex flex-col space-y-2 w-full">
+                    <div className="flex flex-col gap-2 w-full">
                       <Link
                         to={`/track/${order._id}`}
-                        className="btn-primary flex items-center justify-center space-x-2"
+                        className="btn-primary flex items-center justify-center gap-2 py-2 sm:py-3 text-sm sm:text-base rounded-xl sm:rounded-2xl"
                       >
-                        <Eye className="h-5 w-5" />
-                        <span>Track Order</span>
+                        <Eye className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0" />
+                        <span>Track</span>
                       </Link>
 
                       <button
                         onClick={() => handleDownloadInvoice(order._id)}
-                        className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center space-x-2"
+                        className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl sm:rounded-2xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                       >
-                        <Download className="h-5 w-5" />
-                        <span>Download Invoice</span>
+                        <Download className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0" />
+                        <span>Invoice</span>
                       </button>
                     </div>
                   </div>

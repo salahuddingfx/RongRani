@@ -12,6 +12,11 @@ const AIChatFloatingWidget = () => {
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
+  const [deliverySettings, setDeliverySettings] = useState({
+    chittagongFee: 70,
+    outsideChittagongFee: 150,
+    freeShippingThreshold: 2500,
+  });
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -21,6 +26,10 @@ const AIChatFloatingWidget = () => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Note: We use default delivery settings in the AI chat
+  // These will be updated when admin changes settings and page reloads
+  // For real-time updates, a Socket.io listener can be added
 
   const getBotResponse = (userMessage) => {
     const msg = userMessage.toLowerCase();
@@ -36,7 +45,7 @@ const AIChatFloatingWidget = () => {
     } else if (msg.includes('price') || msg.includes('cost') || msg.includes('দাম')) {
       return "💰 Our products range from ৳500 (Handwritten Chirkut) to ৳9500 (Premium Luxury Gift Box). Most popular items are between ৳1500-৳5500. What's your budget?";
     } else if (msg.includes('delivery') || msg.includes('shipping') || msg.includes('ডেলিভারি')) {
-      return "🚚 Cox's Bazar: ৳70 | Other districts: ৳150 | FREE delivery on orders above ৳2500.";
+      return `🚚 Cox's Bazar: ৳${deliverySettings.chittagongFee} | Other districts: ৳${deliverySettings.outsideChittagongFee} | FREE delivery on orders above ৳${deliverySettings.freeShippingThreshold}.`;
     } else if (msg.includes('payment') || msg.includes('পেমেন্ট')) {
       return "💳 We accept: Cash on Delivery (COD), bKash, Nagad, Rocket. For mobile banking, please provide Transaction ID and last 4 digits after payment.";
     } else if (msg.includes('track') || msg.includes('order') || msg.includes('অর্ডার')) {
@@ -105,7 +114,7 @@ const AIChatFloatingWidget = () => {
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="floating-widget fixed bottom-24 lg:bottom-6 right-6 z-50 w-[calc(100vw-2rem)] sm:w-[420px] h-[70vh] sm:h-[620px] max-h-[calc(100vh-5rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col">
+        <div className="floating-widget fixed bottom-24 lg:bottom-6 right-6 z-50 w-[calc(100vw-3rem)] sm:w-96 h-[50vh] sm:h-[520px] max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col">
           {/* Header */}
           <div
             className="bg-gradient-to-r from-maroon via-maroon-light to-gold text-white p-4 flex items-center justify-between relative overflow-hidden"

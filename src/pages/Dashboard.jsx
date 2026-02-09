@@ -43,7 +43,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Sidebar */}
         <div className="lg:col-span-1">
-          <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-lg p-6">
+          <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-3xl p-6">
             <div className="text-center mb-6">
               <div className="w-20 h-20 bg-maroon rounded-full flex items-center justify-center mx-auto mb-4">
                 <User className="h-10 w-10 text-white" />
@@ -84,7 +84,7 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <div className="lg:col-span-3">
-          <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-lg p-6">
+          <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-3xl p-6">
             {activeTab === 'profile' && (
               <div>
                 <h2 className="text-2xl font-bold mb-6">Profile Information</h2>
@@ -193,14 +193,14 @@ const Dashboard = () => {
                         <label className="block text-sm font-medium mb-2">Current Password</label>
                         <input
                           type="password"
-                          className="w-full px-4 py-2 rounded bg-white/20 dark:bg-gray-700/20 border border-white/30 dark:border-gray-600/30"
+                          className="w-full px-4 py-2 rounded-2xl bg-white/20 dark:bg-gray-700/20 border border-white/30 dark:border-gray-600/30"
                         />
                       </div>
                       <div>
                         <label className="block text-sm font-medium mb-2">New Password</label>
                         <input
                           type="password"
-                          className="w-full px-4 py-2 rounded bg-white/20 dark:bg-gray-700/20 border border-white/30 dark:border-gray-600/30"
+                          className="w-full px-4 py-2 rounded-2xl bg-white/20 dark:bg-gray-700/20 border border-white/30 dark:border-gray-600/30"
                         />
                       </div>
                       <button

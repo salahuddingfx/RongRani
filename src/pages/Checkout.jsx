@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useDeliveryCalculation } from '../hooks/useDeliveryCalculation';
 import { CreditCard, Truck, MapPin, User } from 'lucide-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
@@ -10,6 +11,8 @@ const Checkout = () => {
   const { cartItems, totalPrice, clearCart } = useCart();
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { delivery, loading: deliveryLoading, fetchDelivery } = useDeliveryCalculation();
+  
   const [loading, setLoading] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const [couponInfo, setCouponInfo] = useState(null);
@@ -44,7 +47,14 @@ const Checkout = () => {
       setCouponInfo(null);
       setDiscount(0);
     }
-  }, [totalPrice]);
+  }, [totalPrice, couponInfo]);
+
+  // Fetch delivery charge from backend when address or total price changes
+  useEffect(() => {
+    if (totalPrice > 0 && formData.district && formData.city) {
+      fetchDelivery(totalPrice, formData.district, formData.city);
+    }
+  }, [totalPrice, formData.district, formData.city, fetchDelivery]);
 
   const handleApplyCoupon = async () => {
     if (couponLoading) return;
@@ -218,10 +228,8 @@ const Checkout = () => {
     );
   }
 
-  const normalizedCity = (formData.city || '').toString().trim().toLowerCase();
-  const isCoxBazar = normalizedCity.includes('cox') && normalizedCity.includes('bazar');
-  const baseShipping = isCoxBazar ? 70 : 150;
-  const shipping = totalPrice >= 2500 ? 0 : baseShipping;
+  // Get delivery charge from backend (or 0 while loading)
+  const shipping = delivery?.charge || 0;
   const tax = 0; // No tax
   const total = Math.max(0, totalPrice + shipping + tax - discount);
 
@@ -342,11 +350,13 @@ const Checkout = () => {
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span>৳{shipping}</span>
+                <span>{deliveryLoading ? '...' : `৳${shipping}`}</span>
               </div>
-              <p className="text-xs text-slate">
-                Cox's Bazar delivery: ৳70, other districts: ৳150 (Free over ৳2500)
-              </p>
+              {delivery?.label && (
+                <p className="text-xs text-slate">
+                  {delivery.label}
+                </p>
+              )}
               {discount > 0 && (
                 <div className="flex justify-between text-green-700 font-semibold">
                   <span>Discount</span>

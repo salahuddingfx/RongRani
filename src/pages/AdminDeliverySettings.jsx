@@ -73,40 +73,44 @@ const AdminDeliverySettings = () => {
         <p className="text-slate">Manage shipping fees and free delivery rules.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="card space-y-4 max-w-2xl">
-        <div>
-          <label className="block text-sm font-semibold text-slate mb-1">Within Chittagong Division Fee (BDT)</label>
-          <p className="text-xs text-slate mb-2">Including Cox's Bazar, Chittagong, and surrounding areas</p>
+      <form onSubmit={handleSubmit} className="card space-y-6 max-w-2xl">
+        <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
+          <label className="block text-sm font-bold text-blue-900 mb-1">🏙️ Cox's Bazar & Chittagong Division Delivery Fee (BDT)</label>
+          <p className="text-xs text-blue-800 mb-3">Apply this fee for deliveries within Chittagong Division (Cox's Bazar, Chittagong, Khagrachari, Rangamati)</p>
           <input
             name="chittagongFee"
             type="number"
             value={formData.chittagongFee}
             onChange={handleChange}
-            className="input-field w-full"
+            className="input-field w-full text-lg font-bold"
             min="0"
+            placeholder="e.g., 70"
           />
         </div>
-        <div>
-          <label className="block text-sm font-semibold text-slate mb-1">Outside Chittagong Division Fee (BDT)</label>
-          <p className="text-xs text-slate mb-2">Rest of Bangladesh (Dhaka, Sylhet, Rajshahi, etc.)</p>
+        <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4">
+          <label className="block text-sm font-bold text-green-900 mb-1">🌍 Outside Chittagong Division Delivery Fee (BDT)</label>
+          <p className="text-xs text-green-800 mb-3">Apply this fee for deliveries outside Chittagong (Dhaka, Sylhet, Rajshahi, Barisal, Khulna, Mymensingh, Rangpur)</p>
           <input
             name="outsideChittagongFee"
             type="number"
             value={formData.outsideChittagongFee}
             onChange={handleChange}
-            className="input-field w-full"
+            className="input-field w-full text-lg font-bold"
             min="0"
+            placeholder="e.g., 150"
           />
         </div>
-        <div>
-          <label className="block text-sm font-semibold text-slate mb-1">Free Shipping Threshold (BDT)</label>
+        <div className="bg-gold/20 border-2 border-gold/50 rounded-xl p-4">
+          <label className="block text-sm font-bold text-amber-900 mb-1">🎁 Free Shipping Threshold (BDT)</label>
+          <p className="text-xs text-amber-800 mb-3">Orders above this amount get FREE shipping (both regions)</p>
           <input
             name="freeShippingThreshold"
             type="number"
             value={formData.freeShippingThreshold}
             onChange={handleChange}
-            className="input-field w-full"
+            className="input-field w-full text-lg font-bold"
             min="0"
+            placeholder="e.g., 2500"
           />
         </div>
         <div className="flex justify-end">

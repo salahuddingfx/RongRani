@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const Review = require('../models/Review');
+const Order = require('../models/Order');
 const cloudinary = require('../utils/cloudinaryConfig');
 
 const emitEvent = (req, event, payload) => {
@@ -202,6 +204,175 @@ const getTags = async (req, res) => {
   }
 };
 
+// @desc    Submit a review for a product (must have ordered it)
+// @route   POST /api/products/:id/reviews
+// @access  Public (allows both logged-in and guest users with order verification)
+const submitReview = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { rating, title, comment, guestEmail, orderId } = req.body;
+
+    // Validate required fields
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+    }
+
+    if (!comment || comment.trim().length < 10) {
+      return res.status(400).json({ message: 'Comment must be at least 10 characters' });
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Check if user has ordered this product
+    let hasOrdered = false;
+    let userEmail = null;
+
+    if (req.user) {
+      // Logged-in user - check order history
+      const userOrders = await Order.find({
+        user: req.user._id,
+        orderStatus: 'delivered', // Only allow reviews after delivery
+        'items.product': productId,
+      });
+      hasOrdered = userOrders.length > 0;
+      userEmail = req.user.email;
+    } else if (guestEmail && orderId) {
+      // Guest user - verify order with email and orderId
+      const guestOrder = await Order.findById(orderId);
+      if (
+        guestOrder &&
+        guestOrder.guestInfo?.email === guestEmail &&
+        guestOrder.orderStatus === 'delivered' &&
+        guestOrder.items.some((item) => item.product.toString() === productId)
+      ) {
+        hasOrdered = true;
+        userEmail = guestEmail;
+      }
+    }
+
+    if (!hasOrdered) {
+      return res.status(403).json({
+        message: 'You can only review products you have ordered and received',
+      });
+    }
+
+    // Check if user already reviewed this product
+    const existingReview = await Review.findOne({
+      product: productId,
+      $or: [
+        { user: req.user?._id },
+        { guestName: userEmail },
+      ],
+    });
+
+    if (existingReview) {
+      return res.status(400).json({ message: 'You have already reviewed this product' });
+    }
+
+    // Create review (starts as pending, needs admin approval)
+    const review = await Review.create({
+      product: productId,
+      user: req.user?._id || null,
+      guestName: !req.user ? userEmail : null,
+      rating,
+      title: title || '',
+      comment,
+      status: 'pending', // Admin must approve
+    });
+
+    // Update product review stats
+    const stats = await Review.aggregate([
+      { $match: { product: product._id, status: 'approved' } },
+      {
+        $group: {
+          _id: null,
+          avgRating: { $avg: '$rating' },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    if (stats.length > 0) {
+      product.rating = stats[0].avgRating;
+      product.reviewCount = stats[0].count;
+    } else {
+      product.rating = 0;
+      product.reviewCount = 0;
+    }
+
+    await product.save();
+
+    // Emit real-time event
+    emitEvent(req, 'review:submitted', { review, productId });
+
+    res.status(201).json({
+      message: 'Review submitted! It will be published after admin approval.',
+      review,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get reviews for a product (only approved)
+// @route   GET /api/products/:id/reviews
+// @access  Public
+const getProductReviews = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const reviews = await Review.find({
+      product: id,
+      status: 'approved',
+    })
+      .populate('user', 'name')
+      .sort({ createdAt: -1 })
+      .lean();
+
+    res.json(reviews);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Check if user can review a product
+// @route   GET /api/products/:id/can-review
+// @access  Private/Public
+const canReviewProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { guestEmail, orderId } = req.query;
+
+    let hasOrdered = false;
+
+    if (req.user) {
+      // Logged-in user
+      const userOrders = await Order.countDocuments({
+        user: req.user._id,
+        orderStatus: 'delivered',
+        'items.product': id,
+      });
+      hasOrdered = userOrders > 0;
+    } else if (guestEmail && orderId) {
+      // Guest user
+      const guestOrder = await Order.findById(orderId);
+      hasOrdered = !!(
+        guestOrder &&
+        guestOrder.guestInfo?.email === guestEmail &&
+        guestOrder.orderStatus === 'delivered' &&
+        guestOrder.items.some((item) => item.product.toString() === id)
+      );
+    }
+
+    res.json({ canReview: hasOrdered });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // @desc    Search products
 // @route   GET /api/products/search
 // @access  Public
@@ -241,4 +412,7 @@ module.exports = {
   getCategories,
   getTags,
   searchProducts,
+  submitReview,
+  getProductReviews,
+  canReviewProduct,
 };
