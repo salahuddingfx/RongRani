@@ -84,7 +84,7 @@ const AdminCategories = () => {
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this category?')) return;
-    
+
     try {
       const token = localStorage.getItem('token');
       await axios.delete(`/api/categories/${id}`, {
@@ -100,7 +100,7 @@ const AdminCategories = () => {
   const toggleActive = async (category) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`/api/categories/${category._id}`, 
+      await axios.put(`/api/categories/${category._id}`,
         { isActive: !category.isActive },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -153,9 +153,9 @@ const AdminCategories = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-6">
+    <div className="min-h-screen bg-slate-900 p-6">
       {/* Header */}
-      <div className="bg-gradient-to-r from-maroon to-pink-600 rounded-2xl shadow-2xl p-8 mb-8">
+      <div className="bg-maroon rounded-2xl shadow-2xl p-8 mb-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">Categories Management</h1>
@@ -225,14 +225,14 @@ const AdminCategories = () => {
               <div className="flex space-x-2">
                 <button
                   onClick={() => handleEdit(category)}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center justify-center space-x-2 shadow-lg"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center justify-center space-x-2 shadow-lg"
                 >
                   <Edit className="h-4 w-4" />
                   <span>Edit</span>
                 </button>
                 <button
                   onClick={() => handleDelete(category._id)}
-                  className="flex-1 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-600 text-white px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center justify-center space-x-2 shadow-lg"
+                  className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-semibold transition-all flex items-center justify-center space-x-2 shadow-lg"
                 >
                   <Trash2 className="h-4 w-4" />
                   <span>Delete</span>
@@ -261,7 +261,7 @@ const AdminCategories = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-slate-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-slate-700">
-            <div className="sticky top-0 bg-gradient-to-r from-maroon to-pink-600 p-6 flex justify-between items-center rounded-t-3xl z-10">
+            <div className="sticky top-0 bg-maroon p-6 flex justify-between items-center rounded-t-3xl z-10">
               <h2 className="text-3xl font-bold text-white">
                 {editingCategory ? 'Edit Category' : 'Add New Category'}
               </h2>
@@ -269,7 +269,7 @@ const AdminCategories = () => {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div>
                 <label className="block text-sm font-bold text-white mb-2">
@@ -348,7 +348,7 @@ const AdminCategories = () => {
                         <option key={color.value} value={color.value}>{color.name}</option>
                       ))}
                     </select>
-                    <div 
+                    <div
                       className="absolute right-3 top-1/2 transform -translate-y-1/2 w-6 h-6 rounded-full border-2 border-white pointer-events-none"
                       style={{ backgroundColor: colorOptions.find(c => c.value === formData.color)?.preview }}
                     ></div>
@@ -389,7 +389,7 @@ const AdminCategories = () => {
                 <button type="button" onClick={resetForm} className="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-xl font-bold transition-colors">
                   Cancel
                 </button>
-                <button type="submit" className="flex-1 bg-gradient-to-r from-maroon to-pink-600 hover:from-maroon/90 hover:to-pink-600/90 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg">
+                <button type="submit" className="flex-1 bg-maroon hover:bg-maroon/90 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-lg">
                   {editingCategory ? 'Update Category' : 'Create Category'}
                 </button>
               </div>

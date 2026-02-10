@@ -101,7 +101,7 @@ const Reviews = () => {
                 path="/reviews"
             />
 
-            <div className="min-h-screen bg-gradient-to-br from-cream via-white to-pink-50 py-8 md:py-12">
+            <div className="min-h-screen bg-cream py-8 md:py-12">
                 <div className="container mx-auto px-4">
                     {/* Header */}
                     <div className="text-center mb-8 md:mb-12">
@@ -133,8 +133,8 @@ const Reviews = () => {
                                     <Star
                                         key={i}
                                         className={`w-5 h-5 md:w-6 md:h-6 ${i < Math.floor(stats.averageRating)
-                                                ? 'fill-yellow-400 text-yellow-400'
-                                                : 'text-slate-300'
+                                            ? 'fill-yellow-400 text-yellow-400'
+                                            : 'text-slate-300'
                                             }`}
                                     />
                                 ))}
@@ -145,7 +145,7 @@ const Reviews = () => {
                         </div>
 
                         {/* Total Reviews */}
-                        <div className="bg-gradient-to-br from-maroon to-pink-600 rounded-2xl p-6 md:p-8 shadow-lg text-center text-white">
+                        <div className="bg-maroon rounded-2xl p-6 md:p-8 shadow-lg text-center text-white">
                             <Users className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 opacity-90" />
                             <div className="text-4xl md:text-5xl font-black mb-2">
                                 {stats.totalReviews}+
@@ -166,7 +166,7 @@ const Reviews = () => {
                                         <span className="text-slate-600 w-8">{rating}★</span>
                                         <div className="flex-1 bg-slate-100 rounded-full h-2 overflow-hidden">
                                             <div
-                                                className="bg-gradient-to-r from-maroon to-pink-500 h-full rounded-full transition-all duration-500"
+                                                className="bg-maroon h-full rounded-full transition-all duration-500"
                                                 style={{ width: `${getRatingPercentage(rating)}%` }}
                                             />
                                         </div>
@@ -206,8 +206,8 @@ const Reviews = () => {
                                         key={value}
                                         onClick={() => setFilter(value)}
                                         className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-xl font-semibold transition-all text-sm md:text-base ${filter === value
-                                                ? 'bg-maroon text-white shadow-lg scale-105'
-                                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                            ? 'bg-maroon text-white shadow-lg scale-105'
+                                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                                             }`}
                                     >
                                         <Icon className="w-4 h-4" />
@@ -266,8 +266,8 @@ const Reviews = () => {
                                                         <Star
                                                             key={i}
                                                             className={`w-4 h-4 md:w-5 md:h-5 ${i < review.rating
-                                                                    ? 'fill-yellow-400 text-yellow-400'
-                                                                    : 'text-slate-300'
+                                                                ? 'fill-yellow-400 text-yellow-400'
+                                                                : 'text-slate-300'
                                                                 }`}
                                                         />
                                                     ))}

@@ -41,7 +41,7 @@ const WhatsAppWidget = () => {
       sender: 'user',
       timestamp: new Date().toISOString()
     };
-    
+
     setMessages([...messages, userMessage]);
 
     // Open WhatsApp with message
@@ -79,12 +79,12 @@ const WhatsAppWidget = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 left-6 z-50 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-full p-4 shadow-2xl hover:shadow-green-500/50 hover:scale-110 transition-all duration-300 group"
+          className="fixed bottom-6 left-6 z-50 bg-green-600 text-white rounded-full p-4 shadow-2xl hover:shadow-green-500/50 hover:scale-110 transition-all duration-300 group"
           aria-label="Open WhatsApp Chat"
         >
           <MessageCircle className="h-7 w-7" />
           <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-pulse border-2 border-white flex items-center justify-center text-[8px] font-bold">1</span>
-          <div className="absolute -top-12 left-0 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          <div className="absolute -top-12 left-0 bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
             Chat on WhatsApp 💬
           </div>
         </button>
@@ -94,7 +94,7 @@ const WhatsAppWidget = () => {
       {isOpen && (
         <div className="fixed bottom-6 left-6 z-50 w-[calc(100vw-2rem)] sm:w-96 h-[600px] max-h-[calc(100vh-5rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-green-200 flex flex-col">
           {/* Header */}
-          <div className="bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4 flex items-center justify-between relative overflow-hidden">
+          <div className="bg-green-600 text-white p-4 flex items-center justify-between relative overflow-hidden">
             <div className="absolute inset-0 opacity-20">
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')]"></div>
             </div>
@@ -120,18 +120,17 @@ const WhatsAppWidget = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-br from-green-50/30 via-emerald-50/30 to-white scrollbar-hide">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white scrollbar-hide">
             {messages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-                    msg.sender === 'user'
-                      ? 'bg-gradient-to-br from-green-600 to-emerald-600 text-white rounded-br-md shadow-lg'
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 ${msg.sender === 'user'
+                      ? 'bg-green-600 text-white rounded-br-md shadow-lg'
                       : 'bg-white text-slate border-2 border-green-200 rounded-bl-md shadow-md'
-                  }`}
+                    }`}
                 >
                   {msg.sender === 'support' && (
                     <div className="flex items-center space-x-2 mb-2">
@@ -145,9 +144,9 @@ const WhatsAppWidget = () => {
                     {msg.text}
                   </p>
                   <p className={`text-xs mt-2 ${msg.sender === 'user' ? 'text-white/70' : 'text-slate/50'}`}>
-                    {new Date(msg.timestamp).toLocaleTimeString('en-US', { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
+                    {new Date(msg.timestamp).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
                     })}
                   </p>
                 </div>
@@ -157,7 +156,7 @@ const WhatsAppWidget = () => {
           </div>
 
           {/* Quick Messages */}
-          <div className="px-4 py-3 bg-gradient-to-r from-green-50 to-emerald-50 border-t border-green-200">
+          <div className="px-4 py-3 bg-green-50 border-t border-green-200">
             <p className="text-xs font-bold text-green-700 mb-2">Quick Messages:</p>
             <div className="grid grid-cols-2 gap-2">
               {quickMessages.map((quick, index) => (
@@ -193,13 +192,13 @@ const WhatsAppWidget = () => {
               <button
                 onClick={handleSendMessage}
                 disabled={!message.trim()}
-                className="bg-gradient-to-br from-green-600 to-emerald-600 text-white p-3 rounded-2xl hover:scale-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all shadow-lg hover:shadow-green-500/50"
+                className="bg-green-600 text-white p-3 rounded-2xl hover:scale-110 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 transition-all shadow-lg hover:shadow-green-500/50"
                 aria-label="Send Message"
               >
                 <Send className="h-6 w-6" />
               </button>
             </div>
-            
+
             {/* Contact Info */}
             <div className="flex items-center justify-around text-xs text-slate/70 border-t border-green-100 pt-3">
               <a href="tel:+8801851075537" className="flex items-center space-x-1 hover:text-green-600 transition-colors">

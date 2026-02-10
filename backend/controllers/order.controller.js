@@ -62,6 +62,7 @@ const createOrder = async (req, res) => {
       paymentDetails,
       couponCode,
       notes,
+      giftMessage,
       guestInfo, // For guest checkout
     } = req.body;
 
@@ -212,6 +213,7 @@ const createOrder = async (req, res) => {
       total,
       coupon: coupon?._id,
       notes,
+      giftMessage,
     });
 
     emitEvent(req, 'order:new', {
@@ -294,6 +296,7 @@ const createOrder = async (req, res) => {
           total: total.toFixed(2),
           paymentMethod,
           shippingAddress: `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.zipCode || ''}`,
+          giftMessage: giftMessage || 'No gift message',
         }
       );
       console.log('✅ Admin order notification sent');

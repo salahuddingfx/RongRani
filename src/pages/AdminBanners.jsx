@@ -38,7 +38,7 @@ const AdminBanners = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
       const token = localStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
@@ -91,9 +91,9 @@ const AdminBanners = () => {
   const toggleActive = async (bannerId, currentStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`/api/admin/banners/${bannerId}/toggle`, 
+      await axios.patch(`/api/admin/banners/${bannerId}/toggle`,
         { isActive: !currentStatus },
-        { headers: { Authorization: `Bearer ${token}` }}
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('Banner status updated');
       fetchBanners();
@@ -118,18 +118,18 @@ const AdminBanners = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-4xl font-black bg-gradient-to-r from-maroon to-red-700 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-black text-maroon mb-2">
             Banner Management
           </h1>
           <p className="text-slate text-lg">Manage homepage banner slides and promotions</p>
         </div>
-        <button 
+        <button
           onClick={() => {
             setEditingBanner(null);
             setFormData({ title: '', subtitle: '', link: '', image: '', isActive: true, order: 0 });
             setShowModal(true);
           }}
-          className="bg-gradient-to-r from-maroon to-red-700 text-white px-6 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center space-x-2"
+          className="bg-maroon text-white px-6 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center space-x-2"
         >
           <Plus className="h-5 w-5" />
           <span>Add New Banner</span>
@@ -138,7 +138,7 @@ const AdminBanners = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-maroon to-red-700 text-white p-6 rounded-2xl shadow-lg">
+        <div className="bg-maroon text-white p-6 rounded-2xl shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-white/80 text-sm font-semibold mb-1">Total Banners</p>
@@ -147,7 +147,7 @@ const AdminBanners = () => {
             <Image className="h-12 w-12 opacity-30" />
           </div>
         </div>
-        <div className="bg-gradient-to-br from-green-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg">
+        <div className="bg-green-600 text-white p-6 rounded-2xl shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-white/80 text-sm font-semibold mb-1">Active</p>
@@ -156,7 +156,7 @@ const AdminBanners = () => {
             <Eye className="h-12 w-12 opacity-30" />
           </div>
         </div>
-        <div className="bg-gradient-to-br from-slate-500 to-slate-700 text-white p-6 rounded-2xl shadow-lg">
+        <div className="bg-slate-600 text-white p-6 rounded-2xl shadow-lg">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-white/80 text-sm font-semibold mb-1">Inactive</p>
@@ -171,10 +171,10 @@ const AdminBanners = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {banners.map((banner) => (
           <div key={banner._id} className="bg-white rounded-2xl shadow-xl overflow-hidden border border-maroon/10 hover:shadow-2xl transition-all">
-            <div className="relative h-48 bg-gradient-to-br from-cream to-pink-50">
+            <div className="relative h-48 bg-cream">
               {banner.image ? (
-                <img 
-                  src={banner.image} 
+                <img
+                  src={banner.image}
                   alt={banner.title}
                   className="w-full h-full object-cover"
                 />
@@ -183,11 +183,10 @@ const AdminBanners = () => {
                   <Image className="h-16 w-16 text-slate/30" />
                 </div>
               )}
-              <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold ${
-                banner.isActive 
-                  ? 'bg-green-500 text-white' 
+              <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold ${banner.isActive
+                  ? 'bg-green-500 text-white'
                   : 'bg-slate-500 text-white'
-              }`}>
+                }`}>
                 {banner.isActive ? '✓ Active' : '✗ Inactive'}
               </div>
             </div>
@@ -206,11 +205,10 @@ const AdminBanners = () => {
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => toggleActive(banner._id, banner.isActive)}
-                    className={`p-2 rounded-lg transition-colors ${
-                      banner.isActive
+                    className={`p-2 rounded-lg transition-colors ${banner.isActive
                         ? 'bg-slate-100 hover:bg-slate-200 text-slate'
                         : 'bg-green-100 hover:bg-green-200 text-green-600'
-                    }`}
+                      }`}
                     title={banner.isActive ? 'Deactivate' : 'Activate'}
                   >
                     {banner.isActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -241,9 +239,9 @@ const AdminBanners = () => {
           <Image className="h-24 w-24 text-slate/30 mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-maroon mb-2">No Banners Yet</h3>
           <p className="text-slate mb-6">Create your first banner to display on the homepage</p>
-          <button 
+          <button
             onClick={() => setShowModal(true)}
-            className="bg-gradient-to-r from-maroon to-red-700 text-white px-8 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all inline-flex items-center space-x-2"
+            className="bg-maroon text-white px-8 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all inline-flex items-center space-x-2"
           >
             <Plus className="h-5 w-5" />
             <span>Create First Banner</span>
@@ -255,7 +253,7 @@ const AdminBanners = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="bg-gradient-to-r from-maroon to-red-700 text-white p-6 flex items-center justify-between">
+            <div className="bg-maroon text-white p-6 flex items-center justify-between">
               <h2 className="text-2xl font-black">
                 {editingBanner ? 'Edit Banner' : 'Create New Banner'}
               </h2>
@@ -266,14 +264,14 @@ const AdminBanners = () => {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
               <div>
                 <label className="block text-sm font-bold text-maroon mb-2">Banner Title *</label>
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-maroon/20 rounded-xl focus:outline-none focus:border-maroon text-slate"
                   required
                   placeholder="e.g., Valentine's Day Special"
@@ -285,7 +283,7 @@ const AdminBanners = () => {
                 <input
                   type="text"
                   value={formData.subtitle}
-                  onChange={(e) => setFormData({...formData, subtitle: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-maroon/20 rounded-xl focus:outline-none focus:border-maroon text-slate"
                   placeholder="e.g., Up to 50% off on selected items"
                 />
@@ -296,7 +294,7 @@ const AdminBanners = () => {
                 <input
                   type="text"
                   value={formData.image}
-                  onChange={(e) => setFormData({...formData, image: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-maroon/20 rounded-xl focus:outline-none focus:border-maroon text-slate"
                   required
                   placeholder="https://example.com/banner-image.jpg"
@@ -308,7 +306,7 @@ const AdminBanners = () => {
                 <input
                   type="text"
                   value={formData.link}
-                  onChange={(e) => setFormData({...formData, link: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, link: e.target.value })}
                   className="w-full px-4 py-3 border-2 border-maroon/20 rounded-xl focus:outline-none focus:border-maroon text-slate"
                   placeholder="/shop?category=Valentine"
                 />
@@ -320,7 +318,7 @@ const AdminBanners = () => {
                   <input
                     type="number"
                     value={formData.order}
-                    onChange={(e) => setFormData({...formData, order: parseInt(e.target.value)})}
+                    onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) })}
                     className="w-full px-4 py-3 border-2 border-maroon/20 rounded-xl focus:outline-none focus:border-maroon text-slate"
                     min="0"
                   />
@@ -331,7 +329,7 @@ const AdminBanners = () => {
                   <input
                     type="checkbox"
                     checked={formData.isActive}
-                    onChange={(e) => setFormData({...formData, isActive: e.target.checked})}
+                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                     className="w-6 h-6 text-maroon rounded focus:ring-maroon"
                   />
                 </div>
@@ -340,7 +338,7 @@ const AdminBanners = () => {
               <div className="flex items-center space-x-4 pt-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-gradient-to-r from-maroon to-red-700 text-white py-4 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all"
+                  className="flex-1 bg-maroon text-white py-4 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all"
                 >
                   {editingBanner ? 'Update Banner' : 'Create Banner'}
                 </button>

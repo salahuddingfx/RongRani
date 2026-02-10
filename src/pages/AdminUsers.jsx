@@ -46,9 +46,9 @@ const AdminUsers = () => {
   const handleRoleChange = async (userId, newRole) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`/api/admin/users/${userId}/role`, 
+      await axios.put(`/api/admin/users/${userId}/role`,
         { role: newRole },
-        { headers: { Authorization: `Bearer ${token}` }}
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('User role updated successfully');
       fetchUsers();
@@ -59,7 +59,7 @@ const AdminUsers = () => {
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email?.toLowerCase().includes(searchTerm.toLowerCase());
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = filterRole === 'all' || user.role === filterRole;
     return matchesSearch && matchesRole;
   });
@@ -67,11 +67,11 @@ const AdminUsers = () => {
   const getRoleBadge = (role) => {
     switch (role) {
       case 'super_admin':
-        return 'bg-gradient-to-r from-purple-600 to-pink-600 text-white';
+        return 'bg-purple-600 text-white';
       case 'admin':
-        return 'bg-gradient-to-r from-maroon to-red-700 text-white';
+        return 'bg-maroon text-white';
       default:
-        return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white';
+        return 'bg-blue-600 text-white';
     }
   };
 
@@ -94,12 +94,12 @@ const AdminUsers = () => {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-4xl font-black bg-gradient-to-r from-maroon to-red-700 bg-clip-text text-transparent mb-2">
+            <h1 className="text-4xl font-black text-maroon mb-2">
               User Management
             </h1>
             <p className="text-slate text-lg">Manage all registered users and their permissions</p>
           </div>
-          <button className="bg-gradient-to-r from-maroon to-red-700 text-white px-6 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center space-x-2">
+          <button className="bg-maroon text-white px-6 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center space-x-2">
             <UserPlus className="h-5 w-5" />
             <span>Add New User</span>
           </button>
@@ -107,7 +107,7 @@ const AdminUsers = () => {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <div className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white p-6 rounded-2xl shadow-lg">
+          <div className="bg-blue-600 text-white p-6 rounded-2xl shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/80 text-sm font-semibold mb-1">Total Users</p>
@@ -116,7 +116,7 @@ const AdminUsers = () => {
               <Users className="h-12 w-12 opacity-30" />
             </div>
           </div>
-          <div className="bg-gradient-to-br from-maroon to-red-700 text-white p-6 rounded-2xl shadow-lg">
+          <div className="bg-maroon text-white p-6 rounded-2xl shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/80 text-sm font-semibold mb-1">Admins</p>
@@ -125,7 +125,7 @@ const AdminUsers = () => {
               <Shield className="h-12 w-12 opacity-30" />
             </div>
           </div>
-          <div className="bg-gradient-to-br from-purple-600 to-pink-600 text-white p-6 rounded-2xl shadow-lg">
+          <div className="bg-purple-600 text-white p-6 rounded-2xl shadow-lg">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-white/80 text-sm font-semibold mb-1">Customers</p>
@@ -165,7 +165,7 @@ const AdminUsers = () => {
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-maroon/10">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-maroon to-red-700 text-white">
+            <thead className="bg-maroon text-white">
               <tr>
                 <th className="px-6 py-4 text-left text-sm font-bold uppercase">Avatar</th>
                 <th className="px-6 py-4 text-left text-sm font-bold uppercase">Name</th>
@@ -230,9 +230,9 @@ const AdminUsers = () => {
                       <button className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600 transition-colors" title="Edit User">
                         <Edit className="h-4 w-4" />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDeleteUser(user._id)}
-                        className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors" 
+                        className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors"
                         title="Delete User"
                       >
                         <Trash2 className="h-4 w-4" />

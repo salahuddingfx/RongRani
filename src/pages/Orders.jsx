@@ -117,7 +117,7 @@ const Orders = () => {
   // Guest User View - Order Tracking Form
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-cream py-12 px-4">
+      <div className="min-h-screen bg-cream py-12 px-4">
         <div className="max-w-2xl mx-auto">
           <div className="card rounded-3xl p-8 md:p-12 shadow-2xl">
             {/* Header */}
@@ -206,7 +206,7 @@ const Orders = () => {
   // Logged-in User View
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-cream">
+      <div className="min-h-screen flex items-center justify-center bg-cream">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-maroon mx-auto mb-4" />
           <p className="text-slate-600">{t('loading')}</p>
@@ -216,7 +216,7 @@ const Orders = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-cream py-8 px-4 reveal-fade">
+    <div className="min-h-screen bg-cream py-8 px-4 reveal-fade">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8 reveal-left">
@@ -343,7 +343,7 @@ const Orders = () => {
 
                       <button
                         onClick={() => handleDownloadInvoice(order._id)}
-                        className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-2 text-sm md:text-base"
+                        className="bg-green-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-2 text-sm md:text-base"
                       >
                         <Download className="h-4 md:h-5 w-4 md:w-5" />
                         <span>{t('language') === 'bn' ? 'ইনভয়েস' : 'Invoice'}</span>

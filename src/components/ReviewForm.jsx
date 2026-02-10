@@ -3,7 +3,7 @@ import { Star, X, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const ReviewForm = ({ productId, onReviewSubmitted = () => {}, onClose = () => {} }) => {
+const ReviewForm = ({ productId, onReviewSubmitted = () => { }, onClose = () => { } }) => {
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
@@ -85,7 +85,7 @@ const ReviewForm = ({ productId, onReviewSubmitted = () => {}, onClose = () => {
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 animate-fade-in">
       <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto animate-slide-up">
         {/* Header */}
-        <div className="sticky top-0 bg-gradient-to-r from-maroon to-pink-600 text-white p-6 flex items-center justify-between">
+        <div className="sticky top-0 bg-maroon text-white p-6 flex items-center justify-between">
           <h2 className="text-2xl font-black">Share Your Experience ✨</h2>
           <button
             onClick={onClose}
@@ -149,11 +149,10 @@ const ReviewForm = ({ productId, onReviewSubmitted = () => {}, onClose = () => {
                   title={`${star} out of 5 stars`}
                 >
                   <Star
-                    className={`h-10 w-10 ${
-                      star <= (hoveredRating || rating)
+                    className={`h-10 w-10 ${star <= (hoveredRating || rating)
                         ? 'fill-gold text-gold'
                         : 'text-slate/30'
-                    } transition-colors`}
+                      } transition-colors`}
                   />
                 </button>
               ))}
@@ -232,7 +231,7 @@ const ReviewForm = ({ productId, onReviewSubmitted = () => {}, onClose = () => {
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 py-3 px-4 bg-gradient-to-r from-maroon to-pink-600 text-white rounded-2xl font-bold hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
+              className="flex-1 py-3 px-4 bg-maroon text-white rounded-2xl font-bold hover:shadow-xl hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
             >
               {loading ? 'Publishing...' : 'Publish Review ✨'}
             </button>

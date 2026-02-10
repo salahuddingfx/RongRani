@@ -35,7 +35,8 @@ const Checkout = () => {
     zipCode: user?.address?.zipCode || '',
     transactionId: '',
     senderLastDigits: '',
-    paymentMethod: 'cod'
+    paymentMethod: 'cod',
+    giftMessage: ''
   });
 
   const handleChange = (e) => {
@@ -166,6 +167,7 @@ const Checkout = () => {
         } : undefined,
         isGiftWrapped: giftWrapping,
         giftWrappingFee: giftWrapping ? giftWrappingFee : 0,
+        giftMessage: formData.giftMessage,
       };
 
       if (couponInfo?.code) {
@@ -577,6 +579,24 @@ const Checkout = () => {
                   <CreditCard className="h-5 w-5 mr-2" />
                   Payment Method
                 </h3>
+
+                {/* Gift Message Block */}
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    Gift Message (optional)
+                  </label>
+                  <textarea
+                    name="giftMessage"
+                    value={formData.giftMessage}
+                    onChange={handleChange}
+                    rows={3}
+                    maxLength={500}
+                    className="input-field bg-white"
+                    placeholder="Write a special message for your loved one..."
+                  />
+                  <p className="text-[10px] text-slate-400 mt-1">Maximum 500 characters</p>
+                </div>
+
                 <div className="space-y-3">
                   <label className="flex items-center p-3 border-2 border-maroon rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors">
                     <input

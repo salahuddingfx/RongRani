@@ -34,11 +34,11 @@ const AdminLayout = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-slate-50">
       <ScrollRevealManager />
 
       {/* Admin Header */}
-      <header className="bg-gradient-to-r from-maroon via-maroon to-pink-800 text-white shadow-2xl sticky top-0 z-50 border-b-4 border-pink-600">
+      <header className="bg-maroon text-white shadow-2xl sticky top-0 z-50 border-b-4 border-pink-600">
         <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex justify-between items-center">
             {/* Logo & Mobile Menu Button */}
@@ -105,7 +105,7 @@ const AdminLayout = () => {
         >
           <div className="h-full overflow-y-auto">
             {/* Mobile Header */}
-            <div className="lg:hidden sticky top-0 bg-gradient-to-r from-maroon to-pink-700 text-white p-4 flex items-center justify-between">
+            <div className="lg:hidden sticky top-0 bg-maroon text-white p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-2xl">🎁</span>
                 <div>
@@ -135,7 +135,7 @@ const AdminLayout = () => {
                         transition-all duration-200
                         group
                         ${isActive(item.path)
-                          ? 'bg-gradient-to-r from-maroon to-pink-700 text-white shadow-lg scale-105'
+                          ? 'bg-maroon text-white shadow-lg scale-105'
                           : 'text-slate-700 hover:bg-slate-100 hover:text-maroon'
                         }
                       `}

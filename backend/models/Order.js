@@ -169,6 +169,10 @@ const orderSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  giftMessage: {
+    type: String,
+    maxLength: [500, 'Gift message cannot exceed 500 characters'],
+  },
   total: {
     type: Number,
     required: true,

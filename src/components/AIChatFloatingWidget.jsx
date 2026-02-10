@@ -33,7 +33,7 @@ const AIChatFloatingWidget = () => {
 
   const getBotResponse = (userMessage) => {
     const msg = userMessage.toLowerCase();
-    
+
     if (msg.includes('love') || msg.includes('romantic') || msg.includes('প্রেম')) {
       return "💕 Perfect! Our Love Combo Special (৳2500) includes a handwritten love letter, chocolates, and a teddy bear. We also have Couple Rings Set (৳3500) and Valentine Special Combo (৳6500). Which one interests you?";
     } else if (msg.includes('anniversary') || msg.includes('বার্ষিকী')) {
@@ -117,11 +117,9 @@ const AIChatFloatingWidget = () => {
         <div className="floating-widget fixed bottom-24 lg:bottom-6 right-6 z-50 w-[calc(100vw-3rem)] sm:w-96 h-[50vh] sm:h-[520px] max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col">
           {/* Header */}
           <div
-            className="bg-gradient-to-r from-maroon via-maroon-light to-gold text-white p-4 flex items-center justify-between relative overflow-hidden"
+            className="bg-maroon text-white p-4 flex items-center justify-between relative overflow-hidden"
           >
-            <div className="absolute inset-0 opacity-20" style={{
-              backgroundImage: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.4) 0%, transparent 45%), radial-gradient(circle at 80% 0%, rgba(255,255,255,0.25) 0%, transparent 50%)'
-            }}></div>
+            <div className="absolute inset-0 opacity-20"></div>
             <div className="flex items-center space-x-3 relative z-10">
               <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg">
                 <span className="text-xs font-bold text-maroon">AI</span>
@@ -154,11 +152,10 @@ const AIChatFloatingWidget = () => {
                 className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                    message.sender === 'user'
+                  className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.sender === 'user'
                       ? 'bg-maroon text-white rounded-br-md shadow-lg'
                       : 'bg-white text-slate-700 border border-maroon/10 rounded-bl-md shadow-md'
-                  }`}
+                    }`}
                 >
                   {message.sender === 'bot' && (
                     <div className="flex items-center space-x-2 mb-2">
@@ -170,9 +167,9 @@ const AIChatFloatingWidget = () => {
                     {message.text}
                   </p>
                   <p className={`text-xs mt-2 ${message.sender === 'user' ? 'text-white/70' : 'text-slate-500'}`}>
-                    {new Date(message.timestamp).toLocaleTimeString('en-US', { 
-                      hour: '2-digit', 
-                      minute: '2-digit' 
+                    {new Date(message.timestamp).toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit'
                     })}
                   </p>
                 </div>

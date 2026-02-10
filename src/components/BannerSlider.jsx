@@ -10,7 +10,7 @@ const DEFAULT_BANNERS = [
     title: 'Handcrafted Excellence',
     subtitle: 'Discover Traditional Bengali Crafts',
     description: 'Each piece tells a story of heritage and craftsmanship',
-    bgColor: 'bg-gradient-to-br from-maroon via-maroon-light to-gold',
+    bgColor: 'bg-maroon',
     textColor: 'text-white',
     image: '/api/placeholder/800/400',
     link: '/shop'
@@ -20,7 +20,7 @@ const DEFAULT_BANNERS = [
     title: 'Summer Collection 2026',
     subtitle: 'New Arrivals - Up to 40% Off',
     description: 'Premium handwoven textiles and artisan crafts',
-    bgColor: 'bg-gradient-to-br from-emerald via-emerald-light to-teal',
+    bgColor: 'bg-emerald-600',
     textColor: 'text-white',
     image: '/api/placeholder/800/400',
     link: '/shop'
@@ -30,7 +30,7 @@ const DEFAULT_BANNERS = [
     title: 'Support Local Artisans',
     subtitle: 'Every Purchase Makes a Difference',
     description: 'Empowering craftspeople across Bangladesh',
-    bgColor: 'bg-gradient-to-br from-gold via-amber to-orange',
+    bgColor: 'bg-amber-500',
     textColor: 'text-charcoal',
     image: '/api/placeholder/800/400',
     link: '/shop'
@@ -53,7 +53,7 @@ const BannerSlider = () => {
         title: banner.title || 'Banner Title',
         subtitle: banner.subtitle || '',
         description: banner.description || '',
-        bgColor: banner.bgColor || 'bg-gradient-to-br from-maroon via-maroon-light to-gold',
+        bgColor: banner.bgColor || 'bg-maroon',
         textColor: banner.textColor || 'text-white',
         image: banner.image || '/api/placeholder/800/400',
         link: banner.link || '#'
@@ -112,7 +112,7 @@ const BannerSlider = () => {
 
   if (loading) {
     return (
-      <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
+      <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-3xl shadow-2xl bg-gray-200 animate-pulse" />
     );
   }
 
@@ -194,11 +194,10 @@ const BannerSlider = () => {
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`transition-all duration-300 rounded-full ${
-              currentSlide === index
+            className={`transition-all duration-300 rounded-full ${currentSlide === index
                 ? 'w-12 h-3 bg-white'
                 : 'w-3 h-3 bg-white/50 hover:bg-white/80'
-            }`}
+              }`}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}

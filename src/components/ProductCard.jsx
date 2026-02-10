@@ -48,7 +48,7 @@ const ProductCard = ({ product }) => {
         {/* Image Container */}
         <div className="relative overflow-hidden aspect-square bg-slate-100">
           {!imageLoaded && (
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-200 to-slate-100 animate-pulse" />
+            <div className="absolute inset-0 bg-slate-200 animate-pulse" />
           )}
           <img
             src={productImage}
@@ -60,14 +60,14 @@ const ProductCard = ({ product }) => {
               }`}
           />
 
-          {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
           {/* Top Badges */}
           <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
             {/* Discount Badge */}
             {hasDiscount && (
-              <div className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1 animate-bounce-slow">
+              <div className="bg-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1 animate-pulse">
                 <Zap className="w-3 h-3" />
                 {discountPercent}% {t('off')}
               </div>
@@ -75,8 +75,16 @@ const ProductCard = ({ product }) => {
 
             {/* New Badge */}
             {product.isNew && (
-              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+              <div className="bg-emerald-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
                 {t('new_arrival')}
+              </div>
+            )}
+
+            {/* Premium Badge for High Ratings */}
+            {product.rating >= 4.5 && (
+              <div className="bg-amber-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
+                <Star className="w-3 h-3 fill-white" />
+                {t('language') === 'bn' ? 'বেস্ট সেলার' : 'Best Seller'}
               </div>
             )}
           </div>
@@ -94,7 +102,7 @@ const ProductCard = ({ product }) => {
               <Eye className="h-4 w-4" />
             </button>
             <button
-              className="p-2.5 bg-white/95 backdrop-blur-sm rounded-xl hover:bg-pink-500 hover:text-white shadow-lg transform hover:scale-110 transition-all duration-300"
+              className="p-2.5 bg-white/95 backdrop-blur-sm rounded-xl hover:bg-pink-600 hover:text-white shadow-lg transform hover:scale-110 transition-all duration-300"
               aria-label={t('add_to_wishlist')}
             >
               <Heart className="h-4 w-4" />
@@ -113,7 +121,7 @@ const ProductCard = ({ product }) => {
             <button
               onClick={handleAddToCart}
               disabled={productStock === 0}
-              className="w-full bg-gradient-to-r from-maroon to-pink-600 text-white py-3 px-4 rounded-xl hover:from-maroon-dark hover:to-pink-700 font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transform"
+              className="w-full bg-maroon text-white py-3 px-4 rounded-xl hover:bg-maroon-dark font-bold transition-all duration-300 flex items-center justify-center gap-2 shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 transform"
             >
               <ShoppingCart className="h-5 w-5" />
               <span>{t('add_to_cart')}</span>
