@@ -202,7 +202,7 @@ const Footer = () => {
                   {t('language') === 'bn' ? 'ভালোবাসা দিয়ে তৈরি' : 'Developed with'} ❤️ {t('language') === 'bn' ? 'দ্বারা' : 'by'}{' '}
                   <button
                     onClick={() => setShowDevProfile(true)}
-                    className="text-pink-400 hover:text-pink-300 transition-colors font-semibold underline cursor-pointer"
+                    className="text-pink-400 hover:text-pink-300 transition-all font-bold underline cursor-pointer relative z-[10000] hover:scale-110 active:scale-95 inline-block"
                   >
                     Salah Uddin Kader
                   </button>
