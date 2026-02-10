@@ -12,7 +12,7 @@ const AppLayout = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-pink-50 text-gray-900">
+    <div className="min-h-screen bg-pink-50 text-charcoal">
       <Seo path={location.pathname} />
       <ScrollRevealManager />
       <div className="fixed top-0 left-0 right-0 z-50">
@@ -23,10 +23,10 @@ const AppLayout = () => {
         <Outlet />
       </main>
       <Footer />
-      
+
       {/* AI Chat Widget - All Devices */}
       <AIChatFloatingWidget />
-      
+
       <BottomNav />
     </div>
   );

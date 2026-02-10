@@ -153,8 +153,8 @@ const AIChatFloatingWidget = () => {
               >
                 <div
                   className={`max-w-[80%] rounded-2xl px-4 py-3 ${message.sender === 'user'
-                      ? 'bg-maroon text-white rounded-br-md shadow-lg'
-                      : 'bg-white text-slate-700 border border-maroon/10 rounded-bl-md shadow-md'
+                    ? 'bg-maroon text-white rounded-br-md shadow-lg'
+                    : 'bg-white text-slate-700 border border-maroon/10 rounded-bl-md shadow-md'
                     }`}
                 >
                   {message.sender === 'bot' && (
@@ -187,13 +187,11 @@ const AIChatFloatingWidget = () => {
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Type your message... (Press Enter to send)"
-                  className="w-full px-4 py-3 pr-12 border-2 border-maroon/20 rounded-2xl focus:outline-none focus:border-maroon resize-none text-sm text-slate-800 scrollbar-hide"
+                  className="w-full px-4 py-3 pr-12 border-2 border-maroon/20 rounded-2xl focus:outline-none focus:border-maroon resize-none text-sm text-slate-800 dark:text-gray-100 bg-white dark:bg-slate-700 scrollbar-hide"
                   rows={1}
                   style={{
                     minHeight: '48px',
-                    maxHeight: '120px',
-                    color: '#1f2937',
-                    backgroundColor: '#ffffff'
+                    maxHeight: '120px'
                   }}
                 />
               </div>
