@@ -33,15 +33,15 @@
   .dark .bg-white\/30,
   .dark .bg-white\/70,
   .dark .bg-white\/80 {
-    @apply bg-slate-800\/60 backdrop-blur-md border-slate-700\/50 !important;
+    @apply bg-slate-800/60 backdrop-blur-md border-slate-700/50 !important;
   }
 
   .dark .bg-gray-800\/20 {
-    @apply bg-slate-800\/60 border-slate-700\/50 !important;
+    @apply bg-slate-800/60 border-slate-700/50 !important;
   }
 
   .dark .bg-slate\/10 {
-    @apply bg-slate-700\/40 !important;
+    @apply bg-slate-700/40 !important;
   }
 
   .dark .bg-pink-50 {
@@ -62,22 +62,22 @@
 
   .dark .bg-green-50,
   .dark .bg-green-100 {
-    @apply bg-green-900\/30 text-green-100 !important;
+    @apply bg-green-900/30 text-green-100 !important;
   }
 
   .dark .bg-blue-50,
   .dark .bg-blue-100 {
-    @apply bg-blue-900\/30 text-blue-100 !important;
+    @apply bg-blue-900/30 text-blue-100 !important;
   }
 
   .dark .bg-amber-50,
   .dark .bg-amber-100 {
-    @apply bg-amber-900\/30 text-amber-100 !important;
+    @apply bg-amber-900/30 text-amber-100 !important;
   }
 
   .dark .bg-red-50,
   .dark .bg-red-100 {
-    @apply bg-red-900\/30 text-red-100 !important;
+    @apply bg-red-900/30 text-red-100 !important;
   }
 
   .dark .text-maroon {
@@ -109,7 +109,7 @@
   }
 
   .dark .text-maroon\/60 {
-    @apply text-pink-300\/80 !important;
+    @apply text-pink-300/80 !important;
   }
 
   .dark .text-slate-500 {
