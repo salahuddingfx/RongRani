@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image, Plus, Edit, Trash2, Eye, EyeOff, Upload, X } from 'lucide-react';
+import { Image, Plus, Edit, Trash2, Eye, EyeOff, Upload, X, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
