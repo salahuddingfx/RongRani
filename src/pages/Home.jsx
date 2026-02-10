@@ -376,7 +376,7 @@ const Home = () => {
                 );
               })}
               <Link to="/shop" className="flex-shrink-0 w-40 group">
-                <div className="bg-emerald rounded-2xl p-4 text-left shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                <div className="bg-teal-600 rounded-2xl p-4 text-left shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                   <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                     <Shirt className="h-5 w-5 text-white" />
                   </div>
@@ -434,7 +434,7 @@ const Home = () => {
               className="group animate-fade-in-up"
               style={{ animationDelay: `${categories.length * 0.1}s` }}
             >
-              <div className="bg-emerald rounded-2xl p-6 text-left shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="bg-teal-600 rounded-2xl p-6 text-left shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div className="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Shirt className="h-6 w-6 text-white" />
                 </div>
