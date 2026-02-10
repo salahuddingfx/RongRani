@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Trash2, Edit, Search, Package } from 'lucide-react';
+import { Plus, Trash2, Edit, Search, Package, Globe, Tag, Settings } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useSocket } from '../contexts/socketContextBase';
@@ -434,13 +434,16 @@ const AdminProducts = () => {
                 </p>
               </div>
 
-              {/* Advanced - Tags & SEO */}
               <div className="border-t border-slate/10 pt-6 mt-6">
-                <h3 className="text-lg font-bold text-maroon mb-4">SEO & Search Optimization</h3>
+                <h3 className="text-xl font-bold text-maroon mb-6 flex items-center space-x-2">
+                  <Settings className="h-6 w-6" />
+                  <span>SEO & Search Optimization</span>
+                </h3>
 
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-semibold text-slate mb-2">
+                    <label className="flex items-center text-sm font-semibold text-slate mb-2">
+                      <Tag className="h-4 w-4 mr-2 text-maroon" />
                       Search Tags (Keywords)
                       <span className="text-xs font-normal text-slate-500 ml-2">
                         💡 Separate with commas (e.g., gift, handmade, birthday)
@@ -455,9 +458,12 @@ const AdminProducts = () => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-semibold text-slate mb-2">SEO Title</label>
+                      <label className="flex items-center text-sm font-semibold text-slate mb-2">
+                        <Globe className="h-4 w-4 mr-2 text-maroon" />
+                        SEO Title
+                      </label>
                       <input
                         type="text"
                         value={formData.seoTitle}
@@ -467,7 +473,10 @@ const AdminProducts = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-slate mb-2">SEO Description</label>
+                      <label className="flex items-center text-sm font-semibold text-slate mb-2">
+                        <Search className="h-4 w-4 mr-2 text-maroon" />
+                        SEO Description
+                      </label>
                       <textarea
                         value={formData.seoDescription}
                         onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}

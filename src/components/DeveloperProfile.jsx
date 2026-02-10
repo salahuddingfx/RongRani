@@ -46,25 +46,25 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
       aria-modal="true"
     >
       <div
-        className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto animate-slide-up"
+        className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto animate-slide-up relative custom-scrollbar scroll-smooth"
         onClick={(event) => event.stopPropagation()}
       >
         {/* Header */}
         <div className="bg-maroon text-white p-6 sm:p-8 md:p-10 overflow-hidden sticky top-0 z-10">
-          
+
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 hover:bg-white/20 rounded-full transition-all hover:scale-110 hover:rotate-90 duration-300 z-20"
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all hover:scale-110 hover:rotate-90 duration-300 z-30 backdrop-blur-md"
             aria-label="Close developer profile"
           >
             <X className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
-          
+
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-5 sm:gap-7">
             <div className="relative group">
               <div className="w-28 h-28 sm:w-36 sm:h-36 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center shrink-0 border-4 border-white/30 overflow-hidden shadow-2xl group-hover:scale-105 transition-transform duration-300 rotate-3 group-hover:rotate-0">
-                <img 
-                  src="https://github.com/salahuddingfx.png" 
+                <img
+                  src="https://github.com/salahuddingfx.png"
                   alt="Salah Uddin Kader"
                   className="w-full h-full object-cover"
                   onError={(e) => {
@@ -99,11 +99,11 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
               </div>
               <h3 className="text-2xl sm:text-3xl font-bold text-maroon dark:text-pink-600">About Me</h3>
             </div>
-            <p className="text-sm sm:text-base text-slate-700 leading-relaxed pl-13 sm:pl-15 border-l-4 border-maroon/30 pl-5">
-              Passionate Full Stack Developer specializing in the MERN stack with 1.5+ years of experience 
-              building scalable web applications. I create beautiful, user-friendly interfaces and robust 
-              backend systems. Based in the scenic Cox's Bazar, I work with clients worldwide to bring 
-              their digital visions to life.
+            <p className="text-sm sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed border-l-4 border-maroon dark:border-pink-600 pl-4 sm:pl-6 py-1 italic shadow-sm bg-maroon/5 dark:bg-pink-600/5 rounded-r-2xl">
+              "Passionate Full Stack Developer specializing in the MERN stack with 1.5+ years of experience
+              building scalable web applications. I create beautiful, user-friendly interfaces and robust
+              backend systems. Based in the scenic Cox's Bazar, I work with clients worldwide to bring
+              their digital visions to life."
             </p>
           </div>
 
@@ -124,7 +124,7 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
                     <span
                       key={skill}
                       className="px-4 py-2 sm:px-5 sm:py-2.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 rounded-xl text-xs sm:text-sm font-semibold border-2 border-blue-200 dark:border-blue-700 hover:scale-105 hover:shadow-lg hover:border-blue-400 transition-all duration-200 cursor-pointer"
-                      style={{animationDelay: `${index * 50}ms`}}
+                      style={{ animationDelay: `${index * 50}ms` }}
                     >
                       {skill}
                     </span>
@@ -145,7 +145,7 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
                     <span
                       key={skill}
                       className="px-4 py-2 sm:px-5 sm:py-2.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200 rounded-xl text-xs sm:text-sm font-semibold border-2 border-green-200 dark:border-green-700 hover:scale-105 hover:shadow-lg hover:border-green-400 transition-all duration-200 cursor-pointer"
-                      style={{animationDelay: `${index * 50}ms`}}
+                      style={{ animationDelay: `${index * 50}ms` }}
                     >
                       {skill}
                     </span>
@@ -161,18 +161,17 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
                   </div>
                   <h3 className="text-xl sm:text-2xl font-bold text-maroon dark:text-pink-600">Tools & Technologies</h3>
                 </div>
-                <div className="flex flex-wrap gap-2 sm:gap-3">
+                <div className="flex flex-wrap gap-2 sm:gap-4">
                   {skills.tools.map((skill, index) => {
                     const IconComponent = toolIcons[skill];
                     return (
                       <div
                         key={skill}
-                        className="px-4 py-2 sm:px-5 sm:py-2.5 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-200 rounded-xl text-xs sm:text-sm font-semibold border-2 border-purple-200 dark:border-purple-700 hover:scale-105 hover:shadow-lg hover:border-purple-400 transition-all duration-200 cursor-pointer flex items-center gap-2"
-                        style={{animationDelay: `${index * 50}ms`}}
-                        title={skill}
+                        className="px-4 py-2 sm:px-6 sm:py-3 bg-white dark:bg-slate-700 text-purple-700 dark:text-purple-300 rounded-2xl text-xs sm:text-sm font-bold border-2 border-purple-100 dark:border-purple-900 shadow-sm hover:shadow-purple-200 dark:hover:shadow-black/40 hover:scale-105 hover:border-purple-400 transition-all duration-300 flex items-center gap-2 group/tool"
+                        style={{ animationDelay: `${index * 50}ms` }}
                       >
                         {IconComponent && (
-                          <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+                          <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 text-purple-500 group-hover/tool:rotate-12 transition-transform" />
                         )}
                         <span>{skill}</span>
                       </div>
@@ -195,18 +194,21 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
                     href={url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center p-4 sm:p-5 text-white rounded-2xl hover:scale-105 hover:shadow-2xl transition-all duration-300 group"
+                    className="flex items-center p-4 sm:p-6 text-white rounded-3xl hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 group overflow-hidden relative"
                     style={{ backgroundColor: bg }}
                   >
+                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-150 transition-transform duration-700">
+                      <Icon className="h-16 w-16" />
+                    </div>
                     <div
-                      className="w-12 h-12 rounded-xl flex items-center justify-center mr-3 group-hover:scale-110 transition-all duration-300"
+                      className="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 group-hover:rotate-12 transition-all duration-300 shadow-lg relative z-10"
                       style={{ backgroundColor: iconBg }}
                     >
                       <Icon className="h-6 w-6 text-white" />
                     </div>
-                    <div>
-                      <span className="text-base sm:text-lg font-bold block">{label}</span>
-                      <span className="text-xs text-white/80">Visit Profile</span>
+                    <div className="relative z-10">
+                      <span className="text-base sm:text-xl font-bold block">{label}</span>
+                      <span className="text-xs text-white/70 font-medium">Follow Profile →</span>
                     </div>
                   </a>
                 );
