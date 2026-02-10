@@ -1,8 +1,8 @@
 {
-  "name": "chirkut-ghor-frontend",
+  "name": "rongrani-frontend",
   "private": true,
   "version": "1.0.0",
-  "description": "Frontend for Chirkut ঘর - A modern React e-commerce platform with bilingual support",
+  "description": "Frontend for RongRani - A modern React e-commerce platform with bilingual support",
   "type": "module",
   "scripts": {
     "dev": "vite",

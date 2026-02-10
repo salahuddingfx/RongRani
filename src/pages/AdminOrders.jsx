@@ -94,19 +94,19 @@ const AdminOrders = () => {
         { courierDetails: details },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
+
       toast.success(response.data.message || 'Order sent to courier successfully!', {
         id: loadingToast,
         duration: 5000,
       });
-      
+
       if (response.data.courierInfo?.trackingCode) {
         toast.success(
           `Tracking Code: ${response.data.courierInfo.trackingCode}`,
           { duration: 8000 }
         );
       }
-      
+
       fetchOrders();
     } catch (error) {
       const data = error.response?.data;
@@ -244,11 +244,10 @@ const AdminOrders = () => {
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                className={`px-4 py-2 rounded-lg font-semibold capitalize transition-all ${
-                  statusFilter === status
+                className={`px-4 py-2 rounded-lg font-semibold capitalize transition-all ${statusFilter === status
                     ? 'bg-maroon text-white shadow-medium'
                     : 'bg-cream-light text-charcoal hover:bg-maroon/10'
-                }`}
+                  }`}
               >
                 {status}
               </button>
@@ -284,14 +283,14 @@ const AdminOrders = () => {
                     <p className="text-charcoal font-medium">
                       {order.shippingAddress
                         ? [
-                            order.shippingAddress.street,
-                            order.shippingAddress.union,
-                            order.shippingAddress.subDistrict,
-                            order.shippingAddress.district,
-                            order.shippingAddress.division,
-                            order.shippingAddress.city,
-                            order.shippingAddress.postalCode || order.shippingAddress.zipCode,
-                          ].filter(Boolean).join(', ')
+                          order.shippingAddress.street,
+                          order.shippingAddress.union,
+                          order.shippingAddress.subDistrict,
+                          order.shippingAddress.district,
+                          order.shippingAddress.division,
+                          order.shippingAddress.city,
+                          order.shippingAddress.postalCode || order.shippingAddress.zipCode,
+                        ].filter(Boolean).join(', ')
                         : 'N/A'}
                     </p>
                   </div>
@@ -324,18 +323,18 @@ const AdminOrders = () => {
 
                 <div className="flex flex-col items-end space-y-3">
                   {/* Send to Courier Button */}
-                  {!order.courierInfo?.consignmentId && 
-                   order.orderStatus !== 'delivered' && 
-                   order.orderStatus !== 'cancelled' && (
-                    <button
-                      onClick={() => openCourierModal(order)}
-                      className="px-4 py-2 rounded-lg text-sm font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors flex items-center gap-2 border-2 border-emerald-300"
-                    >
-                      <Truck className="h-4 w-4" />
-                      Send to Courier
-                    </button>
-                  )}
-                  
+                  {!order.courierInfo?.consignmentId &&
+                    order.orderStatus !== 'delivered' &&
+                    order.orderStatus !== 'cancelled' && (
+                      <button
+                        onClick={() => openCourierModal(order)}
+                        className="px-4 py-2 rounded-lg text-sm font-semibold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors flex items-center gap-2 border-2 border-emerald-300"
+                      >
+                        <Truck className="h-4 w-4" />
+                        Send to Courier
+                      </button>
+                    )}
+
                   {/* Show tracking info if already sent */}
                   {order.courierInfo?.trackingCode && (
                     <div className="px-4 py-2 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 border-2 border-blue-300">
@@ -362,6 +361,38 @@ const AdminOrders = () => {
                       <option value="cancelled">Cancelled</option>
                     </select>
                   )}
+
+                  {/* Payment Status Dropdown for Admin */}
+                  <div className="flex items-center space-x-2 w-full justify-end mt-2">
+                    <span className="text-xs font-bold text-slate">Payment:</span>
+                    <select
+                      value={order.paymentStatus || 'pending'}
+                      onChange={async (e) => {
+                        const newStatus = e.target.value;
+                        const confirmMsg = newStatus === 'paid'
+                          ? "Mark this order as PAID? This will count towards revenue."
+                          : "Change payment status?";
+
+                        if (window.confirm(confirmMsg)) {
+                          try {
+                            const token = localStorage.getItem('token');
+                            await axios.put(`/api/admin/orders/${order._id}`, {
+                              paymentStatus: newStatus
+                            }, { headers: { Authorization: `Bearer ${token}` } });
+                            toast.success(`Payment marked as ${newStatus}`);
+                            fetchOrders();
+                          } catch {
+                            toast.error('Failed to update payment status');
+                          }
+                        }
+                      }}
+                      className={`input-field text-sm py-1 px-2 w-auto border-2 ${order.paymentStatus === 'paid' ? 'border-green-500 text-green-700' : 'border-orange-300 text-orange-700'}`}
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="paid">Paid</option>
+                      <option value="failed">Failed</option>
+                    </select>
+                  </div>
                   <button
                     onClick={() => handleDeleteOrder(order._id)}
                     className="px-4 py-2 rounded-lg text-sm font-semibold bg-red-50 text-red-700 hover:bg-red-100 transition-colors"

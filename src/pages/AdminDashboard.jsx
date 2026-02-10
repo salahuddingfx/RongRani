@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Package, ShoppingBag, Users, DollarSign, TrendingUp, Ticket, BarChart3, ArrowUp, ArrowDown } from 'lucide-react';
+import { Package, ShoppingBag, Users, DollarSign, TrendingUp, Ticket, BarChart3, ArrowUp, ArrowDown, Zap } from 'lucide-react';
 import axios from 'axios';
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
@@ -75,7 +75,7 @@ const AdminDashboard = () => {
           <p className="text-sm mt-2">Make sure the backend server is running on port 5000</p>
         </div>
       )}
-      
+
       <h1 className="text-3xl font-bold text-maroon mb-8">Admin Dashboard</h1>
 
       {/* Stats Grid */}
@@ -168,6 +168,14 @@ const AdminDashboard = () => {
             <ShoppingBag className="h-8 w-8 text-purple-600" />
             <span className="font-bold text-charcoal">View Orders</span>
           </Link>
+
+          <Link
+            to="/admin/flash-sale"
+            className="flex items-center space-x-3 p-5 bg-pink-100 hover:bg-pink-200 rounded-xl transition-all duration-300 shadow-soft hover:shadow-medium border-2 border-pink-200 hover:border-pink-300"
+          >
+            <Zap className="h-8 w-8 text-pink-600" />
+            <span className="font-bold text-charcoal">Flash Sales</span>
+          </Link>
         </div>
       </div>
 
@@ -183,14 +191,14 @@ const AdminDashboard = () => {
             <AreaChart data={revenueData}>
               <defs>
                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8B1538" stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor="#8B1538" stopOpacity={0}/>
+                  <stop offset="5%" stopColor="#8B1538" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#8B1538" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey="name" stroke="#666" />
               <YAxis stroke="#666" />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ backgroundColor: 'white', border: '1px solid #8B1538', borderRadius: '8px' }}
                 labelStyle={{ color: '#8B1538', fontWeight: 'bold' }}
               />
@@ -222,7 +230,7 @@ const AdminDashboard = () => {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ backgroundColor: 'white', border: '1px solid #8B1538', borderRadius: '8px' }}
               />
             </PieChart>
@@ -240,7 +248,7 @@ const AdminDashboard = () => {
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
               <XAxis dataKey="status" stroke="#666" />
               <YAxis stroke="#666" />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ backgroundColor: 'white', border: '1px solid #8B1538', borderRadius: '8px' }}
                 labelStyle={{ color: '#8B1538', fontWeight: 'bold' }}
               />
@@ -264,12 +272,11 @@ const AdminDashboard = () => {
               {topProducts.map((product, idx) => (
                 <div key={product._id || idx} className="flex items-center justify-between p-4 bg-cream-light rounded-lg hover:shadow-md transition-all">
                   <div className="flex items-center space-x-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      idx === 0 ? 'bg-gold/20 text-gold' :
-                      idx === 1 ? 'bg-slate/20 text-slate' :
-                      idx === 2 ? 'bg-amber-500/20 text-amber-600' :
-                      'bg-slate/10 text-slate'
-                    }`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${idx === 0 ? 'bg-gold/20 text-gold' :
+                        idx === 1 ? 'bg-slate/20 text-slate' :
+                          idx === 2 ? 'bg-amber-500/20 text-amber-600' :
+                            'bg-slate/10 text-slate'
+                      }`}>
                       <span className="font-black text-lg">#{idx + 1}</span>
                     </div>
                     <div>

@@ -23,7 +23,7 @@ const generateInvoice = (order) => {
       
       // Header
       doc.fillColor('#FFFFFF');
-      doc.fontSize(32).font('Helvetica-Bold').text('Chirkut ঘর', 50, 40);
+      doc.fontSize(32).font('Helvetica-Bold').text('RongRani', 50, 40);
       doc.fontSize(14).font('Helvetica').text('Premium Handcrafted Gifts', 50, 75);
       doc.fontSize(10).text('Cox\'s Bazar, Bangladesh', 50, 92);
       doc.fontSize(10).text('Email: support@chirkutghor.com', 50, 107);
@@ -172,7 +172,7 @@ const generateInvoice = (order) => {
       doc.moveTo(50, footerY).lineTo(545, footerY).stroke('#D4AF37');
       doc.fontSize(8).fillColor('#999999');
       doc.text('This is a computer-generated invoice and does not require a signature.', 50, footerY + 10, { align: 'center', width: 495 });
-      doc.text('Chirkut ঘর © 2026 • All Rights Reserved', 50, footerY + 25, { align: 'center', width: 495 });
+      doc.text('RongRani © 2026 • All Rights Reserved', 50, footerY + 25, { align: 'center', width: 495 });
       
       doc.end();
     } catch (error) {
@@ -194,7 +194,7 @@ const generateReport = (data, type) => {
       });
       
       // Header
-      doc.fontSize(20).text('Chirkut ঘর', { align: 'center' });
+      doc.fontSize(20).text('RongRani', { align: 'center' });
       doc.fontSize(14).text(`${type} Report`, { align: 'center' });
       doc.text(`Generated on: ${new Date().toLocaleDateString()}`, { align: 'center' });
       doc.moveDown();

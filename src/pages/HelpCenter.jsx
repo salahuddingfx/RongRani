@@ -175,8 +175,8 @@ const HelpCenter = () => {
   return (
     <div className="min-h-screen bg-pink-50 py-16 px-4">
       <Seo
-        title="Help Center | Chirkut Ghor Gift Delivery FAQs"
-        description="Find answers about gift orders, delivery, payments, and returns. Browse Chirkut Ghor help topics and FAQs."
+        title="Help Center | RongRani Gift Delivery FAQs"
+        description="Find answers about gift orders, delivery, payments, and returns. Browse RongRani help topics and FAQs."
         path="/help"
       />
       <div className="max-w-6xl mx-auto">

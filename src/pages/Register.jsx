@@ -48,13 +48,13 @@ const Register = () => {
       return;
     }
 
-    try {
+      try {
       await register({
         name: formData.name,
         email: formData.email,
         password: formData.password
       });
-      toast.success('Account created successfully! Welcome to Chirkut ঘর');
+      toast.success('Account created successfully! Welcome to RongRani');
       navigate(from === '/cart' ? '/checkout' : from);
     } catch (error) {
       setError(error.response?.data?.message || 'Registration failed');
@@ -73,7 +73,7 @@ const Register = () => {
       <div className="pt-8 pb-4">
         <div className="flex justify-center">
           <Link to="/" className="text-2xl font-bold text-maroon">
-            Chirkut ঘর
+            RongRani
           </Link>
         </div>
       </div>
@@ -112,7 +112,7 @@ const Register = () => {
         <div className="glass-card w-full max-w-md p-8">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-maroon mb-2">Create Account</h2>
-            <p className="text-slate text-sm">Join Chirkut ঘর and unlock lifetime benefits</p>
+            <p className="text-slate text-sm">Join RongRani and unlock lifetime benefits</p>
           </div>
 
           {/* Message from Cart */}

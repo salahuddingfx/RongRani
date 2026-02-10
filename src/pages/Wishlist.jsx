@@ -9,7 +9,7 @@ const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([
     {
       _id: '11',
-      name: 'Love Combo - Chirkut Special',
+      name: 'Love Combo - RongRani Special',
       price: 2500,
       originalPrice: 3000,
       images: ['https://images.unsplash.com/photo-1518893063132-36e46dbe2428?w=500'],

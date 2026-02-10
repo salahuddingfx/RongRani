@@ -1,1110 +1,712 @@
 <div align="center">
 
-# 🎁 Chirkut ঘর - Bangladeshi Gift E-commerce Platform
+![RongRani Banner](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=35&duration=3000&pause=1000&color=800020&center=true&vCenter=true&multiline=true&repeat=false&width=800&height=100&lines=🎁+RongRani;Premium+Handmade+Gifts+%26+Crafts)
 
-<img src="./frontend/public/Chirkut-Ghor-logo-1.png" alt="Chirkut Ghor Logo" width="120" height="120" />
+<img src="https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React"/>
+<img src="https://img.shields.io/badge/Node.js-18.x-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js"/>
+<img src="https://img.shields.io/badge/MongoDB-6.0-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB"/>
+<img src="https://img.shields.io/badge/Express-4.18-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express"/>
+<img src="https://img.shields.io/badge/TailwindCSS-3.3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"/>
+<img src="https://img.shields.io/badge/bKash-Payment-E2136E?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA&logoColor=white" alt="bKash"/>
 
-### একটি সম্পূর্ণ বাংলাদেশী উপহার ই-কমার্স প্ল্যাটফর্ম
+### 🌟 Full-Stack E-Commerce Platform with Bengali Support
 
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
-[![Node Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
-[![React Version](https://img.shields.io/badge/react-19.2.0-blue)](https://reactjs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)](https://www.mongodb.com/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-![No API Keys Required](https://img.shields.io/badge/Setup-No%20API%20Keys%20Required-success)
+![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=800020&center=true&vCenter=true&width=600&lines=Modern+MERN+Stack+Application;Bilingual+(English+%2B+Bengali);bKash+Payment+Integration;Real-time+Notifications;AI-Powered+Recommendations)
 
-**[Live Demo](#) • [Quick Start](QUICKSTART.md) • [Report Bug](https://github.com/yourusername/chirkut-ghor/issues) • [Request Feature](https://github.com/yourusername/chirkut-ghor/issues)**
+[🚀 Live Demo](#) | [📖 Documentation](#-features) | [🐛 Report Bug](https://github.com/salahuddingfx/rongrani/issues) | [✨ Request Feature](https://github.com/salahuddingfx/rongrani/issues)
 
----
-
-> 🚀 **New to the project?** Check out [QUICKSTART.md](QUICKSTART.md) for a 5-minute setup with **NO API keys required!**
-
----
-
-A complete, production-ready **MERN stack** e-commerce platform for **"Chirkut ঘর"**, a Bangladeshi gift brand specializing in traditional and modern gifts. Built with modern web technologies, featuring bilingual support (🇧🇩 Bangla & 🇬🇧 English), AI-powered gift recommendations, and glassmorphism UI. Ideal for handmade gifts, surprise boxes, and Bangladesh gift shop workflows.
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="700">
 
 </div>
 
 ---
 
-## 📸 Screenshots
+## 📋 Table of Contents
+
+- [✨ Features](#-features)
+- [🎨 Screenshots](#-screenshots)
+- [🛠️ Tech Stack](#️-tech-stack)
+- [🚀 Getting Started](#-getting-started)
+- [💳 bKash Integration](#-bkash-integration)
+- [📁 Project Structure](#-project-structure)
+- [🔧 Configuration](#-configuration)
+- [🌐 API Documentation](#-api-documentation)
+- [🎯 Roadmap](#-roadmap)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [👨‍💻 Author](#-author)
+
+---
 
 <div align="center">
 
-### 🏠 Home Page
-> Coming Soon - Add your screenshot here
+## ✨ Features
 
-### 🛍️ Product Catalog
-> Coming Soon - Add your screenshot here
-
-### 🛒 Shopping Cart
-> Coming Soon - Add your screenshot here
-
-### 👨‍💼 Admin Dashboard
-> Coming Soon - Add your screenshot here
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="1000">
 
 </div>
 
----
-
-## ✨ Key Features
+### 🛍️ Customer Features
 
 <table>
 <tr>
-<td>
+<td width="50%">
 
-### 🛒 **E-commerce Core**
-- 📦 Product catalog with categories
-- 🛍️ Shopping cart & wishlist
-- 💳 Checkout process
-- 📱 Order tracking
-- 🔍 Advanced search & filters
-- ⭐ Product reviews & ratings
-
-</td>
-<td>
-
-### 🎨 **UI/UX Excellence**
-- 🌈 Glassmorphism design
-- 🌓 Light/Dark mode
-- 📱 Fully responsive
-- 🌐 Bilingual (Bangla/English)
-- ⚡ Fast & smooth animations
-- ♿ Accessible components
+#### 🎯 Core Shopping Experience
+- ✅ **Product Browsing** with advanced filters
+- ✅ **Smart Search** with real-time suggestions
+- ✅ **Product Categories** with beautiful UI
+- ✅ **Wishlist** functionality
+- ✅ **Shopping Cart** with quantity management
+- ✅ **Guest Checkout** support
+- ✅ **Order Tracking** system
+- ✅ **Product Reviews** & ratings
 
 </td>
-</tr>
-<tr>
-<td>
+<td width="50%">
 
-### 🔐 **Authentication & Security**
-- 🔑 JWT authentication
-- 🌐 OAuth (Google/Facebook)
-- 👥 Role-based access control
-- 🛡️ Rate limiting & security headers
-- 🔒 Password encryption
-- ✅ Input validation
-
-</td>
-<td>
-
-### 🤖 **AI & Automation**
-- 💬 AI chatbot (Gemini)
-- 🎁 Gift recommendations
-- 📧 Automated emails
-- 📊 Smart analytics
-- 🔔 Real-time notifications
-- 📄 PDF invoice generation
-
-</td>
-</tr>
-<tr>
-<td>
-
-### 👨‍💼 **Admin Panel**
-- 📊 Analytics dashboard
-- 📦 Product management
-- 📋 Order management
-- 👥 User management
-- 🎫 Coupon management
-- 🎨 Banner & promotions
-
-</td>
-<td>
-
-### 💰 **Payment & Delivery**
-- 💵 Cash on Delivery
-- 📱 bKash/Nagad manual entry
-- 🚚 Delivery tracking
-- 📍 Area-based delivery
-- 💰 Dynamic delivery charges
-- 🎟️ Discount coupons
+#### 🌟 Enhanced Features
+- ✅ **Hot Offers** banner system
+- ✅ **Recently Viewed** products
+- ✅ **Related Products** suggestions
+- ✅ **AI-Powered Recommendations**
+- ✅ **Real-time Notifications** (Socket.io)
+- ✅ **Newsletter** subscription
+- ✅ **Responsive Design** (Mobile-first)
+- ✅ **Page Transitions** & animations
 
 </td>
 </tr>
 </table>
 
----
-
-## 🛠️ Tech Stack
+### 🌐 Bilingual Support
 
 <div align="center">
 
-### Frontend 🎨
-![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![Vite](https://img.shields.io/badge/Vite-5.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-
-### Backend ⚙️
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
-![Mongoose](https://img.shields.io/badge/Mongoose-ODM-880000?style=for-the-badge&logo=mongodb&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)
-
-### Services & APIs 🌐
-![Cloudinary](https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white)
-![Google Gemini](https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white)
-![Brevo](https://img.shields.io/badge/Brevo-Email-0B996E?style=for-the-badge&logo=mail.ru&logoColor=white)
-![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)
-
-### Development Tools 🛠️
-![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)
-![PostCSS](https://img.shields.io/badge/PostCSS-DD3A0A?style=for-the-badge&logo=postcss&logoColor=white)
-![Nodemon](https://img.shields.io/badge/Nodemon-76D04B?style=for-the-badge&logo=nodemon&logoColor=white)
+| Feature | Status |
+|---------|--------|
+| 🇧🇩 **Full Bengali Translation** | ✅ Complete UI in Bengali |
+| 🇬🇧 **English Support** | ✅ Seamless language switching |
+| 💾 **Persistent Language** | ✅ Saves user preference |
+| 🔄 **Dynamic Content** | ✅ All content translates instantly |
 
 </div>
 
-<details>
-<summary><b>📦 Complete Technology Stack</b></summary>
+### 💳 Payment & Checkout
 
-### Frontend Technologies
+<div align="center">
 
-#### Core Libraries
-- **React 19.2.0** - Modern UI library with hooks and concurrent features
-- **Vite 5.x** - Lightning-fast build tool and dev server
-- **React DOM 19.2.0** - React rendering for web
+```mermaid
+graph LR
+    A[Cart] --> B[Checkout]
+    B --> C[bKash Payment]
+    C --> D{Payment Status}
+    D -->|Success| E[Order Confirmed]
+    D -->|Failed| F[Retry Payment]
+    D -->|Cancelled| G[Return to Cart]
+```
 
-#### Routing & Navigation
-- **React Router DOM 6.x** - Client-side routing and navigation
+</div>
 
-#### Styling & UI
-- **Tailwind CSS 3.x** - Utility-first CSS framework
-- **PostCSS 8.x** - CSS transformations
-- **Autoprefixer 10.x** - CSS vendor prefixing
-- **Lucide React** - Beautiful icon library
-- **Headless UI 1.x** - Unstyled accessible components
+- 💰 **bKash Integration** - Secure mobile payment
+- 📦 **Multiple Delivery Options**
+- 🎟️ **Coupon System** with validation
+- 📧 **Email Notifications** for orders
+- 📱 **SMS Notifications** (optional)
+- 🔄 **Refund System** (Admin)
 
-#### State Management & Data Fetching
-- **Axios 1.6** - Promise-based HTTP client
-- **TanStack React Query 5.x** - Powerful async state management
+### 👨‍💼 Admin Panel
 
-#### Forms & Validation
-- **React Hook Form 7.x** - Performant form library
+<table>
+<tr>
+<td width="50%">
 
-#### Internationalization (i18n)
-- **i18next 23.x** - Internationalization framework
-- **react-i18next 13.x** - React bindings for i18next
-- **i18next-browser-languagedetector 7.x** - Language detection
+#### 📊 Dashboard & Analytics
+- ✅ **Sales Analytics** with charts
+- ✅ **Revenue Tracking**
+- ✅ **Customer Insights**
+- ✅ **Product Performance**
+- ✅ **Real-time Statistics**
+- ✅ **Responsive Design**
 
-#### Charts & Data Visualization
-- **Chart.js 4.x** - Flexible charting library
-- **React Chart.js 2** - React wrapper for Chart.js
-- **Recharts 3.x** - Composable charting library
+</td>
+<td width="50%">
 
-#### UI Enhancements
-- **React Hot Toast 2.x** - Lightweight notifications
-- **React DatePicker 4.x** - Date picker component
-- **React Helmet Async 2.x** - Document head manager for SEO
+#### 🔧 Management Tools
+- ✅ **Product Management** (CRUD)
+- ✅ **Order Management**
+- ✅ **User Management**
+- ✅ **Category Management**
+- ✅ **Banner Management**
+- ✅ **Hot Offer Settings**
+- ✅ **Review Moderation**
+- ✅ **Coupon Management**
 
-#### Development Tools
-- **ESLint 9.x** - JavaScript linting
-- **Vite PWA Plugin** - Progressive Web App support
+</td>
+</tr>
+</table>
 
----
+### 🎨 Design & UX
 
-### Backend Technologies
+<div align="center">
 
-#### Core Framework
-- **Node.js 16+** - JavaScript runtime
-- **Express 4.x** - Fast web framework
+| Feature | Description |
+|---------|-------------|
+| 🎨 **Modern UI/UX** | Clean, intuitive interface |
+| 📱 **Fully Responsive** | Mobile-first design approach |
+| ⚡ **Fast Performance** | Optimized loading & rendering |
+| 🌈 **Smooth Animations** | Delightful page transitions |
+| 🎭 **Dark Mode** | Theme support with toggle |
+| ♿ **Accessible** | WCAG 2.1 compliant |
 
-#### Database
-- **MongoDB** - NoSQL database
-- **Mongoose 8.x** - MongoDB ODM (Object Data Modeling)
-
-#### Authentication & Security
-- **jsonwebtoken 9.x** - JWT token generation/verification
-- **bcryptjs 2.x** - Password hashing
-- **Passport 0.7** - Authentication middleware
-- **passport-google-oauth20 2.x** - Google OAuth strategy
-- **passport-facebook 3.x** - Facebook OAuth strategy
-- **google-auth-library 9.x** - Google authentication
-
-#### Validation & Sanitization
-- **Joi 17.x** - Schema validation
-- **express-validator** - Express middleware for validation
-
-#### File Handling
-- **Multer 1.x** - Multipart/form-data file uploads
-- **Sharp 0.34** - Image processing and optimization
-
-#### Security Middleware
-- **Helmet 7.x** - HTTP security headers
-- **CORS 2.x** - Cross-Origin Resource Sharing
-- **express-rate-limit 7.x** - Rate limiting middleware
-
-#### Email & Communication
-- **Nodemailer 6.x** - Email sending
-- **@sendinblue/client 3.x** - Brevo (SendinBlue) API client
-
-#### PDF Generation
-- **PDFKit 0.14** - PDF document generation
-
-#### Real-time Communication
-- **Socket.io 4.8** - Real-time bidirectional communication
-
-#### Cloud Services
-- **Cloudinary 1.x** - Image and video management
-
-#### Utilities
-- **Axios 1.x** - HTTP client for API calls
-- **Compression 1.7** - Response compression
-- **Morgan 1.x** - HTTP request logger
-- **dotenv 16.x** - Environment variable management
-
-#### Development Tools
-- **Nodemon 3.x** - Auto-restart development server
+</div>
 
 ---
 
-### Third-Party Services & APIs
+<div align="center">
 
-#### Cloud Storage
-- **Cloudinary** - Image/video upload, storage, and transformations
+## 🎨 Screenshots
 
-#### AI & Machine Learning
-- **Google Gemini AI** - AI-powered chatbot and recommendations
+<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
 
-#### Email Service
-- **Brevo (SendinBlue)** - Transactional and marketing emails
+### 🏠 Home Page
+![Home Page](screenshots/home.png)
+*Beautiful hero section with Bengali support*
 
-#### Authentication Providers
-- **Google OAuth 2.0** - Social login with Google
-- **Facebook Login** - Social login with Facebook
+### 🛍️ Shop & Products
+![Shop Page](screenshots/shop.png)
+*Advanced filtering and search capabilities*
 
-#### Database Hosting
-- **MongoDB Atlas** - Cloud-hosted MongoDB
+### 📱 Mobile Responsive
+<img src="screenshots/mobile.png" width="300" alt="Mobile View"/>
 
-#### Payment Processing (Ready for Integration)
-- **Steadfast Courier API** - Bangladesh delivery tracking (integration ready)
-- **bKash** - Mobile financial service (manual entry)
-- **Nagad** - Mobile financial service (manual entry)
+*Optimized for all screen sizes*
 
----
+### 👨‍💼 Admin Dashboard
+![Admin Dashboard](screenshots/admin.png)
+*Comprehensive admin panel with analytics*
 
-### Development & Deployment
-
-#### Version Control
-- **Git** - Source code management
-- **GitHub** - Code hosting and collaboration
-
-#### Package Managers
-- **npm** - Node Package Manager
-
-#### Build Tools
-- **Vite** - Frontend bundler
-- **ESBuild** - JavaScript bundler (used by Vite)
-
-#### Code Quality
-- **ESLint** - Code linting
-- **Prettier** (optional) - Code formatting
+</div>
 
 ---
 
-### Architecture & Patterns
+<div align="center">
 
-- **MVC Pattern** - Model-View-Controller architecture
-- **RESTful API** - REST architectural style
-- **JWT Authentication** - Stateless authentication
-- **Role-Based Access Control (RBAC)** - User permissions management
-- **Microservices Ready** - Modular service architecture
-- **Responsive Design** - Mobile-first approach
-- **Progressive Web App (PWA)** - App-like experience
+## 🛠️ Tech Stack
+
+<img src="https://user-images.githubusercontent.com/74038190/212257454-16e3712e-945a-4ca2-b238-408ad0bf87e6.gif" width="100">
+<img src="https://user-images.githubusercontent.com/74038190/212257472-08e52665-c503-4bd9-aa20-f5a4dae769b5.gif" width="100">
+<img src="https://user-images.githubusercontent.com/74038190/212257468-1e9a91f1-b626-4baa-b15d-5c385dfa7ed2.gif" width="100">
+<img src="https://user-images.githubusercontent.com/74038190/212257465-7ce8d493-cac5-494e-982a-5a9deb852c4b.gif" width="100">
+
+</div>
+
+### Frontend
+
+```javascript
+{
+  "framework": "React 18.2.0",
+  "routing": "React Router DOM 6.x",
+  "styling": "TailwindCSS 3.3",
+  "state": "Context API",
+  "http": "Axios",
+  "icons": "Lucide React",
+  "notifications": "React Hot Toast",
+  "seo": "React Helmet Async",
+  "charts": "Recharts",
+  "animations": "Custom CSS + Framer Motion"
+}
+```
+
+### Backend
+
+```javascript
+{
+  "runtime": "Node.js 18.x",
+  "framework": "Express 4.18",
+  "database": "MongoDB 6.0",
+  "odm": "Mongoose",
+  "authentication": "JWT",
+  "payment": "bKash Tokenized API",
+  "email": "Nodemailer",
+  "realtime": "Socket.io",
+  "security": "Helmet, CORS, Rate Limiting"
+}
+```
+
+### DevOps & Tools
+
+<div align="center">
+
+| Tool | Purpose |
+|------|---------|
+| 🔧 **Git & GitHub** | Version Control |
+| 📦 **npm** | Package Manager |
+| 🔍 **ESLint** | Code Quality |
+| 🎨 **PostCSS** | CSS Processing |
+| 🚀 **Vite** | Build Tool |
+| 📝 **dotenv** | Environment Variables |
+
+</div>
 
 ---
 
-### Design & Styling
+<div align="center">
 
-- **Glassmorphism UI** - Modern frosted glass effect
-- **Dark/Light Mode** - Theme switching
-- **Responsive Design** - Works on all device sizes
-- **Tailwind Utilities** - Custom utility classes
-- **CSS Custom Properties** - Dynamic theming
-- **Animations** - Smooth transitions and effects
+## 🚀 Getting Started
 
-</details>
+<img src="https://user-images.githubusercontent.com/74038190/212284136-03988914-d899-44b4-b1d9-4eeccf656e44.gif" width="1000">
 
----
+</div>
 
-## 🚀 Quick Start
-
-### 📋 Prerequisites
+### Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- ![Node.js](https://img.shields.io/badge/Node.js-%3E%3D16.0.0-339933?logo=nodedotjs) Node.js (v16 or higher)
-- ![MongoDB](https://img.shields.io/badge/MongoDB-Local%20or%20Atlas-47A248?logo=mongodb) MongoDB (local installation or Atlas account)
-- ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white) Git
-- ![npm](https://img.shields.io/badge/npm-CB3837?logo=npm&logoColor=white) npm or yarn
-
-### 📥 Installation
-
-#### 1️⃣ Clone the Repository
-
 ```bash
-git clone https://github.com/yourusername/chirkut-ghor.git
-cd chirkut-ghor
+node --version  # v18.x or higher
+npm --version   # v9.x or higher
+mongod --version # v6.0 or higher
+git --version   # v2.x or higher
 ```
 
-#### 2️⃣ Install Dependencies
+### Installation
+
+<details>
+<summary><b>📥 Click to expand installation steps</b></summary>
+
+#### 1️⃣ Clone the repository
 
 ```bash
-# Install backend dependencies
+git clone https://github.com/salahuddingfx/rongrani.git
+cd rongrani
+```
+
+#### 2️⃣ Install Backend Dependencies
+
+```bash
 cd backend
 npm install
+```
 
-# Install frontend dependencies
-cd ../frontend
+#### 3️⃣ Install Frontend Dependencies
+
+```bash
+cd ..
 npm install
 ```
 
-#### 3️⃣ Configure Environment Variables
+#### 4️⃣ Configure Environment Variables
 
-**Option A: Minimal Setup (Fastest - No API Keys!)**
+Create `.env` file in the `backend` folder:
+
+```env
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# Database
+MONGO_URI=mongodb://localhost:27017/rongrani
+
+# JWT
+JWT_SECRET=your_super_secret_jwt_key_here
+JWT_EXPIRE=7d
+
+# bKash Payment Gateway
+BKASH_BASE_URL=https://tokenized.sandbox.bka.sh/v1.2.0-beta
+BKASH_APP_KEY=your_bkash_app_key
+BKASH_APP_SECRET=your_bkash_app_secret
+BKASH_USERNAME=your_bkash_username
+BKASH_PASSWORD=your_bkash_password
+
+# Email Configuration
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+
+# Frontend URL
+CLIENT_URL=http://localhost:3000
+```
+
+#### 5️⃣ Start MongoDB
 
 ```bash
-cd backend
-cp .env.minimal .env
-# Edit .env - only update MONGO_URI and JWT_SECRET
+# Windows
+net start MongoDB
+
+# macOS/Linux
+sudo systemctl start mongod
 ```
 
-**Option B: Full Setup (All Features)**
+#### 6️⃣ Run the Application
 
-```bash
-cd backend
-cp .env.example .env
-# Edit .env with your API credentials
-```
-
-> 💡 **Tip:** Start with Option A and add API keys later as needed!
-
-# Edit .env with your actual credentials
-# Use your favorite text editor (notepad, VSCode, nano, etc.)
-```
-
-<details>
-<summary><b>⚙️ Environment Variables Configuration</b></summary>
-
-### Quick Start (Minimal Setup)
-
-For fastest setup, copy `.env.minimal` to `.env`:
-
-```bash
-cp backend/.env.minimal backend/.env
-```
-
-Then just update these **3 REQUIRED** variables:
-
-```env
-# REQUIRED
-MONGO_URI=mongodb://localhost:27017/chirkutghor  # or your MongoDB Atlas URL
-JWT_SECRET=your_super_secret_key_at_least_32_characters_long
-FRONTEND_URL=http://localhost:5173
-```
-
-**That's it!** The app will work with core features. 🎉
-
----
-
-### What Works WITHOUT Optional APIs?
-
-✅ **Full E-commerce Functionality:**
-- User registration & login (email/password)
-- Product catalog browsing
-- Search & filters
-- Shopping cart
-- Checkout & order placement
-- Order tracking
-- Admin panel
-- Dashboard analytics
-- Product/order/user management
-
-✅ **Graceful Fallbacks:**
-- Email notifications → Logged to console
-- Image uploads → Placeholder images
-- AI chatbot → Fallback responses
-- Social login → Email/password only
-
----
-
-### Optional Services (Add When Needed)
-
-<details>
-<summary><b>📧 Email Notifications (Brevo/SendinBlue)</b></summary>
-
-**When to add:** Send order confirmations, password resets, etc.
-
-```env
-BREVO_API_KEY=your_brevo_api_key
-BREVO_SMTP_HOST=smtp-relay.brevo.com
-BREVO_SMTP_PORT=587
-BREVO_SMTP_USER=your_smtp_user
-BREVO_SMTP_PASS=your_smtp_password
-FROM_EMAIL=your_email@example.com
-FROM_NAME=Chirkut ঘর
-```
-
-**Get API key:** [Brevo.com](https://www.brevo.com/) (free tier available)
-
-</details>
-
-<details>
-<summary><b>☁️ Image Storage (Cloudinary)</b></summary>
-
-**When to add:** Upload product images, user avatars, etc.
-
-```env
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-```
-
-**Get API key:** [Cloudinary.com](https://cloudinary.com/) (free tier available)
-
-</details>
-
-<details>
-<summary><b>🤖 AI Chatbot (Google Gemini)</b></summary>
-
-**When to add:** Enable AI-powered gift recommendations.
-
-```env
-GEMINI_API_KEY=your_gemini_api_key
-```
-
-**Get API key:** [Google AI Studio](https://makersuite.google.com/app/apikey) (free tier available)
-
-</details>
-
-<details>
-<summary><b>🔐 Social Login (OAuth)</b></summary>
-
-**When to add:** Let users login with Google/Facebook.
-
-```env
-# Google OAuth
-GOOGLE_CLIENT_ID=your_google_client_id
-GOOGLE_CLIENT_SECRET=your_google_client_secret
-
-# Facebook OAuth
-FACEBOOK_APP_ID=your_facebook_app_id
-FACEBOOK_APP_SECRET=your_facebook_app_secret
-```
-
-**Setup guides:**
-- [Google OAuth Console](https://console.cloud.google.com/)
-- [Facebook Developers](https://developers.facebook.com/)
-
-</details>
-
-<details>
-<summary><b>🚚 Delivery Tracking (Steadfast)</b></summary>
-
-**When to add:** Automated delivery order creation and tracking.
-
-```env
-STEADFAST_API_KEY=your_steadfast_api_key
-STEADFAST_API_SECRET=your_steadfast_api_secret
-```
-
-**See:** [Steadfast Integration Guide](docs/STEADFAST_INTEGRATION.md)
-
-</details>
-
----
-
-### Complete Configuration Example
-
-For production or full features, see `backend/.env.example`.
-
-> ⚠️ **SECURITY WARNING**: Never commit your `.env` file to version control! It's already in `.gitignore`.
-
-</details>
-
-#### 4️⃣ Start Development Servers
-
-Open two terminal windows:
-
-**Terminal 1 - Backend:**
+**Backend:**
 ```bash
 cd backend
 npm run dev
 ```
-Backend will run on `http://localhost:5000`
 
-**Terminal 2 - Frontend:**
+**Frontend:**
 ```bash
-cd frontend
 npm run dev
 ```
-Frontend will run on `http://localhost:5173`
 
-#### 5️⃣ Access the Application
+#### 7️⃣ Access the Application
 
-- 🌐 **Frontend**: [http://localhost:5173](http://localhost:5173)
-- ⚙️ **Backend API**: [http://localhost:5000](http://localhost:5000)
-- 👨‍💼 **Admin Panel**: [http://localhost:5173/admin](http://localhost:5173/admin)
+- 🌐 **Frontend**: http://localhost:3000
+- 🔧 **Backend API**: http://localhost:5000
+- 👨‍💼 **Admin Panel**: http://localhost:3000/admin
 
-**Default Admin Credentials:**
-- Email: As set in `SUPER_ADMIN_EMAIL`
-- Password: As set in `SUPER_ADMIN_PASSWORD`
+</details>
+
+### Default Admin Credentials
+
+```
+Email: admin@rongrani.com
+Password: admin123
+```
+
+> ⚠️ **Important**: Change these credentials after first login!
 
 ---
 
-## 📂 Project Structure
+<div align="center">
+
+## 💳 bKash Integration
+
+<img src="https://user-images.githubusercontent.com/74038190/212284087-bbe7e430-757e-4901-90bf-4cd2ce3e1852.gif" width="100">
+
+</div>
+
+### Setup Guide
+
+1. **Register as bKash Merchant**
+   - Visit: https://developer.bka.sh/
+   - Create merchant account
+   - Complete KYC verification
+
+2. **Get API Credentials**
+   ```
+   App Key
+   App Secret
+   Username
+   Password
+   ```
+
+3. **Configure Environment**
+   ```env
+   # Sandbox (Testing)
+   BKASH_BASE_URL=https://tokenized.sandbox.bka.sh/v1.2.0-beta
+   
+   # Production (Live)
+   BKASH_BASE_URL=https://tokenized.pay.bka.sh/v1.2.0-beta
+   ```
+
+4. **Test Payment Flow**
+   - Use sandbox credentials
+   - Test with dummy phone numbers
+   - Verify callbacks
+
+### Payment Flow
+
+```mermaid
+sequenceDiagram
+    participant C as Customer
+    participant F as Frontend
+    participant B as Backend
+    participant bK as bKash API
+    
+    C->>F: Initiate Checkout
+    F->>B: POST /api/payment/init
+    B->>bK: Create Payment
+    bK-->>B: Payment ID & URL
+    B-->>F: bKash URL
+    F->>C: Redirect to bKash
+    C->>bK: Complete Payment
+    bK->>B: Callback (Success/Fail)
+    B->>B: Update Order Status
+    B-->>F: Redirect to Status Page
+    F-->>C: Show Order Confirmation
+```
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/payment/init` | Initialize payment |
+| POST | `/api/payment/execute` | Execute payment |
+| GET | `/api/payment/query/:id` | Query payment status |
+| POST | `/api/payment/refund` | Refund payment (Admin) |
+
+---
+
+## 📁 Project Structure
 
 ```
-chirkut-ghor/
-├── 📁 backend/                 # Node.js + Express backend
-│   ├── 📁 config/             # Configuration files
-│   │   ├── database.js        # MongoDB connection
-│   │   └── passport.js        # Passport OAuth strategies
-│   ├── 📁 controllers/        # Route controllers
+rongrani/
+├── 📂 backend/                 # Backend Node.js application
+│   ├── 📂 config/             # Configuration files
+│   │   └── db.js              # MongoDB connection
+│   ├── 📂 controllers/        # Route controllers
 │   │   ├── auth.controller.js
 │   │   ├── product.controller.js
 │   │   ├── order.controller.js
-│   │   ├── admin.controller.js
-│   │   └── ...
-│   ├── 📁 models/             # Mongoose models
+│   │   └── payment.controller.js
+│   ├── 📂 middlewares/        # Custom middlewares
+│   │   ├── auth.middleware.js
+│   │   └── error.middleware.js
+│   ├── 📂 models/             # Mongoose models
 │   │   ├── User.js
 │   │   ├── Product.js
 │   │   ├── Order.js
-│   │   └── ...
-│   ├── 📁 routes/             # API routes
+│   │   └── Review.js
+│   ├── 📂 routes/             # API routes
 │   │   ├── auth.routes.js
 │   │   ├── product.routes.js
-│   │   └── ...
-│   ├── 📁 middlewares/        # Custom middlewares
-│   │   ├── auth.middleware.js
-│   │   ├── admin.middleware.js
-│   │   └── validation.middleware.js
-│   ├── 📁 utils/              # Utility functions
-│   │   ├── emailService.js
-│   │   ├── aiService.js
-│   │   ├── pdfGenerator.js
-│   │   └── ...
-│   ├── 📁 scripts/            # Database seed scripts
-│   ├── 📄 app.js              # Express app
-│   ├── 📄 server.js           # Server entry point
+│   │   ├── order.routes.js
+│   │   └── payment.routes.js
+│   ├── 📂 utils/              # Utility functions
+│   ├── 📂 uploads/            # File uploads
+│   ├── 📄 server.js           # Entry point
 │   ├── 📄 .env.example        # Environment template
 │   └── 📄 package.json
 │
-├── 📁 frontend/               # React + Vite frontend
-│   ├── 📁 public/            # Static assets
-│   │   └── Chirkut-Ghor-logo-icon.png
-│   ├── 📁 src/
-│   │   ├── 📁 assets/        # Images, fonts, etc.
-│   │   ├── 📁 components/    # Reusable components
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── ProductCard.jsx
-│   │   │   └── ...
-│   │   ├── 📁 pages/         # Page components
-│   │   │   ├── Home.jsx
-│   │   │   ├── Products.jsx
-│   │   │   ├── Cart.jsx
-│   │   │   ├── AdminDashboard.jsx
-│   │   │   └── ...
-│   │   ├── 📁 contexts/      # React contexts
-│   │   │   ├── AuthContext.jsx
-│   │   │   ├── CartContext.jsx
-│   │   │   └── ThemeContext.jsx
-│   │   ├── 📁 i18n/          # Internationalization
-│   │   │   ├── index.js
-│   │   │   └── 📁 locales/
-│   │   │       ├── en.json
-│   │   │       └── bn.json
-│   │   ├── 📄 App.jsx        # Main app component
-│   │   ├── 📄 main.jsx       # Entry point
-│   │   └── 📄 index.css      # Global styles
-│   ├── 📄 index.html
-│   ├── 📄 vite.config.js
-│   ├── 📄 tailwind.config.js
-│   └── 📄 package.json
+├── 📂 src/                     # Frontend React application
+│   ├── 📂 components/         # Reusable components
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   ├── ProductCard.jsx
+│   │   └── AdminLayout.jsx
+│   ├── 📂 contexts/           # React contexts
+│   │   ├── AuthContext.jsx
+│   │   ├── CartContext.jsx
+│   │   ├── LanguageContext.jsx
+│   │   └── ThemeContext.jsx
+│   ├── 📂 pages/              # Page components
+│   │   ├── Home.jsx
+│   │   ├── Shop.jsx
+│   │   ├── ProductDetail.jsx
+│   │   ├── Cart.jsx
+│   │   ├── Checkout.jsx
+│   │   └── Reviews.jsx
+│   ├── 📂 utils/              # Utility functions
+│   ├── 📂 assets/             # Static assets
+│   ├── 📄 App.jsx             # Main App component
+│   ├── 📄 main.jsx            # Entry point
+│   └── 📄 index.css           # Global styles
 │
-├── 📁 .github/               # GitHub configurations
-│   └── copilot-instructions.md
-├── 📄 .gitignore            # Git ignore rules
-└── 📄 README.md             # This file
+├── 📂 public/                  # Public assets
+├── 📄 package.json
+├── 📄 tailwind.config.js
+├── 📄 vite.config.js
+└── 📄 README.md
 ```
 
 ---
 
-## 🔑 API Endpoints
+## 🔧 Configuration
 
-<details>
-<summary><b>View All API Endpoints</b></summary>
+### TailwindCSS Custom Colors
 
-### 🔐 Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `GET /api/auth/me` - Get current user
-- `GET /api/auth/google` - Google OAuth
-- `GET /api/auth/facebook` - Facebook OAuth
-
-### 📦 Products
-- `GET /api/products` - Get all products (with pagination, filters)
-- `GET /api/products/:id` - Get single product
-- `POST /api/products` - Create product (Admin only)
-- `PUT /api/products/:id` - Update product (Admin only)
-- `DELETE /api/products/:id` - Delete product (Admin only)
-
-### 🗂️ Categories
-- `GET /api/categories` - Get all categories
-- `POST /api/categories` - Create category (Admin only)
-- `PUT /api/categories/:id` - Update category (Admin only)
-- `DELETE /api/categories/:id` - Delete category (Admin only)
-
-### 🛒 Orders
-- `GET /api/orders` - Get user orders
-- `GET /api/orders/:id` - Get single order
-- `POST /api/orders` - Create new order
-- `PUT /api/orders/:id/status` - Update order status (Admin)
-- `GET /api/orders/:id/invoice` - Download invoice PDF
-
-### 👥 Users
-- `GET /api/users` - Get all users (Admin only)
-- `GET /api/users/:id` - Get single user
-- `PUT /api/users/:id` - Update user
-- `DELETE /api/users/:id` - Delete user (Admin only)
-
-### 🎨 Banners & Promotions
-- `GET /api/banners` - Get active banners
-- `POST /api/banners` - Create banner (Admin)
-- `GET /api/coupons/validate/:code` - Validate coupon
-
-### 🤖 AI Chat
-- `POST /api/ai/chat` - Send message to AI assistant
-
-</details>
-
----
-
-## 🌐 Environment Setup
-
-## Project Structure
-
-```
-chirkut-ghor/
-├── backend/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── middlewares/
-│   ├── utils/
-│   ├── config/
-│   ├── server.js
-│   ├── app.js
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   ├── pages/
-│   │   ├── context/
-│   │   ├── hooks/
-│   │   ├── i18n/
-│   │   ├── admin/
-│   │   └── ...
-│   ├── public/
-│   ├── index.html
-│   └── package.json
-├── .github/
-└── README.md
+```javascript
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        maroon: '#800020',
+        cream: '#FFF8DC',
+        charcoal: '#36454F',
+        emerald: '#50C878',
+      },
+      animation: {
+        'reveal-left': 'revealLeft 0.8s ease-out',
+        'reveal-right': 'revealRight 0.8s ease-out',
+      }
+    }
+  }
+}
 ```
 
 ---
 
-## 🌐 Environment Setup
+<div align="center">
 
-### 🔒 Generate Secure JWT Secret
+## 🌐 API Documentation
 
-```bash
-# Using Node.js
-node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+<img src="https://user-images.githubusercontent.com/74038190/212257467-871d32b7-e401-42e8-a166-fcfd7baa4c6b.gif" width="100">
 
-# Or using OpenSSL
-openssl rand -hex 32
+</div>
+
+### Authentication
+
+```http
+POST   /api/auth/register       # Register new user
+POST   /api/auth/login          # Login user
+POST   /api/auth/logout         # Logout user
+GET    /api/auth/me             # Get current user
+POST   /api/auth/forgot-password # Send reset email
+PUT    /api/auth/reset-password/:token # Reset password
 ```
 
-### 📧 Email Service Setup (Brevo)
+### Products
 
-1. Sign up at [Brevo](https://www.brevo.com/)
-2. Get your API key from Settings
-3. Configure SMTP settings
-4. Add to `.env`
+```http
+GET    /api/products            # Get all products
+GET    /api/products/:id        # Get single product
+POST   /api/products            # Create product (Admin)
+PUT    /api/products/:id        # Update product (Admin)
+DELETE /api/products/:id        # Delete product (Admin)
+GET    /api/products/category/:category # Get by category
+```
 
-### ☁️ Cloudinary Setup
+### Orders
 
-1. Create account at [Cloudinary](https://cloudinary.com/)
-2. Get credentials from Dashboard
-3. Add to `.env`
+```http
+GET    /api/orders              # Get user orders
+GET    /api/orders/:id          # Get single order
+POST   /api/orders              # Create order
+PUT    /api/orders/:id          # Update order (Admin)
+GET    /api/orders/track/:orderNumber # Track order
+```
 
-### 🤖 Google Gemini API
+### Reviews
 
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create API key
-3. Add to `.env`
-
----
-
-## 🚀 Deployment
-
-### 📋 Pre-deployment Checklist
-
-- [ ] All dependencies installed and up to date
-- [ ] `.env` file configured (NOT committed to Git)
-- [ ] Database connection tested successfully
-- [ ] Frontend build successful (`npm run build`)
-- [ ] All API endpoints tested
-- [ ] Environment variables set on hosting platform
-- [ ] CORS configured for production domain
-- [ ] Rate limiting properly configured
-- [ ] Security headers enabled (Helmet)
-- [ ] SSL certificate configured
-- [ ] Error logging setup
-- [ ] Monitoring tools integrated
-
-### 🌍 Deployment Platforms
-
-#### Backend (Node.js + Express)
-
-**Recommended Platforms:**
-
-[![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/)
-[![Railway](https://img.shields.io/badge/Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app/)
-[![Heroku](https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white)](https://heroku.com/)
-[![DigitalOcean](https://img.shields.io/badge/DigitalOcean-0080FF?style=for-the-badge&logo=digitalocean&logoColor=white)](https://www.digitalocean.com/)
-[![AWS](https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=amazon-aws&logoColor=white)](https://aws.amazon.com/)
-
-<details>
-<summary><b>Deploy to Render (Recommended)</b></summary>
-
-1. Push your code to GitHub
-2. Go to [Render Dashboard](https://dashboard.render.com/)
-3. Click "New +" → "Web Service"
-4. Connect your GitHub repository
-5. Configure:
-   - **Name**: chirkut-ghor-backend
-   - **Environment**: Node
-   - **Build Command**: `cd backend && npm install`
-   - **Start Command**: `cd backend && npm start`
-6. Add environment variables from `.env`
-7. Click "Create Web Service"
-
-</details>
-
-#### Frontend (React + Vite)
-
-**Recommended Platforms:**
-
-[![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
-[![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://netlify.com/)
-[![Cloudflare Pages](https://img.shields.io/badge/Cloudflare_Pages-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://pages.cloudflare.com/)
-
-<details>
-<summary><b>Deploy to Vercel (Recommended)</b></summary>
-
-1. Install Vercel CLI: `npm i -g vercel`
-2. Navigate to frontend folder: `cd frontend`
-3. Run: `vercel`
-4. Follow the prompts
-5. Set environment variables in Vercel dashboard
-6. Deploy: `vercel --prod`
-
-Or use Vercel GitHub integration for automatic deployments.
-
-</details>
-
-#### Database (MongoDB)
-
-[![MongoDB Atlas](https://img.shields.io/badge/MongoDB_Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/cloud/atlas)
-
-<details>
-<summary><b>Setup MongoDB Atlas</b></summary>
-
-1. Create account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a new cluster (Free tier available)
-3. Create database user
-4. Whitelist IP addresses (or allow from anywhere for simplicity)
-5. Get connection string
-6. Update `MONGO_URI` in your environment variables
-
-</details>
-
-### 🔐 Production Environment Variables
-
-```env
-# Use strong, randomly generated values
-NODE_ENV=production
-MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/dbname
-JWT_SECRET=<64-character-random-hex-string>
-FRONTEND_URL=https://yourdomain.com
-
-# Update with production values
-BREVO_API_KEY=your_production_brevo_key
-CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_key
-CLOUDINARY_API_SECRET=your_secret
-GEMINI_API_KEY=your_gemini_key
+```http
+GET    /api/reviews/all         # Get all reviews
+GET    /api/reviews/product/:id # Get product reviews
+POST   /api/reviews             # Create review
+PUT    /api/reviews/:id         # Update review
+DELETE /api/reviews/:id         # Delete review
 ```
 
 ---
 
-## 📚 Usage Guide
+<div align="center">
 
-### 👤 User Features
+## 🎯 Roadmap
 
-1. **Browse Products**: Explore gift categories and products
-2. **Search & Filter**: Find specific gifts using advanced filters
-3. **Add to Cart**: Build your shopping cart
-4. **Checkout**: Complete purchase with Cash on Delivery or mobile payment
-5. **Track Orders**: Monitor order status in real-time
-6. **AI Assistant**: Get gift recommendations via chat
+<img src="https://user-images.githubusercontent.com/74038190/212284094-e50ac1fc-b785-43c4-96ca-e2284152a053.gif" width="200">
 
-### 👨‍💼 Admin Features
+</div>
 
-1. **Dashboard**: View sales analytics and statistics
-2. **Manage Products**: Add, edit, delete products
-3. **Manage Orders**: Process and update order statuses
-4. **Manage Users**: View and manage customer accounts
-5. **Coupons**: Create and manage discount coupons
-6. **Banners**: Update homepage promotional banners
-7. **Reports**: Generate sales and inventory reports
+### Phase 1 - Core Features ✅
+- [x] User Authentication
+- [x] Product Management
+- [x] Shopping Cart
+- [x] Checkout & Payment
+- [x] Order Management
 
----
+### Phase 2 - Enhanced Features ✅
+- [x] Bengali Translation
+- [x] Reviews System
+- [x] Wishlist
+- [x] Admin Dashboard
+- [x] Real-time Notifications
+- [x] bKash Integration
 
-## 🧪 Testing
+### Phase 3 - Advanced Features 🚧
+- [ ] AI Product Recommendations
+- [ ] Advanced Analytics
+- [ ] Mobile App (React Native)
+- [ ] Multi-vendor Support
+- [ ] Live Chat Support
+- [ ] Voice Search
 
-```bash
-# Run backend tests
-cd backend
-npm test
-
-# Run frontend tests
-cd frontend
-npm test
-
-# Run E2E tests (if configured)
-npm run test:e2e
-```
-
----
-
-## 🚚 Delivery Integration (Bangladesh)
-
-### Steadfast Courier API
-
-This project is ready for integration with **Steadfast Courier**, one of Bangladesh's leading delivery services.
-
-**Current Setup:**
-- ✅ Delivery zones configured for Cox's Bazar/Chittagong base
-- ✅ Within Chittagong Division: **৳60**
-- ✅ Outside Chittagong Division: **৳130**
-- ✅ Admin panel for delivery settings management
-
-**Integration Guide:**
-
-For detailed step-by-step instructions on integrating Steadfast Courier API, see:
-
-📖 **[Steadfast Integration Guide](docs/STEADFAST_INTEGRATION.md)**
-
-The guide covers:
-- API credential setup
-- Backend integration code
-- Automatic order creation
-- Real-time tracking
-- Delivery charge calculation
-- Testing procedures
-
-**Benefits:**
-- 🚀 Automated order creation
-- 📍 Real-time tracking
-- 💰 Dynamic delivery charges
-- 📦 Bulk order processing
-- 🔔 Status notifications
-
-**Alternative Delivery Partners:**
-- Pathao Courier
-- Redx
-- Paperfly
-- eCourier
-- Manual/Local delivery
+### Phase 4 - Optimization 📋
+- [ ] Performance Optimization
+- [ ] SEO Improvements
+- [ ] PWA Support
+- [ ] Automated Testing
+- [ ] CI/CD Pipeline
+- [ ] Docker Containerization
 
 ---
+
+<div align="center">
 
 ## 🤝 Contributing
 
-We welcome contributions! Please follow these steps:
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="500">
 
-### 1️⃣ Fork the Repository
+</div>
 
-Click the "Fork" button at the top right of this page.
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-### 2️⃣ Clone Your Fork
+### How to Contribute
 
-```bash
-git clone https://github.com/your-username/chirkut-ghor.git
-cd chirkut-ghor
-```
+1. **Fork** the Project
+2. Create your Feature Branch
+   ```bash
+   git checkout -b feature/AmazingFeature
+   ```
+3. Commit your Changes
+   ```bash
+   git commit -m 'Add some AmazingFeature'
+   ```
+4. Push to the Branch
+   ```bash
+   git push origin feature/AmazingFeature
+   ```
+5. Open a **Pull Request**
 
-### 3️⃣ Create a Branch
+### Development Guidelines
 
-```bash
-git checkout -b feature/AmazingFeature
-```
-
-### 4️⃣ Make Your Changes
-
-- Write clean, documented code
-- Follow existing code style
-- Add tests if applicable
-- Update documentation
-
-### 5️⃣ Commit Your Changes
-
-```bash
-git add .
-git commit -m "Add: Amazing new feature"
-```
-
-**Commit Message Convention:**
-- `Add:` New feature
-- `Fix:` Bug fix
-- `Update:` Changes to existing feature
-- `Remove:` Removed functionality
-- `Docs:` Documentation changes
-
-### 6️⃣ Push to Your Fork
-
-```bash
-git push origin feature/AmazingFeature
-```
-
-### 7️⃣ Create a Pull Request
-
-Go to the original repository and click "New Pull Request"
-
-### 📏 Code Style Guidelines
-
-- Use meaningful variable and function names
-- Comment complex logic
-- Follow ESLint rules
-- Keep functions small and focused
-- Write reusable components
+- ✅ Follow the existing code style
+- ✅ Write meaningful commit messages
+- ✅ Add comments for complex logic
+- ✅ Test your changes thoroughly
+- ✅ Update documentation as needed
+- ✅ Keep PRs focused and small
 
 ---
 
-## 🛡️ Security
+<div align="center">
 
-### 🔒 Security Best Practices
+## 📄 License
 
-- ⚠️ **Never commit `.env` files** - Already in `.gitignore`
-- ⚠️ **Use strong passwords** - Minimum 8 characters with special chars
-- ⚠️ **Rotate API keys regularly** - Change keys every 90 days
-- ⚠️ **Keep dependencies updated** - Run `npm audit` regularly
-- ⚠️ **Enable rate limiting** - Protect against brute force attacks
-- ⚠️ **Use HTTPS in production** - Always use SSL certificates
-- ⚠️ **Validate user input** - Sanitize and validate all inputs
-- ⚠️ **Implement CSRF protection** - Use tokens for sensitive operations
-
-### 🐛 Reporting Security Issues
-
-If you discover a security vulnerability, please email: **security@chirkutghor.com**
-
-**Do not** create public GitHub issues for security vulnerabilities.
-
----
-
-## 📝 License
-
-This project is licensed under the **ISC License**.
-
-```
-ISC License
-
-Copyright (c) 2026 Salahuddin Kader Appy
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted, provided that the above
-copyright notice and this permission notice appear in all copies.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-```
+Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
 ## 👨‍💻 Author
 
-<div align="center">
+<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
 
-### **Salahuddin Kader Appy**
+### **Salahuddin**
 
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/yourusername)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/yourprofile)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:salauddinkaderappy@gmail.com)
-[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=About.me&logoColor=white)](https://yourportfolio.com)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/salahuddingfx)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/salahuddingfx)
+[![Portfolio](https://img.shields.io/badge/Portfolio-FF5722?style=for-the-badge&logo=google-chrome&logoColor=white)](https://salahuddingfx.com)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:salahuddin@example.com)
 
-</div>
+**Full Stack Developer | MERN Stack Specialist | Open Source Enthusiast**
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **React Team** - For the amazing React library
-- **MongoDB** - For the flexible NoSQL database
-- **Tailwind CSS** - For the utility-first CSS framework
-- **Google Gemini** - For AI capabilities
-- **Cloudinary** - For image hosting services
-- **Brevo** - For email services
-
----
-
-## 📞 Support
-
-<div align="center">
-
-### Need Help?
-
-[![Documentation](https://img.shields.io/badge/Documentation-Read%20Docs-blue?style=for-the-badge)](https://github.com/yourusername/chirkut-ghor/wiki)
-[![Issues](https://img.shields.io/badge/Issues-Report%20Bug-red?style=for-the-badge)](https://github.com/yourusername/chirkut-ghor/issues)
-[![Discussions](https://img.shields.io/badge/Discussions-Ask%20Question-green?style=for-the-badge)](https://github.com/yourusername/chirkut-ghor/discussions)
-
-**Email**: salauddinkaderappy@gmail.com
-
-</div>
-
----
-
-## ⭐ Show Your Support
-
-If you found this project helpful, please give it a ⭐️!
-
-<div align="center">
-
-[![Star this repo](https://img.shields.io/github/stars/yourusername/chirkut-ghor?style=social)](https://github.com/yourusername/chirkut-ghor)
-[![Fork this repo](https://img.shields.io/github/forks/yourusername/chirkut-ghor?style=social)](https://github.com/yourusername/chirkut-ghor/fork)
-[![Watch this repo](https://img.shields.io/github/watchers/yourusername/chirkut-ghor?style=social)](https://github.com/yourusername/chirkut-ghor)
-
-</div>
+- [React](https://reactjs.org/) - UI Library
+- [Node.js](https://nodejs.org/) - Runtime Environment
+- [MongoDB](https://www.mongodb.com/) - Database
+- [TailwindCSS](https://tailwindcss.com/) - CSS Framework
+- [Lucide Icons](https://lucide.dev/) - Icon Library
+- [bKash](https://www.bka.sh/) - Payment Gateway
+- [Socket.io](https://socket.io/) - Real-time Communication
 
 ---
 
 <div align="center">
 
-### 🎁 Made with ❤️ in Bangladesh 🇧🇩
+### ⭐ Star this repo if you find it helpful!
 
-**Chirkut ঘর** - Traditional Gifts, Modern Platform
+![GitHub stars](https://img.shields.io/github/stars/salahuddingfx/rongrani?style=social)
+![GitHub forks](https://img.shields.io/github/forks/salahuddingfx/rongrani?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/salahuddingfx/rongrani?style=social)
 
-[⬆ Back to Top](#-chirkut-ঘর---bangladeshi-gift-e-commerce-platform)
+**Made with ❤️ by Salahuddin**
+
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="1000">
 
 </div>

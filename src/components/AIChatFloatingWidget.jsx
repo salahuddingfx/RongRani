@@ -6,7 +6,7 @@ const AIChatFloatingWidget = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! 💝 Welcome to Chirkut ঘর! I'm your AI assistant. What can I help you with today?",
+      text: "Hello! 💝 Welcome to RongRani! I'm your AI assistant. What can I help you with today?",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -35,7 +35,7 @@ const AIChatFloatingWidget = () => {
     const msg = userMessage.toLowerCase();
     
     if (msg.includes('love') || msg.includes('romantic') || msg.includes('প্রেম')) {
-      return "💕 Perfect! Our Love Combo Special (৳2500) includes a handwritten chirkut, chocolates, and a teddy bear. We also have Couple Rings Set (৳3500) and Valentine Special Combo (৳6500). Which one interests you?";
+      return "💕 Perfect! Our Love Combo Special (৳2500) includes a handwritten love letter, chocolates, and a teddy bear. We also have Couple Rings Set (৳3500) and Valentine Special Combo (৳6500). Which one interests you?";
     } else if (msg.includes('anniversary') || msg.includes('বার্ষিকী')) {
       return "🎉 For anniversaries, our Anniversary Surprise Box (৳5500) is the best seller! It includes a necklace, bangles, and a love note. Also check out Couple Watch Set (৳7500) and Premium Gift Sharee (৳6500).";
     } else if (msg.includes('birthday') || msg.includes('জন্মদিন')) {
@@ -43,7 +43,7 @@ const AIChatFloatingWidget = () => {
     } else if (msg.includes('chocolate') || msg.includes('চকলেট')) {
       return "🍫 We have amazing chocolates! Premium Chocolate Gift Box (৳1500) with assorted Dairy Milk, KitKat & Silk, and Heart Shape Chocolate Box (৳2200) for romantic occasions!";
     } else if (msg.includes('price') || msg.includes('cost') || msg.includes('দাম')) {
-      return "💰 Our products range from ৳500 (Handwritten Chirkut) to ৳9500 (Premium Luxury Gift Box). Most popular items are between ৳1500-৳5500. What's your budget?";
+      return "💰 Our products range from ৳500 (Handwritten Love Letter) to ৳9500 (Premium Luxury Gift Box). Most popular items are between ৳1500-৳5500. What's your budget?";
     } else if (msg.includes('delivery') || msg.includes('shipping') || msg.includes('ডেলিভারি')) {
       return `🚚 Cox's Bazar: ৳${deliverySettings.chittagongFee} | Other districts: ৳${deliverySettings.outsideChittagongFee} | FREE delivery on orders above ৳${deliverySettings.freeShippingThreshold}.`;
     } else if (msg.includes('payment') || msg.includes('পেমেন্ট')) {
@@ -55,7 +55,7 @@ const AIChatFloatingWidget = () => {
     } else if (msg.includes('gift') || msg.includes('suggest') || msg.includes('উপহার')) {
       return "🎁 What's the occasion? Choose from: 💕 Love/Romance | 🎂 Birthday | 🎉 Anniversary | 💍 Proposal | 💐 Valentine's | 🎓 Graduation. Tell me and I'll suggest perfect gifts!";
     } else if (msg.includes('thanks') || msg.includes('thank') || msg.includes('ধন্যবাদ')) {
-      return "You're very welcome! 💝 Feel free to ask anything anytime. Happy shopping at Chirkut ঘর! Need anything else?";
+      return "You're very welcome! 💝 Feel free to ask anything anytime. Happy shopping at RongRani! Need anything else?";
     } else if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('হাই')) {
       return "Hello! 👋 Great to see you! I'm here to help you find the perfect gift. Tell me, what occasion are you shopping for today?";
     } else {
@@ -210,7 +210,7 @@ const AIChatFloatingWidget = () => {
               </button>
             </div>
             <p className="text-xs text-center text-slate/60 mt-2 font-medium">
-              Powered by Chirkut ঘর AI • Always ready to help 💝
+              Powered by RongRani AI • Always ready to help 💝
             </p>
           </div>
         </div>

@@ -5,6 +5,9 @@ const app = require('./app');
 const mongoose = require('mongoose');
 const seedAdminUser = require('./utils/seedAdmin');
 
+// Force restart for new routes and logging
+console.log('🔄 Server starting...');
+
 const PORT = process.env.PORT || 5000;
 
 process.on('unhandledRejection', (reason) => {

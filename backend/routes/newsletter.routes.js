@@ -30,12 +30,12 @@ router.post('/subscribe', async (req, res) => {
     const subscription = await Newsletter.create({
       email: email.toLowerCase()
     });
-
+    
     // Send welcome email
     try {
       await sendEmail(
         email,
-        'Welcome to Chirkut ঘর Newsletter! 🎁',
+        'Welcome to RongRani Newsletter! 🎁',
         'newsletterWelcome',
         { email: email }
       );

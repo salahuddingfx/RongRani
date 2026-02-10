@@ -20,19 +20,15 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     // Apply theme to document on mount and when theme changes
-    console.log('🎨 Theme effect running:', { isDark, classList: document.documentElement.classList.value });
     if (isDark) {
       document.documentElement.classList.add('dark');
-      console.log('✅ Added dark class');
     } else {
       document.documentElement.classList.remove('dark');
-      console.log('✅ Removed dark class');
     }
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }, [isDark]);
 
   const toggleTheme = () => {
-    console.log('🎨 Theme toggle clicked! Current:', isDark ? 'dark' : 'light');
     setIsDark(!isDark);
   };
 

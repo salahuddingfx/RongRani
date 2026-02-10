@@ -8,7 +8,9 @@ import BannerSlider from '../components/BannerSlider';
 import TypingEffect from '../components/TypingEffect';
 import Newsletter from '../components/Newsletter';
 import { useSocket } from '../contexts/socketContextBase';
+import { useLanguage } from '../contexts/LanguageContext';
 import Seo from '../components/Seo';
+import FlashSale from '../components/FlashSale';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -16,6 +18,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [hotOffer, setHotOffer] = useState(null);
   const { socket } = useSocket() || {};
+  const { t } = useLanguage();
 
   const categoryColorMap = {
     'bg-pink-600': '#DB2777',
@@ -196,14 +199,14 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       <Seo
-        title="Chirkut Ghor | Handmade Gifts, Surprise Boxes & Delivery in Bangladesh"
-        description="Handmade gifts, surprise boxes, jewelry, flowers, and decor with fast delivery across Bangladesh. Custom orders and festive deals from Chirkut Ghor."
+        title="RongRani | Handmade Gifts, Surprise Boxes & Delivery in Bangladesh"
+        description="Handmade gifts, surprise boxes, jewelry, flowers, and decor with fast delivery across Bangladesh. Custom orders and festive deals from RongRani."
         path="/"
       />
       {/* Hero Section - Clean Design */}
-      <section className="relative overflow-hidden bg-white py-16 md:py-24">
+      <section className="relative overflow-hidden bg-white py-16 md:py-24 reveal">
         <div className="section-container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {hotOffer?.isActive && (
@@ -214,7 +217,7 @@ const Home = () => {
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                   <div className="text-left md:text-center md:flex-1">
                     <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/80 text-maroon text-xs font-bold">
-                      {hotOffer.badgeText || 'Hot Offer'}
+                      {hotOffer.badgeText || t('hot_offer')}
                     </span>
                     <h3 className="text-xl md:text-2xl font-bold text-maroon mt-2">
                       {hotOffer.title}
@@ -231,7 +234,7 @@ const Home = () => {
                       to={hotOffer.ctaLink || '/shop'}
                       className="inline-flex items-center mt-2 px-4 py-2 bg-maroon text-white rounded-xl font-semibold"
                     >
-                      {hotOffer.ctaText || 'Shop Now'}
+                      {hotOffer.ctaText || t('shop_now')}
                     </Link>
                   </div>
                 </div>
@@ -241,16 +244,18 @@ const Home = () => {
             <div className="flex items-center justify-center space-x-2 mb-6 animate-fade-in-up">
               <Sparkles className="h-5 w-5 text-maroon" />
               <span className="text-sm font-bold text-maroon uppercase tracking-wider">
-                Premium Handcrafted Collection
+                {t('language') === 'bn' ? 'প্রিমিয়াম হস্তনির্মিত কালেকশন' : 'Premium Handcrafted Collection'}
               </span>
             </div>
 
             {/* Main Heading with Typing Effect */}
             <h1 className="text-4xl md:text-6xl font-bold text-charcoal mb-4 leading-tight animate-fade-in-up stagger-1">
-              Handmade Gifts & Surprise Boxes in Bangladesh<br />
+              {t('hero_title')}<br />
               <span className="text-maroon">
-                <TypingEffect 
-                  texts={['Love & Romance', 'Special Moments', 'Heartfelt Surprises']}
+                <TypingEffect
+                  texts={t('language') === 'bn'
+                    ? ['ভালোবাসা ও রোমান্স', 'বিশেষ মুহূর্ত', 'হৃদয়স্পর্শী সারপ্রাইজ']
+                    : ['Love & Romance', 'Special Moments', 'Heartfelt Surprises']}
                   speed={100}
                   deleteSpeed={50}
                   pauseTime={2000}
@@ -259,18 +264,17 @@ const Home = () => {
             </h1>
 
             <p className="text-lg md:text-xl text-charcoal-light mb-8 leading-relaxed max-w-2xl mx-auto animate-fade-in-up stagger-2">
-              Express your emotions with curated jewelry, watches, chocolates, flowers, and romantic gift combos.
-              Make every moment unforgettable with Chirkut Ghor and fast delivery across Bangladesh.
+              {t('hero_subtitle')}
             </p>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in-up stagger-3">
               <Link to="/shop" className="btn-primary px-8 py-4 text-lg flex items-center justify-center space-x-2 group shadow-xl">
-                <span>Explore Collection</span>
+                <span>{t('explore_collection')}</span>
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
               </Link>
               <Link to="/about" className="btn-secondary px-8 py-4 text-lg">
-                Our Story
+                {t('language') === 'bn' ? 'আমাদের গল্প' : 'Our Story'}
               </Link>
             </div>
 
@@ -308,22 +312,25 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Flash Sale Section */}
+      <FlashSale />
+
       {/* Banner Slider Section */}
-      <section className="section-spacing bg-cream">
+      <section className="section-spacing bg-white dark:bg-slate-900 reveal">
         <div className="section-container">
           <BannerSlider />
         </div>
       </section>
 
       {/* Categories Section */}
-      <section className="section-spacing bg-white">
+      <section className="section-spacing bg-white reveal">
         <div className="section-container">
           <div className="text-center mb-8 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-charcoal mb-3 sm:mb-4">
-              Shop by Category
+              {t('shop_by_category')}
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-charcoal-light max-w-2xl mx-auto px-4">
-              Explore our diverse range of handcrafted products
+              {t('language') === 'bn' ? 'আমাদের বৈচিত্র্যময় হস্তনির্মিত পণ্য দেখুন' : 'Explore our diverse range of handcrafted products'}
             </p>
           </div>
 
@@ -401,7 +408,7 @@ const Home = () => {
                   key={category._id || index}
                   to={`/shop?category=${category.name}`}
                   className="group animate-fade-in-up"
-                  style={{animationDelay: `${index * 0.1}s`}}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div
                     className="rounded-2xl p-6 text-left shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ring-1 ring-black/5"
@@ -425,14 +432,14 @@ const Home = () => {
             <Link
               to="/shop"
               className="group animate-fade-in-up"
-              style={{animationDelay: `${categories.length * 0.1}s`}}
+              style={{ animationDelay: `${categories.length * 0.1}s` }}
             >
               <div className="bg-emerald rounded-2xl p-6 text-left shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
                 <div className="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Shirt className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">All Products</h3>
-                <p className="text-white/80 text-sm">Browse the full catalog</p>
+                <h3 className="text-lg font-bold text-white mb-2">{t('language') === 'bn' ? 'সব পণ্য' : 'All Products'}</h3>
+                <p className="text-white/80 text-sm">{t('language') === 'bn' ? 'সম্পূর্ণ ক্যাটালগ দেখুন' : 'Browse the full catalog'}</p>
               </div>
             </Link>
           </div>
@@ -440,14 +447,14 @@ const Home = () => {
       </section>
 
       {/* Featured Products Section */}
-      <section className="section-spacing bg-cream">
+      <section className="section-spacing bg-cream reveal">
         <div className="section-container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
-              Featured Collection
+              {t('featured_products')}
             </h2>
             <p className="text-charcoal-light text-lg max-w-2xl mx-auto">
-              Handpicked treasures from our finest artisans, each piece crafted with love and tradition
+              {t('language') === 'bn' ? 'আমাদের সেরা কারিগরদের হাতে বাছাই করা সংগ্রহ, প্রতিটি পণ্য ভালোবাসা এবং ঐতিহ্য দিয়ে তৈরি' : 'Handpicked treasures from our finest artisans, each piece crafted with love and tradition'}
             </p>
           </div>
 
@@ -457,7 +464,7 @@ const Home = () => {
                 <div
                   key={index}
                   className="animate-fade-in-up"
-                  style={{animationDelay: `${index * 0.1}s`}}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <ProductCardSkeleton />
                 </div>
@@ -469,7 +476,7 @@ const Home = () => {
                 <div
                   key={product._id}
                   className="animate-slide-up"
-                  style={{animationDelay: `${index * 0.1}s`}}
+                  style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <ProductCard product={product} />
                 </div>
@@ -489,13 +496,13 @@ const Home = () => {
       <Newsletter />
 
       {/* CTA Section */}
-      <section className="section-spacing bg-cream-light" data-reveal-ignore="true">
+      <section className="section-spacing bg-cream-light reveal" data-reveal-ignore="true">
         <div className="section-container">
           <div className="max-w-4xl mx-auto">
             <div className="glass-card p-8 md:p-12 text-center">
               <Award className="h-16 w-16 text-maroon mx-auto mb-6" />
               <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
-                Why Choose Chirkut ঘর?
+                Why Choose RongRani?
               </h2>
               <p className="text-charcoal-light text-lg mb-8 max-w-2xl mx-auto">
                 We're more than just an online store. We're a platform that connects you with skilled artisans

@@ -8,6 +8,7 @@ import { addToRecentlyViewed } from '../utils/productUtils';
 import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
 import ReviewForm from '../components/ReviewForm';
+import ProductCard from '../components/ProductCard';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -26,6 +27,7 @@ const ProductDetail = () => {
     chittagongFee: 60,
     outsideChittagongFee: 130,
   });
+  const [relatedProducts, setRelatedProducts] = useState([]);
   const { addToCart } = useCart();
   const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'http://localhost:5173').replace(/\/+$/, '');
 
@@ -46,6 +48,17 @@ const ProductDetail = () => {
     try {
       const response = await axios.get(`/api/products/${id}`);
       setProduct(response.data);
+
+      // Fetch related products based on category
+      if (response.data.category) {
+        try {
+          const relatedRes = await axios.get(`/api/products?category=${response.data.category}&limit=5`);
+          const filtered = relatedRes.data.products.filter(p => p._id !== id).slice(0, 4);
+          setRelatedProducts(filtered);
+        } catch (err) {
+          console.error('Error fetching related products:', err);
+        }
+      }
     } catch {
       // Mock data for development
       const mockProducts = {
@@ -55,7 +68,7 @@ const ProductDetail = () => {
           description: 'Beautiful handwoven silk scarf with traditional patterns. Made from the finest silk threads and handwoven by skilled artisans using age-old techniques.',
           price: 2250,
           originalPrice: 2500,
-          images: [{url: '/api/placeholder/400/400'}, {url: '/api/placeholder/400/400'}, {url: '/api/placeholder/400/400'}],
+          images: [{ url: '/api/placeholder/400/400' }, { url: '/api/placeholder/400/400' }, { url: '/api/placeholder/400/400' }],
           stock: 15,
           category: 'clothing',
           rating: 4.5,
@@ -67,7 +80,7 @@ const ProductDetail = () => {
           description: 'Set of 3 handcrafted bamboo baskets for storage. Perfect for organizing your home and adding a natural touch to your decor.',
           price: 1800,
           originalPrice: 1800,
-          images: [{url: '/api/placeholder/400/400'}, {url: '/api/placeholder/400/400'}],
+          images: [{ url: '/api/placeholder/400/400' }, { url: '/api/placeholder/400/400' }],
           stock: 8,
           category: 'home',
           rating: 4.2,
@@ -147,30 +160,30 @@ const ProductDetail = () => {
   };
 
   const pagePath = `/product/${id}`;
-  const pageTitle = product ? `${product.name} | Chirkut Ghor` : 'Product Details | Chirkut Ghor';
+  const pageTitle = product ? `${product.name} | RongRani` : 'Product Details | RongRani';
   const pageDescription = product?.description
     ? buildDescription(product.description)
-    : 'View product details, pricing, and delivery options from Chirkut Ghor.';
+    : 'View product details, pricing, and delivery options from RongRani.';
   const pageImage = product
     ? getImageUrl(product.images?.[0]) || getImageUrl(product.image)
     : '';
   const productSchema = product
     ? {
-        '@context': 'https://schema.org',
-        '@type': 'Product',
-        name: product.name,
-        description: pageDescription,
-        image: pageImage ? [pageImage] : undefined,
-        sku: product._id,
-        brand: { '@type': 'Brand', name: 'Chirkut Ghor' },
-        offers: {
-          '@type': 'Offer',
-          priceCurrency: 'BDT',
-          price: String(product.price),
-          availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
-          url: `${baseUrl}${pagePath}`,
-        },
-      }
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      description: pageDescription,
+      image: pageImage ? [pageImage] : undefined,
+      sku: product._id,
+      brand: { '@type': 'Brand', name: 'RongRani' },
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'BDT',
+        price: String(product.price),
+        availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        url: `${baseUrl}${pagePath}`,
+      },
+    }
     : null;
 
   const nextImage = () => {
@@ -185,8 +198,8 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Seo
-          title="Product Details | Chirkut Ghor"
-          description="View product details, pricing, and delivery options from Chirkut Ghor."
+          title="Product Details | RongRani"
+          description="View product details, pricing, and delivery options from RongRani."
           path={pagePath}
         />
         <div className="text-center">
@@ -201,8 +214,8 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Seo
-          title="Product Not Found | Chirkut Ghor"
-          description="The product you are looking for is unavailable. Explore handmade gifts and surprise boxes at Chirkut Ghor."
+          title="Product Not Found | RongRani"
+          description="The product you are looking for is unavailable. Explore handmade gifts and surprise boxes at RongRani."
           path={pagePath}
           noIndex
         />
@@ -267,6 +280,9 @@ const ProductDetail = () => {
                     '/api/placeholder/600/600'
                   }
                   alt={product.name}
+                  loading="eager"
+                  decoding="async"
+                  fetchpriority="high"
                   className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-110"
                 />
               </div>
@@ -309,15 +325,16 @@ const ProductDetail = () => {
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
-                    className={`flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-3 transition-all duration-300 ${
-                      selectedImage === index 
-                        ? 'border-maroon shadow-2xl scale-110 ring-4 ring-maroon/20' 
-                        : 'border-maroon/10 hover:border-maroon/50 hover:scale-105'
-                    }`}
+                    className={`flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-3 transition-all duration-300 ${selectedImage === index
+                      ? 'border-maroon shadow-2xl scale-110 ring-4 ring-maroon/20'
+                      : 'border-maroon/10 hover:border-maroon/50 hover:scale-105'
+                      }`}
                   >
                     <img
                       src={getImageUrl(image) || '/api/placeholder/120/120'}
                       alt={`${product.name} ${index + 1}`}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   </button>
@@ -335,7 +352,7 @@ const ProductDetail = () => {
                 <Package className="h-4 w-4" />
                 <span className="capitalize">{product.category}</span>
               </div>
-              
+
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-maroon mb-5 leading-tight">
                 {product.name}
               </h1>
@@ -346,11 +363,10 @@ const ProductDetail = () => {
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-5 w-5 ${
-                        i < Math.floor(product.rating || 0)
-                          ? 'text-gold fill-current'
-                          : 'text-slate/30'
-                      }`}
+                      className={`h-5 w-5 ${i < Math.floor(product.rating || 0)
+                        ? 'text-gold fill-current'
+                        : 'text-slate/30'
+                        }`}
                     />
                   ))}
                 </div>
@@ -397,12 +413,10 @@ const ProductDetail = () => {
               {/* Stock Status */}
               <div className="flex items-center justify-between pb-5 mb-5 border-b-2 border-maroon/10">
                 <div className="flex items-center space-x-3">
-                  <div className={`w-3 h-3 rounded-full animate-pulse shadow-lg ${
-                    product.stock > 0 ? 'bg-green-500' : 'bg-red-500'
-                  }`}></div>
-                  <span className={`font-bold text-base ${
-                    product.stock > 0 ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <div className={`w-3 h-3 rounded-full animate-pulse shadow-lg ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'
+                    }`}></div>
+                  <span className={`font-bold text-base ${product.stock > 0 ? 'text-green-600' : 'text-red-600'
+                    }`}>
                     {product.stock > 0 ? `✅ ${product.stock} in stock` : '❌ Out of stock'}
                   </span>
                 </div>
@@ -459,11 +473,10 @@ const ProductDetail = () => {
                 </button>
                 <button
                   onClick={addToWishlist}
-                  className={`w-full py-4 rounded-2xl border-3 transition-all flex items-center justify-center space-x-3 hover:scale-[1.02] active:scale-95 font-semibold ${
-                    isWishlisted
-                      ? 'bg-pink-500 border-pink-500 text-white shadow-xl'
-                      : 'bg-white border-maroon/30 text-maroon hover:border-maroon hover:bg-maroon/5'
-                  }`}
+                  className={`w-full py-4 rounded-2xl border-3 transition-all flex items-center justify-center space-x-3 hover:scale-[1.02] active:scale-95 font-semibold ${isWishlisted
+                    ? 'bg-pink-500 border-pink-500 text-white shadow-xl'
+                    : 'bg-white border-maroon/30 text-maroon hover:border-maroon hover:bg-maroon/5'
+                    }`}
                 >
                   <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current animate-pulse' : ''}`} />
                   <span>{isWishlisted ? 'Saved to Wishlist ❤️' : 'Add to Wishlist 🤍'}</span>
@@ -516,7 +529,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="flex items-center justify-between p-4 bg-cream/30 rounded-xl border border-maroon/10 hover:shadow-md transition-shadow">
                   <span className="text-slate font-semibold text-base">Brand:</span>
-                  <span className="text-maroon font-black text-lg">Chirkut ঘর</span>
+                  <span className="text-maroon font-black text-lg">RongRani</span>
                 </div>
               </div>
             </div>
@@ -654,7 +667,7 @@ const ProductDetail = () => {
                 {canReview && (
                   <button
                     onClick={() => setShowReviewForm(true)}
-                    className="bg-gradient-to-r from-maroon to-pink-600 text-white px-6 py-3 rounded-2xl font-bold text-sm hover:shadow-xl hover:scale-105 transition-all active:scale-95"
+                    className="bg-maroon text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-maroon-dark hover:shadow-xl hover:scale-105 transition-all active:scale-95"
                   >
                     Write Review ✨
                   </button>
@@ -682,9 +695,8 @@ const ProductDetail = () => {
                             {[...Array(5)].map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-4 w-4 ${
-                                  i < review.rating ? 'text-gold fill-current' : 'text-slate/30'
-                                }`}
+                                className={`h-4 w-4 ${i < review.rating ? 'text-gold fill-current' : 'text-slate/30'
+                                  }`}
                               />
                             ))}
                           </div>
@@ -726,6 +738,28 @@ const ProductDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Related Products Section */}
+      {relatedProducts.length > 0 && (
+        <section className="py-16 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+          <div className="container mx-auto px-4">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-3xl font-black text-maroon flex items-center gap-2">
+                <TrendingUp className="w-8 h-8" />
+                You May Also Like
+              </h2>
+              <Link to="/shop" className="text-slate-500 hover:text-maroon font-semibold flex items-center gap-1 group transition-colors">
+                View All <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedProducts.map(product => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Review Form Modal */}
       {showReviewForm && (

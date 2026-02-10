@@ -51,7 +51,7 @@ const Login = () => {
       <div className="pt-8 pb-4">
         <div className="flex justify-center">
           <Link to="/" className="text-2xl font-bold text-maroon">
-            Chirkut ঘর
+            RongRani
           </Link>
         </div>
       </div>

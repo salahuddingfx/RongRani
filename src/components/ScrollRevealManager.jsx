@@ -5,44 +5,26 @@ const ScrollRevealManager = () => {
     const location = useLocation();
 
     useEffect(() => {
-        // Animate all elements inside main
-        const selectorList = [
-            'main', // Animate main itself
-            'main > *', // Animate all direct children of main
-            'main *', // All descendants of main
-        ];
-
-        if (!('IntersectionObserver' in window)) {
-            document.querySelectorAll(selectorList.join(',')).forEach(el =>
-                el.classList.add('reveal-visible')
-            );
-            return;
-        }
+        // Target elements with specific animation classes
+        const selector = '.reveal, .reveal-left, .reveal-right';
 
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('reveal-visible');
-                        observer.unobserve(entry.target); // reveal ONCE
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); // output ONCE
                     }
                 });
             },
             {
-                threshold: 0.15,
-                rootMargin: '0px 0px -10% 0px',
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px',
             }
         );
 
-        const applyReveal = () => {
-            document.querySelectorAll(selectorList.join(',')).forEach((el) => {
-                if (el.dataset.revealInit === 'true') return;
-                el.dataset.revealInit = 'true';
-                observer.observe(el);
-            });
-        };
-
-        applyReveal();
+        const elements = document.querySelectorAll(selector);
+        elements.forEach((el) => observer.observe(el));
 
         return () => observer.disconnect();
     }, [location.pathname]);

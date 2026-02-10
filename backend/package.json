@@ -1,7 +1,7 @@
 {
-  "name": "chirkut-ghor-backend",
+  "name": "rongrani-backend",
   "version": "1.0.0",
-  "description": "Backend API for Chirkut ঘর - A Bangladeshi gift e-commerce platform built with Node.js, Express, and MongoDB",
+  "description": "Backend API for RongRani - A Bangladeshi gift e-commerce platform built with Node.js, Express, and MongoDB",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -74,7 +74,8 @@
     "pdfkit": "^0.14.0",
     "recharts": "^3.7.0",
     "sharp": "^0.34.5",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.3",
+    "sslcommerz-lts": "^1.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

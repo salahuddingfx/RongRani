@@ -5,10 +5,10 @@ import Seo from '../components/Seo';
 
 const PrivacyPolicy = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-cream via-white to-cream-light py-16">
+    <div className="min-h-screen bg-cream py-16">
       <Seo
-        title="Privacy Policy | Chirkut Ghor"
-        description="Learn how Chirkut Ghor collects, uses, and protects your data when you shop for handmade gifts in Bangladesh."
+        title="Privacy Policy | RongRani"
+        description="Learn how RongRani collects, uses, and protects your data when you shop for handmade gifts in Bangladesh."
         path="/privacy-policy"
       />
       <div className="section-container max-w-4xl">
@@ -17,7 +17,7 @@ const PrivacyPolicy = () => {
           <div className="flex justify-center mb-6">
             <div
               className="p-4 rounded-2xl shadow-xl"
-              style={{ backgroundImage: 'linear-gradient(135deg, #059669 0%, #0D9488 100%)' }}
+              style={{ backgroundColor: '#059669' }}
             >
               <Shield className="h-12 w-12 text-white" />
             </div>
@@ -70,8 +70,8 @@ const PrivacyPolicy = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">1. Introduction</h2>
             <p className="text-charcoal-light leading-relaxed">
-              At Chirkut ঘর, we respect your privacy and are committed to protecting your personal data. 
-              This privacy policy explains how we collect, use, store, and protect your information when you 
+              At RongRani, we respect your privacy and are committed to protecting your personal data.
+              This privacy policy explains how we collect, use, store, and protect your information when you
               visit our website and use our services.
             </p>
           </section>
@@ -158,7 +158,7 @@ const PrivacyPolicy = () => {
                 <li>Provide personalized content and recommendations</li>
               </ul>
               <p className="leading-relaxed mt-3">
-                You can control cookies through your browser settings. However, disabling cookies may affect 
+                You can control cookies through your browser settings. However, disabling cookies may affect
                 your ability to use certain features of our website.
               </p>
             </div>
@@ -171,7 +171,7 @@ const PrivacyPolicy = () => {
               <h2 className="text-2xl font-bold text-charcoal">6. Data Security</h2>
             </div>
             <p className="text-charcoal-light leading-relaxed">
-              We implement appropriate technical and organizational measures to protect your personal information 
+              We implement appropriate technical and organizational measures to protect your personal information
               from unauthorized access, disclosure, alteration, or destruction. These measures include:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-4 mt-3 text-charcoal-light">
@@ -206,8 +206,8 @@ const PrivacyPolicy = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">8. Data Retention</h2>
             <p className="text-charcoal-light leading-relaxed">
-              We retain your personal information for as long as necessary to fulfill the purposes outlined in 
-              this privacy policy, unless a longer retention period is required by law. When we no longer need 
+              We retain your personal information for as long as necessary to fulfill the purposes outlined in
+              this privacy policy, unless a longer retention period is required by law. When we no longer need
               your information, we will securely delete or anonymize it.
             </p>
           </section>
@@ -216,8 +216,8 @@ const PrivacyPolicy = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">9. Third-Party Links</h2>
             <p className="text-charcoal-light leading-relaxed">
-              Our website may contain links to third-party websites. We are not responsible for the privacy 
-              practices of these external sites. We encourage you to read their privacy policies before 
+              Our website may contain links to third-party websites. We are not responsible for the privacy
+              practices of these external sites. We encourage you to read their privacy policies before
               providing any personal information.
             </p>
           </section>
@@ -226,8 +226,8 @@ const PrivacyPolicy = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">10. Children's Privacy</h2>
             <p className="text-charcoal-light leading-relaxed">
-              Our services are not intended for children under 13 years of age. We do not knowingly collect 
-              personal information from children. If you believe we have collected information from a child, 
+              Our services are not intended for children under 13 years of age. We do not knowingly collect
+              personal information from children. If you believe we have collected information from a child,
               please contact us immediately.
             </p>
           </section>
@@ -236,8 +236,8 @@ const PrivacyPolicy = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">11. Changes to This Policy</h2>
             <p className="text-charcoal-light leading-relaxed">
-              We may update this privacy policy from time to time. We will notify you of significant changes 
-              by posting a notice on our website or sending you an email. Your continued use of our services 
+              We may update this privacy policy from time to time. We will notify you of significant changes
+              by posting a notice on our website or sending you an email. Your continued use of our services
               after changes constitutes acceptance of the updated policy.
             </p>
           </section>

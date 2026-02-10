@@ -56,7 +56,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 /* -------------------- ROUTES -------------------- */
 app.get('/', (_req, res) => {
-  res.json({ message: 'Chirkut ঘর Backend API running' });
+  res.json({ message: 'RongRani Backend API running' });
 });
 
 app.get('/api/health', (_req, res) => {
@@ -85,6 +85,8 @@ app.use('/api/ai', require('./routes/ai.routes'));
 app.use('/api/categories', require('./routes/category.routes'));
 app.use('/api/promotions', require('./routes/promotion.routes'));
 app.use('/api/coupons', require('./routes/coupon.routes'));
+app.use('/api/payment', require('./routes/payment.routes'));
+app.use('/api/flash-sales', require('./routes/flashSale.routes'));
 
 /* -------------------- PLACEHOLDER IMAGE -------------------- */
 app.get('/api/placeholder/:width/:height', async (req, res) => {

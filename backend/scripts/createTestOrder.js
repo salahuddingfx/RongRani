@@ -136,7 +136,7 @@ const createTestOrder = async () => {
     try {
       await sendEmail(
         user.email,
-        'Order Confirmation - Chirkut ঘর',
+        'Order Confirmation - RongRani',
         'orderConfirmation',
         {
           name: user.name,
@@ -164,7 +164,7 @@ const createTestOrder = async () => {
     try {
       await sendEmail(
         process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
-        `🛒 New Order #${order._id} - Chirkut ঘর`,
+        `🛒 New Order #${order._id} - RongRani`,
         'adminNewOrder',
         {
           orderId: order._id,

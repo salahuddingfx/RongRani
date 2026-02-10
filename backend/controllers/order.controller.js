@@ -68,7 +68,7 @@ const createOrder = async (req, res) => {
     // Determine if this is a guest order
     const isGuest = !req.user;
     const userId = req.user?._id || null;
-    
+
     // For guest orders, require guestInfo
     if (isGuest && (!guestInfo?.name || !guestInfo?.phone)) {
       return res.status(400).json({
@@ -230,7 +230,7 @@ const createOrder = async (req, res) => {
       const recipientEmail = isGuest ? guestInfo.email : req.user.email;
       const recipientName = isGuest ? guestInfo.name : req.user.name;
       const trackingQuery = recipientEmail ? `?email=${encodeURIComponent(recipientEmail)}` : '';
-      
+
       // Generate PDF invoice
       let attachments = [];
       try {
@@ -244,11 +244,11 @@ const createOrder = async (req, res) => {
         console.error('PDF generation failed:', pdfError);
         // Continue with email even if PDF fails
       }
-      
+
       if (recipientEmail) {
         await sendEmail(
           recipientEmail,
-          'Order Confirmation - Chirkut ঘর',
+          'Order Confirmation - RongRani',
           'orderConfirmation',
           {
             name: recipientName,
@@ -277,12 +277,13 @@ const createOrder = async (req, res) => {
     try {
       const customerEmail = isGuest ? guestInfo.email : req.user.email;
       const customerName = isGuest ? guestInfo.name : req.user.name;
-      const customerPhone = isGuest ? guestInfo.phone : req.user.phone || 'Not provided';
-      
+      // Use shipping phone as it is mandatory, fallback to user phone or guest phone
+      const customerPhone = shippingAddress.phone || (isGuest ? guestInfo.phone : req.user.phone) || 'Not provided';
+
       console.log('📧 Sending new order notification to admin...');
       await sendEmail(
         process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
-        `🛒 New Order #${order._id} - Chirkut ঘর`,
+        `🛒 New Order #${order._id} - RongRani`,
         'adminOrderNotification',
         {
           orderId: order._id,
@@ -407,7 +408,7 @@ const getOrderForTracking = async (req, res) => {
 // @access  Private/Admin
 const updateOrderStatus = async (req, res) => {
   try {
-    const { orderStatus, trackingNumber } = req.body;
+    const { orderStatus, trackingNumber, paymentStatus } = req.body;
 
     const order = await Order.findById(req.params.id);
 
@@ -415,43 +416,54 @@ const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    order.orderStatus = orderStatus;
+    // Update Order Status
+    if (orderStatus) {
+      order.orderStatus = orderStatus;
+      if (orderStatus === 'delivered' && !order.deliveredAt) {
+        order.deliveredAt = new Date();
+        // Often, delivered COD orders are implicitly paid, but let's keep it manual as requested unless admin sets it
+      }
+    }
+
+    // Update Tracking
     if (trackingNumber) order.trackingNumber = trackingNumber;
 
-    if (orderStatus === 'delivered') {
-      order.deliveredAt = new Date();
+    // Update Payment Status (User Request: "parcel deliverd hoya gele oita admin change kore dite parbe paid hisebe")
+    // This allows admin to verify payment and mark it as 'paid'
+    if (paymentStatus) {
+      order.paymentStatus = paymentStatus;
+
+      // If status becomes PAID, mark isPaid=true so it counts in revenue
+      if (paymentStatus === 'paid' && !order.isPaid) {
+        order.isPaid = true;
+        order.paidAt = new Date();
+      }
+      // Allow reverting to unpaid if needed (e.g. error)
+      else if (paymentStatus !== 'paid' && order.isPaid) {
+        order.isPaid = false;
+        order.paidAt = null;
+      }
     }
 
     await order.save();
 
     // Send status update email
     try {
-      if (order.user) {
-        const user = await User.findById(order.user);
-        const trackingQuery = user?.email ? `?email=${encodeURIComponent(user.email)}` : '';
+      const recipientEmail = order.user ? (await User.findById(order.user))?.email : order.guestInfo?.email;
+      const recipientName = order.user ? (await User.findById(order.user))?.name : order.guestInfo?.name;
+
+      if (recipientEmail) {
+        const trackingQuery = recipientEmail ? `?email=${encodeURIComponent(recipientEmail)}` : '';
         await sendEmail(
-          user.email,
-          'Order Status Update - Chirkut ঘর',
+          recipientEmail,
+          'Order Update - RongRani',
           'orderStatusUpdate',
           {
-            name: user.name,
+            name: recipientName || 'Customer',
             orderId: order._id,
-            status: orderStatus,
-            trackingNumber,
-            trackingQuery,
-          }
-        );
-      } else if (order.guestInfo) {
-        const trackingQuery = order.guestInfo?.email ? `?email=${encodeURIComponent(order.guestInfo.email)}` : '';
-        await sendEmail(
-          order.guestInfo.email,
-          'Order Status Update - Chirkut ঘর',
-          'orderStatusUpdate',
-          {
-            name: order.guestInfo.name,
-            orderId: order._id,
-            status: orderStatus,
-            trackingNumber,
+            status: orderStatus || order.orderStatus, // show current status
+            paymentStatus: paymentStatus || order.paymentStatus,
+            trackingNumber: trackingNumber || order.trackingNumber,
             trackingQuery,
           }
         );

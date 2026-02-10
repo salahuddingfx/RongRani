@@ -5,17 +5,17 @@ import Seo from '../components/Seo';
 
 const TermsConditions = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-cream via-white to-cream-light py-16">
+    <div className="min-h-screen bg-cream py-16">
       <Seo
-        title="Terms & Conditions | Chirkut Ghor"
-        description="Read the terms and conditions for shopping, delivery, and returns at Chirkut Ghor."
+        title="Terms & Conditions | RongRani"
+        description="Read the terms and conditions for shopping, delivery, and returns at RongRani."
         path="/terms"
       />
       <div className="section-container max-w-4xl">
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-br from-maroon to-pink-600 p-4 rounded-2xl shadow-xl">
+            <div className="bg-maroon p-4 rounded-2xl shadow-xl">
               <FileText className="h-12 w-12 text-white" />
             </div>
           </div>
@@ -67,8 +67,8 @@ const TermsConditions = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">1. Introduction</h2>
             <p className="text-charcoal-light leading-relaxed">
-              Welcome to Chirkut ঘর. These Terms and Conditions govern your use of our website and services. 
-              By accessing or using our website, you agree to be bound by these terms. If you disagree with 
+              Welcome to RongRani. These Terms and Conditions govern your use of our website and services.
+              By accessing or using our website, you agree to be bound by these terms. If you disagree with
               any part of these terms, please do not use our website.
             </p>
           </section>
@@ -91,8 +91,8 @@ const TermsConditions = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">3. Product Information</h2>
             <p className="text-charcoal-light leading-relaxed">
-              We strive to provide accurate product descriptions and images. However, we do not warrant that product 
-              descriptions or other content on our website are accurate, complete, reliable, current, or error-free. 
+              We strive to provide accurate product descriptions and images. However, we do not warrant that product
+              descriptions or other content on our website are accurate, complete, reliable, current, or error-free.
               Actual product colors may vary slightly from images due to screen settings and lighting conditions.
             </p>
           </section>
@@ -145,8 +145,8 @@ const TermsConditions = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">7. Intellectual Property</h2>
             <p className="text-charcoal-light leading-relaxed">
-              All content on this website, including text, graphics, logos, images, and software, is the property 
-              of Chirkut ঘর or its content suppliers and is protected by copyright laws. You may not reproduce, 
+              All content on this website, including text, graphics, logos, images, and software, is the property
+              of RongRani or its content suppliers and is protected by copyright laws. You may not reproduce,
               distribute, or create derivative works without our express written permission.
             </p>
           </section>
@@ -155,8 +155,8 @@ const TermsConditions = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">8. Limitation of Liability</h2>
             <p className="text-charcoal-light leading-relaxed">
-              To the fullest extent permitted by law, Chirkut ঘর shall not be liable for any indirect, incidental, 
-              special, or consequential damages arising from your use of our website or products. Our total liability 
+              To the fullest extent permitted by law, RongRani shall not be liable for any indirect, incidental,
+              special, or consequential damages arising from your use of our website or products. Our total liability
               shall not exceed the amount you paid for the product.
             </p>
           </section>
@@ -177,8 +177,8 @@ const TermsConditions = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">10. Changes to Terms</h2>
             <p className="text-charcoal-light leading-relaxed">
-              We reserve the right to modify these terms at any time. Changes will be effective immediately upon 
-              posting on our website. Your continued use of our website after changes constitutes acceptance of 
+              We reserve the right to modify these terms at any time. Changes will be effective immediately upon
+              posting on our website. Your continued use of our website after changes constitutes acceptance of
               the modified terms.
             </p>
           </section>
@@ -187,7 +187,7 @@ const TermsConditions = () => {
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-4">11. Governing Law</h2>
             <p className="text-charcoal-light leading-relaxed">
-              These Terms and Conditions are governed by and construed in accordance with the laws of Bangladesh. 
+              These Terms and Conditions are governed by and construed in accordance with the laws of Bangladesh.
               Any disputes shall be subject to the exclusive jurisdiction of the courts in Dhaka, Bangladesh.
             </p>
           </section>

@@ -1,33 +1,48 @@
 const nodemailer = require('nodemailer');
 const EmailLog = require('../models/EmailLog');
 
-// Check if email service is configured
-const isEmailConfigured = !!(process.env.BREVO_SMTP_USER && process.env.BREVO_SMTP_PASS);
+// Check if email service is configured (Gmail or Brevo)
+const isGmailConfigured = !!(process.env.EMAIL_USER && process.env.EMAIL_PASS);
+const isBrevoConfigured = !!(process.env.BREVO_SMTP_USER && process.env.BREVO_SMTP_PASS);
+const isEmailConfigured = isGmailConfigured || isBrevoConfigured;
 
 if (!isEmailConfigured) {
   console.log('⚠️  Email service not configured - emails will be logged to console only');
-  console.log('   To enable: Set BREVO_SMTP_USER and BREVO_SMTP_PASS in .env');
+  console.log('   To enable Gmail: Set EMAIL_USER and EMAIL_PASS in .env');
+  console.log('   To enable Brevo: Set BREVO_SMTP_USER and BREVO_SMTP_PASS in .env');
+} else {
+  console.log(`✅ Email service configured using: ${isGmailConfigured ? 'Gmail' : 'Brevo'}`);
 }
 
-// Create transporter with Brevo SMTP (only if configured)
-const transporter = isEmailConfigured ? nodemailer.createTransport({
-  host: process.env.BREVO_SMTP_HOST || 'smtp-relay.brevo.com',
-  port: process.env.BREVO_SMTP_PORT || 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: process.env.BREVO_SMTP_USER,
-    pass: process.env.BREVO_SMTP_PASS
+// Create transporter (Gmail takes priority over Brevo)
+const transporter = isEmailConfigured ? nodemailer.createTransport(
+  isGmailConfigured ? {
+    host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+    port: process.env.EMAIL_PORT || 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  } : {
+    host: process.env.BREVO_SMTP_HOST || 'smtp-relay.brevo.com',
+    port: process.env.BREVO_SMTP_PORT || 587,
+    secure: false,
+    auth: {
+      user: process.env.BREVO_SMTP_USER,
+      pass: process.env.BREVO_SMTP_PASS
+    }
   }
-}) : null;
+) : null;
 
 async function sendEmail(to, subject, template, data, attachments = []) {
   try {
     console.log('📧 Email Service - Starting send to:', to);
     console.log('   Subject:', subject);
     console.log('   Template:', template);
-    
+
     const htmlContent = getTemplateContent(template, data);
-    
+
     // If email not configured, just log to console
     if (!isEmailConfigured) {
       console.log('⚠️  Email not sent (no SMTP configured)');
@@ -35,7 +50,7 @@ async function sendEmail(to, subject, template, data, attachments = []) {
       console.log('   Subject:', subject);
       console.log('   Template:', template);
       console.log('   Data:', JSON.stringify(data, null, 2));
-      
+
       // Still log to database
       await EmailLog.create({
         to,
@@ -46,13 +61,13 @@ async function sendEmail(to, subject, template, data, attachments = []) {
         error: 'Email service not configured',
         sentAt: new Date(),
       });
-      
+
       return { messageId: 'console-only', skipped: true };
     }
-    
+
     // Prepare email options
     const mailOptions = {
-      from: `"${process.env.FROM_NAME || 'Chirkut ঘর'}" <${process.env.FROM_EMAIL || process.env.BREVO_SMTP_USER}>`,
+      from: `"${process.env.FROM_NAME || 'RongRani'}" <${process.env.FROM_EMAIL || process.env.BREVO_SMTP_USER}>`,
       to,
       subject,
       html: htmlContent,
@@ -66,7 +81,7 @@ async function sendEmail(to, subject, template, data, attachments = []) {
     if (attachments && attachments.length > 0) {
       mailOptions.attachments = attachments;
     }
-    
+
     // Send email using nodemailer
     console.log('   Sending via SMTP...');
     const result = await transporter.sendMail(mailOptions);
@@ -88,7 +103,7 @@ async function sendEmail(to, subject, template, data, attachments = []) {
     console.error('   Error message:', error.message);
     console.error('   Error code:', error.code);
     console.error('   Full error:', error);
-    
+
     // Log failed email
     await EmailLog.create({
       to,
@@ -109,9 +124,9 @@ const getTemplateContent = (template, data) => {
   const templates = {
     welcome: () => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #fff6f6; border-radius: 10px;">
-        <h1 style="color: #8B1538;">Welcome to Chirkut ঘর! 💝</h1>
+        <h1 style="color: #8B1538;">Welcome to RongRani! 💝</h1>
         <p>Dear ${data.name},</p>
-        <p>Thank you for joining Chirkut ঘর. We're excited to have you as part of our community!</p>
+        <p>Thank you for joining RongRani. We're excited to have you as part of our community!</p>
         <p style="color: #8B1538; font-weight: bold;">As a lifetime customer, you'll enjoy:</p>
         <ul style="color: #444;">
           <li>💝 Exclusive offers and discounts</li>
@@ -120,7 +135,7 @@ const getTemplateContent = (template, data) => {
         </ul>
         <a href="${process.env.FRONTEND_URL}/shop" style="background-color: #8B1538; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 15px;">Start Shopping</a>
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ Chirkut ঘর ✨</p>
+          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ RongRani ✨</p>
           <p style="color: #666; font-size: 13px; margin: 5px 0;">Your trusted gift & lifestyle store</p>
           <div style="margin: 15px 0;">
             <a href="https://facebook.com/chirkutghor" style="display: inline-block; margin: 0 8px; text-decoration: none;">📘 Facebook</a>
@@ -136,7 +151,7 @@ const getTemplateContent = (template, data) => {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #fff6f6; border-radius: 10px;">
         <div style="text-align: center; background: #8B1538; color: white; padding: 20px; border-radius: 10px 10px 0 0; margin: -20px -20px 20px -20px;">
           <h1 style="margin: 0; font-size: 28px;">🎉 Order Confirmed!</h1>
-          <p style="margin: 10px 0 0 0; font-size: 14px;">Thank you for shopping with Chirkut ঘর</p>
+          <p style="margin: 10px 0 0 0; font-size: 14px;">Thank you for shopping with RongRani</p>
         </div>
         
         <p>Dear <strong>${data.name}</strong>,</p>
@@ -158,7 +173,7 @@ const getTemplateContent = (template, data) => {
             </tr>
           </thead>
           <tbody>
-            ${(data.items || []).map((item, i) => `
+            ${(data.items || []).map((item) => `
               <tr style="border-bottom: 1px solid #f0f0f0;">
                 <td style="padding: 12px;">
                   <div style="display: flex; align-items: center;">
@@ -213,7 +228,7 @@ const getTemplateContent = (template, data) => {
         </div>
         
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ Chirkut ঘর ✨</p>
+          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ RongRani ✨</p>
           <p style="color: #666; font-size: 13px; margin: 5px 0;">Your trusted gift & lifestyle store</p>
           <div style="margin: 15px 0;">
             <a href="https://facebook.com/chirkutghor" style="display: inline-block; margin: 0 8px; text-decoration: none;">📘 Facebook</a>
@@ -243,7 +258,7 @@ const getTemplateContent = (template, data) => {
         <p><strong>Shipping Address:</strong> ${data.shippingAddress}</p>
         <p style="margin-top: 20px; color: #ef4444; font-weight: bold;">⚡ Please process this order as soon as possible.</p>
         <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-          <p style="color: #888; font-size: 13px; margin: 5px 0;">Chirkut ঘর - Admin Notification</p>
+          <p style="color: #888; font-size: 13px; margin: 5px 0;">RongRani - Admin Notification</p>
         </div>
       </div>
     `,
@@ -256,7 +271,7 @@ const getTemplateContent = (template, data) => {
         <p style="color: #dc2626;">⚠️ This link will expire in 1 hour.</p>
         <p>If you didn't request this, please ignore this email.</p>
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ Chirkut ঘর ✨</p>
+          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ RongRani ✨</p>
           <p style="color: #666; font-size: 13px; margin: 5px 0;">Your trusted gift & lifestyle store</p>
           <div style="margin: 15px 0;">
             <a href="https://facebook.com/chirkutghor" style="display: inline-block; margin: 0 8px; text-decoration: none;">📘 Facebook</a>
@@ -276,7 +291,7 @@ const getTemplateContent = (template, data) => {
         ${data.trackingNumber ? `<p><strong>Tracking Number:</strong> ${data.trackingNumber}</p>` : ''}
         <a href="${process.env.FRONTEND_URL}/track/${data.orderId}${data.trackingQuery || ''}" style="background-color: #8B1538; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 15px;">Track Order</a>
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ Chirkut ঘর ✨</p>
+          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ RongRani ✨</p>
           <p style="color: #666; font-size: 13px; margin: 5px 0;">Your trusted gift & lifestyle store</p>
           <div style="margin: 15px 0;">
             <a href="https://facebook.com/chirkutghor" style="display: inline-block; margin: 0 8px; text-decoration: none;">📘 Facebook</a>
@@ -291,7 +306,7 @@ const getTemplateContent = (template, data) => {
     newsletterWelcome: () => `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: linear-gradient(135deg, #8B1538 0%, #ec4899 100%); border-radius: 15px;">
         <div style="background: white; padding: 30px; border-radius: 10px;">
-          <h1 style="color: #8B1538; text-align: center; font-size: 32px;">🎉 Welcome to Chirkut ঘর Newsletter!</h1>
+          <h1 style="color: #8B1538; text-align: center; font-size: 32px;">🎉 Welcome to RongRani Newsletter!</h1>
           <p style="text-align: center; color: #444; font-size: 18px;">Thank you for subscribing! We're thrilled to have you.</p>
           <div style="background: #fff6f6; padding: 20px; border-radius: 10px; margin: 20px 0;">
             <h2 style="color: #8B1538; text-align: center; margin-bottom: 15px;">🎁 Your Welcome Gift</h2>
@@ -312,7 +327,7 @@ const getTemplateContent = (template, data) => {
             <a href="${process.env.FRONTEND_URL}/shop" style="background-color: #8B1538; color: white; padding: 15px 30px; text-decoration: none; border-radius: 25px; display: inline-block; font-weight: bold; font-size: 16px;">Start Shopping Now</a>
           </div>
           <p style="text-align: center; color: #888; font-size: 12px; margin-top: 30px;">
-            You're receiving this email because you subscribed to Chirkut ঘর newsletter.<br/>
+            You're receiving this email because you subscribed to the RongRani newsletter.<br/>
             Don't want these emails? <a href="${process.env.FRONTEND_URL}/unsubscribe" style="color: #8B1538;">Unsubscribe</a>
           </p>
         </div>
@@ -326,9 +341,9 @@ const getTemplateContent = (template, data) => {
           <p><strong>Email:</strong> ${data.userEmail}</p>
           <p><strong>Registered At:</strong> ${data.registeredAt}</p>
         </div>
-        <p style="color: #666;">This user has joined Chirkut ঘর platform. Welcome email has been sent to their inbox.</p>
+        <p style="color: #666;">This user has joined the RongRani platform. Welcome email has been sent to their inbox.</p>
         <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-          <p style="color: #888; font-size: 13px; margin: 5px 0;">Chirkut ঘর - Admin Notification</p>
+          <p style="color: #888; font-size: 13px; margin: 5px 0;">RongRani - Admin Notification</p>
         </div>
       </div>
     `,
@@ -353,7 +368,7 @@ const getTemplateContent = (template, data) => {
         </div>
         <p style="color: #ef4444; font-weight: bold; text-align: center;">⚡ Please process this order immediately!</p>
         <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-          <p style="color: #888; font-size: 13px; margin: 5px 0;">Chirkut ঘর - Admin Notification</p>
+          <p style="color: #888; font-size: 13px; margin: 5px 0;">RongRani - Admin Notification</p>
         </div>
       </div>
     `,
@@ -372,12 +387,35 @@ const getTemplateContent = (template, data) => {
           ✅ Payment has been successfully processed. You can now proceed with order fulfillment.
         </p>
         <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
-          <p style="color: #888; font-size: 13px; margin: 5px 0;">Chirkut ঘর - Admin Notification</p>
+          <p style="color: #888; font-size: 13px; margin: 5px 0;">RongRani - Admin Notification</p>
+        </div>
+      </div>
+    `,
+    reviewThankYou: () => `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #fff6f6; border-radius: 10px;">
+        <h1 style="color: #8B1538;">Thank You for Your Review! 💖</h1>
+        <p>Dear ${data.name},</p>
+        <p>We truly appreciate you taking the time to share your thoughts on <strong>${data.productName}</strong>.</p>
+        <div style="background: white; padding: 15px; border-radius: 10px; border-left: 4px solid #8B1538; margin: 20px 0; font-style: italic;">
+          "${data.comment.length > 100 ? data.comment.substring(0, 100) + '...' : data.comment}"
+        </div>
+        <p>Your feedback helps us improve and helps other customers make better choices.</p>
+        <p>As a token of our appreciation, here is a discount code for your next purchase:</p>
+        <div style="text-align: center; margin: 20px 0;">
+          <span style="background: #8B1538; color: white; padding: 10px 20px; font-size: 18px; font-weight: bold; border-radius: 5px; letter-spacing: 2px;">REVIEW5OFF</span>
+        </div>
+        <p style="font-size: 12px; color: #666; text-align: center;">Use this code at checkout for 5% off your next order!</p>
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #e5e7eb;">
+          <p style="color: #8B1538; font-weight: bold; font-size: 16px; margin-bottom: 10px;">✨ RongRani ✨</p>
+          <div style="margin: 15px 0;">
+            <a href="https://facebook.com/chirkutghor" style="display: inline-block; margin: 0 8px; text-decoration: none;">📘 Facebook</a>
+            <a href="https://instagram.com/chirkutghor" style="display: inline-block; margin: 0 8px; text-decoration: none;">📷 Instagram</a>
+          </div>
         </div>
       </div>
     `,
   };
-  
+
   const templateFn = templates[template];
   return templateFn ? templateFn() : '<p>Email content</p>';
 };

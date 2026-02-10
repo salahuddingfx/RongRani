@@ -62,8 +62,8 @@ const AboutUs = () => {
   return (
     <div className="min-h-screen bg-cream">
       <Seo
-        title="About Chirkut Ghor | Handmade Gifts in Bangladesh"
-        description="Learn about Chirkut Ghor, our artisans, and our mission to deliver handcrafted gifts and surprise boxes across Bangladesh."
+        title="About RongRani | Handmade Gifts in Bangladesh"
+        description="Learn about RongRani, our artisans, and our mission to deliver handcrafted gifts and surprise boxes across Bangladesh."
         path="/about"
       />
       {/* Hero Section */}
@@ -79,7 +79,7 @@ const AboutUs = () => {
               <span className="font-semibold">Est. 2026</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-white">
-              Welcome to Chirkut ঘর
+              Welcome to RongRani
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-white/90 font-medium leading-relaxed">
               Your destination for beautiful, handcrafted gifts and lifestyle products
@@ -143,7 +143,7 @@ const AboutUs = () => {
             <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12 border border-maroon/10">
               <div className="prose prose-lg max-w-none">
                 <p className="text-lg text-charcoal-light leading-relaxed mb-6">
-                  <strong className="text-maroon">Chirkut ঘর</strong> was born from a simple yet powerful vision: 
+                  <strong className="text-maroon">RongRani</strong> was born from a simple yet powerful vision: 
                   to celebrate and preserve the rich heritage of Bangladeshi craftsmanship while making it accessible to everyone.
                 </p>
                 <p className="text-lg text-charcoal-light leading-relaxed mb-6">
@@ -184,7 +184,7 @@ const AboutUs = () => {
               What We Stand For
             </h2>
             <p className="text-lg text-charcoal-light max-w-2xl mx-auto">
-              These core values guide everything we do at Chirkut ঘর
+              These core values guide everything we do at RongRani
             </p>
           </div>
 
@@ -217,7 +217,7 @@ const AboutUs = () => {
               <span className="font-bold">Our Team</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-maroon mb-4">
-              Meet the People Behind Chirkut ঘর
+              Meet the People Behind RongRani
             </h2>
             <p className="text-lg text-charcoal-light max-w-2xl mx-auto">
               Passionate individuals dedicated to bringing you the best

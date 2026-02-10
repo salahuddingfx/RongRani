@@ -53,7 +53,7 @@ const AppInitializer = ({ children }) => {
           {/* Animated Logo */}
           <div className="mb-12">
             <div className="text-7xl md:text-8xl font-bold text-white mb-6 animate-fade-in-up">
-              Chirkut ঘর
+              RongRani
             </div>
             <div className="relative">
               <div className="w-20 h-20 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useDeliveryCalculation } from '../hooks/useDeliveryCalculation';
@@ -12,7 +12,10 @@ const Checkout = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { delivery, loading: deliveryLoading, fetchDelivery } = useDeliveryCalculation();
-  
+  const { state } = useLocation();
+  const giftWrapping = state?.giftWrapping || false;
+  const giftWrappingFee = 50;
+
   const [loading, setLoading] = useState(false);
   const [couponCode, setCouponCode] = useState('');
   const [couponInfo, setCouponInfo] = useState(null);
@@ -98,12 +101,12 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Prevent multiple submissions
     if (loading) {
       return;
     }
-    
+
     setLoading(true);
 
     try {
@@ -114,7 +117,7 @@ const Checkout = () => {
         return;
       }
 
-      if (formData.paymentMethod !== 'cod') {
+      if (['bkash', 'nagad', 'rocket'].includes(formData.paymentMethod)) {
         if (!formData.transactionId || !formData.senderLastDigits) {
           toast.error('Please provide transaction ID and sender last 4 digits');
           setLoading(false);
@@ -157,10 +160,12 @@ const Checkout = () => {
           country: 'Bangladesh',
         },
         paymentMethod: formData.paymentMethod,
-        paymentDetails: formData.paymentMethod !== 'cod' ? {
+        paymentDetails: ['bkash', 'nagad', 'rocket'].includes(formData.paymentMethod) ? {
           transactionId: formData.transactionId,
           senderLastDigits: formData.senderLastDigits,
         } : undefined,
+        isGiftWrapped: giftWrapping,
+        giftWrappingFee: giftWrapping ? giftWrappingFee : 0,
       };
 
       if (couponInfo?.code) {
@@ -183,19 +188,39 @@ const Checkout = () => {
           Authorization: `Bearer ${token}`
         }
       } : {};
-      
-      await axios.post('/api/orders', orderData, config);
-      
-      // Clear cart and show success
+
+      const response = await axios.post('/api/orders', orderData, config);
+      const newOrder = response.data; // Assuming backend returns the created order object directly or in data property
+
+      // Clear cart
       clearCart();
-      
+
+      // Handle Payment Redirection
+      if (formData.paymentMethod === 'sslcommerz') {
+        try {
+          const paymentResponse = await axios.post('/api/payment/init', {
+            orderId: newOrder._id || newOrder.order?._id
+          }, config);
+
+          if (paymentResponse.data.url) {
+            window.location.replace(paymentResponse.data.url);
+            return; // Stop further execution
+          }
+        } catch (paymentError) {
+          console.error('Payment init failed:', paymentError);
+          toast.error('Payment initialization failed. Please check your order in dashboard.');
+          navigate('/orders'); // Fallback
+          return;
+        }
+      }
+
       // Show different messages based on payment method
       if (formData.paymentMethod === 'cod') {
         toast.success('Order placed successfully! We will contact you soon.');
-      } else {
+      } else if (formData.paymentMethod !== 'sslcommerz') {
         toast.success(`Order placed! We'll call you to confirm ${formData.paymentMethod.toUpperCase()} payment.`);
       }
-      
+
       // Navigate based on auth status
       setTimeout(() => {
         if (isAuthenticated) {
@@ -231,7 +256,7 @@ const Checkout = () => {
   // Get delivery charge from backend (or 0 while loading)
   const shipping = delivery?.charge || 0;
   const tax = 0; // No tax
-  const total = Math.max(0, totalPrice + shipping + tax - discount);
+  const total = Math.max(0, totalPrice + shipping + tax + (giftWrapping ? giftWrappingFee : 0) - discount);
 
   return (
     <div className="min-h-screen bg-cream py-12">
@@ -239,7 +264,7 @@ const Checkout = () => {
         <h1 className="text-4xl font-bold text-maroon mb-2 text-center">
           Checkout
         </h1>
-        
+
         {!isAuthenticated && (
           <div className="max-w-2xl mx-auto mb-8">
             <div className="bg-maroon text-white rounded-2xl p-6 shadow-xl">
@@ -285,374 +310,394 @@ const Checkout = () => {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-        {/* Order Summary */}
-        <div className="space-y-6">
-          <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center">
-              <Truck className="h-5 w-5 mr-2" />
-              Order Summary
-            </h2>
+          {/* Order Summary */}
+          <div className="space-y-6">
+            <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-lg p-6">
+              <h2 className="text-xl font-semibold mb-4 flex items-center">
+                <Truck className="h-5 w-5 mr-2" />
+                Order Summary
+              </h2>
 
-            <div className="space-y-3">
-              {cartItems.map((item) => (
-                <div key={item.id} className="flex justify-between items-center">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={item.image || '/placeholder.jpg'}
-                      alt={item.name}
-                      className="w-12 h-12 object-cover rounded"
-                    />
-                    <div>
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Quantity: {item.quantity}
-                      </p>
+              <div className="space-y-3">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={item.image || '/placeholder.jpg'}
+                        alt={item.name}
+                        className="w-12 h-12 object-cover rounded"
+                      />
+                      <div>
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Quantity: {item.quantity}
+                        </p>
+                      </div>
                     </div>
+                    <p className="font-semibold">৳{item.price * item.quantity}</p>
                   </div>
-                  <p className="font-semibold">৳{item.price * item.quantity}</p>
-                </div>
-              ))}
-            </div>
-
-            <hr className="my-4 border-white/30 dark:border-gray-600/30" />
-
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>৳{totalPrice}</span>
+                ))}
               </div>
+
+              <hr className="my-4 border-white/30 dark:border-gray-600/30" />
+
               <div className="space-y-2">
-                <label className="block text-sm font-semibold text-slate">
-                  Coupon Code
-                </label>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="text"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    className="input-field flex-1"
-                    placeholder="Enter coupon code"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleApplyCoupon}
-                    disabled={couponLoading}
-                    className="bg-maroon text-white px-4 py-2 rounded-lg font-semibold disabled:opacity-60"
-                  >
-                    {couponInfo ? 'Remove' : couponLoading ? 'Applying...' : 'Apply'}
-                  </button>
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>৳{totalPrice}</span>
                 </div>
-                {couponInfo && (
-                  <p className="text-xs text-green-700 font-semibold">
-                    Applied {couponInfo.code} • Saved ৳{discount.toFixed(0)}
+                <div className="space-y-2">
+                  <label className="block text-sm font-semibold text-slate">
+                    Coupon Code
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      className="input-field flex-1"
+                      placeholder="Enter coupon code"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleApplyCoupon}
+                      disabled={couponLoading}
+                      className="bg-maroon text-white px-4 py-2 rounded-lg font-semibold disabled:opacity-60"
+                    >
+                      {couponInfo ? 'Remove' : couponLoading ? 'Applying...' : 'Apply'}
+                    </button>
+                  </div>
+                  {couponInfo && (
+                    <p className="text-xs text-green-700 font-semibold">
+                      Applied {couponInfo.code} • Saved ৳{discount.toFixed(0)}
+                    </p>
+                  )}
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  <span>{deliveryLoading ? '...' : `৳${shipping}`}</span>
+                </div>
+                {giftWrapping && (
+                  <div className="flex justify-between text-amber-600">
+                    <span className="flex items-center gap-1">🎁 Gift Wrapping</span>
+                    <span>৳{giftWrappingFee}</span>
+                  </div>
+                )}
+                {delivery?.label && (
+                  <p className="text-xs text-slate">
+                    {delivery.label}
                   </p>
                 )}
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>{deliveryLoading ? '...' : `৳${shipping}`}</span>
-              </div>
-              {delivery?.label && (
-                <p className="text-xs text-slate">
-                  {delivery.label}
-                </p>
-              )}
-              {discount > 0 && (
-                <div className="flex justify-between text-green-700 font-semibold">
-                  <span>Discount</span>
-                  <span>-৳{discount.toFixed(0)}</span>
+                {discount > 0 && (
+                  <div className="flex justify-between text-green-700 font-semibold">
+                    <span>Discount</span>
+                    <span>-৳{discount.toFixed(0)}</span>
+                  </div>
+                )}
+                <hr className="border-white/30 dark:border-gray-600/30" />
+                <div className="flex justify-between text-lg font-semibold">
+                  <span>Total</span>
+                  <span>৳{total.toFixed(2)}</span>
                 </div>
-              )}
-              <hr className="border-white/30 dark:border-gray-600/30" />
-              <div className="flex justify-between text-lg font-semibold">
-                <span>Total</span>
-                <span>৳{total.toFixed(2)}</span>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Checkout Form */}
-        <div className="card p-6 lg:p-8">
-          <h2 className="text-2xl font-bold text-maroon mb-6 flex items-center">
-            <MapPin className="h-6 w-6 mr-2" />
-            Shipping Information
-          </h2>
+          {/* Checkout Form */}
+          <div className="card p-6 lg:p-8">
+            <h2 className="text-2xl font-bold text-maroon mb-6 flex items-center">
+              <MapPin className="h-6 w-6 mr-2" />
+              Shipping Information
+            </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Guest Name and Email */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="input-field"
-                  placeholder="Enter your full name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="input-field"
-                  placeholder="your.email@example.com"
-                />
-              </div>
-            </div>
-
-            {/* Phone Number */}
-            <div>
-              <label className="block text-sm font-semibold text-slate mb-2">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                className="input-field"
-                placeholder="+880 1XXX-XXXXXX"
-              />
-            </div>
-
-            {/* Address */}
-            <div>
-              <label className="block text-sm font-semibold text-slate mb-2">
-                Street Address <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-                rows={2}
-                className="input-field"
-                placeholder="House/Flat no, Street name"
-              />
-            </div>
-
-            {/* Division and District */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  Division (optional)
-                </label>
-                <input
-                  type="text"
-                  name="division"
-                  value={formData.division}
-                  onChange={handleChange}
-                  className="input-field"
-                  placeholder="Chattogram"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  District (optional)
-                </label>
-                <input
-                  type="text"
-                  name="district"
-                  value={formData.district}
-                  onChange={handleChange}
-                  className="input-field"
-                  placeholder="Cox's Bazar"
-                />
-              </div>
-            </div>
-
-            {/* Sub-district and Union */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  Sub-district (Upazila) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="subDistrict"
-                  value={formData.subDistrict}
-                  onChange={handleChange}
-                  required
-                  className="input-field"
-                  placeholder="Cox's Bazar Sadar"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  Union / Ward <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="union"
-                  value={formData.union}
-                  onChange={handleChange}
-                  required
-                  className="input-field"
-                  placeholder="Union name"
-                />
-              </div>
-            </div>
-
-            {/* City and Postal Code */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  City <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="city"
-                  value={formData.city}
-                  onChange={handleChange}
-                  required
-                  className="input-field"
-                  placeholder="Dhaka"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  Postal Code (optional)
-                </label>
-                <input
-                  type="text"
-                  name="postalCode"
-                  value={formData.postalCode}
-                  onChange={handleChange}
-                  className="input-field"
-                  placeholder="1200"
-                />
-              </div>
-            </div>
-
-            {/* Payment Method */}
-            <div className="bg-cream-light p-6 rounded-lg">
-              <h3 className="text-lg font-bold text-maroon mb-4 flex items-center">
-                <CreditCard className="h-5 w-5 mr-2" />
-                Payment Method
-              </h3>
-              <div className="space-y-3">
-                <label className="flex items-center p-3 border-2 border-maroon rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Guest Name and Email */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    Full Name <span className="text-red-500">*</span>
+                  </label>
                   <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="cod"
-                    checked={formData.paymentMethod === 'cod'}
+                    type="text"
+                    name="name"
+                    value={formData.name}
                     onChange={handleChange}
-                    className="text-maroon focus:ring-maroon h-4 w-4"
+                    required
+                    className="input-field"
+                    placeholder="Enter your full name"
                   />
-                  <span className="ml-3 font-semibold text-charcoal">💵 Cash on Delivery</span>
-                </label>
-                
-                <div className="border-2 border-maroon/30 rounded-lg p-4 bg-white/70">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-                    <p className="font-bold text-maroon">📱 Mobile Banking (bKash/Nagad/Rocket)</p>
-                    <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-maroon text-white text-sm font-semibold">
-                      01764723083
-                    </span>
-                  </div>
-                  <ol className="text-sm text-charcoal space-y-1">
-                    <li>1) Send full payment to the number above.</li>
-                    <li>2) Use your own number for payment.</li>
-                    <li>3) Enter Transaction ID and last 4 digits below.</li>
-                  </ol>
-                  <div className="space-y-2 ml-3">
-                    <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="bkash"
-                        checked={formData.paymentMethod === 'bkash'}
-                        onChange={handleChange}
-                        className="text-maroon focus:ring-maroon h-4 w-4"
-                      />
-                      <span className="ml-3 text-charcoal">bKash</span>
-                    </label>
-                    <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="nagad"
-                        checked={formData.paymentMethod === 'nagad'}
-                        onChange={handleChange}
-                        className="text-maroon focus:ring-maroon h-4 w-4"
-                      />
-                      <span className="ml-3 text-charcoal">Nagad</span>
-                    </label>
-                    <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="rocket"
-                        checked={formData.paymentMethod === 'rocket'}
-                        onChange={handleChange}
-                        className="text-maroon focus:ring-maroon h-4 w-4"
-                      />
-                      <span className="ml-3 text-charcoal">Rocket</span>
-                    </label>
-                  </div>
-                  {formData.paymentMethod !== 'cod' && (
-                    <div className="mt-4 ml-3 space-y-3">
-                      <div>
-                        <label className="block text-sm font-semibold text-slate mb-2">
-                          Transaction ID <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="transactionId"
-                          value={formData.transactionId}
-                          onChange={handleChange}
-                          className="input-field"
-                          placeholder="e.g. 8A7B6C5D"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-slate mb-2">
-                          Sender Number (last 4 digits) <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          name="senderLastDigits"
-                          value={formData.senderLastDigits}
-                          onChange={handleChange}
-                          className="input-field"
-                          placeholder="e.g. 2383"
-                          maxLength={4}
-                        />
-                      </div>
-                      <p className="text-xs text-slate">You can call admin after payment if needed.</p>
-                    </div>
-                  )}
-                  <p className="text-xs text-slate mt-3 ml-3">⚠️ We'll call you to confirm payment details</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="input-field"
+                    placeholder="your.email@example.com"
+                  />
                 </div>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full py-5 text-lg font-bold shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Placing Order...' : 'Place Order - ৳' + total.toFixed(2)}
-            </button>
-          </form>
+              {/* Phone Number */}
+              <div>
+                <label className="block text-sm font-semibold text-slate mb-2">
+                  Phone Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  className="input-field"
+                  placeholder="+880 1XXX-XXXXXX"
+                />
+              </div>
+
+              {/* Address */}
+              <div>
+                <label className="block text-sm font-semibold text-slate mb-2">
+                  Street Address <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                  rows={2}
+                  className="input-field"
+                  placeholder="House/Flat no, Street name"
+                />
+              </div>
+
+              {/* Division and District */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    Division (optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="division"
+                    value={formData.division}
+                    onChange={handleChange}
+                    className="input-field"
+                    placeholder="Chattogram"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    District (optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="district"
+                    value={formData.district}
+                    onChange={handleChange}
+                    className="input-field"
+                    placeholder="Cox's Bazar"
+                  />
+                </div>
+              </div>
+
+              {/* Sub-district and Union */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    Sub-district (Upazila) <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="subDistrict"
+                    value={formData.subDistrict}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                    placeholder="Cox's Bazar Sadar"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    Union / Ward <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="union"
+                    value={formData.union}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                    placeholder="Union name"
+                  />
+                </div>
+              </div>
+
+              {/* City and Postal Code */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    City <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                    placeholder="Dhaka"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">
+                    Postal Code (optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    className="input-field"
+                    placeholder="1200"
+                  />
+                </div>
+              </div>
+
+              {/* Payment Method */}
+              <div className="bg-cream-light p-6 rounded-lg">
+                <h3 className="text-lg font-bold text-maroon mb-4 flex items-center">
+                  <CreditCard className="h-5 w-5 mr-2" />
+                  Payment Method
+                </h3>
+                <div className="space-y-3">
+                  <label className="flex items-center p-3 border-2 border-maroon rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="cod"
+                      checked={formData.paymentMethod === 'cod'}
+                      onChange={handleChange}
+                      className="text-maroon focus:ring-maroon h-4 w-4"
+                    />
+                    <span className="ml-3 font-semibold text-charcoal">💵 Cash on Delivery</span>
+                  </label>
+
+                  {/* SSLCommerz Option - Separate */}
+                  <label className="flex items-center p-3 border-2 border-maroon rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="sslcommerz"
+                      checked={formData.paymentMethod === 'sslcommerz'}
+                      onChange={handleChange}
+                      className="text-maroon focus:ring-maroon h-4 w-4"
+                    />
+                    <span className="ml-3 font-semibold text-charcoal">💳 Online Payment (Card/Bkash/Nagad via SSLCommerz)</span>
+                  </label>
+
+                  {/* Manual Mobile Banking */}
+                  <div className="border-2 border-maroon/30 rounded-lg p-4 bg-white/70">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                      <p className="font-bold text-maroon">📱 Manual Mobile Banking</p>
+                      <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-maroon text-white text-sm font-semibold">
+                        01764723083
+                      </span>
+                    </div>
+                    <ol className="text-sm text-charcoal space-y-1">
+                      <li>1) Send full payment to the number above.</li>
+                      <li>2) Use your own number for payment.</li>
+                      <li>3) Enter Transaction ID and last 4 digits below.</li>
+                    </ol>
+                    <div className="space-y-2 ml-3 mt-3">
+                      <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="bkash"
+                          checked={formData.paymentMethod === 'bkash'}
+                          onChange={handleChange}
+                          className="text-maroon focus:ring-maroon h-4 w-4"
+                        />
+                        <span className="ml-3 text-charcoal">bKash (Manual)</span>
+                      </label>
+                      <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="nagad"
+                          checked={formData.paymentMethod === 'nagad'}
+                          onChange={handleChange}
+                          className="text-maroon focus:ring-maroon h-4 w-4"
+                        />
+                        <span className="ml-3 text-charcoal">Nagad (Manual)</span>
+                      </label>
+                      <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
+                        <input
+                          type="radio"
+                          name="paymentMethod"
+                          value="rocket"
+                          checked={formData.paymentMethod === 'rocket'}
+                          onChange={handleChange}
+                          className="text-maroon focus:ring-maroon h-4 w-4"
+                        />
+                        <span className="ml-3 text-charcoal">Rocket (Manual)</span>
+                      </label>
+                    </div>
+
+                    {/* Show fields only for Manual Mobile Banking */}
+                    {['bkash', 'nagad', 'rocket'].includes(formData.paymentMethod) && (
+                      <div className="mt-4 ml-3 space-y-3 animate-fade-in-up">
+                        <div>
+                          <label className="block text-sm font-semibold text-slate mb-2">
+                            Transaction ID <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="transactionId"
+                            value={formData.transactionId}
+                            onChange={handleChange}
+                            className="input-field"
+                            placeholder="e.g. 8A7B6C5D"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-slate mb-2">
+                            Sender Number (last 4 digits) <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="senderLastDigits"
+                            value={formData.senderLastDigits}
+                            onChange={handleChange}
+                            className="input-field"
+                            placeholder="e.g. 2383"
+                            maxLength={4}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-primary w-full py-3 md:py-5 text-sm md:text-lg font-bold shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Placing Order...' : 'Place Order - ৳' + total.toFixed(2)}
+              </button>
+            </form>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );

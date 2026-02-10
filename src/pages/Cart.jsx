@@ -17,16 +17,19 @@ const Cart = () => {
     }
   }, [totalPrice, fetchDelivery]);
 
+  const [giftWrapping, setGiftWrapping] = useState(false);
+  const giftWrappingFee = 50;
+
   const shipping = delivery?.charge || 0;
   const tax = 0; // No tax
-  const finalTotal = totalPrice + shipping + tax;
+  const finalTotal = totalPrice + shipping + tax + (giftWrapping ? giftWrappingFee : 0);
 
   if (cartItems.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4 bg-pink-50">
         <div className="text-center card p-12 max-w-md">
           <div className="w-24 h-24 bg-slate/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <ShoppingCart className="h-12 w-12 text-slate" />
+            <ShoppingBag className="h-12 w-12 text-slate" />
           </div>
           <h2 className="text-3xl font-bold text-maroon mb-4">
             Your Cart is Empty
@@ -100,7 +103,7 @@ const Cart = () => {
               <div
                 key={item.id}
                 className="card p-4 sm:p-6 animate-slide-up"
-                style={{animationDelay: `${index * 0.1}s`}}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:space-x-6">
                   {/* Product Image */}
@@ -227,16 +230,42 @@ const Cart = () => {
                   </span>
                 </div>
 
+                {/* Gift Wrapping Toggle */}
+                <div className="flex items-center justify-between text-sm sm:text-base py-2">
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex items-center">
+                      <input
+                        type="checkbox"
+                        id="giftWrapping"
+                        checked={giftWrapping}
+                        onChange={(e) => setGiftWrapping(e.target.checked)}
+                        className="peer h-4 w-4 cursor-pointer appearance-none rounded border border-slate-300 shadow transition-all hover:shadow-md checked:bg-maroon checked:border-maroon focus:outline-none focus:ring-1 focus:ring-maroon focus:ring-offset-1"
+                      />
+                      <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100 pointer-events-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor" stroke="currentColor" strokeWidth="1">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                        </svg>
+                      </span>
+                    </div>
+                    <label htmlFor="giftWrapping" className="flex items-center gap-1.5 cursor-pointer select-none text-slate">
+                      <span className="text-amber-500">🎁</span>
+                      <span>Gift Wrapping</span>
+                    </label>
+                  </div>
+                  <span className="font-semibold text-maroon">৳{giftWrappingFee}</span>
+                </div>
+
                 <hr className="border-slate/20" />
 
                 <div className="flex justify-between items-center text-lg sm:text-xl font-bold">
                   <span className="text-maroon">Total</span>
-                  <span className="text-maroon">৳{finalTotal.toFixed(2)}</span>
+                  <span className="text-maroon">৳{finalTotal.toLocaleString()}</span>
                 </div>
               </div>
 
               <Link
                 to="/checkout"
+                state={{ giftWrapping }}
                 className="btn-primary w-full py-3 sm:py-4 px-4 rounded-full font-semibold text-sm sm:text-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform mb-3 sm:mb-4"
               >
                 <span>Checkout</span>

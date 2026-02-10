@@ -33,14 +33,14 @@ const register = async (req, res) => {
     // Send welcome email
     try {
       console.log('📧 Attempting to send welcome email to:', email);
-      await sendEmail(email, 'Welcome to Chirkut ঘর', 'welcome', { name });
+      await sendEmail(email, 'Welcome to RongRani', 'welcome', { name });
       console.log('✅ Welcome email sent successfully to:', email);
       
       // Send admin notification about new user
       console.log('📧 Sending new user notification to admin...');
       await sendEmail(
         process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
-        '🆕 New User Registered - Chirkut ঘর',
+        '🆕 New User Registered - RongRani',
         'adminNewUser',
         { userName: name, userEmail: email, registeredAt: new Date().toLocaleString() }
       );

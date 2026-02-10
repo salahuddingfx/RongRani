@@ -135,4 +135,4 @@ For security-related questions:
 
 ---
 
-**Thank you for helping keep Chirkut ঘর secure! 🔒**
+**Thank you for helping keep RongRani secure! 🔒**

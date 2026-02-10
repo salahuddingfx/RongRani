@@ -6,7 +6,7 @@ const AIChatWidget = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! 💝 Welcome to Chirkut ঘর! I can help you find the perfect gift. What occasion are you shopping for?",
+      text: "Hello! 💝 Welcome to RongRani! I can help you find the perfect gift. What occasion are you shopping for?",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -27,9 +27,9 @@ const AIChatWidget = () => {
     const msg = userMessage.toLowerCase();
     
     if (msg.includes('custom') || msg.includes('customize') || msg.includes('personalize')) {
-      return "Perfect! 🎁 We specialize in custom gift orders!\n\nYou can customize:\n✨ Personalized chirkuts\n💝 Custom gift combos\n🎀 Special occasion packages\n\nFor custom orders, click the WhatsApp button (green icon) below to chat with our team directly. They'll help you create the perfect custom gift! 💚";
+      return "Perfect! 🎁 We specialize in custom gift orders!\n\nYou can customize:\n✨ Personalized handwritten love letters\n💝 Custom gift combos\n🎀 Special occasion packages\n\nFor custom orders, click the WhatsApp button (green icon) below to chat with our team directly. They'll help you create the perfect custom gift! 💚";
     } else if (msg.includes('love') || msg.includes('romantic')) {
-      return "Our Love Combo Special (৳2500) is perfect! It includes a romantic chirkut, chocolates, and a teddy. Also check out our Couple Rings Set (৳3500) and Valentine Special Combo (৳6500)!";
+      return "Our Love Combo Special (৳2500) is perfect! It includes a romantic handwritten letter, chocolates, and a teddy. Also check out our Couple Rings Set (৳3500) and Valentine Special Combo (৳6500)!";
     } else if (msg.includes('anniversary')) {
       return "For anniversaries, I recommend our Anniversary Surprise Box (৳5500) - it's our best seller! Also beautiful are the Couple Watch Set (৳7500) and Premium Gift Sharee (৳6500).";
     } else if (msg.includes('birthday')) {
@@ -41,7 +41,7 @@ const AIChatWidget = () => {
     } else if (msg.includes('watch')) {
       return "We have Ladies Elegant Watch (৳4500) and Couple Watch Set (৳7500) - both are premium quality!";
     } else if (msg.includes('price') || msg.includes('cheap') || msg.includes('affordable')) {
-      return "Our most affordable items: Handwritten Chirkut (৳500), Artificial Rose Bouquet (৳800), Jhumka Earrings (৳1200). All under ৳1500!";
+      return "Our most affordable items: Handwritten Love Letter (৳500), Artificial Rose Bouquet (৳800), Jhumka Earrings (৳1200). All under ৳1500!";
     } else if (msg.includes('best seller') || msg.includes('popular')) {
       return "Top sellers: Love Combo Special (৳2500, 5★), Anniversary Surprise Box (৳5500, 5★), and Valentine Special Combo (৳6500, 5★)!";
     } else if (msg.includes('delivery') || msg.includes('shipping')) {

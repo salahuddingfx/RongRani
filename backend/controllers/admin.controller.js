@@ -306,7 +306,7 @@ const updateOrder = async (req, res) => {
           console.log(`📧 Sending delivery confirmation to ${customerEmail}...`);
           await sendEmail(
             customerEmail,
-            `🎉 Your Order #${order._id} Has Been Delivered! - Chirkut ঘর`,
+            `🎉 Your Order #${order._id} Has Been Delivered! - RongRani`,
             'orderStatusUpdate',
             {
               name: customerName,
@@ -411,8 +411,8 @@ const sendToCourier = async (req, res) => {
     const deliveryType = deliveryTypeMap[deliveryTypeRaw] || deliveryTypeRaw;
     const parcelValue = details.parcelValue ? Number(details.parcelValue) : undefined;
     const invoice = details.invoice || `CHG-${order._id}`;
-    const rawNote = details.note || order.notes || `Order from Chirkut Ghor - ${order.items.length} items`;
-    const note = rawNote.toString().replace(/[^\x20-\x7E]/g, '').trim() || 'Order from Chirkut Ghor';
+    const rawNote = details.note || order.notes || `Order from RongRani - ${order.items.length} items`;
+    const note = rawNote.toString().replace(/[^\x20-\x7E]/g, '').trim() || 'Order from RongRani';
     const codAmount = typeof details.codAmount !== 'undefined'
       ? Number(details.codAmount)
       : (order.paymentMethod === 'cod' ? order.total : 0);
@@ -543,7 +543,7 @@ const sendToCourier = async (req, res) => {
         console.log(`📧 Sending courier notification to ${customerEmail}...`);
         await sendEmail(
           customerEmail,
-          `📦 Your Order #${order._id} is On The Way! - Chirkut ঘর`,
+          `📦 Your Order #${order._id} is On The Way! - RongRani`,
           'orderStatusUpdate',
           {
             name: customerName,

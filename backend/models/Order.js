@@ -161,6 +161,14 @@ const orderSchema = new mongoose.Schema({
     default: 0,
     min: [0, 'Discount cannot be negative'],
   },
+  isGiftWrapped: {
+    type: Boolean,
+    default: false
+  },
+  giftWrappingFee: {
+    type: Number,
+    default: 0
+  },
   total: {
     type: Number,
     required: true,
@@ -211,7 +219,7 @@ const orderSchema = new mongoose.Schema({
 });
 
 // Update updatedAt on save
-orderSchema.pre('save', function(next) {
+orderSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });

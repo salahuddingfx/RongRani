@@ -7,7 +7,7 @@ const WhatsAppWidget = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! 👋 Welcome to Chirkut ঘর. How can we help you today?",
+      text: "Hello! 👋 Welcome to RongRani. How can we help you today?",
       sender: 'support',
       timestamp: new Date().toISOString()
     }
@@ -103,7 +103,7 @@ const WhatsAppWidget = () => {
                 <MessageCircle className="h-7 w-7" />
               </div>
               <div>
-                <h3 className="font-black text-lg">Chirkut ঘর Support</h3>
+                <h3 className="font-black text-lg">RongRani Support</h3>
                 <div className="flex items-center space-x-2">
                   <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></span>
                   <p className="text-xs text-white/90 font-medium">Typically replies instantly</p>

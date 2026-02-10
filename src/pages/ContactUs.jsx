@@ -25,8 +25,8 @@ const ContactUs = () => {
   return (
     <div className="min-h-screen bg-pink-50 py-16 px-4">
       <Seo
-        title="Contact Chirkut Ghor | Gift Shop Support in Bangladesh"
-        description="Contact Chirkut Ghor for gift orders, custom surprises, and support. Call, email, or visit our gift shop team in Bangladesh."
+        title="Contact RongRani | Gift Shop Support in Bangladesh"
+        description="Contact RongRani for gift orders, custom surprises, and support. Call, email, or visit our gift shop team in Bangladesh."
         path="/contact"
       />
       <div className="max-w-7xl mx-auto">

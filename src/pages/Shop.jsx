@@ -49,7 +49,7 @@ const Shop = () => {
       setTotalPages(Math.ceil(response.data.total / productsPerPage));
     } catch (error) {
       console.error('Error fetching products:', error);
-      // Chirkut Ghor Gift Products - Fallback data with client-side filtering
+      // RongRani Gift Products - Fallback data with client-side filtering
       let fallbackProducts = [
         // Jewellery
         {
@@ -178,8 +178,8 @@ const Shop = () => {
         // Love Combo
         {
           _id: '11',
-          name: 'Love Combo - Chirkut Special',
-          description: 'Handwritten chirkut + chocolate + flower combo',
+          name: 'Love Combo - RongRani Special',
+          description: 'Handwritten love letter + chocolate + flower combo',
           price: 2500,
           originalPrice: 3000,
           images: [{ url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400' }],
@@ -242,7 +242,7 @@ const Shop = () => {
         // Handmade Gifts
         {
           _id: '16',
-          name: 'Handwritten Chirkut',
+          name: 'Handwritten Love Letter',
           description: 'Personalized handwritten love letter in Bengali/English',
           price: 500,
           originalPrice: 500,
@@ -372,7 +372,7 @@ const Shop = () => {
       setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
-      // Chirkut Ghor Categories
+      // RongRani Categories
       setCategories([
         'Love Combo',
         'Anniversary Combo',
@@ -429,7 +429,7 @@ const Shop = () => {
   return (
     <div className="min-h-screen">
       <Seo
-        title="Shop Handmade Gifts & Surprise Boxes | Chirkut Ghor"
+        title="Shop Handmade Gifts & Surprise Boxes | RongRani"
         description="Browse handmade gifts, surprise boxes, jewelry, chocolates, and decor. Filter by price, category, and occasion to find the perfect gift in Bangladesh."
         path="/shop"
       />

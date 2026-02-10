@@ -67,7 +67,7 @@ class AIService {
 
   async chatWithAI(message, context = '') {
     try {
-      const systemPrompt = `You are a helpful AI assistant for Chirkut ঘর, an e-commerce platform specializing in Bangladeshi products and gifts.
+      const systemPrompt = `You are a helpful AI assistant for RongRani, an e-commerce platform specializing in Bangladeshi products and gifts.
       Be friendly, helpful, and knowledgeable about products, orders, and customer service.
       Context: ${context}`;
 

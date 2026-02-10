@@ -6,7 +6,7 @@ const WhatsAppWizard = () => {
   const [message, setMessage] = useState('');
   
   const phoneNumber = '8801851075537'; // Replace with actual WhatsApp number
-  const defaultMessage = 'Hello! I need help with Chirkut ঘর services.';
+  const defaultMessage = 'Hello! I need help with RongRani services.';
 
   const services = [
     { icon: '🎁', text: 'Gift Recommendations', query: 'I need gift recommendations' },
@@ -47,7 +47,7 @@ const WhatsAppWizard = () => {
                 <Bot className="h-7 w-7" />
               </div>
               <div>
-                <h3 className="font-bold text-lg">Chirkut ঘর Assistant</h3>
+                <h3 className="font-bold text-lg">RongRani Assistant</h3>
                 <p className="text-xs text-white/90">Powered by WhatsApp AI</p>
               </div>
             </div>

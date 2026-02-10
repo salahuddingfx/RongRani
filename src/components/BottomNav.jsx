@@ -10,7 +10,7 @@ const BottomNav = () => {
   const { totalItems } = useCart();
   
   const phoneNumber = '8801851075537';
-  const defaultMessage = 'Hello! I need help with Chirkut ঘর services.';
+  const defaultMessage = 'Hello! I need help with RongRani services.';
 
   const isActive = (path) => {
     if (path === '/') {

@@ -83,8 +83,8 @@ const createProduct = async (req, res) => {
     // Validate required fields
     const { name, description, price, category, stock } = req.body;
     if (!name || !description || !price || !category) {
-      return res.status(400).json({ 
-        message: 'Missing required fields: name, description, price, category are required' 
+      return res.status(400).json({
+        message: 'Missing required fields: name, description, price, category are required'
       });
     }
 
@@ -98,12 +98,12 @@ const createProduct = async (req, res) => {
     console.log('Product data to create:', JSON.stringify(productData, null, 2));
     const product = await Product.create(productData);
     console.log('✅ Product created successfully:', product._id);
-    
+
     emitEvent(req, 'product:created', product);
     res.status(201).json(product);
   } catch (error) {
     console.error('❌ Product creation failed:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       message: error.message,
       details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
@@ -308,8 +308,28 @@ const submitReview = async (req, res) => {
     // Emit real-time event
     emitEvent(req, 'review:submitted', { review, productId });
 
+    // Get user details for email
+    const reviewerName = req.user ? req.user.name : (guestName || 'Valued Customer');
+    const reviewerEmail = req.user ? req.user.email : guestEmail;
+
+    // Send Thank You Email
+    if (reviewerEmail) {
+      // We don't await this to avoid blocking the response
+      const { sendEmail } = require('../utils/emailService');
+      sendEmail(
+        reviewerEmail,
+        'Thanks for your review! 💖',
+        'reviewThankYou',
+        {
+          name: reviewerName,
+          productName: product.name,
+          comment: comment
+        }
+      ).catch(err => console.error('Failed to send review email:', err));
+    }
+
     res.status(201).json({
-      message: 'Review submitted! It will be published after admin approval.',
+      message: 'Review submitted! Check your email for a surprise! 🎁',
       review,
     });
   } catch (error) {
