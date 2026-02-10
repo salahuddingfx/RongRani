@@ -26,7 +26,10 @@ app.use(
       // allow server-to-server / postman / no-origin
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
+      const isAllowed = allowedOrigins.includes(origin);
+      const isVercelPreview = origin.endsWith('.vercel.app') && origin.includes('chirkut-ghor');
+
+      if (isAllowed || isVercelPreview) {
         callback(null, true);
       } else {
         callback(new Error(`CORS blocked: ${origin}`));

@@ -33,7 +33,13 @@ const socketOrigins = [
 
 const io = new Server(server, {
   cors: {
-    origin: socketOrigins,
+    origin: (origin, callback) => {
+      if (!origin || socketOrigins.includes(origin) || (origin.endsWith('.vercel.app') && origin.includes('chirkut-ghor'))) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   },
 });
