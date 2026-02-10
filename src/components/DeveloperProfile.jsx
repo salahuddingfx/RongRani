@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { X, Github, Facebook, Globe, Mail, MapPin, Code2, Database, Layout, Server, MessageCircle, GitBranch, Box, Cloud, Zap, Edit } from 'lucide-react';
+import { X, Github, Facebook, Globe, Mail, MapPin, Code2, Database, Layout, Server, MessageCircle, GitBranch, Box, Cloud, Zap, Edit, Cpu, Layers, Terminal, Atom, Wind, HardDrive, Network, Globe2, FileCode } from 'lucide-react';
 
 const DeveloperProfile = ({ isOpen, onClose }) => {
   useEffect(() => {
@@ -21,13 +20,28 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
     tools: ['Git', 'Docker', 'AWS', 'Firebase', 'Vercel', 'VS Code']
   };
 
-  const toolIcons = {
+  const skillIcons = {
+    // Frontend
+    'React': Atom,
+    'Next.js': Globe2,
+    'Vue.js': Layers,
+    'Tailwind CSS': Wind,
+    'JavaScript': FileCode,
+    'TypeScript': Code2,
+    // Backend
+    'Node.js': Server,
+    'Express': Zap,
+    'MongoDB': Database,
+    'PostgreSQL': HardDrive,
+    'REST APIs': Network,
+    'GraphQL': GitBranch,
+    // Tools
     'Git': GitBranch,
     'Docker': Box,
     'AWS': Cloud,
     'Firebase': Zap,
     'Vercel': Edit,
-    'VS Code': Code2
+    'VS Code': Terminal
   };
 
   const socialLinks = [
@@ -119,16 +133,20 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
                   </div>
                   <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200">Frontend Development</h4>
                 </div>
-                <div className="flex flex-wrap gap-2 sm:gap-3">
-                  {skills.frontend.map((skill, index) => (
-                    <span
-                      key={skill}
-                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 rounded-xl text-xs sm:text-sm font-semibold border-2 border-blue-200 dark:border-blue-700 hover:scale-105 hover:shadow-lg hover:border-blue-400 transition-all duration-200 cursor-pointer"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                <div className="flex flex-wrap gap-2 sm:gap-4">
+                  {skills.frontend.map((skill, index) => {
+                    const Icon = skillIcons[skill];
+                    return (
+                      <span
+                        key={skill}
+                        className="px-4 py-2 sm:px-5 sm:py-2.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 rounded-xl text-xs sm:text-sm font-bold border-2 border-blue-100 dark:border-blue-800 hover:scale-105 hover:shadow-lg hover:border-blue-400 transition-all duration-300 cursor-pointer flex items-center gap-2 group/skill"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        {Icon && <Icon className="h-4 w-4 text-blue-500 group-hover/skill:rotate-12 transition-transform" />}
+                        {skill}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -140,16 +158,20 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
                   </div>
                   <h4 className="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-200">Backend Development</h4>
                 </div>
-                <div className="flex flex-wrap gap-2 sm:gap-3">
-                  {skills.backend.map((skill, index) => (
-                    <span
-                      key={skill}
-                      className="px-4 py-2 sm:px-5 sm:py-2.5 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-200 rounded-xl text-xs sm:text-sm font-semibold border-2 border-green-200 dark:border-green-700 hover:scale-105 hover:shadow-lg hover:border-green-400 transition-all duration-200 cursor-pointer"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
+                <div className="flex flex-wrap gap-2 sm:gap-4">
+                  {skills.backend.map((skill, index) => {
+                    const Icon = skillIcons[skill];
+                    return (
+                      <span
+                        key={skill}
+                        className="px-4 py-2 sm:px-5 sm:py-2.5 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-200 rounded-xl text-xs sm:text-sm font-bold border-2 border-green-100 dark:border-green-800 hover:scale-105 hover:shadow-lg hover:border-green-400 transition-all duration-300 cursor-pointer flex items-center gap-2 group/skill"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        {Icon && <Icon className="h-4 w-4 text-green-500 group-hover/skill:rotate-12 transition-transform" />}
+                        {skill}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -163,7 +185,7 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
                 </div>
                 <div className="flex flex-wrap gap-2 sm:gap-4">
                   {skills.tools.map((skill, index) => {
-                    const IconComponent = toolIcons[skill];
+                    const IconComponent = skillIcons[skill];
                     return (
                       <div
                         key={skill}
