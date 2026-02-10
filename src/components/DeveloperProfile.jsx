@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { X, Github, Facebook, Globe, Mail, MapPin, Code2, Database, Layout, Server, MessageCircle, GitBranch, Box, Cloud, Zap, Edit, Cpu, Layers, Terminal, Atom, Wind, HardDrive, Network, Globe2, FileCode } from 'lucide-react';
 
 const DeveloperProfile = ({ isOpen, onClose }) => {
