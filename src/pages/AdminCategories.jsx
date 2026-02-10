@@ -40,7 +40,7 @@ const AdminCategories = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('/api/categories');
+      const response = await axios.get('/api/categories?all=true');
       if (response.data.success) {
         setCategories(response.data.categories);
       }

@@ -4,6 +4,7 @@ import axios from 'axios';
 import ProductCard from '../components/ProductCard';
 import { Search, Filter, X } from 'lucide-react';
 import Seo from '../components/Seo';
+import { useSocket } from '../contexts/socketContextBase';
 
 const Shop = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,6 +23,7 @@ const Shop = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const productsPerPage = 12;
+  const { socket } = useSocket() || {};
 
   // Update filters when URL params change
   useEffect(() => {
@@ -395,6 +397,27 @@ const Shop = () => {
     fetchCategories();
   }, [fetchProducts, currentPage]);
 
+  // Socket listeners for real-time updates
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('product:created', fetchProducts);
+    socket.on('product:updated', fetchProducts);
+    socket.on('product:deleted', fetchProducts);
+    socket.on('category:created', fetchCategories);
+    socket.on('category:updated', fetchCategories);
+    socket.on('category:deleted', fetchCategories);
+
+    return () => {
+      socket.off('product:created', fetchProducts);
+      socket.off('product:updated', fetchProducts);
+      socket.off('product:deleted', fetchProducts);
+      socket.off('category:created', fetchCategories);
+      socket.off('category:updated', fetchCategories);
+      socket.off('category:deleted', fetchCategories);
+    };
+  }, [socket, fetchProducts, fetchCategories]);
+
   useEffect(() => {
     if (window.innerWidth >= 1024) {
       setShowFilters(true);
@@ -604,13 +627,13 @@ const Shop = () => {
                     <div
                       key={product._id}
                       className="animate-slide-up"
-                      style={{animationDelay: `${index * 0.1}s`}}
+                      style={{ animationDelay: `${index * 0.1}s` }}
                     >
                       <ProductCard product={product} />
                     </div>
                   ))}
                 </div>
-                
+
                 {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="flex justify-center items-center space-x-2 mt-12">
@@ -621,7 +644,7 @@ const Shop = () => {
                     >
                       Previous
                     </button>
-                    
+
                     {[...Array(totalPages)].map((_, i) => {
                       const pageNum = i + 1;
                       // Show first page, last page, current page, and pages around current
@@ -634,11 +657,10 @@ const Shop = () => {
                           <button
                             key={pageNum}
                             onClick={() => setCurrentPage(pageNum)}
-                            className={`px-4 py-2 rounded-lg border-2 transition-all ${
-                              currentPage === pageNum
+                            className={`px-4 py-2 rounded-lg border-2 transition-all ${currentPage === pageNum
                                 ? 'bg-maroon text-white border-maroon'
                                 : 'border-maroon/20 hover:bg-maroon hover:text-white'
-                            }`}
+                              }`}
                           >
                             {pageNum}
                           </button>
@@ -651,7 +673,7 @@ const Shop = () => {
                       }
                       return null;
                     })}
-                    
+
                     <button
                       onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                       disabled={currentPage === totalPages}

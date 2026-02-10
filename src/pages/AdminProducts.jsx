@@ -12,6 +12,7 @@ const AdminProducts = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [stockDrafts, setStockDrafts] = useState({});
   const [editingProduct, setEditingProduct] = useState(null);
+  const [categories, setCategories] = useState([]);
   const { socket } = useSocket() || {};
   const [formData, setFormData] = useState({
     name: '',
@@ -37,9 +38,21 @@ const AdminProducts = () => {
     }
   }, []);
 
+  const fetchCategories = useCallback(async () => {
+    try {
+      const response = await axios.get('/api/categories?all=true');
+      if (response.data.success) {
+        setCategories(response.data.categories);
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  }, []);
+
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+    fetchCategories();
+  }, [fetchProducts, fetchCategories]);
 
   useEffect(() => {
     if (!socket) return;
@@ -49,18 +62,37 @@ const AdminProducts = () => {
     socket.on('product:updated', handleRefresh);
     socket.on('product:deleted', handleRefresh);
     socket.on('inventory:updated', handleRefresh);
+    socket.on('category:created', fetchCategories);
+    socket.on('category:updated', fetchCategories);
+    socket.on('category:deleted', fetchCategories);
 
     return () => {
       socket.off('product:created', handleRefresh);
       socket.off('product:updated', handleRefresh);
       socket.off('product:deleted', handleRefresh);
       socket.off('inventory:updated', handleRefresh);
+      socket.off('category:created', fetchCategories);
+      socket.off('category:updated', fetchCategories);
+      socket.off('category:deleted', fetchCategories);
     };
   }, [socket, fetchProducts]);
 
+  useEffect(() => {
+    if (!socket) return;
+    socket.on('category:created', fetchCategories);
+    socket.on('category:updated', fetchCategories);
+    socket.on('category:deleted', fetchCategories);
+
+    return () => {
+      socket.off('category:created', fetchCategories);
+      socket.off('category:updated', fetchCategories);
+      socket.off('category:deleted', fetchCategories);
+    };
+  }, [socket, fetchCategories]);
+
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
-    
+
     try {
       const token = localStorage.getItem('token');
       await axios.delete(`/api/products/${id}`, {
@@ -233,7 +265,7 @@ const AdminProducts = () => {
                 <tr key={product._id} className="hover:bg-cream-light transition-colors">
                   <td className="px-6 py-4">
                     <img
-                       src={typeof product.images?.[0] === 'string' ? product.images?.[0] : product.images?.[0]?.url || 'https://via.placeholder.com/100'}
+                      src={typeof product.images?.[0] === 'string' ? product.images?.[0] : product.images?.[0]?.url || 'https://via.placeholder.com/100'}
                       alt={product.name}
                       className="h-16 w-16 object-cover rounded-lg shadow-soft"
                     />
@@ -247,9 +279,8 @@ const AdminProducts = () => {
                   <td className="px-6 py-4 font-bold text-maroon">৳{product.price}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        product.stock > 10 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
+                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${product.stock > 10 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
                         {product.stock}
                       </span>
                       <input
@@ -268,10 +299,10 @@ const AdminProducts = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex justify-center space-x-3">
-                       <button
-                         className="p-2 hover:bg-maroon/10 rounded-lg transition-colors"
-                         onClick={() => handleEdit(product)}
-                       >
+                      <button
+                        className="p-2 hover:bg-maroon/10 rounded-lg transition-colors"
+                        onClick={() => handleEdit(product)}
+                      >
                         <Edit className="h-5 w-5 text-maroon" />
                       </button>
                       <button
@@ -314,7 +345,7 @@ const AdminProducts = () => {
                   type="text"
                   required
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="input-field w-full"
                   placeholder="Handmade Pottery Vase"
                 />
@@ -324,7 +355,7 @@ const AdminProducts = () => {
                 <textarea
                   required
                   value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="input-field w-full"
                   rows="3"
                   placeholder="Beautiful handcrafted pottery..."
@@ -337,7 +368,7 @@ const AdminProducts = () => {
                     type="number"
                     required
                     value={formData.price}
-                    onChange={(e) => setFormData({...formData, price: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                     className="input-field w-full"
                     placeholder="1500"
                   />
@@ -348,7 +379,7 @@ const AdminProducts = () => {
                     type="number"
                     required
                     value={formData.stock}
-                    onChange={(e) => setFormData({...formData, stock: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                     className="input-field w-full"
                     placeholder="25"
                   />
@@ -359,22 +390,15 @@ const AdminProducts = () => {
                 <select
                   required
                   value={formData.category}
-                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   className="input-field w-full"
                 >
                   <option value="">Select Category</option>
-                  <option value="Love Combo">Love Combo</option>
-                  <option value="Anniversary Combo">Anniversary Combo</option>
-                  <option value="Birthday Combo">Birthday Combo</option>
-                  <option value="Valentine Combo">Valentine Combo</option>
-                  <option value="Proposal Combo">Proposal Combo</option>
-                  <option value="Jewellery">Jewellery</option>
-                  <option value="Watches">Watches</option>
-                  <option value="Chocolates">Chocolates</option>
-                  <option value="Gifts">Gifts</option>
-                  <option value="Handmade">Handmade Gifts</option>
-                  <option value="Clothing">Clothing & Sharee</option>
-                  <option value="Gift Boxes">Gift Boxes</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat.name}>
+                      {cat.name}
+                    </option>
+                  ))}
                 </select>
               </div>
               <div>
@@ -387,7 +411,7 @@ const AdminProducts = () => {
                 <textarea
                   required
                   value={formData.images}
-                  onChange={(e) => setFormData({...formData, images: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, images: e.target.value })}
                   className="input-field w-full"
                   rows="3"
                   placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg, https://example.com/image3.jpg"

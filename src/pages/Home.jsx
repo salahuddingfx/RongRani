@@ -53,9 +53,15 @@ const Home = () => {
     const handleUpdate = (data) => setHotOffer(data);
 
     socket.on('hot_offer:updated', handleUpdate);
+    socket.on('category:created', fetchCategories);
+    socket.on('category:updated', fetchCategories);
+    socket.on('category:deleted', fetchCategories);
 
     return () => {
       socket.off('hot_offer:updated', handleUpdate);
+      socket.off('category:created', fetchCategories);
+      socket.off('category:updated', fetchCategories);
+      socket.off('category:deleted', fetchCategories);
     };
   }, [socket]);
 

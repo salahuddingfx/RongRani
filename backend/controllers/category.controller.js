@@ -1,11 +1,21 @@
 const Category = require('../models/Category');
 
+const emitEvent = (req, event, payload) => {
+  const io = req.app?.get('io');
+  if (io) {
+    io.emit(event, payload);
+  }
+};
+
 // Get all categories
 exports.getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find({ isActive: true })
+    const showAll = req.query.all === 'true';
+    const query = showAll ? {} : { isActive: true };
+
+    const categories = await Category.find(query)
       .sort({ order: 1, name: 1 });
-    
+
     res.status(200).json({
       success: true,
       count: categories.length,
@@ -54,7 +64,9 @@ exports.getCategory = async (req, res) => {
 exports.createCategory = async (req, res) => {
   try {
     const category = await Category.create(req.body);
-    
+
+    emitEvent(req, 'category:created', category);
+
     res.status(201).json({
       success: true,
       message: 'Category created successfully',
@@ -85,6 +97,8 @@ exports.updateCategory = async (req, res) => {
       });
     }
 
+    emitEvent(req, 'category:updated', category);
+
     res.status(200).json({
       success: true,
       message: 'Category updated successfully',
@@ -110,6 +124,8 @@ exports.deleteCategory = async (req, res) => {
         message: 'Category not found',
       });
     }
+
+    emitEvent(req, 'category:deleted', { _id: req.params.id });
 
     res.status(200).json({
       success: true,
