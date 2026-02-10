@@ -37,6 +37,7 @@ const TopNavBar = () => {
               value={selectedCurrency}
               onChange={(e) => setSelectedCurrency(e.target.value)}
               className="bg-white/10 border border-white/20 rounded-lg px-2 sm:px-3 py-1 text-xs sm:text-sm focus:outline-none focus:bg-white/20 cursor-pointer"
+              aria-label="Select Currency"
             >
               {currencies.map((currency) => (
                 <option key={currency.code} value={currency.code} className="bg-maroon">
@@ -77,6 +78,7 @@ const TopNavBar = () => {
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
               className="bg-white/10 border border-white/20 rounded-lg px-2 sm:px-3 py-1 text-xs sm:text-sm focus:outline-none focus:bg-white/20 cursor-pointer"
+              aria-label="Select Country"
             >
               {countries.map((country) => (
                 <option key={country.code} value={country.code} className="bg-maroon">

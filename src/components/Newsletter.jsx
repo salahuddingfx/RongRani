@@ -9,7 +9,7 @@ const Newsletter = () => {
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
-    
+
     if (!email || !email.includes('@')) {
       toast.error('Please enter a valid email address');
       return;
@@ -37,7 +37,7 @@ const Newsletter = () => {
             <Mail className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
             <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 text-gold animate-pulse ml-3" />
           </div>
-          
+
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
             Get Exclusive Offers & Updates
           </h2>
@@ -49,14 +49,15 @@ const Newsletter = () => {
             <div className="flex-1 relative">
               <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate/50" />
               <input
+                id="newsletter-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address..."
+                aria-label="Email address for newsletter"
                 className="w-full pl-12 pr-4 py-3 sm:py-4 rounded-full border-2 border-white/20 bg-white/95 text-charcoal placeholder-slate/60 focus:outline-none focus:border-white focus:bg-white transition-all text-sm sm:text-base"
                 disabled={loading}
-              />
-            </div>
+              />            </div>
             <button
               type="submit"
               disabled={loading || !email}

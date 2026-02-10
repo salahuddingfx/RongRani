@@ -127,7 +127,7 @@ const BannerSlider = () => {
         className="flex h-full transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${currentSlide * 100}%)` }}
       >
-        {banners.map((banner) => (
+        {banners.map((banner, index) => (
           <div
             key={banner.id}
             className={`min-w-full h-full ${banner.bgColor} flex items-center justify-center px-8 md:px-16 relative`}
@@ -145,6 +145,8 @@ const BannerSlider = () => {
                   src={banner.image}
                   alt=""
                   className="w-full h-full object-cover opacity-20"
+                  decoding="async"
+                  loading={index === 0 ? "eager" : "lazy"}
                 />
               </div>
             )}
@@ -178,6 +180,8 @@ const BannerSlider = () => {
                         src={banner.image}
                         alt={banner.title}
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                        decoding="async"
+                        loading={index === 0 ? "eager" : "lazy"}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-white/50 text-4xl font-bold">

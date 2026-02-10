@@ -103,7 +103,11 @@ const Navbar = () => {
                 </span>
               </div>
               <div className="flex items-center pl-4 space-x-3">
-                <button onClick={toggleLanguage} className="flex items-center hover:text-gold font-bold uppercase text-[10px] tracking-wider">
+                <button
+                  onClick={toggleLanguage}
+                  className="flex items-center hover:text-gold font-bold uppercase text-[10px] tracking-wider"
+                  aria-label={language === 'en' ? 'Switch to Bangla' : 'Switch to English'}
+                >
                   <Globe className="w-3 h-3 mr-1" />
                   {language === 'en' ? 'BN' : 'EN'}
                 </button>
@@ -136,8 +140,12 @@ const Navbar = () => {
 
               <Link to="/" className="flex items-center gap-2 group shrink-0">
                 {/* Gift Icon */}
-                <div className="w-8 h-8 md:w-10 md:h-10 bg-maroon rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all group-hover:scale-105">
-                  <span className="text-white text-lg md:text-xl">🎁</span>
+                <div
+                  className="w-8 h-8 md:w-10 md:h-10 bg-maroon rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all group-hover:scale-105"
+                  role="img"
+                  aria-label="RongRani Brand Logo"
+                >
+                  <span className="text-white text-lg md:text-xl" aria-hidden="true">🎁</span>
                 </div>
                 {/* Text Logo */}
                 <div className="flex flex-col leading-none">
@@ -168,6 +176,7 @@ const Navbar = () => {
                     className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 
                                                    bg-maroon hover:bg-maroon-dark text-white rounded-full 
                                                    shadow-sm hover:shadow transition-all transform active:scale-95"
+                    aria-label="Search"
                   >
                     <Search className="w-4 h-4" />
                   </button>
@@ -200,7 +209,11 @@ const Navbar = () => {
 
                   <div className="flex items-center gap-1 md:gap-2">
                     {/* Theme Toggle */}
-                    <button onClick={toggleTheme} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300">
+                    <button
+                      onClick={toggleTheme}
+                      className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300"
+                      aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                    >
                       {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                     </button>
 
@@ -220,6 +233,9 @@ const Navbar = () => {
                         <button
                           onClick={() => setShowUserMenu(!showUserMenu)}
                           className="flex items-center gap-2 focus:outline-none group"
+                          aria-label="User Account Menu"
+                          aria-haspopup="true"
+                          aria-expanded={showUserMenu}
                         >
                           <div className="w-8 h-8 rounded-full bg-maroon flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:shadow-lg transition-all ring-2 ring-transparent group-hover:ring-maroon/20">
                             {user.name.charAt(0)}

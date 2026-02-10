@@ -55,8 +55,12 @@ const Footer = () => {
             {/* Brand Section */}
             <div className="lg:col-span-1">
               <div className="flex items-center gap-2 mb-6">
-                <div className="w-10 h-10 bg-maroon rounded-lg flex items-center justify-center shadow-lg">
-                  <span className="text-white text-xl">🎁</span>
+                <div
+                  className="w-10 h-10 bg-maroon rounded-lg flex items-center justify-center shadow-lg"
+                  role="img"
+                  aria-label="RongRani Logo"
+                >
+                  <span className="text-white text-xl" aria-hidden="true">🎁</span>
                 </div>
                 <h3 className="text-2xl font-black text-white">
                   Rong<span className="text-pink-400">Rani</span>
@@ -70,13 +74,13 @@ const Footer = () => {
 
               {/* Social Links */}
               <div className="flex space-x-4">
-                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-maroon rounded-full flex items-center justify-center text-white transition-all hover:scale-110">
+                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-maroon rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Facebook">
                   <Facebook className="h-5 w-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-pink-600 rounded-full flex items-center justify-center text-white transition-all hover:scale-110">
+                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-pink-600 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Instagram">
                   <Instagram className="h-5 w-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-blue-500 rounded-full flex items-center justify-center text-white transition-all hover:scale-110">
+                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-blue-500 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Twitter">
                   <Twitter className="h-5 w-5" />
                 </a>
               </div>

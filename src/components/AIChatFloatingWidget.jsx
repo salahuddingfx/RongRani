@@ -183,10 +183,12 @@ const AIChatFloatingWidget = () => {
             <div className="flex items-end space-x-2">
               <div className="flex-1 relative">
                 <textarea
+                  id="ai-chat-input"
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Type your message... (Press Enter to send)"
+                  aria-label="Message to AI assistant"
                   className="w-full px-4 py-3 pr-12 border-2 border-maroon/20 rounded-2xl focus:outline-none focus:border-maroon resize-none text-sm text-slate-800 dark:text-gray-100 bg-white dark:bg-slate-700 scrollbar-hide"
                   rows={1}
                   style={{

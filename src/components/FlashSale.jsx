@@ -135,6 +135,8 @@ const FlashSale = () => {
                                     src={product.image}
                                     alt={product.name}
                                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                    loading="lazy"
+                                    decoding="async"
                                 />
                                 <span className="absolute top-2 left-2 bg-yellow-400 text-maroon text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
                                     <Zap className="w-3 h-3 fill-maroon" /> -50%
@@ -163,7 +165,10 @@ const FlashSale = () => {
                                     </div>
                                 </div>
 
-                                <button className="w-full mt-2 bg-maroon/10 hover:bg-maroon text-maroon hover:text-white py-2 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2">
+                                <button
+                                    className="w-full mt-2 bg-maroon/10 hover:bg-maroon text-maroon hover:text-white py-2 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2"
+                                    aria-label={`Order ${product.name} now`}
+                                >
                                     <ShoppingBag className="w-4 h-4" />
                                     {language === 'bn' ? 'অর্ডার করুন' : 'Order Now'}
                                 </button>

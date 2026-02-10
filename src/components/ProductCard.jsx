@@ -136,8 +136,8 @@ const ProductCard = ({ product }) => {
             <span className="inline-block text-xs font-bold text-maroon bg-maroon/10 px-3 py-1 rounded-full uppercase tracking-wide">
               {productCategory}
             </span>
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <div className="flex items-center gap-1" aria-label={`Rating: ${productRating.toFixed(1)} out of 5 stars`}>
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" aria-hidden="true" />
               <span className="text-xs font-semibold text-slate-600">
                 {productRating.toFixed(1)}
               </span>

@@ -43,8 +43,8 @@ export default {
         'rose': '#FF69B4',
         'rose-light': '#FFB6C1',
         // Removed emerald, amber, purple, pink etc. to use Tailwind defaults
-        'charcoal': '#2D3748',
-        'charcoal-light': '#4A5568',
+        'charcoal': '#1F2937',
+        'charcoal-light': '#374151',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

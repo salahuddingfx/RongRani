@@ -8,7 +8,7 @@ const BottomNav = () => {
   const location = useLocation();
   const { user } = useAuth();
   const { totalItems } = useCart();
-  
+
   const phoneNumber = '8801851075537';
   const defaultMessage = 'Hello! I need help with RongRani services.';
 
@@ -31,13 +31,13 @@ const BottomNav = () => {
     { path: '/shop', icon: ShoppingBag, label: 'Shop' },
     { path: '/cart', icon: ShoppingBag, label: 'Cart', badge: totalItems },
     { path: '/wishlist', icon: Heart, label: 'Wishlist', auth: true },
-    user?.role === 'admin' 
+    user?.role === 'admin'
       ? { path: '/admin', icon: Crown, label: 'Admin', auth: true }
       : { path: '/dashboard', icon: User, label: user ? 'Account' : 'Login', dest: user ? '/dashboard' : '/login' }
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate/20 shadow-2xl">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-100 dark:bg-slate-900 dark:border-slate-800 shadow-2xl">
       <div className="grid grid-cols-6 h-16">
         {navItems.map((item, index) => {
           const path = item.dest || item.path;
@@ -50,11 +50,11 @@ const BottomNav = () => {
             <Link
               key={index}
               to={path}
-              className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 relative ${
-                active 
-                  ? 'text-maroon' 
-                  : 'text-slate hover:text-maroon'
-              }`}
+              aria-label={item.label}
+              className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 relative ${active
+                  ? 'text-maroon'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-maroon'
+                }`}
             >
               {/* Active Indicator */}
               {active && (
@@ -84,6 +84,7 @@ const BottomNav = () => {
           onClick={handleWhatsApp}
           className="flex flex-col items-center justify-center space-y-1 transition-all duration-300 relative text-green-500 hover:text-green-600"
           title="WhatsApp Support"
+          aria-label="Contact support on WhatsApp"
         >
           <MessageCircle className="h-6 w-6 transition-transform duration-300 hover:scale-110" />
           <span className="text-xs font-semibold">Help</span>
