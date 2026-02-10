@@ -674,14 +674,20 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
 
-### **Salahuddin**
+### **Salah Uddin Kader**
 
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/salahuddingfx)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/salahuddingfx)
-[![Portfolio](https://img.shields.io/badge/Portfolio-FF5722?style=for-the-badge&logo=google-chrome&logoColor=white)](https://salahuddingfx.com)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:salahuddin@example.com)
+[![Portfolio](https://img.shields.io/badge/Portfolio-FF5722?style=for-the-badge&logo=google-chrome&logoColor=white)](https://salahuddin.codes)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:salauddinkaderappy@gmail.com)
 
-**Full Stack Developer | MERN Stack Specialist | Open Source Enthusiast**
+**Full Stack Developer | MERN Stack Specialist | UI/UX Designer | Graphic Designer**
+
+#### 🚀 Notable Projects
+- **StudyFlow:** [studyflow.salahuddin.codes](https://studyflow.salahuddin.codes) - A comprehensive student management platform.
+- **RongRani:** A premium handmade gift shop application.
+
+**Crafting seamless digital experiences with passion and precision.**
 
 ---
 
@@ -705,7 +711,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ![GitHub forks](https://img.shields.io/github/forks/salahuddingfx/rongrani?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/salahuddingfx/rongrani?style=social)
 
-**Made with ❤️ by Salahuddin**
+**Made with ❤️ by Salah Uddin Kader**
 
 <img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="1000">
 
