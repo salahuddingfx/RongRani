@@ -74,7 +74,9 @@ app.get('/api/health', (_req, res) => {
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
-    db: stateMap[mongoose.connection.readyState] || 'unknown',
+    db: {
+      state: stateMap[mongoose.connection.readyState] || 'unknown',
+    },
   });
 });
 
