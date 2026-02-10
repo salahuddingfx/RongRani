@@ -12,17 +12,17 @@ const DEFAULT_BANNERS = [
     description: 'Each piece tells a story of heritage and craftsmanship',
     bgColor: 'bg-maroon',
     textColor: 'text-white',
-    image: '/api/placeholder/800/400',
+    image: 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1200&q=80',
     link: '/shop'
   },
   {
     id: 2,
-    title: 'Summer Collection 2026',
-    subtitle: 'New Arrivals - Up to 40% Off',
-    description: 'Premium handwoven textiles and artisan crafts',
-    bgColor: 'bg-emerald-600',
+    title: 'Anniversary Special',
+    subtitle: 'Make Your Moments Memorable',
+    description: 'Customized surprise boxes and flowers for your loved ones',
+    bgColor: 'bg-pink-800',
     textColor: 'text-white',
-    image: '/api/placeholder/800/400',
+    image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1200&q=80',
     link: '/shop'
   },
   {
@@ -30,9 +30,9 @@ const DEFAULT_BANNERS = [
     title: 'Support Local Artisans',
     subtitle: 'Every Purchase Makes a Difference',
     description: 'Empowering craftspeople across Bangladesh',
-    bgColor: 'bg-amber-500',
-    textColor: 'text-charcoal',
-    image: '/api/placeholder/800/400',
+    bgColor: 'bg-teal-700',
+    textColor: 'text-white',
+    image: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=1200&q=80',
     link: '/shop'
   }
 ];
@@ -55,7 +55,7 @@ const BannerSlider = () => {
         description: banner.description || '',
         bgColor: banner.bgColor || 'bg-maroon',
         textColor: banner.textColor || 'text-white',
-        image: banner.image || '/api/placeholder/800/400',
+        image: typeof banner.image === 'object' ? banner.image.url : (banner.image || 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1200&q=80'),
         link: banner.link || '#'
       }));
       setBanners(fetchedBanners.length > 0 ? fetchedBanners : DEFAULT_BANNERS);
@@ -138,6 +138,17 @@ const BannerSlider = () => {
               <div className="absolute bottom-0 right-0 w-80 h-80 bg-white rounded-full blur-3xl"></div>
             </div>
 
+            {/* Background Image (Optional) */}
+            {banner.image && (
+              <div className="absolute inset-0 z-0">
+                <img
+                  src={banner.image}
+                  alt=""
+                  className="w-full h-full object-cover opacity-20"
+                />
+              </div>
+            )}
+
             {/* Content */}
             <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="text-left">
@@ -154,16 +165,26 @@ const BannerSlider = () => {
                   <Link to={banner.link || '/shop'} className="btn-primary px-8 py-4 text-lg shadow-2xl inline-block">
                     Shop Now
                   </Link>
-                  <a href="#" className="btn-secondary px-8 py-4 text-lg inline-block">
-                    Learn More
-                  </a>
                 </div>
               </div>
 
-              {/* Optional Image/Illustration */}
-              <div className="hidden md:block">
-                <div className="w-full h-80 bg-white/20 backdrop-blur-sm rounded-2xl shadow-xl flex items-center justify-center border-2 border-white/30">
-                  <span className="text-white/50 text-4xl font-bold">Featured Product</span>
+              {/* Banner Image */}
+              <div className="hidden md:block animate-fade-in-right">
+                <div className="relative group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-white/30 to-white/10 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                  <div className="relative w-full h-96 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+                    {banner.image ? (
+                      <img
+                        src={banner.image}
+                        alt={banner.title}
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-white/50 text-4xl font-bold">
+                        No Image
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -195,8 +216,8 @@ const BannerSlider = () => {
             key={index}
             onClick={() => goToSlide(index)}
             className={`transition-all duration-300 rounded-full ${currentSlide === index
-                ? 'w-12 h-3 bg-white'
-                : 'w-3 h-3 bg-white/50 hover:bg-white/80'
+              ? 'w-12 h-3 bg-white'
+              : 'w-3 h-3 bg-white/50 hover:bg-white/80'
               }`}
             aria-label={`Go to slide ${index + 1}`}
           />

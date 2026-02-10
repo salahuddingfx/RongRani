@@ -184,8 +184,8 @@ const AdminBanners = () => {
                 </div>
               )}
               <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold ${banner.isActive
-                  ? 'bg-green-500 text-white'
-                  : 'bg-slate-500 text-white'
+                ? 'bg-green-500 text-white'
+                : 'bg-slate-500 text-white'
                 }`}>
                 {banner.isActive ? '✓ Active' : '✗ Inactive'}
               </div>
@@ -206,8 +206,8 @@ const AdminBanners = () => {
                   <button
                     onClick={() => toggleActive(banner._id, banner.isActive)}
                     className={`p-2 rounded-lg transition-colors ${banner.isActive
-                        ? 'bg-slate-100 hover:bg-slate-200 text-slate'
-                        : 'bg-green-100 hover:bg-green-200 text-green-600'
+                      ? 'bg-slate-100 hover:bg-slate-200 text-slate'
+                      : 'bg-green-100 hover:bg-green-200 text-green-600'
                       }`}
                     title={banner.isActive ? 'Deactivate' : 'Activate'}
                   >
@@ -235,17 +235,70 @@ const AdminBanners = () => {
       </div>
 
       {banners.length === 0 && (
-        <div className="text-center py-16 bg-white rounded-2xl shadow-xl">
+        <div className="text-center py-16 bg-white rounded-2xl shadow-xl border-2 border-dashed border-maroon/20">
           <Image className="h-24 w-24 text-slate/30 mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-maroon mb-2">No Banners Yet</h3>
-          <p className="text-slate mb-6">Create your first banner to display on the homepage</p>
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-maroon text-white px-8 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all inline-flex items-center space-x-2"
-          >
-            <Plus className="h-5 w-5" />
-            <span>Create First Banner</span>
-          </button>
+          <p className="text-slate mb-8 max-w-md mx-auto">Create your first banner to display on the homepage, or import our premium templates to get started quickly.</p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={() => setShowModal(true)}
+              className="bg-maroon text-white px-8 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all inline-flex items-center space-x-2 w-full sm:w-auto"
+            >
+              <Plus className="h-5 w-5" />
+              <span>Create Custom Banner</span>
+            </button>
+            <button
+              onClick={async () => {
+                const templates = [
+                  {
+                    title: 'Handcrafted Excellence',
+                    subtitle: 'Discover Traditional Bengali Crafts',
+                    image: 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1200&q=80',
+                    link: '/shop',
+                    isActive: true,
+                    order: 1
+                  },
+                  {
+                    title: 'Anniversary Special',
+                    subtitle: 'Make Your Moments Memorable',
+                    image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1200&q=80',
+                    link: '/shop',
+                    isActive: true,
+                    order: 2
+                  },
+                  {
+                    title: 'Support Local Artisans',
+                    subtitle: 'Every Purchase Makes a Difference',
+                    image: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=1200&q=80',
+                    link: '/shop',
+                    isActive: true,
+                    order: 3
+                  }
+                ];
+
+                try {
+                  const token = localStorage.getItem('token');
+                  const config = { headers: { Authorization: `Bearer ${token}` } };
+                  const loadingToast = toast.loading('Importing templates...');
+
+                  for (const template of templates) {
+                    await axios.post('/api/admin/banners', template, config);
+                  }
+
+                  toast.dismiss(loadingToast);
+                  toast.success('Banners imported successfully!');
+                  fetchBanners();
+                } catch (err) {
+                  toast.error('Failed to import templates');
+                  console.error(err);
+                }
+              }}
+              className="bg-teal-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all inline-flex items-center space-x-2 w-full sm:w-auto"
+            >
+              <Sparkles className="h-5 w-5 text-yellow-300" />
+              <span>Import Templates</span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -291,14 +344,45 @@ const AdminBanners = () => {
 
               <div>
                 <label className="block text-sm font-bold text-maroon mb-2">Image URL *</label>
-                <input
-                  type="text"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  className="w-full px-4 py-3 border-2 border-maroon/20 rounded-xl focus:outline-none focus:border-maroon text-slate"
-                  required
-                  placeholder="https://example.com/banner-image.jpg"
-                />
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={formData.image}
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                      className="flex-1 px-4 py-3 border-2 border-maroon/20 rounded-xl focus:outline-none focus:border-maroon text-slate"
+                      required
+                      placeholder="https://example.com/banner-image.jpg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const randomId = Math.floor(Math.random() * 1000);
+                        setFormData({ ...formData, image: `https://picsum.photos/seed/${randomId}/1200/600` });
+                      }}
+                      className="bg-teal-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-teal-700 transition-colors"
+                    >
+                      Use Random
+                    </button>
+                  </div>
+
+                  {/* Image Preview */}
+                  {formData.image && (
+                    <div className="relative h-40 w-full rounded-2xl overflow-hidden border-2 border-maroon/10 bg-cream">
+                      <img
+                        src={formData.image}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/800x400?text=Invalid+Image+URL';
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                        <span className="text-white font-bold text-sm bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">Image Preview</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div>

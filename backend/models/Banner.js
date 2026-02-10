@@ -7,42 +7,29 @@ const bannerSchema = new mongoose.Schema({
     trim: true,
     maxlength: [100, 'Title cannot exceed 100 characters'],
   },
+  subtitle: {
+    type: String,
+    maxlength: [200, 'Subtitle cannot exceed 200 characters'],
+  },
   description: {
     type: String,
     maxlength: [500, 'Description cannot exceed 500 characters'],
   },
   image: {
-    url: {
-      type: String,
-      required: true,
-    },
-    publicId: String,
-    alt: String,
+    type: String,
+    required: [true, 'Image URL is required'],
   },
   link: {
     type: String,
     trim: true,
   },
-  position: {
-    type: String,
-    enum: ['hero', 'sidebar', 'footer', 'product'],
-    default: 'hero',
-  },
   isActive: {
     type: Boolean,
     default: true,
   },
-  startDate: {
-    type: Date,
-    default: Date.now,
-  },
-  endDate: {
-    type: Date,
-  },
-  priority: {
+  order: {
     type: Number,
     default: 0,
-    min: 0,
   },
   clickCount: {
     type: Number,
@@ -64,12 +51,12 @@ const bannerSchema = new mongoose.Schema({
 });
 
 // Update updatedAt on save
-bannerSchema.pre('save', function(next) {
+bannerSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
 
 // Index
-bannerSchema.index({ position: 1, isActive: 1, priority: -1 });
+bannerSchema.index({ isActive: 1, order: 1 });
 
 module.exports = mongoose.model('Banner', bannerSchema);

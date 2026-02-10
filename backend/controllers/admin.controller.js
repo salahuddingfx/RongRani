@@ -295,13 +295,13 @@ const updateOrder = async (req, res) => {
 
     if (order.orderStatus === 'delivered' && !order.deliveredAt) {
       order.deliveredAt = new Date();
-      
+
       // Send delivery confirmation email to customer
       try {
         const { sendEmail } = require('../utils/emailService');
         const customerEmail = order.user ? order.user.email : order.guestInfo?.email;
         const customerName = order.user ? order.user.name : order.guestInfo?.name || 'Customer';
-        
+
         if (customerEmail) {
           console.log(`📧 Sending delivery confirmation to ${customerEmail}...`);
           await sendEmail(
@@ -369,9 +369,9 @@ const sendToCourier = async (req, res) => {
 
     // Check if already sent to courier
     if (order.courierInfo?.consignmentId) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: 'Order already sent to courier',
-        trackingCode: order.courierInfo.trackingCode 
+        trackingCode: order.courierInfo.trackingCode
       });
     }
 
@@ -491,9 +491,9 @@ const sendToCourier = async (req, res) => {
     const result = await steadfastService.createOrder(orderData);
 
     if (!result.success) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         message: result.error || 'Failed to send order to courier',
-        details: result.details 
+        details: result.details
       });
     }
 
@@ -524,7 +524,7 @@ const sendToCourier = async (req, res) => {
       note,
     };
     order.trackingNumber = result.trackingCode;
-    
+
     // Update status if not already processing
     if (order.orderStatus === 'pending' || order.orderStatus === 'confirmed') {
       order.orderStatus = 'processing';
@@ -538,7 +538,7 @@ const sendToCourier = async (req, res) => {
       const customerEmail = order.user ? order.user.email : order.guestInfo?.email;
       const customerName = order.user ? order.user.name : order.guestInfo?.name || 'Customer';
       const trackingQuery = customerEmail ? `?email=${encodeURIComponent(customerEmail)}` : '';
-      
+
       if (customerEmail) {
         console.log(`📧 Sending courier notification to ${customerEmail}...`);
         await sendEmail(
@@ -691,7 +691,10 @@ const deleteCoupon = async (req, res) => {
 // @access  Private/Admin
 const createBanner = async (req, res) => {
   try {
-    const banner = await Banner.create(req.body);
+    const banner = await Banner.create({
+      ...req.body,
+      createdBy: req.user._id,
+    });
     emitEvent(req, 'banner:created', banner);
     res.status(201).json(banner);
   } catch (error) {
@@ -704,7 +707,7 @@ const createBanner = async (req, res) => {
 // @access  Private/Admin
 const getBanners = async (req, res) => {
   try {
-    const banners = await Banner.find({});
+    const banners = await Banner.find({}).sort({ order: 1 });
     res.json(banners);
   } catch (error) {
     res.status(500).json({ message: error.message });
