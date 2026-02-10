@@ -212,7 +212,7 @@ const Home = () => {
         path="/"
       />
       {/* Hero Section - Clean Design */}
-      <section className="relative overflow-hidden bg-white py-16 md:py-24 reveal">
+      <section className="relative overflow-hidden bg-white py-8 sm:py-16 md:py-24 reveal min-h-[400px]">
         <div className="section-container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {hotOffer?.isActive && (
@@ -255,7 +255,7 @@ const Home = () => {
             </div>
 
             {/* Main Heading with Typing Effect */}
-            <h1 className="text-4xl md:text-6xl font-bold text-charcoal mb-4 leading-tight animate-fade-in-up stagger-1">
+            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-charcoal mb-4 tracking-tight leading-tight animate-fade-in-up stagger-1">
               {t('hero_title')}<br />
               <span className="text-maroon">
                 <TypingEffect
@@ -329,13 +329,13 @@ const Home = () => {
       </section>
 
       {/* Categories Section */}
-      <section className="section-spacing bg-white reveal">
+      <section className="section-spacing bg-white reveal min-h-[300px]">
         <div className="section-container">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-charcoal mb-3 sm:mb-4">
+          <div className="text-center mb-6 sm:mb-12">
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-charcoal mb-2 sm:mb-4">
               {t('shop_by_category')}
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-charcoal-light max-w-2xl mx-auto px-4">
+            <p className="text-xs sm:text-base md:text-lg text-charcoal-light max-w-2xl mx-auto px-4">
               {t('language') === 'bn' ? 'আমাদের বৈচিত্র্যময় হস্তনির্মিত পণ্য দেখুন' : 'Explore our diverse range of handcrafted products'}
             </p>
           </div>
@@ -455,11 +455,11 @@ const Home = () => {
       {/* Featured Products Section */}
       <section className="section-spacing bg-cream reveal">
         <div className="section-container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
+          <div className="text-center mb-8 sm:mb-16">
+            <h2 className="text-2xl md:text-4xl font-bold text-charcoal mb-3 sm:mb-4">
               {t('featured_products')}
             </h2>
-            <p className="text-charcoal-light text-lg max-w-2xl mx-auto">
+            <p className="text-charcoal-light text-sm sm:text-lg max-w-2xl mx-auto px-4">
               {t('language') === 'bn' ? 'আমাদের সেরা কারিগরদের হাতে বাছাই করা সংগ্রহ, প্রতিটি পণ্য ভালোবাসা এবং ঐতিহ্য দিয়ে তৈরি' : 'Handpicked treasures from our finest artisans, each piece crafted with love and tradition'}
             </p>
           </div>

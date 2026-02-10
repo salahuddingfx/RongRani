@@ -7,27 +7,25 @@ const TypingEffect = ({ texts, speed = 100, deleteSpeed = 50, pauseTime = 2000, 
 
   useEffect(() => {
     const currentText = texts[currentIndex];
-    
+
     const timer = setTimeout(() => {
       if (!isDeleting) {
         // Typing
         if (displayText.length < currentText.length) {
           setDisplayText(currentText.substring(0, displayText.length + 1));
         } else {
-          // Pause before deleting
-          setTimeout(() => setIsDeleting(true), pauseTime);
+          setIsDeleting(true);
         }
       } else {
         // Deleting
         if (displayText.length > 0) {
           setDisplayText(displayText.substring(0, displayText.length - 1));
         } else {
-          // Move to next text
           setIsDeleting(false);
           setCurrentIndex((currentIndex + 1) % texts.length);
         }
       }
-    }, isDeleting ? deleteSpeed : speed);
+    }, isDeleting ? deleteSpeed : (displayText.length === currentText.length ? pauseTime : speed));
 
     return () => clearTimeout(timer);
   }, [displayText, currentIndex, isDeleting, texts, speed, deleteSpeed, pauseTime]);

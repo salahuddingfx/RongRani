@@ -12,7 +12,7 @@ const DEFAULT_BANNERS = [
     description: 'Each piece tells a story of heritage and craftsmanship',
     bgColor: 'bg-maroon',
     textColor: 'text-white',
-    image: 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1000&q=80&auto=format,webp',
     link: '/shop'
   },
   {
@@ -22,7 +22,7 @@ const DEFAULT_BANNERS = [
     description: 'Customized surprise boxes and flowers for your loved ones',
     bgColor: 'bg-pink-800',
     textColor: 'text-white',
-    image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1000&q=80&auto=format,webp',
     link: '/shop'
   },
   {
@@ -32,7 +32,7 @@ const DEFAULT_BANNERS = [
     description: 'Empowering craftspeople across Bangladesh',
     bgColor: 'bg-teal-700',
     textColor: 'text-white',
-    image: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=1200&q=80',
+    image: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=1000&q=80&auto=format,webp',
     link: '/shop'
   }
 ];
@@ -112,7 +112,7 @@ const BannerSlider = () => {
 
   if (loading) {
     return (
-      <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-3xl shadow-2xl bg-gray-200 animate-pulse" />
+      <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl bg-gray-200 animate-pulse" />
     );
   }
 
@@ -121,7 +121,7 @@ const BannerSlider = () => {
   }
 
   return (
-    <div className="relative w-full h-[500px] md:h-[600px] overflow-hidden rounded-3xl shadow-2xl group">
+    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl group">
       {/* Slides */}
       <div
         className="flex h-full transition-transform duration-700 ease-in-out"
@@ -133,9 +133,9 @@ const BannerSlider = () => {
             className={`min-w-full h-full ${banner.bgColor} flex items-center justify-center px-8 md:px-16 relative`}
           >
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 right-0 w-80 h-80 bg-white rounded-full blur-3xl"></div>
+            <div className="absolute inset-0 opacity-10 hidden sm:block">
+              <div className="absolute top-0 left-0 w-64 h-64 md:w-96 md:h-96 bg-white rounded-full blur-2xl md:blur-3xl"></div>
+              <div className="absolute bottom-0 right-0 w-48 h-48 md:w-80 md:h-80 bg-white rounded-full blur-2xl md:blur-3xl"></div>
             </div>
 
             {/* Background Image (Optional) */}
@@ -152,19 +152,19 @@ const BannerSlider = () => {
             )}
 
             {/* Content */}
-            <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div className="text-left">
-                <h2 className={`text-5xl md:text-6xl font-bold ${banner.textColor} mb-4 leading-tight animate-fade-in-up`}>
+            <div className="relative z-10 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center h-full">
+              <div className="text-center md:text-left px-4">
+                <h2 className={`text-3xl sm:text-4xl md:text-6xl font-black ${banner.textColor} mb-3 sm:mb-4 leading-tight animate-fade-in-up`}>
                   {banner.title}
                 </h2>
-                <p className={`text-2xl md:text-3xl ${banner.textColor} mb-6 font-medium animate-fade-in-up stagger-1`}>
+                <p className={`text-lg sm:text-xl md:text-3xl ${banner.textColor} mb-4 sm:mb-6 font-semibold opacity-90 animate-fade-in-up stagger-1`}>
                   {banner.subtitle}
                 </p>
-                <p className={`text-lg ${banner.textColor} mb-8 opacity-90 animate-fade-in-up stagger-2`}>
+                <p className={`text-sm sm:text-base md:text-lg ${banner.textColor} mb-6 sm:mb-8 opacity-80 line-clamp-2 sm:line-clamp-none animate-fade-in-up stagger-2`}>
                   {banner.description}
                 </p>
-                <div className="flex space-x-4 animate-fade-in-up stagger-3">
-                  <Link to={banner.link || '/shop'} className="btn-primary px-8 py-4 text-lg shadow-2xl inline-block">
+                <div className="flex justify-center md:justify-start space-x-4 animate-fade-in-up stagger-3">
+                  <Link to={banner.link || '/shop'} className="btn-primary px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg shadow-2xl inline-block">
                     Shop Now
                   </Link>
                 </div>
@@ -179,6 +179,8 @@ const BannerSlider = () => {
                       <img
                         src={banner.image}
                         alt={banner.title}
+                        width="800"
+                        height="400"
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                         decoding="async"
                         loading={index === 0 ? "eager" : "lazy"}

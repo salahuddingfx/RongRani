@@ -65,8 +65,8 @@ const Navbar = () => {
 
   const topBarClasses = 'bg-maroon text-white text-xs py-2 px-4 hidden md:block transition-all duration-300';
   const mainNavClasses = isScrolled || isOpen
-    ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-md py-3'
-    : 'bg-white dark:bg-slate-900 py-4 border-b border-slate-100 dark:border-slate-800';
+    ? 'bg-white dark:bg-slate-900 md:backdrop-blur-md md:bg-white/95 md:dark:bg-slate-900/95 shadow-md py-2.5 sm:py-3'
+    : 'bg-white dark:bg-slate-900 py-3 sm:py-4 border-b border-slate-100 dark:border-slate-800';
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex flex-col w-full">
