@@ -160,10 +160,11 @@ const ProductDetail = () => {
   };
 
   const pagePath = `/product/${id}`;
-  const pageTitle = product ? `${product.name} | RongRani` : 'Product Details | RongRani';
-  const pageDescription = product?.description
+  const pageTitle = product?.seoTitle || (product ? `${product.name} | RongRani` : 'Product Details | RongRani');
+  const pageDescription = product?.seoDescription || (product?.description
     ? buildDescription(product.description)
-    : 'View product details, pricing, and delivery options from RongRani.';
+    : 'View product details, pricing, and delivery options from RongRani.');
+  const pageKeywords = product?.tags || [];
   const pageImage = product
     ? getImageUrl(product.images?.[0]) || getImageUrl(product.image)
     : '';
@@ -238,6 +239,7 @@ const ProductDetail = () => {
       <Seo
         title={pageTitle}
         description={pageDescription}
+        keywords={pageKeywords}
         path={pagePath}
         image={pageImage}
         schema={productSchema}

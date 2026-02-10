@@ -34,13 +34,14 @@ const resolveImageUrl = (baseUrl, image) => {
   return normalizeUrl(baseUrl, image);
 };
 
-const Seo = ({ title, description, path, image, noIndex = false, schema }) => {
+const Seo = ({ title, description, keywords, path, image, noIndex = false, schema }) => {
   const { language } = useLanguage();
 
   const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'http://localhost:5173').replace(/\/+$/, '');
   const canonical = normalizeUrl(baseUrl, path || '/');
   const metaTitle = title || DEFAULT_TITLE;
   const metaDescription = description || DEFAULT_DESCRIPTION;
+  const metaKeywords = Array.isArray(keywords) ? keywords.join(', ') : keywords;
   const imageUrl =
     resolveImageUrl(baseUrl, image) || normalizeUrl(baseUrl, '/Chirkut-Ghor-logo-1.png');
 
@@ -51,6 +52,7 @@ const Seo = ({ title, description, path, image, noIndex = false, schema }) => {
     <Helmet htmlAttributes={{ lang: htmlLang }}>
       <title>{metaTitle}</title>
       <meta name="description" content={metaDescription} />
+      {metaKeywords && <meta name="keywords" content={metaKeywords} />}
       <meta name="robots" content={noIndex ? 'noindex, nofollow' : 'index, follow'} />
       <link rel="canonical" href={canonical} />
       <meta property="og:site_name" content="RongRani" />

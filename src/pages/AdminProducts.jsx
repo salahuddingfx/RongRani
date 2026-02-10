@@ -20,7 +20,10 @@ const AdminProducts = () => {
     price: '',
     category: '',
     stock: '',
-    images: ''
+    images: '',
+    tags: '',
+    seoTitle: '',
+    seoDescription: ''
   });
 
   const fetchProducts = useCallback(async () => {
@@ -144,6 +147,7 @@ const AdminProducts = () => {
       const productData = {
         ...formData,
         images: formData.images.split(',').map(img => img.trim()),
+        tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock)
       };
@@ -168,7 +172,10 @@ const AdminProducts = () => {
         price: '',
         category: '',
         stock: '',
-        images: ''
+        images: '',
+        tags: '',
+        seoTitle: '',
+        seoDescription: ''
       });
       fetchProducts();
     } catch (error) {
@@ -189,7 +196,10 @@ const AdminProducts = () => {
       price: product.price || '',
       category: product.category || '',
       stock: product.stock ?? '',
-      images: imagesValue
+      images: imagesValue,
+      tags: (product.tags || []).join(', '),
+      seoTitle: product.seoTitle || '',
+      seoDescription: product.seoDescription || ''
     });
     setShowAddModal(true);
   };
@@ -221,7 +231,10 @@ const AdminProducts = () => {
               price: '',
               category: '',
               stock: '',
-              images: ''
+              images: '',
+              tags: '',
+              seoTitle: '',
+              seoDescription: ''
             });
             setShowAddModal(true);
           }}
@@ -420,6 +433,53 @@ const AdminProducts = () => {
                   📌 First image will be the main product image. You can add up to 5 images.
                 </p>
               </div>
+
+              {/* Advanced - Tags & SEO */}
+              <div className="border-t border-slate/10 pt-6 mt-6">
+                <h3 className="text-lg font-bold text-maroon mb-4">SEO & Search Optimization</h3>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate mb-2">
+                      Search Tags (Keywords)
+                      <span className="text-xs font-normal text-slate-500 ml-2">
+                        💡 Separate with commas (e.g., gift, handmade, birthday)
+                      </span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.tags}
+                      onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                      className="input-field w-full"
+                      placeholder="gift, surprise, handmade, pottery"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-slate mb-2">SEO Title</label>
+                      <input
+                        type="text"
+                        value={formData.seoTitle}
+                        onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })}
+                        className="input-field w-full"
+                        placeholder="Premium Handmade Pottery Vase"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-slate mb-2">SEO Description</label>
+                      <textarea
+                        value={formData.seoDescription}
+                        onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
+                        className="input-field w-full"
+                        rows="2"
+                        placeholder="Best handcrafted pottery in Bangladesh with free shipping..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex space-x-4 pt-4">
                 <button type="submit" className="btn-primary flex-1">
                   {editingProduct ? 'Save Changes' : 'Add Product'}
