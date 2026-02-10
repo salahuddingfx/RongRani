@@ -533,9 +533,11 @@ const Home = () => {
                 </div>
               </div>
 
-              <Link to="/about" className="btn-primary px-10 py-4 text-lg">
-                Learn More About Us
-              </Link>
+              <div className="flex justify-center mt-6">
+                <Link to="/about" className="btn-primary px-10 py-4 text-lg">
+                  Learn More About Us
+                </Link>
+              </div>
             </div>
           </div>
         </div>
