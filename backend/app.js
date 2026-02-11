@@ -93,6 +93,7 @@ app.use('/api/coupons', require('./routes/coupon.routes'));
 app.use('/api/payment', require('./routes/payment.routes'));
 app.use('/api/flash-sales', require('./routes/flashSale.routes'));
 app.use('/api/analytics', require('./routes/analytics.routes'));
+app.use('/api/search', require('./routes/search.routes'));
 
 /* -------------------- PLACEHOLDER IMAGE -------------------- */
 app.get('/api/placeholder/:width/:height', async (req, res) => {
