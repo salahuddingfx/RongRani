@@ -20,7 +20,7 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const from = location.state?.from || '/';
   const message = location.state?.message;
 
@@ -48,7 +48,7 @@ const Register = () => {
       return;
     }
 
-      try {
+    try {
       await register({
         name: formData.name,
         email: formData.email,
@@ -72,8 +72,13 @@ const Register = () => {
       {/* Logo at top */}
       <div className="pt-8 pb-4">
         <div className="flex justify-center">
-          <Link to="/" className="text-2xl font-bold text-maroon">
-            RongRani
+          <Link to="/" className="flex flex-col items-center gap-2 group">
+            <div className="w-16 h-16 flex items-center justify-center rounded-full border-2 border-maroon p-0 overflow-hidden shadow-xl group-hover:scale-110 transition-all duration-300 bg-transparent">
+              <img src="/RongRani-Circle.png" alt="Logo" className="w-full h-full object-contain" />
+            </div>
+            <span className="text-2xl md:text-3xl font-black text-maroon tracking-tight">
+              Rong<span className="text-slate-800">Rani</span>
+            </span>
           </Link>
         </div>
       </div>
@@ -232,11 +237,10 @@ const Register = () => {
                   className="sr-only"
                 />
                 <div
-                  className={`w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-colors ${
-                    agreeToTerms
-                      ? 'bg-maroon border-maroon'
-                      : 'border-slate/40 hover:border-maroon'
-                  }`}
+                  className={`w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-colors ${agreeToTerms
+                    ? 'bg-maroon border-maroon'
+                    : 'border-slate/40 hover:border-maroon'
+                    }`}
                   onClick={() => setAgreeToTerms(!agreeToTerms)}
                 >
                   {agreeToTerms && <Check className="h-3 w-3 text-white" />}

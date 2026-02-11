@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingCart, User, Search, Menu, X, Heart, Package, LogOut, Crown, LayoutDashboard, Moon, Sun, Phone, Mail, ChevronDown, Home, Globe } from 'lucide-react';
+import axios from 'axios';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -10,6 +11,15 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [popularSearches, setPopularSearches] = useState(['Love Combo', 'Anniversary', 'Birthday', 'Gift Box']);
+  const [suggestedCategories, setSuggestedCategories] = useState([]);
+  const [recentSearches, setRecentSearches] = useState(() => {
+    const saved = localStorage.getItem('recentSearches');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const { totalItems } = useCart();
@@ -42,12 +52,81 @@ const Navbar = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+    const query = searchQuery.trim();
+    if (query) {
+      // Save to recent searches
+      const updatedRecent = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+      setRecentSearches(updatedRecent);
+      localStorage.setItem('recentSearches', JSON.stringify(updatedRecent));
+
+      navigate(`/shop?search=${encodeURIComponent(query)}`);
       setSearchQuery('');
+      setShowSuggestions(false);
       setIsOpen(false);
     }
   };
+
+  const highlightMatch = (text, query) => {
+    if (!query || typeof text !== 'string') return text;
+    const parts = text.split(new RegExp(`(${query})`, 'gi'));
+    return parts.map((part, i) =>
+      part.toLowerCase() === query.toLowerCase()
+        ? <span key={i} className="text-maroon dark:text-pink-400 font-black">{part}</span>
+        : part
+    );
+  };
+
+  // Live Search Suggestions Effect
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      const query = searchQuery.trim();
+      if (query.length < 2) {
+        setSuggestions([]);
+        setIsSearching(false);
+        return;
+      }
+
+      setIsSearching(true);
+      try {
+        const response = await axios.get(`/api/search/suggestions`, {
+          params: { q: query }
+        });
+
+        if (response.data && response.data.success) {
+          setSuggestions(response.data.suggestions || []);
+          setSuggestedCategories(response.data.categories || []);
+          setPopularSearches(response.data.popularSearches || []);
+          setShowSuggestions(true);
+        }
+      } catch (error) {
+        console.error('Search suggestion error:', error);
+        setSuggestions([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(() => {
+      fetchSuggestions();
+    }, 400); // Slightly longer debounce for better reliability
+
+    return () => clearTimeout(debounceTimer);
+  }, [searchQuery]);
+
+  // Click Outside to Close
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.search-container')) {
+        setShowSuggestions(false);
+      }
+      if (!event.target.closest('.user-menu-container')) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const menuItems = [
     { to: '/', label: 'home' },
@@ -68,6 +147,49 @@ const Navbar = () => {
     ? 'bg-white dark:bg-slate-900 md:backdrop-blur-md md:bg-white/95 md:dark:bg-slate-900/95 shadow-md py-2.5 sm:py-3'
     : 'bg-white dark:bg-slate-900 py-3 sm:py-4 border-b border-slate-100 dark:border-slate-800';
 
+  const [placeholder, setPlaceholder] = useState('');
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+
+  const placeholders = language === 'bn'
+    ? ['উপহার খুজুন...', 'ভালোবাসার কম্বো...', 'বার্থডে গিফট...', 'হস্তনির্মিত পণ্য...', 'সারপ্রাইজ বক্স...']
+    : ['Search for gifts...', 'Love Combo...', 'Birthday Gifts...', 'Handmade Items...', 'Surprise Boxes...'];
+
+  useEffect(() => {
+    let currentText = placeholders[placeholderIndex];
+    let charIndex = 0;
+    let isDeleting = false;
+    let timer;
+
+    const type = () => {
+      if (!isDeleting) {
+        if (charIndex < currentText.length) {
+          setPlaceholder(currentText.substring(0, charIndex + 1));
+          charIndex++;
+          timer = setTimeout(type, 100);
+        } else {
+          timer = setTimeout(() => {
+            isDeleting = true;
+            type();
+          }, 2000);
+        }
+      } else {
+        if (charIndex > 0) {
+          setPlaceholder(currentText.substring(0, charIndex - 1));
+          charIndex--;
+          timer = setTimeout(type, 50);
+        } else {
+          isDeleting = false;
+          setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
+          currentText = placeholders[(placeholderIndex + 1) % placeholders.length];
+          timer = setTimeout(type, 500);
+        }
+      }
+    };
+
+    timer = setTimeout(type, 1000);
+    return () => clearTimeout(timer);
+  }, [placeholderIndex, language]);
+
   return (
     <div className="fixed top-0 left-0 right-0 z-50 flex flex-col w-full">
       {/* 1. TOP BAR - Info & Offers with Marquee */}
@@ -83,11 +205,11 @@ const Navbar = () => {
                 <span className="inline-flex items-center mr-8 text-gold/90 font-semibold">
                   🚚 {t('free_shipping')} ৳2000!
                 </span>
-                <span className="inline-flex items-center mr-8 font-bold">
-                  🎁 {t('welcome_offer')}
+                <span className="inline-flex items-center mr-8 font-bold text-pink-200">
+                  ✨ Handcrafted with Love
                 </span>
                 <span className="inline-flex items-center mr-8 text-gold/90 font-semibold">
-                  🚚 {t('free_shipping')} ৳2000!
+                  🛡️ Secure Payment
                 </span>
               </div>
             </div>
@@ -95,25 +217,19 @@ const Navbar = () => {
             {/* Right Side - Contact & Language */}
             <div className="flex items-center divide-x divide-white/20 shrink-0">
               <div className="hidden md:flex items-center space-x-4 pr-4">
-                <span className="flex items-center hover:text-gold transition-colors cursor-pointer">
+                <a href="tel:+8801851075537" className="flex items-center hover:text-gold transition-colors">
                   <Phone className="w-3 h-3 mr-1.5" /> +880 1851-075537
-                </span>
-                <span className="flex items-center hover:text-gold transition-colors cursor-pointer">
-                  <Mail className="w-3 h-3 mr-1.5" /> salauddinkaderappy@gmail.com
-                </span>
+                </a>
               </div>
-              <div className="flex items-center pl-4 space-x-3">
+              <div className="flex items-center pl-4 space-x-3 text-[10px]">
                 <button
                   onClick={toggleLanguage}
-                  className="flex items-center hover:text-gold font-bold uppercase text-[10px] tracking-wider"
+                  className="flex items-center hover:text-gold font-bold uppercase tracking-wider"
                   aria-label={language === 'en' ? 'Switch to Bangla' : 'Switch to English'}
                 >
                   <Globe className="w-3 h-3 mr-1" />
                   {language === 'en' ? 'BN' : 'EN'}
                 </button>
-                <span className="cursor-pointer hover:text-gold font-bold">
-                  {t('bdt')}
-                </span>
               </div>
             </div>
           </div>
@@ -141,11 +257,15 @@ const Navbar = () => {
               <Link to="/" className="flex items-center gap-2 group shrink-0">
                 {/* Gift Icon */}
                 <div
-                  className="w-8 h-8 md:w-10 md:h-10 bg-maroon rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all group-hover:scale-105"
+                  className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full border-2 border-maroon dark:border-white p-0 overflow-hidden shadow-md group-hover:scale-110 transition-all duration-300 bg-transparent"
                   role="img"
                   aria-label="RongRani Brand Logo"
                 >
-                  <span className="text-white text-lg md:text-xl" aria-hidden="true">🎁</span>
+                  <img
+                    src="/RongRani-Circle.png"
+                    alt="Logo"
+                    className="w-full h-full object-contain"
+                  />
                 </div>
                 {/* Text Logo */}
                 <div className="flex flex-col leading-none">
@@ -159,28 +279,192 @@ const Navbar = () => {
             {/* CENTER: Search Bar (Desktop) */}
             {!isSimplifiedPage && (
               <div className="hidden md:flex flex-1 max-w-xl mx-4 lg:mx-8">
-                <form onSubmit={handleSearch} className="w-full relative group">
-                  <input
-                    type="text"
-                    placeholder={t('search_placeholder')}
-                    className="w-full bg-slate-100 dark:bg-slate-800 border 
+                <div className="w-full relative group search-container">
+                  <form onSubmit={handleSearch} className="w-full relative">
+                    <input
+                      type="text"
+                      placeholder={placeholder}
+                      className="w-full bg-slate-100 dark:bg-slate-800 border 
                                                    border-transparent focus:border-maroon/20 dark:focus:border-maroon/40
                                                    rounded-full py-2.5 pl-5 pr-12 
                                                    focus:ring-2 focus:ring-maroon/10 focus:bg-white dark:focus:bg-slate-800 
                                                    transition-all text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  <button
-                    type="submit"
-                    className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 
+                      value={searchQuery}
+                      onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        if (!showSuggestions) setShowSuggestions(true);
+                      }}
+                      onFocus={() => {
+                        if (searchQuery.length >= 2) setShowSuggestions(true);
+                      }}
+                    />
+                    <button
+                      type="submit"
+                      className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 
                                                    bg-maroon hover:bg-maroon-dark text-white rounded-full 
                                                    shadow-sm hover:shadow transition-all transform active:scale-95"
-                    aria-label="Search"
-                  >
-                    <Search className="w-4 h-4" />
-                  </button>
-                </form>
+                      aria-label="Search"
+                    >
+                      <Search className="w-4 h-4" />
+                    </button>
+                  </form>
+
+                  {/* Search Suggestions Dropdown */}
+                  {showSuggestions && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-slate-100 dark:border-slate-700 overflow-hidden z-[9999] animate-fade-in-up">
+                      {isSearching ? (
+                        <div className="p-8 text-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-maroon mx-auto mb-3"></div>
+                          <p className="text-xs text-slate-400 font-medium">Searching our magic collection...</p>
+                        </div>
+                      ) : (
+                        <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
+                          {/* 0. Popular Searches (When query is short) */}
+                          {searchQuery.trim().length < 2 && (
+                            <div className="p-4 border-b border-slate-50 dark:border-slate-700/50">
+                              <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] mb-3 flex items-center gap-2">
+                                <TrendingUp className="w-3 h-3 text-maroon" /> Trending Now
+                              </h5>
+                              <div className="flex flex-wrap gap-2">
+                                {popularSearches.map((term, i) => (
+                                  <button
+                                    key={i}
+                                    onClick={() => {
+                                      setSearchQuery(term);
+                                      navigate(`/shop?search=${encodeURIComponent(term)}`);
+                                      setShowSuggestions(false);
+                                    }}
+                                    className="px-4 py-1.5 bg-slate-50 dark:bg-slate-700/50 hover:bg-maroon hover:text-white dark:hover:bg-maroon text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold transition-all border border-slate-100 dark:border-slate-600/50"
+                                  >
+                                    {term}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 0.1 Recent Searches */}
+                          {searchQuery.trim().length < 2 && recentSearches.length > 0 && (
+                            <div className="p-4 border-b border-slate-50 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-900/10">
+                              <div className="flex justify-between items-center mb-3">
+                                <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] flex items-center gap-2">
+                                  <Clock className="w-3 h-3" /> Recent Searches
+                                </h5>
+                                <button
+                                  onClick={() => {
+                                    setRecentSearches([]);
+                                    localStorage.removeItem('recentSearches');
+                                  }}
+                                  className="text-[10px] font-bold text-maroon underline underline-offset-2"
+                                >
+                                  Clear All
+                                </button>
+                              </div>
+                              <div className="space-y-1">
+                                {recentSearches.map((term, i) => (
+                                  <button
+                                    key={i}
+                                    onClick={() => {
+                                      setSearchQuery(term);
+                                      navigate(`/shop?search=${encodeURIComponent(term)}`);
+                                      setShowSuggestions(false);
+                                    }}
+                                    className="w-full text-left p-2 hover:bg-white dark:hover:bg-slate-700 rounded-lg text-sm text-slate-600 dark:text-slate-300 transition-colors flex items-center gap-2 group"
+                                  >
+                                    <Search className="w-3 h-3 text-slate-300 group-hover:text-maroon transition-colors" />
+                                    {term}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 1. Category Suggestions */}
+                          {suggestedCategories.length > 0 && searchQuery.trim().length >= 2 && (
+                            <div className="p-4 border-b border-slate-50 dark:border-slate-700/50 bg-maroon/[0.02] dark:bg-pink-400/[0.02]">
+                              <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] mb-3">
+                                Suggested Categories
+                              </h5>
+                              <div className="flex flex-wrap gap-2">
+                                {suggestedCategories.map((cat, i) => (
+                                  <Link
+                                    key={i}
+                                    to={`/shop?category=${encodeURIComponent(cat)}`}
+                                    className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-slate-700 hover:border-maroon dark:hover:border-pink-400 border border-slate-100 dark:border-slate-600 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 transition-all shadow-sm"
+                                    onClick={() => setShowSuggestions(false)}
+                                  >
+                                    <LayoutDashboard className="w-3 h-3 text-maroon dark:text-pink-400" />
+                                    {highlightMatch(cat, searchQuery)}
+                                  </Link>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* 2. Product Suggestions */}
+                          <div className="p-2">
+                            {suggestions.length > 0 ? (
+                              <>
+                                <h5 className="px-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                                  Products Found
+                                </h5>
+                                {suggestions.map((product) => (
+                                  <Link
+                                    key={product._id}
+                                    to={`/product/${product._id}`}
+                                    className="flex items-center gap-4 p-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all rounded-2xl group"
+                                    onClick={() => {
+                                      setShowSuggestions(false);
+                                      setSearchQuery('');
+                                    }}
+                                  >
+                                    <div className="w-14 h-14 rounded-2xl overflow-hidden bg-slate-100 dark:bg-slate-700 flex-shrink-0 border border-slate-100 dark:border-slate-600 group-hover:border-maroon transition-colors">
+                                      <img
+                                        src={product.image?.url || product.image || '/placeholder.jpg'}
+                                        alt={product.name}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                      />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate group-hover:text-maroon dark:group-hover:text-pink-400 transition-colors">
+                                        {highlightMatch(product.name, searchQuery)}
+                                      </h4>
+                                      <div className="flex items-center gap-2 mt-1">
+                                        <span className="text-sm font-black text-maroon dark:text-pink-400">৳{product.price}</span>
+                                        <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{product.category}</span>
+                                      </div>
+                                    </div>
+                                  </Link>
+                                ))}
+                              </>
+                            ) : (
+                              searchQuery.length >= 2 && !isSearching && (
+                                <div className="p-8 text-center">
+                                  <div className="w-16 h-16 bg-slate-50 dark:bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Search className="w-8 h-8 text-slate-300" />
+                                  </div>
+                                  <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-1">No matches found</p>
+                                  <p className="text-xs text-slate-500">Try searching for gifts, combos or boxes</p>
+                                </div>
+                              )
+                            )}
+                          </div>
+
+                          {suggestions.length > 0 && (
+                            <Link
+                              to={`/shop?search=${encodeURIComponent(searchQuery)}`}
+                              className="flex items-center justify-center gap-2 p-4 bg-slate-50/50 dark:bg-slate-900/30 text-sm font-black text-maroon dark:text-pink-400 border-t border-slate-50 dark:border-slate-700/50 hover:bg-maroon hover:text-white dark:hover:bg-maroon transition-all"
+                              onClick={() => setShowSuggestions(false)}
+                            >
+                              View All {suggestions.length > 5 ? 'Result' : 'Results'} 🚀
+                            </Link>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
@@ -283,19 +567,75 @@ const Navbar = () => {
 
           {/* Mobile Search Bar (Below Header) */}
           {!isSimplifiedPage && (
-            <div className="md:hidden mt-3 pb-1">
+            <div className="md:hidden mt-3 pb-1 relative search-container">
               <form onSubmit={handleSearch} className="w-full relative">
                 <input
                   type="text"
                   placeholder={t('search_placeholder')}
                   className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2.5 pl-4 pr-10 focus:ring-2 focus:ring-maroon text-sm"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (!showSuggestions) setShowSuggestions(true);
+                  }}
+                  onFocus={() => {
+                    if (searchQuery.length >= 2) setShowSuggestions(true);
+                  }}
                 />
                 <button type="submit" className="absolute right-0 top-0 h-full px-3 text-slate-500 hover:text-maroon">
                   <Search className="w-4 h-4" />
                 </button>
               </form>
+
+              {/* Mobile Search Suggestions Dropdown */}
+              {showSuggestions && (searchQuery.length >= 2 || suggestions.length > 0) && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden z-[9999] animate-fade-in-up max-h-[60vh] overflow-y-auto">
+                  {isSearching ? (
+                    <div className="p-4 text-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-maroon mx-auto"></div>
+                    </div>
+                  ) : suggestions.length > 0 ? (
+                    <div>
+                      {suggestions.map((product) => (
+                        <Link
+                          key={product._id}
+                          to={`/product/${product._id}`}
+                          className="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 border-b last:border-0 border-slate-50 dark:border-slate-700/50"
+                          onClick={() => {
+                            setShowSuggestions(false);
+                            setSearchQuery('');
+                          }}
+                        >
+                          <div className="w-10 h-10 rounded overflow-hidden bg-slate-100 flex-shrink-0">
+                            <img
+                              src={product.image?.url || product.image || '/placeholder.jpg'}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 truncate">{product.name}</h4>
+                            <p className="text-xs font-black text-maroon dark:text-pink-400">৳{product.price}</p>
+                          </div>
+                        </Link>
+                      ))}
+                      <Link
+                        to={`/shop?search=${encodeURIComponent(searchQuery)}`}
+                        className="block p-3 text-center text-sm font-bold text-maroon dark:text-pink-400 border-t border-slate-50 dark:border-slate-700/50"
+                        onClick={() => setShowSuggestions(false)}
+                      >
+                        View All Result 🚀
+                      </Link>
+                    </div>
+                  ) : (
+                    searchQuery.length >= 2 && !isSearching && (
+                      <div className="p-6 text-center">
+                        <p className="text-xs font-medium text-slate-500">No products found for "{searchQuery}"</p>
+                      </div>
+                    )
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -310,8 +650,8 @@ const Navbar = () => {
           >
             <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-maroon rounded-lg flex items-center justify-center shadow-md">
-                  <span className="text-white text-lg">🎁</span>
+                <div className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-maroon p-0.5 bg-white overflow-hidden shadow-sm">
+                  <img src="/RongRani-[Recovered].png" alt="Logo" className="w-full h-full object-cover" />
                 </div>
                 <span className="text-xl font-black text-maroon">
                   Rong<span className="text-slate-800 dark:text-slate-200">Rani</span>

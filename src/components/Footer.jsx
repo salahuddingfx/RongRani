@@ -56,11 +56,11 @@ const Footer = () => {
             <div className="lg:col-span-1">
               <div className="flex items-center gap-2 mb-6">
                 <div
-                  className="w-10 h-10 bg-maroon rounded-lg flex items-center justify-center shadow-lg"
+                  className="w-14 h-14 flex items-center justify-center rounded-full border-2 border-maroon p-0 overflow-hidden shadow-lg bg-transparent"
                   role="img"
                   aria-label="RongRani Logo"
                 >
-                  <span className="text-white text-xl" aria-hidden="true">🎁</span>
+                  <img src="/RongRani-Circle.png" alt="Logo" className="w-full h-full object-contain" />
                 </div>
                 <h3 className="text-2xl font-black text-white">
                   Rong<span className="text-pink-400">Rani</span>

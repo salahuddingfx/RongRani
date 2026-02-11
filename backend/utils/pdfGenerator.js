@@ -21,13 +21,22 @@ const generateInvoice = (order) => {
       doc.rect(0, 0, 595, 150).fill('#8B1538');
       doc.rect(0, 150, 595, 5).fill('#D4AF37');
 
-      // Header
-      doc.fillColor('#FFFFFF');
-      doc.fontSize(32).font('Helvetica-Bold').text('RongRani', 50, 40);
-      doc.fontSize(14).font('Helvetica').text('Premium Handcrafted Gifts', 50, 75);
-      doc.fontSize(10).text('Cox\'s Bazar, Bangladesh', 50, 92);
-      doc.fontSize(10).text('Email: support@chirkutghor.com', 50, 107);
-      doc.fontSize(10).text('Phone: +880 1234-567890', 50, 122);
+      // Add Logo if exists
+      const logoPath = path.join(__dirname, '../../public/RongRani-Circle.png');
+      if (fs.existsSync(logoPath)) {
+        doc.image(logoPath, 50, 30, { width: 60 });
+        doc.fillColor('#FFFFFF');
+        doc.fontSize(24).font('Helvetica-Bold').text('RongRani', 120, 45);
+        doc.fontSize(12).font('Helvetica').text('Premium Handcrafted Gifts', 120, 75);
+      } else {
+        doc.fillColor('#FFFFFF');
+        doc.fontSize(32).font('Helvetica-Bold').text('RongRani', 50, 40);
+        doc.fontSize(14).font('Helvetica').text('Premium Handcrafted Gifts', 50, 75);
+      }
+
+      doc.fontSize(9).fillColor('#FFFFFF').text('Cox\'s Bazar, Bangladesh', 120, 95);
+      doc.fontSize(9).text('Email: salauddinkaderappy@gmail.com', 120, 108);
+      doc.fontSize(9).text('Phone: +880 1851-075537', 120, 121);
 
       // Invoice title on the right
       doc.fillColor('#FFFFFF');
@@ -76,13 +85,31 @@ const generateInvoice = (order) => {
       yPos += 15;
       doc.text(shipping.phone || '', 50, yPos);
       yPos += 15;
-      doc.text(shipping.street || '', 50, yPos);
-      yPos += 15;
-      const cityState = [shipping.city, shipping.state].filter(Boolean).join(', ');
-      const cityLine = [cityState, shipping.zipCode].filter(Boolean).join(' ').trim();
-      doc.text(cityLine || shipping.city || '', 50, yPos);
-      yPos += 15;
-      doc.text(shipping.country || '', 50, yPos);
+      const addressParts = [
+        shipping.street,
+        shipping.union,
+        shipping.subDistrict,
+        shipping.district
+      ].filter(Boolean);
+
+      const cityParts = [
+        shipping.city,
+        shipping.zipCode || shipping.postalCode
+      ].filter(Boolean);
+
+      addressParts.forEach(part => {
+        if (part) {
+          doc.text(part, 50, yPos, { width: 280 });
+          yPos += 14;
+        }
+      });
+
+      if (cityParts.length > 0) {
+        doc.text(cityParts.join(' - '), 50, yPos, { width: 280 });
+        yPos += 15;
+      }
+
+      doc.text(shipping.country || 'Bangladesh', 50, yPos);
 
       // Items table
       yPos += 35;
@@ -111,8 +138,8 @@ const generateInvoice = (order) => {
 
         doc.text(item.name || 'Product', 60, yPos, { width: 200 });
         doc.text(item.quantity.toString(), 270, yPos, { width: 50, align: 'center' });
-        doc.text(`৳${item.price.toFixed(2)}`, 330, yPos, { width: 100, align: 'right' });
-        doc.font('Helvetica-Bold').text(`৳${(item.price * item.quantity).toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+        doc.text(`Tk ${item.price.toFixed(2)}`, 330, yPos, { width: 100, align: 'right' });
+        doc.font('Helvetica-Bold').text(`Tk ${(item.price * item.quantity).toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
         doc.font('Helvetica');
         yPos += 25;
       });
@@ -127,24 +154,24 @@ const generateInvoice = (order) => {
 
       doc.fontSize(10).fillColor('#666666');
       doc.text('Subtotal:', totalsX, yPos, { width: 100, align: 'right' });
-      doc.fillColor('#000000').text(`৳${order.subtotal.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+      doc.fillColor('#000000').text(`Tk ${order.subtotal.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
       yPos += 18;
 
       if (order.tax && order.tax > 0) {
         doc.fillColor('#666666').text('Tax:', totalsX, yPos, { width: 100, align: 'right' });
-        doc.fillColor('#000000').text(`৳${order.tax.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+        doc.fillColor('#000000').text(`Tk ${order.tax.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
         yPos += 18;
       }
 
       if (order.shipping && order.shipping > 0) {
         doc.fillColor('#666666').text('Shipping:', totalsX, yPos, { width: 100, align: 'right' });
-        doc.fillColor('#000000').text(`৳${order.shipping.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+        doc.fillColor('#000000').text(`Tk ${order.shipping.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
         yPos += 18;
       }
 
       if (order.discount && order.discount > 0) {
         doc.fillColor('#666666').text('Discount:', totalsX, yPos, { width: 100, align: 'right' });
-        doc.fillColor('#16a34a').text(`-৳${order.discount.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+        doc.fillColor('#16a34a').text(`-Tk ${order.discount.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
         yPos += 18;
       }
 
@@ -153,7 +180,7 @@ const generateInvoice = (order) => {
       doc.roundedRect(320, yPos - 8, 225, 35, 5).fill('#8B1538');
       doc.font('Helvetica-Bold').fontSize(14).fillColor('#FFFFFF');
       doc.text('TOTAL AMOUNT:', totalsX + 10, yPos + 3, { width: 100, align: 'right' });
-      doc.fontSize(16).text(`৳${order.total.toFixed(2)}`, 450, yPos + 3, { width: 85, align: 'right' });
+      doc.fontSize(16).text(`Tk ${order.total.toFixed(2)}`, 450, yPos + 3, { width: 85, align: 'right' });
 
       // Footer section
       yPos += 60;
@@ -165,7 +192,7 @@ const generateInvoice = (order) => {
 
       doc.fillColor('#666666').font('Helvetica').fontSize(10);
       doc.text('We appreciate your business. For any questions or concerns,', 50, yPos + 40, { align: 'center', width: 495 });
-      doc.text('please contact us at support@chirkutghor.com', 50, yPos + 55, { align: 'center', width: 495 });
+      doc.text('please contact us at salauddinkaderappy@gmail.com', 50, yPos + 55, { align: 'center', width: 495 });
 
       // Page footer
       const footerY = 750;

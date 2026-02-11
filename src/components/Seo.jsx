@@ -43,7 +43,7 @@ const Seo = ({ title, description, keywords, path, image, noIndex = false, schem
   const metaDescription = description || DEFAULT_DESCRIPTION;
   const metaKeywords = Array.isArray(keywords) ? keywords.join(', ') : keywords;
   const imageUrl =
-    resolveImageUrl(baseUrl, image) || normalizeUrl(baseUrl, '/Chirkut-Ghor-logo-1.png');
+    resolveImageUrl(baseUrl, image) || normalizeUrl(baseUrl, '/RongRani-Circle.png');
 
   const htmlLang = language === 'bn' ? 'bn' : 'en';
   const ogLocale = language === 'bn' ? 'bn_BD' : 'en_BD';

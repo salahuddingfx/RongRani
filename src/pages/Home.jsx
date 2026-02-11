@@ -11,6 +11,7 @@ import { useSocket } from '../contexts/socketContextBase';
 import { useLanguage } from '../contexts/LanguageContext';
 import Seo from '../components/Seo';
 import FlashSale from '../components/FlashSale';
+import ContactFAB from '../components/ContactFAB';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -260,11 +261,25 @@ const Home = () => {
               <span className="text-maroon">
                 <TypingEffect
                   texts={t('language') === 'bn'
-                    ? ['ভালোবাসা ও রোমান্স', 'বিশেষ মুহূর্ত', 'হৃদয়স্পর্শী সারপ্রাইজ']
-                    : ['Love & Romance', 'Special Moments', 'Heartfelt Surprises']}
-                  speed={100}
+                    ? [
+                      'ভালোবাসা ও রোমান্স ❤️',
+                      'বিশেষ মুহূর্ত ✨',
+                      'হৃদয়স্পর্শী সারপ্রাইজ 🎁',
+                      'হস্তনির্মিত অনন্য উপহার 🎨',
+                      'প্রিয়জনের স্মৃতির পাতায় 📸',
+                      'সেরা কোয়ালিটি গ্যারান্টি ⭐'
+                    ]
+                    : [
+                      'Love & Romance ❤️',
+                      'Special Moments ✨',
+                      'Heartfelt Surprises 🎁',
+                      'Unique Handmade Gifts 🎨',
+                      'Memories That Last 📸',
+                      'Premium Quality Guaranteed ⭐'
+                    ]}
+                  speed={80}
                   deleteSpeed={50}
-                  pauseTime={2000}
+                  pauseTime={1500}
                 />
               </span>
             </h1>

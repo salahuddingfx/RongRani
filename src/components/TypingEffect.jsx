@@ -31,9 +31,9 @@ const TypingEffect = ({ texts, speed = 100, deleteSpeed = 50, pauseTime = 2000, 
   }, [displayText, currentIndex, isDeleting, texts, speed, deleteSpeed, pauseTime]);
 
   return (
-    <span className={className}>
-      {displayText}
-      <span className="animate-pulse">|</span>
+    <span className={`inline-flex items-center ${className}`}>
+      <span>{displayText}</span>
+      <span className="w-1 md:w-1.5 h-8 md:h-12 bg-maroon ml-1 animate-pulse rounded-full" />
     </span>
   );
 };

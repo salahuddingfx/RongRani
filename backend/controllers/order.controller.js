@@ -282,21 +282,34 @@ const createOrder = async (req, res) => {
         const customerName = isGuest ? guestInfo.name : req.user?.name;
         const customerPhone = shippingAddress.phone || (isGuest ? guestInfo.phone : req.user?.phone) || 'Not provided';
 
+        // Format full address for admin
+        const fullAddress = [
+          shippingAddress.street,
+          shippingAddress.union,
+          shippingAddress.subDistrict,
+          shippingAddress.district,
+          shippingAddress.city,
+          shippingAddress.zipCode || shippingAddress.postalCode
+        ].filter(Boolean).join(', ');
+
         console.log('📧 Sending new order notification to admin...');
         await sendEmail(
           process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
-          `🛒 New Order #${order._id} - RongRani`,
-          'adminOrderNotification', // Ensure this template exists or handle logic in emailService
+          `🛒 New Order #${order._id.toString().substring(0, 8).toUpperCase()} - ${customerName}`,
+          'adminOrderNotification',
           {
             orderId: order._id,
             customerName,
             customerEmail: customerEmail || 'Not provided',
             customerPhone,
             items: orderItems,
+            subtotal: subtotal.toFixed(2),
+            shipping: shipping.toFixed(2),
+            discount: discount.toFixed(2),
             total: total.toFixed(2),
             paymentMethod,
-            shippingAddress: `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.zipCode || ''}`,
-            giftMessage: giftMessage || 'No gift message',
+            shippingAddress: fullAddress,
+            giftMessage: giftMessage || '',
           }
         );
         console.log('✅ Admin order notification sent');

@@ -38,12 +38,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/chirkut-ghor.git"
+    "url": "https://github.com/salahuddingfx/RongRani.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/chirkut-ghor/issues"
+    "url": "https://github.com/salahuddingfx/RongRani/issues"
   },
-  "homepage": "https://github.com/yourusername/chirkut-ghor#readme",
+  "homepage": "https://github.com/salahuddingfx/RongRani#readme",
   "license": "ISC",
   "type": "commonjs",
   "engines": {

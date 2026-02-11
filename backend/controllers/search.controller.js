@@ -10,43 +10,45 @@ exports.getSearchSuggestions = async (req, res) => {
         if (!q || q.length < 2) {
             return res.json({
                 success: true,
-                suggestions: []
+                suggestions: [],
+                categories: [],
+                popularSearches: ['Love Combo', 'Anniversary', 'Birthday', 'Gift Box']
             });
         }
 
-        // Search in product names and tags
-        const suggestions = await Product.aggregate([
-            {
-                $match: {
-                    isActive: true,
-                    $or: [
-                        { name: { $regex: q, $options: 'i' } },
-                        { tags: { $regex: q, $options: 'i' } },
-                        { category: { $regex: q, $options: 'i' } }
-                    ]
-                }
-            },
-            {
-                $project: {
-                    name: 1,
-                    category: 1,
-                    price: 1,
-                    image: { $arrayElemAt: ['$images', 0] },
-                    _id: 1
-                }
-            },
-            { $limit: 8 }
-        ]);
+        // Search for products
+        const suggestions = await Product.find({
+            isActive: true,
+            $or: [
+                { name: { $regex: q, $options: 'i' } },
+                { tags: { $regex: q, $options: 'i' } }
+            ]
+        })
+            .select('name category price images _id')
+            .limit(6);
 
-        // Also get popular searches (you can store these in a separate collection)
-        const popularSearches = ['Love Combo', 'Anniversary', 'Birthday', 'Valentine', 'Gifts'];
-        const matchingPopular = popularSearches.filter(term =>
+        // Map images to a single url for simpler frontend logic
+        const formattedSuggestions = suggestions.map(prod => ({
+            ...prod._doc,
+            image: prod.images && prod.images.length > 0 ? prod.images[0] : null
+        }));
+
+        // Search for matching categories
+        const categories = await Product.distinct('category', {
+            category: { $regex: q, $options: 'i' },
+            isActive: true
+        });
+
+        // Popular search static terms for now
+        const popularTerms = ['Love Combo', 'Anniversary', 'Birthday', 'Valentine', 'Gifts', 'Jewelry', 'Boxes'];
+        const matchingPopular = popularTerms.filter(term =>
             term.toLowerCase().includes(q.toLowerCase())
-        ).slice(0, 3);
+        ).slice(0, 4);
 
         res.json({
             success: true,
-            suggestions: suggestions,
+            suggestions: formattedSuggestions,
+            categories: categories.slice(0, 3),
             popularSearches: matchingPopular,
             query: q
         });
@@ -54,8 +56,7 @@ exports.getSearchSuggestions = async (req, res) => {
         console.error('Search suggestions error:', error);
         res.status(500).json({
             success: false,
-            message: 'Error fetching suggestions',
-            error: error.message
+            message: 'Error fetching suggestions'
         });
     }
 };

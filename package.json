@@ -26,17 +26,17 @@
   "author": {
     "name": "Salahuddin Kader Appy",
     "email": "salauddinkaderappy@gmail.com",
-    "url": "https://github.com/yourusername"
+    "url": "https://github.com/salahuddingfx"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/chirkut-ghor.git",
+    "url": "https://github.com/salahuddingfx/RongRani.git",
     "directory": "frontend"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/chirkut-ghor/issues"
+    "url": "https://github.com/salahuddingfx/RongRani/issues"
   },
-  "homepage": "https://github.com/yourusername/chirkut-ghor#readme",
+  "homepage": "https://github.com/salahuddingfx/RongRani#readme",
   "license": "ISC",
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -44,6 +44,7 @@
     "@tanstack/react-query": "^5.14.0",
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.0",
+    "canvas-confetti": "^1.9.4",
     "chart.js": "^4.4.0",
     "i18next": "^23.7.0",
     "i18next-browser-languagedetector": "^7.2.0",

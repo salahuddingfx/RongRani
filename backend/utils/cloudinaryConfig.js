@@ -25,7 +25,7 @@ if (!isCloudinaryConfigured) {
   });
 }
 
-const uploadToCloudinary = (file, folder = 'chirkut-ghor') => {
+const uploadToCloudinary = (file, folder = 'rongrani') => {
   return new Promise((resolve, reject) => {
     // If Cloudinary not configured, return placeholder
     if (!isCloudinaryConfigured) {

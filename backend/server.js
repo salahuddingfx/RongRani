@@ -28,13 +28,13 @@ mongoose.connect(process.env.MONGO_URI)
 
 const server = http.createServer(app);
 const socketOrigins = [
-  process.env.FRONTEND_URL || 'https://chirkut-ghor.vercel.app',
+  process.env.FRONTEND_URL || 'https://rongrani.vercel.app',
 ].filter(Boolean);
 
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
-      if (!origin || socketOrigins.includes(origin) || (origin.endsWith('.vercel.app') && origin.includes('chirkut-ghor'))) {
+      if (!origin || socketOrigins.includes(origin) || (origin.endsWith('.vercel.app') && origin.includes('rongrani'))) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));

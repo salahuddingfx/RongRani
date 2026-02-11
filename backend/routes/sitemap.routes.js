@@ -6,7 +6,7 @@ const router = express.Router();
 // Generate dynamic XML sitemap
 router.get('/sitemap.xml', async (req, res) => {
     try {
-        const baseUrl = process.env.SITE_URL || 'https://chirkut-ghor.vercel.app';
+        const baseUrl = process.env.SITE_URL || 'https://rongrani.vercel.app';
         const today = new Date().toISOString().split('T')[0];
 
         // Get all active products
