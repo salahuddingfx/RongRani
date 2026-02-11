@@ -2,19 +2,21 @@ const nodemailer = require('nodemailer');
 
 // Email transporter configuration
 const createTransporter = () => {
-  // Check for Brevo (Sendinblue) Configuration from USER .env
+  // Check for Brevo (Sendinblue) Configuration
   const smtpHost = process.env.BREVO_SMTP_HOST || process.env.SMTP_HOST;
-  const smtpPort = process.env.BREVO_SMTP_PORT || process.env.SMTP_PORT || 587;
+  // Use 2525 as default for Brevo/Cloud as 587 is often throttled
+  const smtpPort = process.env.BREVO_SMTP_PORT || process.env.SMTP_PORT || 2525;
   const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
   const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
 
   console.log('🔍 Checking Email Config:');
   console.log('Host:', smtpHost);
+  console.log('Port:', smtpPort);
   console.log('User:', smtpUser);
   console.log('Pass Length:', smtpPass ? smtpPass.length : 0);
 
   if (smtpHost && smtpUser && smtpPass) {
-    console.log(`✅ Configuring Email Service: ${smtpHost.includes('brevo') ? 'Brevo' : 'SMTP'}`);
+    console.log(`✅ Configuring Email Service: ${smtpHost.includes('brevo') ? 'Brevo' : 'SMTP'} on Port ${smtpPort}`);
     return nodemailer.createTransport({
       host: smtpHost,
       port: Number(smtpPort),
