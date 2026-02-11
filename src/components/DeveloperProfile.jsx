@@ -65,7 +65,7 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
         onClick={(event) => event.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-maroon text-white p-6 sm:p-8 md:p-10 overflow-hidden sticky top-0 z-10">
+        <div className="bg-maroon text-white p-6 sm:p-8 md:p-10 overflow-hidden sticky top-0 z-50 shadow-xl">
 
           <button
             onClick={onClose}
