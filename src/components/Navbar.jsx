@@ -270,17 +270,18 @@ const Navbar = () => {
                 </button>
               </div>
 
-              <Link to="/" className="flex items-center gap-2 group shrink-0">
+              <Link to="/" className="flex items-center gap-2 group shrink-0" aria-label="RongRani Home">
                 {/* Gift Icon */}
                 <div
                   className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full border-2 border-maroon dark:border-white p-0 overflow-hidden shadow-md group-hover:scale-110 transition-all duration-300 bg-transparent"
-                  role="img"
-                  aria-label="RongRani Brand Logo"
+                  role="presentation" // Changed from img to presentation as the img tag inside handles the semantic image
                 >
                   <img
                     src="/RongRani-Circle.png"
-                    alt="Logo"
+                    alt="RongRani Logo"
                     className="w-full h-full object-contain"
+                    width="56"
+                    height="56"
                   />
                 </div>
                 {/* Text Logo */}
@@ -292,14 +293,15 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* CENTER: Search Bar (Desktop) */}
+            {/* Desktop Search */}
             {!isSimplifiedPage && (
               <div className="hidden md:flex flex-1 max-w-xl mx-4 lg:mx-8">
                 <div className="w-full relative group search-container">
-                  <form onSubmit={handleSearch} className="w-full relative">
+                  <form onSubmit={handleSearch} className="w-full relative" role="search">
                     <input
                       type="text"
                       placeholder={placeholder}
+                      aria-label={t('search_placeholder') || "Search for gifts"}
                       className="w-full bg-slate-100 dark:bg-slate-800 border 
                                                    border-transparent focus:border-maroon/20 dark:focus:border-maroon/40
                                                    rounded-full py-2.5 pl-5 pr-12 
@@ -584,10 +586,11 @@ const Navbar = () => {
           {/* Mobile Search Bar (Below Header) */}
           {!isSimplifiedPage && (
             <div className="md:hidden mt-3 pb-1 relative search-container z-[100]">
-              <form onSubmit={handleSearch} className="w-full relative">
+              <form onSubmit={handleSearch} className="w-full relative" role="search">
                 <input
                   type="text"
                   placeholder={t('search_placeholder')}
+                  aria-label={t('search_placeholder') || "Search for gifts"}
                   className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2.5 pl-4 pr-10 focus:ring-2 focus:ring-maroon text-sm"
                   value={searchQuery}
                   onChange={(e) => {

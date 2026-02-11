@@ -40,7 +40,7 @@ const ProductCard = ({ product }) => {
     ? Math.round(((product.originalPrice - productPrice) / product.originalPrice) * 100)
     : 0;
   const stockLabel = productStock > 0 ? t('in_stock') : t('out_of_stock');
-  const stockTone = productStock > 0 ? 'text-emerald-600' : 'text-red-500';
+  const stockTone = productStock > 0 ? 'text-emerald-700' : 'text-red-600';
 
   return (
     <>
@@ -82,7 +82,7 @@ const ProductCard = ({ product }) => {
 
             {/* Premium Badge for High Ratings */}
             {product.rating >= 4.5 && (
-              <div className="bg-amber-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
+              <div className="bg-amber-600 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
                 <Star className="w-3 h-3 fill-white" />
                 {t('language') === 'bn' ? 'বেস্ট সেলার' : 'Best Seller'}
               </div>

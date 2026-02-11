@@ -51,11 +51,9 @@ const BannerSlider = () => {
       const fetchedBanners = response.data.map((banner) => {
         let imageUrl = typeof banner.image === 'object' ? banner.image.url : (banner.image || 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1200');
 
-        // Optimize Unsplash images
+        // Clean Unsplash URL for responsive loading
         if (imageUrl.includes('unsplash.com')) {
-          imageUrl = imageUrl.includes('?')
-            ? `${imageUrl.split('?')[0]}?auto=format,compress&q=60&w=1200`
-            : `${imageUrl}?auto=format,compress&q=60&w=1200`;
+          imageUrl = imageUrl.split('?')[0];
         }
 
         return {
@@ -149,15 +147,24 @@ const BannerSlider = () => {
               <div className="absolute bottom-0 right-0 w-48 h-48 md:w-80 md:h-80 bg-white rounded-full blur-2xl md:blur-3xl"></div>
             </div>
 
-            {/* Background Image (Optional) */}
+            {/* Background Image (Optional) mobile optimized */}
             {banner.image && (
               <div className="absolute inset-0 z-0">
                 <img
-                  src={banner.image}
+                  src={banner.image.includes('unsplash.com')
+                    ? `${banner.image}?auto=format,compress&q=60&w=1200`
+                    : banner.image}
+                  srcSet={banner.image.includes('unsplash.com')
+                    ? `${banner.image}?auto=format,compress&q=60&w=600 600w, 
+                       ${banner.image}?auto=format,compress&q=60&w=1200 1200w`
+                    : undefined}
+                  sizes="(max-width: 640px) 100vw, 100vw"
                   alt=""
                   className="w-full h-full object-cover opacity-20"
                   decoding="async"
                   loading={index === 0 ? "eager" : "lazy"}
+                  width="1200"
+                  height="600"
                 />
               </div>
             )}

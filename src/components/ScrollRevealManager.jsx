@@ -5,6 +5,12 @@ const ScrollRevealManager = () => {
     const location = useLocation();
 
     useEffect(() => {
+        // Respect user's reduced motion preference
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (mediaQuery.matches) {
+            return;
+        }
+
         // Target elements with specific animation classes
         const selector = '.reveal, .reveal-left, .reveal-right, .reveal-up, .reveal-down, .reveal-scale';
 
@@ -13,8 +19,8 @@ const ScrollRevealManager = () => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                    } else {
-                        entry.target.classList.remove('active');
+                        // Optimization: Stop observing once revealed to improve performance
+                        observer.unobserve(entry.target);
                     }
                 });
             },
