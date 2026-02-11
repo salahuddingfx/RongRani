@@ -285,28 +285,62 @@ const emailTemplates = {
 // Send email function
 const sendEmail = async (to, subject, template, data, attachments = []) => {
   try {
+    // 🚀 USE BREVO API IF API KEY IS AVAILABLE (Most reliable for Cloud/Render)
+    if (process.env.BREVO_API_KEY) {
+      console.log(`🚀 Using Brevo API to send email to: ${to}`);
+      const axios = require('axios');
+
+      let htmlContent;
+      if (typeof template === 'string' && emailTemplates[template]) {
+        htmlContent = emailTemplates[template](data);
+      } else {
+        htmlContent = typeof template === 'function' ? template(data) : template;
+      }
+
+      // Convert attachments to Brevo API format (Base64)
+      const formattedAttachments = attachments.map(att => ({
+        content: att.content.toString('base64'),
+        name: att.filename
+      }));
+
+      const response = await axios.post('https://api.brevo.com/v3/smtp/email', {
+        sender: {
+          name: process.env.FROM_NAME || 'RongRani',
+          email: process.env.FROM_EMAIL || 'info@rongrani.com'
+        },
+        to: [{ email: to }],
+        subject: subject,
+        htmlContent: htmlContent,
+        attachment: formattedAttachments.length > 0 ? formattedAttachments : undefined
+      }, {
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('✅ Email sent successfully via Brevo API:', response.data.messageId);
+      return { success: true, messageId: response.data.messageId };
+    }
+
+    // 🕊️ FALLBACK TO SMTP (Current method)
+    console.log('🕊️ No API key found, falling back to SMTP...');
     const transporter = createTransporter();
 
     // Verify connection configuration
     try {
       await transporter.verify();
-      console.log('✅ Email Server is ready to take our messages');
     } catch (verifyError) {
-      console.error('❌ Email Server Verify Error:', verifyError);
-      // Don't return here, try sending anyway as verify might fail on some providers but send still works
+      console.error('⚠️ SMTP Verify failed, attempting to send anyway...');
     }
 
-    // Handle template selection
     let htmlContent;
     if (typeof template === 'string' && emailTemplates[template]) {
       htmlContent = emailTemplates[template](data);
     } else {
-      // If template is not found, assume 'template' is the message body or handle error
       htmlContent = typeof template === 'function' ? template(data) : template;
     }
 
-    // Ensure we have a valid FROM field
-    // Brevo requires a verified sender
     const fromEmail = process.env.FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@rongrani.com';
     const fromName = process.env.FROM_NAME || process.env.EMAIL_FROM_NAME || 'RongRani';
 
@@ -318,16 +352,11 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
       attachments
     };
 
-    console.log(`📧 Attempting to send email to: ${to} from: ${fromEmail}`);
     const info = await transporter.sendMail(mailOptions);
-    console.log('✅ Email sent successfully:', info.messageId);
+    console.log('✅ Email sent via SMTP:', info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('❌ Email sending failed:', error);
-    // Log detailed error for debugging
-    if (error.response) {
-      console.error('Response:', error.response);
-    }
+    console.error('❌ Email failed:', error.response?.data || error.message);
     return { success: false, error: error.message };
   }
 };
