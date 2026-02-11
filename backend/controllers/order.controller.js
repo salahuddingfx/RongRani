@@ -308,6 +308,7 @@ const createOrder = async (req, res) => {
             discount: discount.toFixed(2),
             total: total.toFixed(2),
             paymentMethod,
+            paymentDetails: paymentDetails || {},
             shippingAddress: fullAddress,
             giftMessage: giftMessage || '',
           }
