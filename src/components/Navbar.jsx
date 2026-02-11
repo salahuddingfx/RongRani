@@ -669,7 +669,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Drawer */}
         {!isSimplifiedPage && isOpen && (
-          <div className="fixed inset-0 z-40 bg-black/50 lg:hidden backdrop-blur-sm" onClick={() => setIsOpen(false)}>
+          <div className="fixed inset-0 z-[100] bg-black/50 lg:hidden backdrop-blur-sm" onClick={() => setIsOpen(false)}>
             <div
               className="absolute top-0 left-0 w-[80%] max-w-xs h-full bg-white dark:bg-slate-900 shadow-2xl p-5 flex flex-col animate-slide-right space-y-6 overflow-y-auto"
               onClick={e => e.stopPropagation()}
