@@ -6,14 +6,15 @@ const ScrollRevealManager = () => {
 
     useEffect(() => {
         // Target elements with specific animation classes
-        const selector = '.reveal, .reveal-left, .reveal-right';
+        const selector = '.reveal, .reveal-left, .reveal-right, .reveal-up, .reveal-down, .reveal-scale';
 
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
-                        observer.unobserve(entry.target); // output ONCE
+                    } else {
+                        entry.target.classList.remove('active');
                     }
                 });
             },

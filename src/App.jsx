@@ -16,6 +16,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
 import RecentlyViewed from './components/RecentlyViewed';
+import ScrollRevealManager from './components/ScrollRevealManager';
 
 
 // Loading Component
@@ -102,6 +103,7 @@ function App() {
                           },
                         }}
                       />
+                      <ScrollRevealManager />
                       <ScrollToTop />
 
                       <RecentlyViewed />

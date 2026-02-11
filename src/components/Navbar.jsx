@@ -191,7 +191,7 @@ const Navbar = () => {
   }, [placeholderIndex, language]);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 flex flex-col w-full">
+    <div className="fixed top-0 left-0 right-0 z-[60] flex flex-col w-full overflow-visible">
       {/* 1. TOP BAR - Info & Offers with Marquee */}
       {!isSimplifiedPage && (
         <div className={topBarClasses}>
@@ -253,7 +253,7 @@ const Navbar = () => {
       )}
 
       {/* 2. MAIN NAVBAR */}
-      <nav className={`transition-all duration-300 w-full ${mainNavClasses}`}>
+      <nav className={`transition-all duration-300 w-full overflow-visible ${mainNavClasses}`}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between gap-4">
 
@@ -583,7 +583,7 @@ const Navbar = () => {
 
           {/* Mobile Search Bar (Below Header) */}
           {!isSimplifiedPage && (
-            <div className="md:hidden mt-3 pb-1 relative search-container">
+            <div className="md:hidden mt-3 pb-1 relative search-container z-[100]">
               <form onSubmit={handleSearch} className="w-full relative">
                 <input
                   type="text"
@@ -605,7 +605,7 @@ const Navbar = () => {
 
               {/* Mobile Search Suggestions Dropdown */}
               {showSuggestions && (searchQuery.length >= 2 || suggestions.length > 0) && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden z-[9999] animate-fade-in-up max-h-[60vh] overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-800 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.3)] border border-slate-200 dark:border-slate-600 overflow-hidden z-[99999] animate-fade-in-up max-h-[60vh] overflow-y-auto">
                   {isSearching ? (
                     <div className="p-4 text-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-maroon mx-auto"></div>

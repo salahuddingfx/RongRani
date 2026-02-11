@@ -127,7 +127,7 @@ const AIChatFloatingWidget = () => {
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="floating-widget fixed bottom-24 lg:bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-[400px] sm:h-[520px] max-h-[60vh] sm:max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col">
+        <div className="floating-widget fixed bottom-24 lg:bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-[400px] sm:h-[520px] max-h-[60vh] sm:max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col animate-slide-up">
           {/* Header */}
           <div
             className="bg-maroon text-white p-4 flex items-center justify-between relative overflow-hidden"

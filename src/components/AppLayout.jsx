@@ -15,7 +15,7 @@ const AppLayout = () => {
     <div className="min-h-screen bg-white dark:bg-slate-900 text-charcoal dark:text-white">
       <Seo path={location.pathname} />
       <ScrollRevealManager />
-      <div className="fixed top-0 left-0 right-0 z-50">
+      <div className="fixed top-0 left-0 right-0 z-[100] overflow-visible">
         <TopNavBar />
         <Navbar />
       </div>
