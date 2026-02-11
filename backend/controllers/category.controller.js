@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const Product = require('../models/Product');
 
 const emitEvent = (req, event, payload) => {
   const io = req.app?.get('io');
@@ -16,10 +17,24 @@ exports.getAllCategories = async (req, res) => {
     const categories = await Category.find(query)
       .sort({ order: 1, name: 1 });
 
+    // Calculate product count for each category
+    const categoriesWithCount = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await Product.countDocuments({
+          category: category.name,
+          isActive: true
+        });
+        return {
+          ...category.toObject(),
+          productCount
+        };
+      })
+    );
+
     res.status(200).json({
       success: true,
-      count: categories.length,
-      categories,
+      count: categoriesWithCount.length,
+      categories: categoriesWithCount,
     });
   } catch (error) {
     res.status(500).json({
@@ -65,12 +80,23 @@ exports.createCategory = async (req, res) => {
   try {
     const category = await Category.create(req.body);
 
-    emitEvent(req, 'category:created', category);
+    // Calculate initial product count
+    const productCount = await Product.countDocuments({
+      category: category.name,
+      isActive: true
+    });
+
+    const categoryWithCount = {
+      ...category.toObject(),
+      productCount
+    };
+
+    emitEvent(req, 'category:created', categoryWithCount);
 
     res.status(201).json({
       success: true,
       message: 'Category created successfully',
-      category,
+      category: categoryWithCount,
     });
   } catch (error) {
     res.status(400).json({
@@ -84,25 +110,46 @@ exports.createCategory = async (req, res) => {
 // Update category (Admin only)
 exports.updateCategory = async (req, res) => {
   try {
-    const category = await Category.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const oldCategory = await Category.findById(req.params.id);
 
-    if (!category) {
+    if (!oldCategory) {
       return res.status(404).json({
         success: false,
         message: 'Category not found',
       });
     }
 
-    emitEvent(req, 'category:updated', category);
+    const category = await Category.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    // If category name changed, update all products that use this category name
+    if (req.body.name && req.body.name !== oldCategory.name) {
+      await Product.updateMany(
+        { category: oldCategory.name },
+        { category: req.body.name }
+      );
+    }
+
+    // Calculate updated product count
+    const productCount = await Product.countDocuments({
+      category: category.name,
+      isActive: true
+    });
+
+    const categoryWithCount = {
+      ...category.toObject(),
+      productCount
+    };
+
+    emitEvent(req, 'category:updated', categoryWithCount);
 
     res.status(200).json({
       success: true,
       message: 'Category updated successfully',
-      category,
+      category: categoryWithCount,
     });
   } catch (error) {
     res.status(400).json({
@@ -116,7 +163,7 @@ exports.updateCategory = async (req, res) => {
 // Delete category (Admin only)
 exports.deleteCategory = async (req, res) => {
   try {
-    const category = await Category.findByIdAndDelete(req.params.id);
+    const category = await Category.findById(req.params.id);
 
     if (!category) {
       return res.status(404).json({
@@ -124,6 +171,14 @@ exports.deleteCategory = async (req, res) => {
         message: 'Category not found',
       });
     }
+
+    await Category.findByIdAndDelete(req.params.id);
+
+    // Update products to Uncategorized
+    await Product.updateMany(
+      { category: category.name },
+      { category: 'Uncategorized' }
+    );
 
     emitEvent(req, 'category:deleted', { _id: req.params.id });
 

@@ -553,8 +553,9 @@ const Shop = () => {
                 >
                   <option value="">All Categories</option>
                   {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
+                    <option key={category._id || category.name || category} value={typeof category === 'string' ? category : category.name}>
+                      {typeof category === 'string' ? category : category.name}
+                      {typeof category === 'object' && category.productCount ? ` (${category.productCount})` : ''}
                     </option>
                   ))}
                 </select>
@@ -658,8 +659,8 @@ const Shop = () => {
                             key={pageNum}
                             onClick={() => setCurrentPage(pageNum)}
                             className={`px-4 py-2 rounded-lg border-2 transition-all ${currentPage === pageNum
-                                ? 'bg-maroon text-white border-maroon'
-                                : 'border-maroon/20 hover:bg-maroon hover:text-white'
+                              ? 'bg-maroon text-white border-maroon'
+                              : 'border-maroon/20 hover:bg-maroon hover:text-white'
                               }`}
                           >
                             {pageNum}

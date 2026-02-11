@@ -1,6 +1,7 @@
 const Product = require('../models/Product');
 const Review = require('../models/Review');
 const Order = require('../models/Order');
+const Category = require('../models/Category');
 const cloudinary = require('../utils/cloudinaryConfig');
 
 const emitEvent = (req, event, payload) => {
@@ -185,8 +186,24 @@ const deleteProduct = async (req, res) => {
 // @access  Public
 const getCategories = async (req, res) => {
   try {
-    const categories = await Product.distinct('category', { isActive: true });
-    res.json(categories);
+    const categories = await Category.find({ isActive: true })
+      .sort({ order: 1, name: 1 });
+
+    // Calculate product count for each category
+    const categoriesWithCount = await Promise.all(
+      categories.map(async (category) => {
+        const productCount = await Product.countDocuments({
+          category: category.name,
+          isActive: true
+        });
+        return {
+          ...category.toObject(),
+          productCount
+        };
+      })
+    );
+
+    res.json(categoriesWithCount);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
