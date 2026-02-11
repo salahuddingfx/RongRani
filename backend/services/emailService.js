@@ -4,8 +4,15 @@ const nodemailer = require('nodemailer');
 const createTransporter = () => {
   // Check for Brevo (Sendinblue) Configuration
   const smtpHost = process.env.BREVO_SMTP_HOST || process.env.SMTP_HOST;
-  // Use 2525 as default for Brevo/Cloud as 587 is often throttled
-  const smtpPort = process.env.BREVO_SMTP_PORT || process.env.SMTP_PORT || 2525;
+  let smtpPort = process.env.BREVO_SMTP_PORT || process.env.SMTP_PORT || 2525;
+
+  // FORCE PORT 2525 for Brevo on Cloud environments (Render/Vercel/etc)
+  // because port 587 is almost always blocked or times out.
+  if (smtpHost && smtpHost.includes('brevo.com')) {
+    console.log('🚀 Brevo detected, forcing Port 2525 for better reliability...');
+    smtpPort = 2525;
+  }
+
   const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
   const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
 
