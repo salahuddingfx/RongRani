@@ -142,10 +142,10 @@ const Navbar = () => {
     ...(user?.role === 'admin' ? [{ to: '/admin', label: 'admin_panel', icon: Crown }] : []),
   ];
 
-  const topBarClasses = 'bg-maroon/85 backdrop-blur-md backdrop-saturate-150 text-white text-xs py-2 px-4 hidden md:block transition-all duration-300 ring-1 ring-white/10 relative z-50 mx-4 mt-2 rounded-xl shadow-lg';
+  const topBarClasses = 'bg-maroon/85 backdrop-blur-md backdrop-saturate-150 text-white text-[10px] md:text-xs py-1 md:py-2 px-3 md:px-4 block transition-all duration-300 ring-1 ring-white/10 relative z-50 mx-2 md:mx-4 mt-1 md:mt-2 rounded-xl shadow-lg';
   const mainNavClasses = isScrolled || isOpen
-    ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-xl ring-1 ring-white/20 dark:ring-white/5 py-2 sm:py-3 rounded-2xl mx-4 mt-3 transition-all duration-500 hover:shadow-2xl hover:bg-white/90 dark:hover:bg-slate-900/90'
-    : 'bg-white/70 dark:bg-slate-900/70 backdrop-blur-lg backdrop-saturate-150 shadow-lg ring-1 ring-white/20 dark:ring-white/5 py-3 sm:py-4 rounded-2xl mx-4 mt-3 transition-all duration-500 hover:shadow-xl hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-slate-900/80';
+    ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-xl ring-1 ring-white/20 dark:ring-white/5 py-1.5 sm:py-3 rounded-2xl mx-2 md:mx-4 mt-2 md:mt-3 transition-all duration-500 hover:shadow-2xl hover:bg-white/90 dark:hover:bg-slate-900/90'
+    : 'bg-white/70 dark:bg-slate-900/70 backdrop-blur-lg backdrop-saturate-150 shadow-lg ring-1 ring-white/20 dark:ring-white/5 py-2 sm:py-4 rounded-2xl mx-2 md:mx-4 mt-2 md:mt-3 transition-all duration-500 hover:shadow-xl hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-slate-900/80';
 
   const [placeholder, setPlaceholder] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -201,29 +201,29 @@ const Navbar = () => {
               {/* Animated Marquee Text */}
               <div className="flex-1 overflow-hidden mr-4">
                 <div className="animate-marquee whitespace-nowrap inline-block">
-                  <span className="inline-flex items-center mr-12 font-bold">
+                  <span className="inline-flex items-center mr-8 md:mr-12 font-bold">
                     🎁 {t('welcome_offer')}
                   </span>
-                  <span className="inline-flex items-center mr-12 text-gold font-bold">
+                  <span className="hidden sm:inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
                     🚚 {t('free_shipping')}
                   </span>
-                  <span className="inline-flex items-center mr-12 font-bold text-pink-100">
+                  <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">
                     ✨ Handcrafted with Love
                   </span>
-                  <span className="inline-flex items-center mr-12 text-gold font-bold">
+                  <span className="hidden sm:inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
                     🛡️ Secure Payment
                   </span>
                   {/* Seamless Loop Duplicate */}
-                  <span className="inline-flex items-center mr-12 font-bold">
+                  <span className="inline-flex items-center mr-8 md:mr-12 font-bold">
                     🎁 {t('welcome_offer')}
                   </span>
-                  <span className="inline-flex items-center mr-12 text-gold font-bold">
+                  <span className="hidden sm:inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
                     🚚 {t('free_shipping')}
                   </span>
-                  <span className="inline-flex items-center mr-12 font-bold text-pink-100">
+                  <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">
                     ✨ Handcrafted with Love
                   </span>
-                  <span className="inline-flex items-center mr-12 text-gold font-bold">
+                  <span className="hidden sm:inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
                     🛡️ Secure Payment
                   </span>
                 </div>
@@ -592,13 +592,13 @@ const Navbar = () => {
 
             {/* Mobile Search Bar (Below Header) */}
             {!isSimplifiedPage && (
-              <div className="md:hidden mt-3 pb-1 relative search-container z-[100]">
+              <div className="md:hidden mt-2 pb-0.5 relative search-container z-[100]">
                 <form onSubmit={handleSearch} className="w-full relative" role="search">
                   <input
                     type="text"
-                    placeholder={t('search_placeholder')}
+                    placeholder={placeholder}
                     aria-label={t('search_placeholder') || "Search for gifts"}
-                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2.5 pl-4 pr-10 focus:ring-2 focus:ring-maroon text-sm"
+                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 pl-4 pr-10 focus:ring-2 focus:ring-maroon text-xs"
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
