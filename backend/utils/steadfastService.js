@@ -6,14 +6,14 @@ class SteadfastService {
     this.apiSecret = process.env.STEADFAST_API_SECRET;
     this.baseURL = process.env.STEADFAST_BASE_URL || 'https://portal.steadfast.com.bd/api/v1';
     this.isConfigured = !!(this.apiKey && this.apiSecret);
-    
+
     if (!this.isConfigured) {
       console.log('⚠️  Steadfast Courier API not configured');
       console.log('   To enable: Set STEADFAST_API_KEY and STEADFAST_API_SECRET in .env');
     } else {
       console.log('✅ Steadfast Courier API configured');
     }
-    
+
     this.client = axios.create({
       baseURL: this.baseURL,
       headers: {
@@ -54,18 +54,35 @@ class SteadfastService {
       if (orderData.parcelValue) payload.parcel_value = orderData.parcelValue;
 
       console.log('📦 Creating Steadfast order:', payload.invoice);
-      
+
       const response = await this.client.post('/create_order', payload);
-      
-      console.log('✅ Steadfast order created successfully');
-      
-      return {
-        success: true,
-        data: response.data,
-        consignmentId: response.data.consignment?.consignment_id,
-        trackingCode: response.data.consignment?.tracking_code,
-        message: 'Order sent to Steadfast Courier successfully!',
-      };
+
+      // Log full response for debugging
+      console.log('🚚 Steadfast API Response:', JSON.stringify(response.data, null, 2));
+
+      // Check if consignment works (Steadfast sometimes returns 200 even on logical error)
+      if (response.data && response.data.consignment && response.data.consignment.consignment_id) {
+        console.log('✅ Steadfast order created successfully:', response.data.consignment.consignment_id);
+
+        return {
+          success: true,
+          data: response.data,
+          consignmentId: response.data.consignment.consignment_id,
+          trackingCode: response.data.consignment.tracking_code,
+          message: 'Order sent to Steadfast Courier successfully!',
+        };
+      } else {
+        console.error('❌ Steadfast Error (No Consignment ID):', response.data);
+        // Try to find an error message in the response
+        const errorMsg = response.data.errors ? JSON.stringify(response.data.errors) :
+          (response.data.message || 'Unknown error from CourierAPI');
+
+        return {
+          success: false,
+          error: errorMsg,
+          details: response.data,
+        };
+      }
     } catch (error) {
       console.error('❌ Steadfast Create Order Error:', error.response?.data || error.message);
       return {
@@ -89,7 +106,7 @@ class SteadfastService {
       }
 
       const response = await this.client.get(`/status_by_cid/${consignmentId}`);
-      
+
       return {
         success: true,
         data: response.data,
@@ -121,7 +138,7 @@ class SteadfastService {
       const response = await this.client.post('/get_delivery_charge', {
         cod_amount,
       });
-      
+
       return {
         success: true,
         charge: response.data.delivery_charge,
@@ -152,7 +169,7 @@ class SteadfastService {
       const response = await this.client.post('/cancel_order', {
         tracking_code: trackingCode,
       });
-      
+
       return {
         success: true,
         data: response.data,
@@ -180,7 +197,7 @@ class SteadfastService {
       }
 
       const response = await this.client.get('/get_balance');
-      
+
       return {
         success: true,
         balance: response.data.current_balance,
