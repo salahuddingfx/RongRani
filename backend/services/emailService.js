@@ -27,6 +27,10 @@ const createTransporter = () => {
         ciphers: 'SSLv3',
         rejectUnauthorized: false
       },
+      family: 4, // Force IPv4 (Fixes some cloud deployment ETIMEDOUT issues)
+      connectionTimeout: 30000, // 30 seconds
+      greetingTimeout: 30000,
+      socketTimeout: 30000,
       debug: true // Enable debug logs
     });
   }
@@ -225,6 +229,47 @@ const emailTemplates = {
       </div>
     </body>
     </html>
+  `,
+
+  // Review Request Email
+  reviewRequest: (data) => `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #7b1230 0%, #c41e3a 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #fff; padding: 30px; border: 1px solid #ddd; }
+        .footer { background: #f9f9f9; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
+        .button { display: inline-block; padding: 12px 30px; background: #7b1230; color: white; text-decoration: none; border-radius: 25px; margin: 20px 0; }
+        .star { color: #FFD700; font-size: 24px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>⭐ How was your experience?</h1>
+        </div>
+        <div class="content">
+          <h2>Hello ${data.name || 'Customer'}!</h2>
+          <p>We hope you are loving your items from RongRani! ❤️</p>
+          <p>Your feedback means the world to us and helps others shop with confidence. Would you mind taking a moment to review your purchase?</p>
+          
+          <center>
+            <p class="star">★★★★★</p>
+            <a href="${process.env.FRONTEND_URL}/profile/orders/${data.orderId}" class="button">
+              Write a Review
+            </a>
+          </center>
+        </div>
+        <div class="footer">
+          <p>Thank you for supporting handmade!</p>
+          <p>📞 01851075537 | 📧 info@rongrani.com</p>
+        </div>
+      </div>
+    </body>
+    </html>
   `
 };
 
@@ -279,13 +324,13 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
 };
 
 // Helper functions for specific emails (Using CommonJS exports)
-const sendOrderConfirmation = (orderData) => {
+const sendOrderConfirmation = (orderData, attachments = []) => {
   // Normalize data structure if needed
   // Handle Mongoose document (toObject) or plain object
   const order = orderData.toObject ? orderData.toObject() : orderData;
 
   const customerName = order.user?.name || order.guestInfo?.name || order.billingAddress?.name || 'Customer';
-  const customerEmail = order.user?.email || order.guestInfo?.email || order.billingAddress?.email;
+  const customerEmail = order.user?.email || order.guestInfo?.email || order.billingAddress?.email || order.shippingAddress?.email;
 
   const data = {
     name: customerName,
@@ -303,7 +348,8 @@ const sendOrderConfirmation = (orderData) => {
     customerEmail,
     `Order Confirmation - ${data.orderId}`,
     'orderConfirmation',
-    data
+    data,
+    attachments
   );
 };
 
@@ -316,8 +362,19 @@ const sendOrderStatusUpdate = (email, name, orderId, status, trackingNumber) => 
   );
 };
 
+
+const sendReviewRequest = (email, name, orderId) => {
+  return sendEmail(
+    email,
+    `Rate your experience with RongRani! ⭐`,
+    'reviewRequest',
+    { name, orderId }
+  );
+};
+
 module.exports = {
   sendEmail,
   sendOrderConfirmation,
-  sendOrderStatusUpdate
+  sendOrderStatusUpdate,
+  sendReviewRequest
 };

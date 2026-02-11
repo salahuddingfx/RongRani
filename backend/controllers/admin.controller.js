@@ -293,34 +293,47 @@ const updateOrder = async (req, res) => {
     order.trackingNumber = req.body.trackingNumber || order.trackingNumber;
     order.notes = req.body.notes || order.notes;
 
-    if (order.orderStatus === 'delivered' && !order.deliveredAt) {
-      order.deliveredAt = new Date();
-
-      // Send delivery confirmation email to customer
+    // Check for status change
+    if (order.orderStatus !== previousStatus) {
+      // Send status update email
       try {
-        const { sendEmail } = require('../utils/emailService');
+        const { sendOrderStatusUpdate, sendReviewRequest } = require('../services/emailService');
         const customerEmail = order.user ? order.user.email : order.guestInfo?.email;
         const customerName = order.user ? order.user.name : order.guestInfo?.name || 'Customer';
 
         if (customerEmail) {
-          console.log(`📧 Sending delivery confirmation to ${customerEmail}...`);
-          await sendEmail(
+          console.log(`📧 Status changed to ${order.orderStatus}. Sending email to ${customerEmail}...`);
+
+          // Send primary status update email
+          await sendOrderStatusUpdate(
             customerEmail,
-            `🎉 Your Order #${order._id} Has Been Delivered! - RongRani`,
-            'orderStatusUpdate',
-            {
-              name: customerName,
-              orderId: order._id,
-              status: 'Delivered',
-              trackingNumber: order.trackingNumber || 'N/A'
-            }
+            customerName,
+            order._id,
+            order.orderStatus,
+            order.trackingNumber
           );
-          console.log('✅ Delivery confirmation email sent successfully');
+          console.log('✅ Status update email sent successfully');
+
+          // If Delivered, send Review Request
+          if (order.orderStatus === 'delivered') {
+            console.log(`⭐ Sending review request to ${customerEmail}...`);
+            // Adding a small delay logic here isn't possible in sync flow, but we send it sequentially
+            await sendReviewRequest(
+              customerEmail,
+              customerName,
+              order._id
+            );
+            console.log('✅ Review request email sent successfully');
+          }
         }
       } catch (emailError) {
-        console.error('❌ Failed to send delivery confirmation email:', emailError);
+        console.error('❌ Failed to send status update/review email:', emailError);
         // Don't block order update if email fails
       }
+    }
+
+    if (order.orderStatus === 'delivered' && !order.deliveredAt) {
+      order.deliveredAt = new Date();
     }
 
     const updatedOrder = await order.save({ validateBeforeSave: false });

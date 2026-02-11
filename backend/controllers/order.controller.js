@@ -248,28 +248,23 @@ const createOrder = async (req, res) => {
       }
 
       if (recipientEmail) {
-        await sendEmail(
-          recipientEmail,
-          'Order Confirmation - RongRani',
-          'orderConfirmation',
-          {
-            name: recipientName,
-            orderId: order._id,
-            items: orderItems.map(item => ({
-              name: item.name,
-              quantity: item.quantity,
-              price: item.price,
-              image: item.image
-            })),
-            subtotal: subtotal.toFixed(2),
-            tax: tax.toFixed(2),
-            shipping: shipping.toFixed(2),
-            discount: discount > 0 ? discount.toFixed(2) : 0,
-            total: total.toFixed(2),
-            trackingQuery,
-          },
-          attachments
-        );
+        // Prepare robust data object for email template
+        const emailOrderData = {
+          ...order.toObject(),
+          user: req.user ? req.user.toObject() : undefined, // Ensure user data is available
+          guestInfo: isGuest ? guestInfo : undefined,
+          items: orderItems, // Use populated items from request processing
+          billingAddress: billingAddress || normalizedShippingAddress,
+          shippingAddress: normalizedShippingAddress,
+          total,
+          subtotal,
+          shipping,
+          discount,
+          trackingQuery
+        };
+
+        console.log(`📧 Sending order confirmation to: ${recipientEmail}`);
+        await sendOrderConfirmation(emailOrderData, attachments);
       }
     } catch (emailError) {
       console.error('Order confirmation email failed:', emailError);
