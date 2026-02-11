@@ -142,10 +142,10 @@ const Navbar = () => {
     ...(user?.role === 'admin' ? [{ to: '/admin', label: 'admin_panel', icon: Crown }] : []),
   ];
 
-  const topBarClasses = 'bg-maroon/85 backdrop-blur-md text-white text-xs py-2 px-4 hidden md:block transition-all duration-300 border border-white/10 relative z-50 mx-4 mt-2 rounded-xl shadow-md';
+  const topBarClasses = 'bg-maroon/85 backdrop-blur-md backdrop-saturate-150 text-white text-xs py-2 px-4 hidden md:block transition-all duration-300 ring-1 ring-white/10 relative z-50 mx-4 mt-2 rounded-xl shadow-lg';
   const mainNavClasses = isScrolled || isOpen
-    ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-xl border border-white/20 dark:border-white/10 py-2.5 sm:py-3 rounded-2xl mx-4 mt-2'
-    : 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg shadow-lg border border-white/20 dark:border-white/10 py-3 sm:py-4 rounded-2xl mx-4 mt-2';
+    ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-xl ring-1 ring-white/20 dark:ring-white/5 py-2 sm:py-3 rounded-2xl mx-4 mt-3 transition-all duration-500 hover:shadow-2xl hover:bg-white/90 dark:hover:bg-slate-900/90'
+    : 'bg-white/70 dark:bg-slate-900/70 backdrop-blur-lg backdrop-saturate-150 shadow-lg ring-1 ring-white/20 dark:ring-white/5 py-3 sm:py-4 rounded-2xl mx-4 mt-3 transition-all duration-500 hover:shadow-xl hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-slate-900/80';
 
   const [placeholder, setPlaceholder] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -273,17 +273,17 @@ const Navbar = () => {
                 </div>
 
                 <Link to="/" className="flex items-center gap-2 group shrink-0" aria-label="RongRani Home">
-                  {/* Gift Icon */}
+                  {/* Gift Icon with creative rotation */}
                   <div
-                    className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full border-2 border-maroon dark:border-white p-0 overflow-hidden shadow-md group-hover:scale-110 transition-all duration-300 bg-transparent"
+                    className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl border border-maroon/20 dark:border-white/20 p-1 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm shadow-sm group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 ease-out"
                     role="presentation" // Changed from img to presentation as the img tag inside handles the semantic image
                   >
                     <img
                       src="/RongRani-Circle.png"
                       alt="RongRani Logo"
-                      className="w-full h-full object-contain"
-                      width="56"
-                      height="56"
+                      className="w-full h-full object-contain drop-shadow-md"
+                      width="48"
+                      height="48"
                     />
                   </div>
                   {/* Text Logo */}
@@ -502,11 +502,16 @@ const Navbar = () => {
                         <Link
                           key={item.to}
                           to={item.to}
-                          className={`text-sm font-bold uppercase tracking-wide hover:text-maroon dark:hover:text-pink-400 transition-colors relative group py-2 ${location.pathname === item.to ? 'text-maroon dark:text-pink-400' : 'text-slate-600 dark:text-slate-400'
+                          className={`text-sm font-bold uppercase tracking-wide px-4 py-2 rounded-full transition-all duration-300 relative group overflow-hidden ${location.pathname === item.to
+                            ? 'text-maroon dark:text-pink-400 bg-maroon/5 dark:bg-pink-400/10 shadow-inner'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-maroon dark:hover:text-pink-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'
                             }`}
                         >
-                          {t(item.label)}
-                          <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-maroon transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ${location.pathname === item.to ? 'scale-x-100' : ''}`}></span>
+                          <span className="relative z-10">{t(item.label)}</span>
+                          {/* Creative underline splash */}
+                          {location.pathname === item.to && (
+                            <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-maroon dark:bg-pink-400 rounded-full mb-1"></span>
+                          )}
                         </Link>
                       ))}
                     </div>
