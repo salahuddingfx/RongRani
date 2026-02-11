@@ -3,6 +3,8 @@ import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Package, Truck, CheckCircle, MapPin, Calendar, DollarSign, ArrowLeft, Phone, Mail } from 'lucide-react';
 import axios from 'axios';
 
+import io from 'socket.io-client';
+
 const OrderTracking = () => {
   const { orderId } = useParams();
   const location = useLocation();
@@ -13,6 +15,38 @@ const OrderTracking = () => {
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [error, setError] = useState('');
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    // Initialize Socket
+    const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000');
+    setSocket(newSocket);
+
+    return () => newSocket.close();
+  }, []);
+
+  useEffect(() => {
+    if (!socket || !order) return;
+
+    // Listen for order updates
+    socket.on('order:updated', (updatedOrder) => {
+      if (updatedOrder._id === order._id) {
+        setOrder(prev => ({ ...prev, ...updatedOrder }));
+      }
+    });
+
+    socket.on('order:sent-to-courier', (data) => {
+      if (data._id === order._id) {
+        // Re-fetch to get full courier info or manually merge
+        fetchOrder(order._id, contactEmail, contactPhone);
+      }
+    });
+
+    return () => {
+      socket.off('order:updated');
+      socket.off('order:sent-to-courier');
+    };
+  }, [socket, order, contactEmail, contactPhone]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -31,13 +65,13 @@ const OrderTracking = () => {
   const fetchOrder = async (id, email, phone) => {
     try {
       setError('');
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('token'); // Optional for public tracking
       const response = await axios.get(`/api/orders/track/${id}`, {
         params: {
           email: email || undefined,
           phone: phone || undefined,
         },
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        // headers: token ? { Authorization: `Bearer ${token}` } : {}, // Remove auth requirement for better public tracking if API allows
       });
       setOrder(response.data);
     } catch (err) {
@@ -109,9 +143,9 @@ const OrderTracking = () => {
         status,
         message:
           status === 'pending' ? 'Order placed successfully' :
-          status === 'processing' ? 'We are preparing your order' :
-          status === 'shipped' ? 'Handed to courier for delivery' :
-          'Delivered successfully',
+            status === 'processing' ? 'We are preparing your order' :
+              status === 'shipped' ? 'Handed to courier for delivery' :
+                'Delivered successfully',
         timestamp,
         completed,
       };
@@ -140,7 +174,7 @@ const OrderTracking = () => {
                 {error}
               </div>
             )}
-            
+
             <form onSubmit={handleTrack} className="max-w-md mx-auto">
               <div className="space-y-4">
                 <div className="relative">
