@@ -48,16 +48,27 @@ const BannerSlider = () => {
   const fetchBanners = useCallback(async () => {
     try {
       const response = await axios.get('/api/admin/banners');
-      const fetchedBanners = response.data.map((banner) => ({
-        id: banner._id,
-        title: banner.title || 'Banner Title',
-        subtitle: banner.subtitle || '',
-        description: banner.description || '',
-        bgColor: banner.bgColor || 'bg-maroon',
-        textColor: banner.textColor || 'text-white',
-        image: typeof banner.image === 'object' ? banner.image.url : (banner.image || 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1200&q=80'),
-        link: banner.link || '#'
-      }));
+      const fetchedBanners = response.data.map((banner) => {
+        let imageUrl = typeof banner.image === 'object' ? banner.image.url : (banner.image || 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1200');
+
+        // Optimize Unsplash images
+        if (imageUrl.includes('unsplash.com')) {
+          imageUrl = imageUrl.includes('?')
+            ? `${imageUrl.split('?')[0]}?auto=format,compress&q=60&w=1200`
+            : `${imageUrl}?auto=format,compress&q=60&w=1200`;
+        }
+
+        return {
+          id: banner._id,
+          title: banner.title || 'Banner Title',
+          subtitle: banner.subtitle || '',
+          description: banner.description || '',
+          bgColor: banner.bgColor || 'bg-maroon',
+          textColor: banner.textColor || 'text-white',
+          image: imageUrl,
+          link: banner.link || '#'
+        };
+      });
       setBanners(fetchedBanners.length > 0 ? fetchedBanners : DEFAULT_BANNERS);
     } catch (error) {
       console.error('Error fetching banners:', error);

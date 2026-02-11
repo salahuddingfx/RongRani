@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { ArrowRight, Sparkles, Star, Users, Award, Heart, ShoppingBag, Shirt, Gift, CheckCircle, Shield, TrendingUp, Clock, Package } from 'lucide-react';
-import ProductCard from '../components/ProductCard';
-import { ProductCardSkeleton } from '../components/Skeletons';
-import BannerSlider from '../components/BannerSlider';
+import { Suspense, lazy } from 'react';
 import TypingEffect from '../components/TypingEffect';
-import Newsletter from '../components/Newsletter';
+import Seo from '../components/Seo';
+import ContactFAB from '../components/ContactFAB';
+import { ProductCardSkeleton } from '../components/Skeletons';
 import { useSocket } from '../contexts/socketContextBase';
 import { useLanguage } from '../contexts/LanguageContext';
-import Seo from '../components/Seo';
-import FlashSale from '../components/FlashSale';
-import ContactFAB from '../components/ContactFAB';
+
+const BannerSlider = lazy(() => import('../components/BannerSlider'));
+const Newsletter = lazy(() => import('../components/Newsletter'));
+const FlashSale = lazy(() => import('../components/FlashSale'));
+const ProductCard = lazy(() => import('../components/ProductCard'));
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -333,13 +335,15 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Flash Sale Section */}
-      <FlashSale />
+      <Suspense fallback={<div className="h-40 animate-pulse bg-gray-100 rounded-xl" />}>
+        <FlashSale />
+      </Suspense>
 
-      {/* Banner Slider Section */}
       <section className="section-spacing bg-white dark:bg-slate-900 reveal">
         <div className="section-container">
-          <BannerSlider />
+          <Suspense fallback={<div className="h-[400px] animate-pulse bg-gray-100 rounded-2xl" />}>
+            <BannerSlider />
+          </Suspense>
         </div>
       </section>
 
@@ -494,13 +498,14 @@ const Home = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
               {featuredProducts.map((product, index) => (
-                <div
-                  key={product._id}
-                  className="animate-slide-up"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <ProductCard product={product} />
-                </div>
+                <Suspense key={product._id} fallback={<ProductCardSkeleton />}>
+                  <div
+                    className="animate-slide-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <ProductCard product={product} />
+                  </div>
+                </Suspense>
               ))}
             </div>
           )}
@@ -513,8 +518,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <Newsletter />
+      <Suspense fallback={<div className="h-40 animate-pulse bg-gray-100" />}>
+        <Newsletter />
+      </Suspense>
 
       {/* CTA Section */}
       <section className="section-spacing bg-cream-light reveal" data-reveal-ignore="true">
@@ -557,6 +563,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+      <ContactFAB />
     </div>
   );
 };
