@@ -1,15 +1,13 @@
-// Service Worker for PWA
-const CACHE_NAME = 'rongrani-v1';
+// Service Worker for RongRani PWA with Dynamic Caching
+const CACHE_NAME = 'rongrani-v2';
 const urlsToCache = [
     '/',
-    '/shop',
-    '/about',
-    '/contact',
-    '/wishlist',
-    '/offline',
+    '/index.html',
+    '/manifest.json',
+    '/Chirkut-Ghor-logo-1.png'
 ];
 
-// Install Service Worker
+// Install Service Worker and Cache Static Assets
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -17,22 +15,50 @@ self.addEventListener('install', (event) => {
             return cache.addAll(urlsToCache);
         })
     );
+    self.skipWaiting();
 });
 
-// Cache and return requests
+// Cache and Return Requests
 self.addEventListener('fetch', (event) => {
+    // Bypass caching for API requests and socket.io
+    if (
+        event.request.url.includes('/api/') ||
+        event.request.url.includes('socket.io') ||
+        event.request.method !== 'GET'
+    ) {
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request).then((response) => {
             // Cache hit - return response
             if (response) {
                 return response;
             }
-            return fetch(event.request);
+
+            // Clone request to fetch and cache
+            const fetchRequest = event.request.clone();
+
+            return fetch(fetchRequest).then((response) => {
+                // Check if valid response
+                if (!response || response.status !== 200 || response.type !== 'basic') {
+                    return response;
+                }
+
+                // Clone response to cache
+                const responseToCache = response.clone();
+
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseToCache);
+                });
+
+                return response;
+            });
         })
     );
 });
 
-// Update Service Worker
+// Update Service Worker & Clear Old Caches
 self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
@@ -46,4 +72,5 @@ self.addEventListener('activate', (event) => {
             );
         })
     );
+    self.clients.claim();
 });

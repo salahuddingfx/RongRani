@@ -1,7 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const Order = require('../models/Order');
-const { auth } = require('../middleware/auth');
+const { auth } = require('../middlewares/auth.middleware');
 
 const router = express.Router();
 

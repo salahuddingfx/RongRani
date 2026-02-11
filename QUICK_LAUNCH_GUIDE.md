@@ -36,16 +36,18 @@ SSLCOMMERZ_STORE_PASSWORD=your_password
 
 ### 2. **Brevo Email Already Working!** ✅
 
-Your email system is working! Make sure these are in `.env`:
-```env
-# Brevo SMTP
-SMTP_HOST=smtp-relay.brevo.com
-SMTP_PORT=587
-SMTP_USER=your_brevo_email
-SMTP_PASS=your_brevo_smtp_key
+Your email system is using your existing Brevo credentials (`BREVO_SMTP_*`). Ensure these are correctly set in your Vercel/Render Environment Variables:
 
-EMAIL_FROM=noreply@rongrani.com
-EMAIL_FROM_NAME=RongRani
+```env
+# Brevo SMTP Configuration
+BREVO_API_KEY=xkeysib-...
+BREVO_SMTP_HOST=smtp-relay.brevo.com
+BREVO_SMTP_PORT=587
+BREVO_SMTP_USER=your_brevo_user
+BREVO_SMTP_PASS=your_brevo_pass
+
+FROM_EMAIL=your_email@gmail.com
+FROM_NAME=RongRani
 ```
 
 ### 3. **Test PWA Installation** 📱

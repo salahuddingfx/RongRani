@@ -256,16 +256,27 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
 // Helper functions for specific emails (Using CommonJS exports)
 const sendOrderConfirmation = (orderData) => {
   // Normalize data structure if needed
+  // Handle Mongoose document (toObject) or plain object
+  const order = orderData.toObject ? orderData.toObject() : orderData;
+
+  const customerName = order.user?.name || order.guestInfo?.name || order.billingAddress?.name || 'Customer';
+  const customerEmail = order.user?.email || order.guestInfo?.email || order.billingAddress?.email;
+
   const data = {
-    name: orderData.name,
-    orderId: orderData.orderId,
-    total: orderData.total,
-    items: orderData.items || []
+    name: customerName,
+    orderId: order.orderNumber || order._id,
+    total: order.total,
+    items: order.items || []
   };
 
+  if (!customerEmail) {
+    console.error('❌ No email found for order:', order._id);
+    return Promise.resolve({ success: false, error: 'No email found' });
+  }
+
   return sendEmail(
-    orderData.email || orderData.customerEmail, // Fallback for email field
-    `Order Confirmation - ${orderData.orderId}`,
+    customerEmail,
+    `Order Confirmation - ${data.orderId}`,
     'orderConfirmation',
     data
   );
