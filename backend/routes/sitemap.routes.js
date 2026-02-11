@@ -1,5 +1,5 @@
-import express from 'express';
-import Product from '../models/Product.js';
+const express = require('express');
+const Product = require('../models/Product');
 
 const router = express.Router();
 
@@ -10,6 +10,7 @@ router.get('/sitemap.xml', async (req, res) => {
         const today = new Date().toISOString().split('T')[0];
 
         // Get all active products
+        // Note: Ensure your Product model has 'updatedAt' timestamp
         const products = await Product.find({ isActive: true }).select('_id updatedAt');
 
         // Static pages
@@ -37,7 +38,8 @@ router.get('/sitemap.xml', async (req, res) => {
 
         // Add product pages
         products.forEach(product => {
-            const lastmod = product.updatedAt ? product.updatedAt.toISOString().split('T')[0] : today;
+            // Handle updatedAt safely
+            const lastmod = product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : today;
             xml += '  <url>\n';
             xml += `    <loc>${baseUrl}/product/${product._id}</loc>\n`;
             xml += `    <lastmod>${lastmod}</lastmod>\n`;
@@ -56,4 +58,4 @@ router.get('/sitemap.xml', async (req, res) => {
     }
 });
 
-export default router;
+module.exports = router;

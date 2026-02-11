@@ -1,7 +1,7 @@
-import express from 'express';
-import axios from 'axios';
-import Order from '../models/Order.js';
-import { auth } from '../middleware/auth.js';
+const express = require('express');
+const axios = require('axios');
+const Order = require('../models/Order');
+const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -336,4 +336,4 @@ router.post('/rocket/init', auth, async (req, res) => {
     });
 });
 
-export default router;
+module.exports = router;
