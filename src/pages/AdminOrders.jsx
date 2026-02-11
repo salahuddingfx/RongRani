@@ -73,14 +73,24 @@ const AdminOrders = () => {
   }, [socket, fetchOrders]);
 
   const updateOrderStatus = async (orderId, newStatus) => {
+    // Optimistically update the UI
+    const previousOrders = [...orders];
+    setOrders(prev => prev.map(order =>
+      order._id === orderId ? { ...order, orderStatus: newStatus } : order
+    ));
+
     try {
       const token = localStorage.getItem('token');
       await axios.put(`/api/admin/orders/${orderId}`, {
         orderStatus: newStatus
       }, { headers: { Authorization: `Bearer ${token}` } });
+
       toast.success(`Order status updated to ${newStatus}`);
+      // Sync with server to be safe
       fetchOrders();
-    } catch {
+    } catch (error) {
+      // Revert if failed
+      setOrders(previousOrders);
       toast.error('Failed to update order status');
     }
   };
@@ -245,8 +255,8 @@ const AdminOrders = () => {
                 key={status}
                 onClick={() => setStatusFilter(status)}
                 className={`px-4 py-2 rounded-lg font-semibold capitalize transition-all ${statusFilter === status
-                    ? 'bg-maroon text-white shadow-medium'
-                    : 'bg-cream-light text-charcoal hover:bg-maroon/10'
+                  ? 'bg-maroon text-white shadow-medium'
+                  : 'bg-cream-light text-charcoal hover:bg-maroon/10'
                   }`}
               >
                 {status}
@@ -374,6 +384,12 @@ const AdminOrders = () => {
                           : "Change payment status?";
 
                         if (window.confirm(confirmMsg)) {
+                          // Optimistic update
+                          const previousOrders = [...orders];
+                          setOrders(prev => prev.map(o =>
+                            o._id === order._id ? { ...o, paymentStatus: newStatus } : o
+                          ));
+
                           try {
                             const token = localStorage.getItem('token');
                             await axios.put(`/api/admin/orders/${order._id}`, {
@@ -382,6 +398,8 @@ const AdminOrders = () => {
                             toast.success(`Payment marked as ${newStatus}`);
                             fetchOrders();
                           } catch {
+                            // Revert on error
+                            setOrders(previousOrders);
                             toast.error('Failed to update payment status');
                           }
                         }
