@@ -16,7 +16,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
 import RecentlyViewed from './components/RecentlyViewed';
-import LiveChat from './components/LiveChat';
+
 
 // Loading Component
 const PageLoading = () => (
@@ -103,7 +103,7 @@ function App() {
                         }}
                       />
                       <ScrollToTop />
-                      <LiveChat />
+
                       <RecentlyViewed />
                       <Suspense fallback={<PageLoading />}>
                         <Routes>

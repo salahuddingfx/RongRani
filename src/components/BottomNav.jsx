@@ -38,7 +38,7 @@ const BottomNav = () => {
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-100 dark:bg-slate-900 dark:border-slate-800 shadow-2xl">
-      <div className="grid grid-cols-6 h-16">
+      <div className={`grid h-16 ${user ? 'grid-cols-6' : 'grid-cols-5'}`}>
         {navItems.map((item, index) => {
           const path = item.dest || item.path;
           const active = isActive(item.path);
@@ -52,8 +52,8 @@ const BottomNav = () => {
               to={path}
               aria-label={item.label}
               className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 relative ${active
-                  ? 'text-maroon'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-maroon'
+                ? 'text-maroon'
+                : 'text-slate-600 dark:text-slate-400 hover:text-maroon'
                 }`}
             >
               {/* Active Indicator */}

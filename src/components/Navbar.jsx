@@ -199,16 +199,29 @@ const Navbar = () => {
             {/* Animated Marquee Text */}
             <div className="flex-1 overflow-hidden mr-4">
               <div className="animate-marquee whitespace-nowrap inline-block">
-                <span className="inline-flex items-center mr-8 font-bold">
+                <span className="inline-flex items-center mr-12 font-bold">
                   🎁 {t('welcome_offer')}
                 </span>
-                <span className="inline-flex items-center mr-8 text-gold/90 font-semibold">
-                  🚚 {t('free_shipping')} ৳2000!
+                <span className="inline-flex items-center mr-12 text-gold font-bold">
+                  🚚 {t('free_shipping')}
                 </span>
-                <span className="inline-flex items-center mr-8 font-bold text-pink-200">
+                <span className="inline-flex items-center mr-12 font-bold text-pink-100">
                   ✨ Handcrafted with Love
                 </span>
-                <span className="inline-flex items-center mr-8 text-gold/90 font-semibold">
+                <span className="inline-flex items-center mr-12 text-gold font-bold">
+                  🛡️ Secure Payment
+                </span>
+                {/* Seamless Loop Duplicate */}
+                <span className="inline-flex items-center mr-12 font-bold">
+                  🎁 {t('welcome_offer')}
+                </span>
+                <span className="inline-flex items-center mr-12 text-gold font-bold">
+                  🚚 {t('free_shipping')}
+                </span>
+                <span className="inline-flex items-center mr-12 font-bold text-pink-100">
+                  ✨ Handcrafted with Love
+                </span>
+                <span className="inline-flex items-center mr-12 text-gold font-bold">
                   🛡️ Secure Payment
                 </span>
               </div>
@@ -219,6 +232,9 @@ const Navbar = () => {
               <div className="hidden md:flex items-center space-x-4 pr-4">
                 <a href="tel:+8801851075537" className="flex items-center hover:text-gold transition-colors">
                   <Phone className="w-3 h-3 mr-1.5" /> +880 1851-075537
+                </a>
+                <a href="mailto:salauddinkaderappy@gmail.com" className="flex items-center hover:text-gold transition-colors pl-4">
+                  <Mail className="w-3 h-3 mr-1.5" /> salauddinkaderappy@gmail.com
                 </a>
               </div>
               <div className="flex items-center pl-4 space-x-3 text-[10px]">

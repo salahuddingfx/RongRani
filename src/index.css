@@ -8,6 +8,18 @@
     @apply scroll-smooth;
   }
 
+  /* Utility to hide scrollbars while keeping functionality */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
   body {
     @apply bg-white text-charcoal transition-colors duration-300;
     background-color: #ffffff;

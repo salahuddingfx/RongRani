@@ -79,10 +79,7 @@ const emailTemplates = {
       <tr>
         <td style="padding: 12px; border-bottom: 1px solid #eee;">
           <div style="font-weight: bold; color: #333;">${item.name}</div>
-          <div style="font-size: 12px; color: #666;">Quantity: ${item.quantity} × ৳${item.price}</div>
-        </td>
-        <td style="padding: 12px; border-bottom: 1px solid #eee; text-align: right; font-weight: bold;">
-          ৳${(item.quantity * item.price).toFixed(2)}
+          ৳ ${(item.quantity * item.price).toFixed(2)}
         </td>
       </tr>
     `).join('');
@@ -141,21 +138,21 @@ const emailTemplates = {
             <table class="total-table">
               <tr class="total-row">
                 <td style="color: #666;">Subtotal</td>
-                <td style="text-align: right; font-weight: bold;">৳${order.subtotal?.toFixed(2) || order.total}</td>
+                <td style="text-align: right; font-weight: bold;">৳ ${order.subtotal?.toFixed(2) || order.total}</td>
               </tr>
               ${order.shipping > 0 ? `
               <tr class="total-row">
                 <td style="color: #666;">Shipping Fee</td>
-                <td style="text-align: right; font-weight: bold;">৳${order.shipping.toFixed(2)}</td>
+                <td style="text-align: right; font-weight: bold;">৳ ${order.shipping.toFixed(2)}</td>
               </tr>` : ''}
               ${order.discount > 0 ? `
               <tr class="total-row">
                 <td style="color: #666;">Discount</td>
-                <td style="text-align: right; font-weight: bold; color: #16a34a;">-৳${order.discount.toFixed(2)}</td>
+                <td style="text-align: right; font-weight: bold; color: #16a34a;">-৳ ${order.discount.toFixed(2)}</td>
               </tr>` : ''}
               <tr class="total-row grand-total">
                 <td>Total Amount</td>
-                <td style="text-align: right;">৳${order.total.toFixed(2)}</td>
+                <td style="text-align: right;">৳ ${order.total.toFixed(2)}</td>
               </tr>
             </table>
             
@@ -286,7 +283,7 @@ const emailTemplates = {
           <strong>${item.name}</strong> x ${item.quantity}
         </td>
         <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">
-          ৳${(item.price * item.quantity).toFixed(2)}
+          ৳ ${(item.price * item.quantity).toFixed(2)}
         </td>
       </tr>
     `).join('');
@@ -333,21 +330,21 @@ const emailTemplates = {
               ${products}
               <tr>
                 <td style="padding: 10px; color: #666;">Subtotal</td>
-                <td style="padding: 10px; text-align: right; font-weight: bold;">৳${data.subtotal}</td>
+                <td style="padding: 10px; text-align: right; font-weight: bold;">৳ ${data.subtotal}</td>
               </tr>
               ${data.shipping > 0 ? `
               <tr>
                 <td style="padding: 10px; color: #666;">Shipping Fee</td>
-                <td style="padding: 10px; text-align: right; font-weight: bold;">৳${data.shipping}</td>
+                <td style="padding: 10px; text-align: right; font-weight: bold;">৳ ${data.shipping}</td>
               </tr>` : ''}
               ${data.discount > 0 ? `
               <tr>
                 <td style="padding: 10px; color: #16a34a;">Discount</td>
-                <td style="padding: 10px; text-align: right; font-weight: bold; color: #16a34a;">-৳${data.discount}</td>
+                <td style="padding: 10px; text-align: right; font-weight: bold; color: #16a34a;">-৳ ${data.discount}</td>
               </tr>` : ''}
               <tr style="font-weight: bold; font-size: 18px; border-top: 2px solid #8B1538;">
                 <td style="padding: 15px 10px;">TOTAL AMOUNT</td>
-                <td style="padding: 15px 10px; text-align: right; color: #8B1538;">৳${data.total}</td>
+                <td style="padding: 15px 10px; text-align: right; color: #8B1538;">৳ ${data.total}</td>
               </tr>
             </table>
 

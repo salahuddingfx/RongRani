@@ -58,6 +58,7 @@ const Product3DViewer = ({ images = [], productName = '', discount = null }) => 
 
     // Mouse drag handlers
     const handleMouseDown = (e) => {
+        if (window.innerWidth < 768) return; // Disable rotation on small screens
         e.preventDefault();
         setIsDragging(true);
         setDragStart({ x: e.clientX, y: e.clientY });
@@ -79,6 +80,7 @@ const Product3DViewer = ({ images = [], productName = '', discount = null }) => 
 
     // Touch drag handlers
     const handleTouchStart = (e) => {
+        if (window.innerWidth < 768) return; // Disable rotation on small screens
         setIsDragging(true);
         setDragStart({
             x: e.touches[0].clientX,
@@ -273,8 +275,8 @@ const Product3DViewer = ({ images = [], productName = '', discount = null }) => 
                         {currentIndex + 1} / {images.length}
                     </div>
 
-                    {/* Interactive Hint */}
-                    {showHint && !isDragging && rotation === 0 && zoom === 1 && (
+                    {/* Interactive Hint - Hidden on mobile */}
+                    {showHint && !isDragging && rotation === 0 && zoom === 1 && window.innerWidth >= 768 && (
                         <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-gradient-to-r from-maroon to-pink-500 text-white px-6 py-3 rounded-full text-sm font-bold shadow-xl animate-bounce flex items-center gap-2">
                             <span className="text-2xl">👆</span>
                             <span>Drag to rotate • Scroll to zoom</span>
@@ -294,8 +296,8 @@ const Product3DViewer = ({ images = [], productName = '', discount = null }) => 
                                         resetView();
                                     }}
                                     className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all hover:scale-110 ${index === currentIndex
-                                            ? 'border-maroon ring-4 ring-maroon/30 scale-110'
-                                            : 'border-slate-300 dark:border-slate-600 hover:border-maroon/50'
+                                        ? 'border-maroon ring-4 ring-maroon/30 scale-110'
+                                        : 'border-slate-300 dark:border-slate-600 hover:border-maroon/50'
                                         }`}
                                 >
                                     <img

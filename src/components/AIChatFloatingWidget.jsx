@@ -58,8 +58,21 @@ const AIChatFloatingWidget = () => {
       return "You're very welcome! 💝 Feel free to ask anything anytime. Happy shopping at RongRani! Need anything else?";
     } else if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey') || msg.includes('হাই')) {
       return "Hello! 👋 Great to see you! I'm here to help you find the perfect gift. Tell me, what occasion are you shopping for today?";
+    } else if (msg.includes('help') || msg.includes('সহায়তা') || msg.includes('/')) {
+      return "📍 Important Commands & Links:\n\n" +
+        "📦 Track Order: Navigate to /track\n" +
+        "🛍️ Shop: Browse our collection at /shop\n" +
+        "📞 Contact: Call +8801851075537\n" +
+        "💬 WhatsApp: Direct support at wa.me/8801851075537\n" +
+        "❓ Help Center: Visit /help for FAQs\n\n" +
+        "Simply type what you're looking for (e.g., 'birthday gift') and I'll find it for you! 🎁";
     } else {
-      return "I'd love to help you! 🎁 Try asking about: 💕 Love gifts | 🎂 Birthday presents | 🎉 Anniversaries | 🚚 Delivery | 💳 Payment options | 🎁 Gift suggestions. What interests you?";
+      return "I'm here to help! 💝 Type 'help' to see all important links, or ask me about:\n\n" +
+        "• 📝 Order Tracking\n" +
+        "• 🎁 Gift Suggestions\n" +
+        "• 🚚 Delivery & Shipping\n" +
+        "• 💳 Payment Methods\n\n" +
+        "What can I do for you today?";
     }
   };
 
@@ -106,7 +119,7 @@ const AIChatFloatingWidget = () => {
         >
           <Bot className="h-7 w-7 animate-pulse" />
           <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse border-2 border-white"></span>
-          <div className="absolute -top-12 right-0 bg-maroon text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+          <div className="absolute -top-12 right-0 bg-maroon text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden sm:block">
             Need Help? Chat with AI! 💬
           </div>
         </button>
@@ -114,32 +127,49 @@ const AIChatFloatingWidget = () => {
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="floating-widget fixed bottom-24 lg:bottom-6 right-4 sm:right-6 z-50 w-72 sm:w-80 md:w-96 h-96 sm:h-[520px] max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col">
+        <div className="floating-widget fixed bottom-24 lg:bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-[400px] sm:h-[520px] max-h-[60vh] sm:max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col">
           {/* Header */}
           <div
             className="bg-maroon text-white p-4 flex items-center justify-between relative overflow-hidden"
           >
-            <div className="absolute inset-0 opacity-20"></div>
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm -skew-x-12 translate-x-1/2"></div>
             <div className="flex items-center space-x-3 relative z-10">
-              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-xs font-bold text-maroon">AI</span>
-                <Bot className="h-7 w-7 text-maroon -ml-4" />
+              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg relative overflow-hidden group/icon">
+                <Bot className="h-7 w-7 text-maroon relative z-10 group-hover/icon:scale-110 transition-transform" />
+                <div className="absolute inset-0 bg-maroon/5 animate-pulse"></div>
               </div>
               <div>
-                <h3 className="font-black text-lg">AI Shopping Assistant</h3>
+                <h3 className="font-black text-lg tracking-tight">RongRani Assistant</h3>
                 <div className="flex items-center space-x-2">
-                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                  <p className="text-xs text-white/90 font-medium">Online • Replies instantly</p>
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.5)]"></span>
+                  <p className="text-[10px] text-white/90 font-bold uppercase tracking-widest">Active Now</p>
                 </div>
               </div>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="hover:bg-white/20 rounded-xl p-2 transition-colors relative z-10"
+              className="hover:bg-white/20 rounded-xl p-2 transition-all hover:rotate-90 relative z-10"
               aria-label="Close Chat"
             >
               <X className="h-6 w-6 text-white" />
             </button>
+          </div>
+
+          {/* Quick Actions Bar */}
+          <div className="bg-white border-b border-maroon/10 p-2 flex overflow-x-auto gap-2 whitespace-nowrap no-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <style>{`.no-scrollbar::-webkit-scrollbar { display: none; }`}</style>
+            <a href="/track" className="flex items-center gap-1.5 px-3 py-1.5 bg-maroon/5 hover:bg-maroon/10 text-maroon text-[11px] font-bold rounded-full transition-colors border border-maroon/10">
+              📦 Track Order
+            </a>
+            <a href="https://wa.me/8801851075537" target="_blank" rel="noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-600 text-[11px] font-bold rounded-full transition-colors border border-green-100">
+              💬 WhatsApp
+            </a>
+            <a href="tel:+8801851075537" className="flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[11px] font-bold rounded-full transition-colors border border-blue-100">
+              📞 Call Support
+            </a>
+            <a href="/shop" className="flex items-center gap-1.5 px-3 py-1.5 bg-gold/5 hover:bg-gold/10 text-gold-600 text-[11px] font-bold rounded-full transition-colors border border-gold/10">
+              🛍️ Shop Now
+            </a>
           </div>
 
           {/* Messages */}

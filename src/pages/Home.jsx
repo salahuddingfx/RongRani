@@ -5,7 +5,7 @@ import { ArrowRight, Sparkles, Star, Users, Award, Heart, ShoppingBag, Shirt, Gi
 import { Suspense, lazy } from 'react';
 import TypingEffect from '../components/TypingEffect';
 import Seo from '../components/Seo';
-import ContactFAB from '../components/ContactFAB';
+
 import { ProductCardSkeleton } from '../components/Skeletons';
 import { useSocket } from '../contexts/socketContextBase';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -563,7 +563,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <ContactFAB />
+
     </div>
   );
 };
