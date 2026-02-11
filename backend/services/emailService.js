@@ -350,6 +350,12 @@ const emailTemplates = {
 
             <div style="margin: 20px 0; background: #eee; padding: 15px; text-align: center;">
               <p><strong>Payment Method:</strong> ${data.paymentMethod?.toUpperCase()}</p>
+              ${data.paymentDetails && (data.paymentDetails.transactionId || data.paymentDetails.senderLastDigits) ? `
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ccc;">
+                  ${data.paymentDetails.transactionId ? `<p><strong>TrxID:</strong> ${data.paymentDetails.transactionId}</p>` : ''}
+                  ${data.paymentDetails.senderLastDigits ? `<p><strong>Sender:</strong> ...${data.paymentDetails.senderLastDigits}</p>` : ''}
+                </div>
+              ` : ''}
             </div>
 
             <div class="btns">
