@@ -423,12 +423,17 @@ const sendToCourier = async (req, res) => {
     };
     const deliveryType = deliveryTypeMap[deliveryTypeRaw] || deliveryTypeRaw;
     const parcelValue = details.parcelValue ? Number(details.parcelValue) : undefined;
-    const invoice = details.invoice || `CHG-${order._id}`;
+
+    // Shorten Invoice ID for Courier API (Use last 8 chars to be safe and unique enough)
+    // Steadfast often errors on very long invoice IDs
+    const shortId = order._id.toString().slice(-8).toUpperCase();
+    const invoice = details.invoice || `RR-${shortId}`;
+
     const rawNote = details.note || order.notes || `Order from RongRani - ${order.items.length} items`;
     const note = rawNote.toString().replace(/[^\x20-\x7E]/g, '').trim() || 'Order from RongRani';
     const codAmount = typeof details.codAmount !== 'undefined'
       ? Number(details.codAmount)
-      : (order.paymentMethod === 'cod' ? order.total : 0);
+      : (order.paymentMethod === 'cod' ? Number(order.total) : 0);
 
     const orderData = {
       invoice,
