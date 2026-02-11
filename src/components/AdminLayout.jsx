@@ -17,6 +17,7 @@ const AdminLayout = () => {
 
   const adminNavItems = [
     { path: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
+    { path: '/admin/analytics', label: 'Analytics', icon: '📈' },
     { path: '/admin/users', label: 'Users', icon: '👥' },
     { path: '/admin/orders', label: 'Orders', icon: '📦' },
     { path: '/admin/products', label: 'Products', icon: '🛍️' },
@@ -24,9 +25,10 @@ const AdminLayout = () => {
     { path: '/admin/coupons', label: 'Coupons', icon: '🎫' },
     { path: '/admin/banners', label: 'Banners', icon: '📢' },
     { path: '/admin/hot-offer', label: 'Hot Offer', icon: '🔥' },
+    { path: '/admin/flash-sale', label: 'Flash Sale', icon: '⚡' },
     { path: '/admin/reviews', label: 'Reviews', icon: '⭐' },
     { path: '/admin/delivery-settings', label: 'Delivery', icon: '🚚' },
-    { path: '/admin/reports', label: 'Reports', icon: '📈' },
+    { path: '/admin/reports', label: 'Reports', icon: '📋' },
     { path: '/admin/status', label: 'Status', icon: '🧭' },
     { path: '/admin/ai', label: 'AI Studio', icon: '🤖' },
   ];

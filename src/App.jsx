@@ -42,6 +42,7 @@ import AdminReports from './pages/AdminReports';
 import AdminStatus from './pages/AdminStatus';
 import AdminAI from './pages/AdminAI';
 import AdminFlashSale from './pages/AdminFlashSale';
+import AdminAnalytics from './pages/AdminAnalytics';
 import PaymentStatus from './pages/PaymentStatus';
 import OrderTracking from './pages/OrderTracking';
 import Orders from './pages/Orders';
@@ -179,6 +180,7 @@ function App() {
                           <Route path="status" element={<AdminStatus />} />
                           <Route path="ai" element={<AdminAI />} />
                           <Route path="flash-sale" element={<AdminFlashSale />} />
+                          <Route path="analytics" element={<AdminAnalytics />} />
                         </Route>
                       </Routes>
                     </Router>
