@@ -9,22 +9,27 @@ const createTransporter = () => {
   const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
 
   if (smtpHost && smtpUser && smtpPass) {
-    console.log(`✅ Email service configured using: ${smtpHost.includes('brevo') ? 'Brevo' : 'SMTP'}`);
-    return nodemailer.createTransporter({
+    console.log(`✅ Configuring Email Service: ${smtpHost.includes('brevo') ? 'Brevo' : 'SMTP'}`);
+    return nodemailer.createTransport({
       host: smtpHost,
-      port: smtpPort,
+      port: Number(smtpPort),
       secure: false, // true for 465, false for other ports
       auth: {
         user: smtpUser,
         pass: smtpPass,
       },
+      tls: {
+        ciphers: 'SSLv3',
+        rejectUnauthorized: false
+      },
+      debug: true // Enable debug logs
     });
   }
 
   // SendGrid Fallback
   else if (process.env.SENDGRID_API_KEY) {
     console.log('✅ Email service configured using: SendGrid API');
-    return nodemailer.createTransporter({
+    return nodemailer.createTransport({
       host: 'smtp.sendgrid.net',
       port: 587,
       secure: false,
@@ -223,6 +228,15 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
   try {
     const transporter = createTransporter();
 
+    // Verify connection configuration
+    try {
+      await transporter.verify();
+      console.log('✅ Email Server is ready to take our messages');
+    } catch (verifyError) {
+      console.error('❌ Email Server Verify Error:', verifyError);
+      // Don't return here, try sending anyway as verify might fail on some providers but send still works
+    }
+
     // Handle template selection
     let htmlContent;
     if (typeof template === 'string' && emailTemplates[template]) {
@@ -232,23 +246,29 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
       htmlContent = typeof template === 'function' ? template(data) : template;
     }
 
+    // Ensure we have a valid FROM field
+    // Brevo requires a verified sender
+    const fromEmail = process.env.FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@rongrani.com';
+    const fromName = process.env.FROM_NAME || process.env.EMAIL_FROM_NAME || 'RongRani';
+
     const mailOptions = {
-      from: {
-        name: process.env.FROM_NAME || process.env.EMAIL_FROM_NAME || 'RongRani',
-        address: process.env.FROM_EMAIL || process.env.EMAIL_FROM || 'noreply@rongrani.com',
-      },
+      from: `"${fromName}" <${fromEmail}>`,
       to,
       subject,
       html: htmlContent,
       attachments
     };
 
+    console.log(`📧 Attempting to send email to: ${to} from: ${fromEmail}`);
     const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.messageId);
+    console.log('✅ Email sent successfully:', info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('Email sending failed:', error);
-    // Don't throw error to avoid crashing the request
+    console.error('❌ Email sending failed:', error);
+    // Log detailed error for debugging
+    if (error.response) {
+      console.error('Response:', error.response);
+    }
     return { success: false, error: error.message };
   }
 };
