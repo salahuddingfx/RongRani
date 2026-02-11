@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 const Coupon = require('../models/Coupon');
 const User = require('../models/User');
 const DeliverySetting = require('../models/DeliverySetting');
-const { sendOrderConfirmation, sendOrderStatusUpdate } = require('../services/emailService');
+const { sendOrderConfirmation, sendOrderStatusUpdate, sendEmail } = require('../services/emailService');
 const { generateInvoice } = require('../utils/pdfGenerator');
 const { calculateDelivery, getDeliveryDisplay } = require('../utils/deliveryCalculator');
 
@@ -104,7 +104,7 @@ const createOrder = async (req, res) => {
         attributes: item.attributes || [],
       });
 
-      // Update product stock
+      // Update product stock (Ensure atomic update if possible, but simple save is okay for now)
       product.stock -= item.quantity;
       await product.save();
     }
@@ -216,92 +216,104 @@ const createOrder = async (req, res) => {
       giftMessage,
     });
 
-    emitEvent(req, 'order:new', {
-      _id: order._id,
-      total: order.total,
-      orderStatus: order.orderStatus,
-      paymentStatus: order.paymentStatus,
-      createdAt: order.createdAt,
-      customerName: isGuest ? guestInfo.name : req.user?.name,
-      customerEmail: isGuest ? guestInfo.email : req.user?.email,
-      isGuest,
-    });
-
-    // Send order confirmation email to customer
-    try {
-      const recipientEmail = isGuest ? guestInfo.email : req.user.email;
-      const recipientName = isGuest ? guestInfo.name : req.user.name;
-      const trackingQuery = recipientEmail ? `?email=${encodeURIComponent(recipientEmail)}` : '';
-
-      // Generate PDF invoice
-      let attachments = [];
-      try {
-        const pdfBuffer = await generateInvoice(order);
-        attachments.push({
-          filename: `Invoice-${order._id}.pdf`,
-          content: pdfBuffer,
-          contentType: 'application/pdf'
-        });
-      } catch (pdfError) {
-        console.error('PDF generation failed:', pdfError);
-        // Continue with email even if PDF fails
-      }
-
-      if (recipientEmail) {
-        // Prepare robust data object for email template
-        const emailOrderData = {
-          ...order.toObject(),
-          user: req.user ? req.user.toObject() : undefined, // Ensure user data is available
-          guestInfo: isGuest ? guestInfo : undefined,
-          items: orderItems, // Use populated items from request processing
-          billingAddress: billingAddress || normalizedShippingAddress,
-          shippingAddress: normalizedShippingAddress,
-          total,
-          subtotal,
-          shipping,
-          discount,
-          trackingQuery
-        };
-
-        console.log(`📧 Sending order confirmation to: ${recipientEmail}`);
-        await sendOrderConfirmation(emailOrderData, attachments);
-      }
-    } catch (emailError) {
-      console.error('Order confirmation email failed:', emailError);
-    }
-
-    // Send order notification to admin
-    try {
-      const customerEmail = isGuest ? guestInfo.email : req.user.email;
-      const customerName = isGuest ? guestInfo.name : req.user.name;
-      // Use shipping phone as it is mandatory, fallback to user phone or guest phone
-      const customerPhone = shippingAddress.phone || (isGuest ? guestInfo.phone : req.user.phone) || 'Not provided';
-
-      console.log('📧 Sending new order notification to admin...');
-      await sendEmail(
-        process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
-        `🛒 New Order #${order._id} - RongRani`,
-        'adminOrderNotification',
-        {
-          orderId: order._id,
-          customerName,
-          customerEmail: customerEmail || 'Not provided',
-          customerPhone,
-          items: orderItems,
-          total: total.toFixed(2),
-          paymentMethod,
-          shippingAddress: `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.zipCode || ''}`,
-          giftMessage: giftMessage || 'No gift message',
-        }
-      );
-      console.log('✅ Admin order notification sent');
-    } catch (emailError) {
-      console.error('❌ Admin notification email failed:', emailError);
-    }
-
+    // Send response IMMEDIATELY
     res.status(201).json(order);
+
+    // BACKGROUND TASKS (Non-blocking)
+    // 1. Emit Socket Event
+    try {
+      emitEvent(req, 'order:new', {
+        _id: order._id,
+        total: order.total,
+        orderStatus: order.orderStatus,
+        paymentStatus: order.paymentStatus,
+        createdAt: order.createdAt,
+        customerName: isGuest ? guestInfo.name : req.user?.name,
+        customerEmail: isGuest ? guestInfo.email : req.user?.email,
+        isGuest,
+      });
+    } catch (socketError) {
+      console.error('Socket emit failed:', socketError);
+    }
+
+    // 2. Generate PDF & Send Emails
+    (async () => {
+      try {
+        const recipientEmail = isGuest ? guestInfo.email : req.user?.email;
+        const trackingQuery = recipientEmail ? `?email=${encodeURIComponent(recipientEmail)}` : '';
+
+        // Generate PDF invoice
+        let attachments = [];
+        try {
+          const pdfBuffer = await generateInvoice(order);
+          attachments.push({
+            filename: `Invoice-${order._id}.pdf`,
+            content: pdfBuffer,
+            contentType: 'application/pdf'
+          });
+        } catch (pdfError) {
+          console.error('PDF generation failed:', pdfError);
+          // Continue with email even if PDF fails
+        }
+
+        if (recipientEmail) {
+          // Prepare robust data object for email template
+          const emailOrderData = {
+            ...order.toObject(),
+            user: req.user ? req.user.toObject() : undefined,
+            guestInfo: isGuest ? guestInfo : undefined,
+            items: orderItems,
+            billingAddress: billingAddress || normalizedShippingAddress,
+            shippingAddress: normalizedShippingAddress,
+            total,
+            subtotal,
+            shipping,
+            discount,
+            trackingQuery
+          };
+
+          console.log(`📧 Sending order confirmation to: ${recipientEmail}`);
+          // Async call, no await to block if we were outside IIFE, but here we are in background IIFE so await is fine/good for logging
+          await sendOrderConfirmation(emailOrderData, attachments);
+        }
+
+        // Send order notification to admin
+        const customerEmail = isGuest ? guestInfo.email : req.user?.email;
+        const customerName = isGuest ? guestInfo.name : req.user?.name;
+        const customerPhone = shippingAddress.phone || (isGuest ? guestInfo.phone : req.user?.phone) || 'Not provided';
+
+        console.log('📧 Sending new order notification to admin...');
+        await sendEmail(
+          process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
+          `🛒 New Order #${order._id} - RongRani`,
+          'adminOrderNotification', // Ensure this template exists or handle logic in emailService
+          {
+            orderId: order._id,
+            customerName,
+            customerEmail: customerEmail || 'Not provided',
+            customerPhone,
+            items: orderItems,
+            total: total.toFixed(2),
+            paymentMethod,
+            shippingAddress: `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.zipCode || ''}`,
+            giftMessage: giftMessage || 'No gift message',
+          }
+        );
+        console.log('✅ Admin order notification sent');
+
+      } catch (backgroundError) {
+        console.error('❌ Background task failed (Email/PDF):', backgroundError);
+      }
+    })();
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    // If response was maintained (res.headersSent check not strictly needed if we structure correctly, 
+    // but safety first if the error happened BEFORE res.json)
+    if (!res.headersSent) {
+      res.status(500).json({ message: error.message });
+    } else {
+      console.error('Error after response sent:', error);
+    }
   }
 };
 
