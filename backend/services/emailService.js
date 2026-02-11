@@ -8,6 +8,11 @@ const createTransporter = () => {
   const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
   const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
 
+  console.log('🔍 Checking Email Config:');
+  console.log('Host:', smtpHost);
+  console.log('User:', smtpUser);
+  console.log('Pass Length:', smtpPass ? smtpPass.length : 0);
+
   if (smtpHost && smtpUser && smtpPass) {
     console.log(`✅ Configuring Email Service: ${smtpHost.includes('brevo') ? 'Brevo' : 'SMTP'}`);
     return nodemailer.createTransport({
@@ -42,7 +47,7 @@ const createTransporter = () => {
 
   // Fallback to Gmail SMTP if nothing else matches
   console.log('⚠️ Email service fallback: Gmail SMTP (Check your .env if this is unintentional)');
-  return nodemailer.createTransporter({
+  return nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
     secure: false,
@@ -53,7 +58,7 @@ const createTransporter = () => {
   });
 };
 
-// Email templates
+// ... Email templates code below (keeping it same)
 const emailTemplates = {
   // Order Confirmation Email
   orderConfirmation: (order) => {
