@@ -295,41 +295,41 @@ const updateOrder = async (req, res) => {
 
     // Check for status change
     if (order.orderStatus !== previousStatus) {
-      // Send status update email
-      try {
-        const { sendOrderStatusUpdate, sendReviewRequest } = require('../services/emailService');
-        const customerEmail = order.user ? order.user.email : order.guestInfo?.email;
-        const customerName = order.user ? order.user.name : order.guestInfo?.name || 'Customer';
+      // Send status update email in BACKGROUND
+      (async () => {
+        try {
+          const { sendOrderStatusUpdate, sendReviewRequest } = require('../services/emailService');
+          const customerEmail = order.user ? order.user.email : order.guestInfo?.email;
+          const customerName = order.user ? order.user.name : order.guestInfo?.name || 'Customer';
 
-        if (customerEmail) {
-          console.log(`📧 Status changed to ${order.orderStatus}. Sending email to ${customerEmail}...`);
+          if (customerEmail) {
+            console.log(`📧 Status changed to ${order.orderStatus}. Sending email to ${customerEmail}...`);
 
-          // Send primary status update email
-          await sendOrderStatusUpdate(
-            customerEmail,
-            customerName,
-            order._id,
-            order.orderStatus,
-            order.trackingNumber
-          );
-          console.log('✅ Status update email sent successfully');
-
-          // If Delivered, send Review Request
-          if (order.orderStatus === 'delivered') {
-            console.log(`⭐ Sending review request to ${customerEmail}...`);
-            // Adding a small delay logic here isn't possible in sync flow, but we send it sequentially
-            await sendReviewRequest(
+            // Send primary status update email
+            await sendOrderStatusUpdate(
               customerEmail,
               customerName,
-              order._id
+              order._id,
+              order.orderStatus,
+              order.trackingNumber
             );
-            console.log('✅ Review request email sent successfully');
+            console.log('✅ Status update email sent successfully');
+
+            // If Delivered, send Review Request
+            if (order.orderStatus === 'delivered') {
+              console.log(`⭐ Sending review request to ${customerEmail}...`);
+              await sendReviewRequest(
+                customerEmail,
+                customerName,
+                order._id
+              );
+              console.log('✅ Review request email sent successfully');
+            }
           }
+        } catch (emailError) {
+          console.error('❌ Failed to send status update/review email (background):', emailError);
         }
-      } catch (emailError) {
-        console.error('❌ Failed to send status update/review email:', emailError);
-        // Don't block order update if email fails
-      }
+      })();
     }
 
     if (order.orderStatus === 'delivered' && !order.deliveredAt) {

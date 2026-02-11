@@ -457,30 +457,32 @@ const updateOrderStatus = async (req, res) => {
 
     await order.save();
 
-    // Send status update email
-    try {
-      const recipientEmail = order.user ? (await User.findById(order.user))?.email : order.guestInfo?.email;
-      const recipientName = order.user ? (await User.findById(order.user))?.name : order.guestInfo?.name;
+    // Send status update email in BACKGROUND
+    (async () => {
+      try {
+        const recipientEmail = order.user ? (await User.findById(order.user))?.email : order.guestInfo?.email;
+        const recipientName = order.user ? (await User.findById(order.user))?.name : order.guestInfo?.name;
 
-      if (recipientEmail) {
-        const trackingQuery = recipientEmail ? `?email=${encodeURIComponent(recipientEmail)}` : '';
-        await sendEmail(
-          recipientEmail,
-          'Order Update - RongRani',
-          'orderStatusUpdate',
-          {
-            name: recipientName || 'Customer',
-            orderId: order._id,
-            status: orderStatus || order.orderStatus, // show current status
-            paymentStatus: paymentStatus || order.paymentStatus,
-            trackingNumber: trackingNumber || order.trackingNumber,
-            trackingQuery,
-          }
-        );
+        if (recipientEmail) {
+          const trackingQuery = recipientEmail ? `?email=${encodeURIComponent(recipientEmail)}` : '';
+          await sendEmail(
+            recipientEmail,
+            'Order Update - RongRani',
+            'orderStatusUpdate',
+            {
+              name: recipientName || 'Customer',
+              orderId: order._id,
+              status: orderStatus || order.orderStatus, // show current status
+              paymentStatus: paymentStatus || order.paymentStatus,
+              trackingNumber: trackingNumber || order.trackingNumber,
+              trackingQuery,
+            }
+          );
+        }
+      } catch (emailError) {
+        console.error('Status update email failed (background):', emailError);
       }
-    } catch (emailError) {
-      console.error('Status update email failed:', emailError);
-    }
+    })();
 
     res.json(order);
   } catch (error) {
