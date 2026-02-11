@@ -170,6 +170,11 @@ const emailTemplates = {
             <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
                <p>© ${new Date().getFullYear()} RongRani. All rights reserved.</p>
+               <div style="margin-top: 15px;">
+                  <a href="https://facebook.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
+                  <a href="https://instagram.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+                  <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
+               </div>
             </div>
           </div>
         </div>
@@ -229,6 +234,11 @@ const emailTemplates = {
             <p style="margin-top: 20px; color: #666; font-size: 12px;">
               © ${new Date().getFullYear()} RongRani. All rights reserved.
             </p>
+            <div style="margin-top: 15px;">
+              <a href="https://facebook.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
+              <a href="https://instagram.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+              <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
+            </div>
           </div>
         </div>
       </body>
@@ -269,6 +279,11 @@ const emailTemplates = {
         </div>
         <div class="footer">
           <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
+          <div style="margin-top: 15px;">
+            <a href="https://facebook.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
+            <a href="https://instagram.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+            <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
+          </div>
         </div>
       </div>
     </body>
@@ -406,6 +421,15 @@ const emailTemplates = {
         <div class="footer">
           <p>Thank you for supporting handmade!</p>
           <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
+        </div>
+        <div class="footer">
+          <p>Thank you for supporting handmade!</p>
+          <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
+          <div style="margin-top: 15px;">
+            <a href="https://facebook.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
+            <a href="https://instagram.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+            <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
+          </div>
         </div>
       </div>
     </body>
