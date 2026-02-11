@@ -329,6 +329,21 @@ const AdminOrders = () => {
                   <p className="text-slate text-sm font-semibold">Total Amount</p>
                   <p className="text-3xl font-bold text-maroon">৳{(order.total || 0).toLocaleString()}</p>
                   <p className="text-sm text-slate mt-1 capitalize">{order.paymentMethod}</p>
+                  {/* Manual Payment Verification Info */}
+                  {order.paymentDetails && (order.paymentDetails.transactionId || order.paymentDetails.senderLastDigits) && (
+                    <div className="mt-2 text-right bg-slate-50 dark:bg-slate-700/50 p-2 rounded border border-slate-200 dark:border-slate-600 inline-block min-w-[140px]">
+                      {order.paymentDetails.transactionId && (
+                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                          TrxID: <span className="font-mono font-bold text-maroon dark:text-pink-400 select-all">{order.paymentDetails.transactionId}</span>
+                        </p>
+                      )}
+                      {order.paymentDetails.senderLastDigits && (
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                          Sender: <span className="font-mono font-bold text-slate-700 dark:text-slate-300">...{order.paymentDetails.senderLastDigits}</span>
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex flex-col items-end space-y-3">
