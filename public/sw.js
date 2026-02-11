@@ -1,3 +1,4 @@
+
 // Service Worker for RongRani PWA with Dynamic Caching
 const CACHE_NAME = 'rongrani-v2';
 const urlsToCache = [
@@ -20,8 +21,10 @@ self.addEventListener('install', (event) => {
 
 // Cache and Return Requests
 self.addEventListener('fetch', (event) => {
-    // Bypass caching for API requests and socket.io
+    // Bypass caching for non-http protocols (like chrome-extension://), API requests, and socket.io
+    const url = new URL(event.request.url);
     if (
+        !url.protocol.startsWith('http') ||
         event.request.url.includes('/api/') ||
         event.request.url.includes('socket.io') ||
         event.request.method !== 'GET'
