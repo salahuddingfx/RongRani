@@ -139,8 +139,9 @@ const Cart = () => {
                     {/* Quantity Controls */}
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="btn-secondary p-1.5 rounded-lg hover:scale-110 transition-transform"
+                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                        className="btn-secondary p-1.5 rounded-lg hover:scale-110 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
+                        disabled={item.quantity <= 1}
                         title="Decrease quantity"
                       >
                         <Minus className="h-4 w-4" />
@@ -149,9 +150,10 @@ const Cart = () => {
                         {item.quantity}
                       </span>
                       <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="btn-secondary p-1.5 rounded-lg hover:scale-110 transition-transform"
-                        title="Increase quantity"
+                        onClick={() => updateQuantity(item.id, Math.min(item.stock || 999, item.quantity + 1))}
+                        className="btn-secondary p-1.5 rounded-lg hover:scale-110 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
+                        disabled={item.quantity >= (item.stock || 999)}
+                        title={item.quantity >= (item.stock || 999) ? "Max stock reached" : "Increase quantity"}
                       >
                         <Plus className="h-4 w-4" />
                       </button>
@@ -175,8 +177,9 @@ const Cart = () => {
                   {/* Desktop: Quantity Controls */}
                   <div className="hidden sm:flex items-center gap-2">
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="btn-secondary p-2 rounded-full hover:scale-110 transition-transform"
+                      onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                      className="btn-secondary p-2 rounded-full hover:scale-110 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
+                      disabled={item.quantity <= 1}
                       title="Decrease quantity"
                     >
                       <Minus className="h-4 w-4" />
@@ -185,9 +188,10 @@ const Cart = () => {
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="btn-secondary p-2 rounded-full hover:scale-110 transition-transform"
-                      title="Increase quantity"
+                      onClick={() => updateQuantity(item.id, Math.min(item.stock || 999, item.quantity + 1))}
+                      className="btn-secondary p-2 rounded-full hover:scale-110 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
+                      disabled={item.quantity >= (item.stock || 999)}
+                      title={item.quantity >= (item.stock || 999) ? "Max stock reached" : "Increase quantity"}
                     >
                       <Plus className="h-4 w-4" />
                     </button>

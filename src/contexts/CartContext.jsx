@@ -40,15 +40,32 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
       const productId = product._id || product.id;
-      const existingItem = prevItems.find(item => item.id === productId);
+      const existingItem = prevItems.find(item => item.userId === productId || item.id === productId);
+
+      const availableStock = product.stock || 0;
 
       if (existingItem) {
+        const newQuantity = existingItem.quantity + quantity;
+        if (newQuantity > availableStock) {
+          // Optionally show toast/alert here, but context usually doesn't do UI
+          // For now, cap at max stock
+          return prevItems.map(item =>
+            (item.userId === productId || item.id === productId)
+              ? { ...item, quantity: availableStock, stock: availableStock }
+              : item
+          );
+        }
+
         return prevItems.map(item =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity + quantity }
+          (item.userId === productId || item.id === productId)
+            ? { ...item, quantity: newQuantity, stock: availableStock }
             : item
         );
       } else {
+        if (quantity > availableStock) {
+          quantity = availableStock;
+        }
+
         return [...prevItems, {
           id: productId,
           name: product.name,
@@ -56,7 +73,8 @@ export const CartProvider = ({ children }) => {
           originalPrice: product.originalPrice,
           image: product.images?.[0] || product.image || 'https://via.placeholder.com/100',
           category: product.category,
-          quantity
+          quantity,
+          stock: availableStock // Store stock info
         }];
       }
     });
@@ -73,9 +91,15 @@ export const CartProvider = ({ children }) => {
     }
 
     setCartItems(prevItems =>
-      prevItems.map(item =>
-        item.id === id ? { ...item, quantity } : item
-      )
+      prevItems.map(item => {
+        if (item.id === id) {
+          // Check stock limit if available
+          const maxStock = item.stock || 100; // Default high if no stock info
+          const validQuantity = Math.min(quantity, maxStock);
+          return { ...item, quantity: validQuantity };
+        }
+        return item;
+      })
     );
   };
 
