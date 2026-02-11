@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
 import ReviewForm from '../components/ReviewForm';
 import ProductCard from '../components/ProductCard';
+import Product3DViewer from '../components/Product3DViewer';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -235,7 +236,7 @@ const ProductDetail = () => {
   const categoryParam = categoryLabel ? encodeURIComponent(categoryLabel) : '';
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-white dark:bg-slate-900">
       <Seo
         title={pageTitle}
         description={pageDescription}
@@ -245,7 +246,7 @@ const ProductDetail = () => {
         schema={productSchema}
       />
       {/* Breadcrumb */}
-      <div className="bg-white/80 backdrop-blur-md shadow-sm sticky top-16 sm:top-20 md:top-24 z-40">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 sticky top-[72px] sm:top-[80px] md:top-[88px] z-40">
         <div className="container mx-auto px-4 py-4">
           <nav className="text-sm flex items-center space-x-2">
             <Link to="/" className="text-slate hover:text-maroon transition-colors font-medium">Home</Link>
@@ -270,79 +271,16 @@ const ProductDetail = () => {
 
       <div className="container mx-auto px-4 py-8 lg:py-12 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 xl:gap-16">
-          {/* Product Images */}
-          <div className="space-y-4 animate-fade-in-up lg:sticky lg:top-32 lg:self-start lg:col-span-5 xl:col-span-6">
-            {/* Main Image */}
-            <div className="relative bg-white rounded-3xl overflow-hidden shadow-2xl group border border-maroon/10">
-              <div className="aspect-square w-full p-4">
-                <img
-                  src={
-                    getImageUrl(product.images?.[selectedImage]) ||
-                    getImageUrl(product.image) ||
-                    '/api/placeholder/600/600'
-                  }
-                  alt={product.name}
-                  loading="eager"
-                  decoding="async"
-                  fetchpriority="high"
-                  className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-110"
-                />
-              </div>
-              {product.images?.length > 1 && (
-                <>
-                  <button
-                    onClick={prevImage}
-                    className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-maroon/90 backdrop-blur-md rounded-full p-3 hover:bg-maroon shadow-xl hover:scale-110 transition-all text-white"
-                  >
-                    <ChevronLeft className="h-6 w-6" />
-                  </button>
-                  <button
-                    onClick={nextImage}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-maroon/90 backdrop-blur-md rounded-full p-3 hover:bg-maroon shadow-xl hover:scale-110 transition-all text-white"
-                  >
-                    <ChevronRight className="h-6 w-6" />
-                  </button>
-                </>
-              )}
-              {product.originalPrice && product.originalPrice > product.price && (
-                <div className="absolute top-6 left-6">
-                  <div className="bg-maroon text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4" />
-                    <span>-{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF</span>
-                  </div>
-                </div>
-              )}
-              {/* New Badge */}
-              <div className="absolute top-6 right-6">
-                <div className="bg-gold text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg animate-pulse">
-                  ⭐ TRENDING
-                </div>
-              </div>
-            </div>
-
-            {/* Thumbnail Images */}
-            {product.images?.length > 1 && (
-              <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`flex-shrink-0 w-24 h-24 rounded-2xl overflow-hidden border-3 transition-all duration-300 ${selectedImage === index
-                      ? 'border-maroon shadow-2xl scale-110 ring-4 ring-maroon/20'
-                      : 'border-maroon/10 hover:border-maroon/50 hover:scale-105'
-                      }`}
-                  >
-                    <img
-                      src={getImageUrl(image) || '/api/placeholder/120/120'}
-                      alt={`${product.name} ${index + 1}`}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
+          {/* Product 3D Viewer */}
+          <div className="animate-fade-in-up lg:sticky lg:top-32 lg:self-start lg:col-span-5 xl:col-span-6">
+            <Product3DViewer
+              images={product.images?.map(img => getImageUrl(img)) || [getImageUrl(product.image)]}
+              productName={product.name}
+              discount={product.originalPrice && product.originalPrice > product.price
+                ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+                : null
+              }
+            />
           </div>
 
           {/* Product Info */}

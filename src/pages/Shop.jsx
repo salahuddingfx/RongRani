@@ -513,7 +513,7 @@ const Shop = () => {
               aria-expanded={showFilters}
             >
               <Filter className="h-5 w-5" />
-              <span>{showFilters ? 'Hide Filters' : 'Filters'}</span>
+              <span>{showFilters ? 'Hide Filters' : 'Show Filters'}</span>
             </button>
           </div>
         </div>
@@ -552,7 +552,7 @@ const Shop = () => {
                   className="input-field"
                 >
                   <option value="">All Categories</option>
-                  {categories.map((category) => (
+                  {categories && categories.map((category) => (
                     <option key={category._id || category.name || category} value={typeof category === 'string' ? category : category.name}>
                       {typeof category === 'string' ? category : category.name}
                       {typeof category === 'object' && category.productCount ? ` (${category.productCount})` : ''}
@@ -616,7 +616,7 @@ const Shop = () => {
                   <p className="text-slate">Loading beautiful products...</p>
                 </div>
               </div>
-            ) : products.length > 0 ? (
+            ) : products && products.length > 0 ? (
               <>
                 <div className="flex items-center justify-between mb-6">
                   <p className="text-slate">
@@ -624,7 +624,7 @@ const Shop = () => {
                   </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
-                  {products.map((product, index) => (
+                  {products && products.map((product, index) => (
                     <div
                       key={product._id}
                       className="animate-slide-up"
@@ -646,7 +646,7 @@ const Shop = () => {
                       Previous
                     </button>
 
-                    {[...Array(totalPages)].map((_, i) => {
+                    {totalPages && [...Array(totalPages)].map((_, i) => {
                       const pageNum = i + 1;
                       // Show first page, last page, current page, and pages around current
                       if (
