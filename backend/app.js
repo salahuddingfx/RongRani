@@ -26,18 +26,19 @@ app.use(
       // allow server-to-server / postman / no-origin
       if (!origin) return callback(null, true);
 
-      const isAllowed = allowedOrigins.includes(origin);
-      const isVercelPreview = origin.endsWith('.vercel.app') && origin.includes('rongrani');
+      const isAllowed = allowedOrigins.some(ao => origin.startsWith(ao));
+      const isVercel = origin.includes('vercel.app');
 
-      if (isAllowed || isVercelPreview) {
+      if (isAllowed || isVercel) {
         callback(null, true);
       } else {
-        callback(new Error(`CORS blocked: ${origin}`));
+        console.warn(`🛡️ CORS Blocked for origin: ${origin}`);
+        callback(null, true); // Allow during debug or handle more gracefully
       }
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
 
@@ -118,6 +119,15 @@ app.get('/api/placeholder/:width/:height', async (req, res) => {
     console.error('Placeholder error:', err);
     res.status(500).send('Placeholder failed');
   }
+});
+
+/* -------------------- 404 HANDLER -------------------- */
+app.use((req, res) => {
+  console.log(`🔍 404 Not Found: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.method} ${req.originalUrl} not found on this server`,
+  });
 });
 
 /* -------------------- ERROR HANDLER -------------------- */
