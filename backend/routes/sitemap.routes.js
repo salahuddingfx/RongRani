@@ -9,9 +9,12 @@ router.get('/sitemap.xml', async (req, res) => {
         const baseUrl = process.env.SITE_URL || 'https://rongrani.vercel.app';
         const today = new Date().toISOString().split('T')[0];
 
-        // Get all active products
-        // Note: Ensure your Product model has 'updatedAt' timestamp
-        const products = await Product.find({ isActive: true }).select('_id updatedAt');
+        // Get all active products with minimal fields
+        const products = await Product.find({ isActive: true }).select('_id updatedAt category name slug');
+
+        // Get unique categories from products
+        // Standardize category names (lowercase) to avoid duplicates like 'Jewelry' and 'jewelry'
+        const categories = [...new Set(products.map(p => p.category ? p.category.toLowerCase() : null).filter(Boolean))];
 
         // Static pages
         const staticPages = [
@@ -20,6 +23,8 @@ router.get('/sitemap.xml', async (req, res) => {
             { url: '/about', changefreq: 'monthly', priority: '0.7' },
             { url: '/contact', changefreq: 'monthly', priority: '0.6' },
             { url: '/wishlist', changefreq: 'weekly', priority: '0.5' },
+            { url: '/login', changefreq: 'monthly', priority: '0.4' },
+            { url: '/register', changefreq: 'monthly', priority: '0.4' },
         ];
 
         // Build XML
@@ -36,15 +41,26 @@ router.get('/sitemap.xml', async (req, res) => {
             xml += '  </url>\n';
         });
 
+        // Add category pages
+        categories.forEach(category => {
+            xml += '  <url>\n';
+            // Encode category for URL safety
+            xml += `    <loc>${baseUrl}/shop?category=${encodeURIComponent(category)}</loc>\n`;
+            xml += `    <lastmod>${today}</lastmod>\n`;
+            xml += '    <changefreq>weekly</changefreq>\n';
+            xml += '    <priority>0.8</priority>\n';
+            xml += '  </url>\n';
+        });
+
         // Add product pages
         products.forEach(product => {
-            // Handle updatedAt safely
             const lastmod = product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : today;
             xml += '  <url>\n';
             xml += `    <loc>${baseUrl}/product/${product._id}</loc>\n`;
             xml += `    <lastmod>${lastmod}</lastmod>\n`;
             xml += '    <changefreq>weekly</changefreq>\n';
             xml += '    <priority>0.8</priority>\n';
+            // Optional: Add images extension for better image SEO? (Requires schema extension, sticking to basic for now)
             xml += '  </url>\n';
         });
 

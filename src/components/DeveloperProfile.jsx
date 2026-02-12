@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { X, Github, Facebook, Globe, Mail, MapPin, Code2, Database, Layout, Server, MessageCircle, GitBranch, Box, Cloud, Zap, Edit, Cpu, Layers, Terminal, Atom, Wind, HardDrive, Network, Globe2, FileCode } from 'lucide-react';
+import { X, Github, Facebook, Globe, Mail, MapPin, Code2, Database, Layout, Server, MessageCircle, GitBranch, Box, Cloud, Zap, Edit, Cpu, Layers, Terminal, Atom, Wind, HardDrive, Network, Globe2, FileCode, Linkedin } from 'lucide-react';
 
 const DeveloperProfile = ({ isOpen, onClose }) => {
   useEffect(() => {
@@ -47,10 +47,10 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
 
   const socialLinks = [
     { icon: Github, label: 'GitHub', url: 'https://github.com/salahuddingfx', bg: '#1F2937', iconBg: 'rgba(255,255,255,0.2)' },
-    { icon: MessageCircle, label: 'WhatsApp', url: 'https://wa.me/8801851075537', bg: '#059669', iconBg: 'rgba(255,255,255,0.2)' },
-    { icon: Facebook, label: 'Facebook', url: 'https://facebook.com/salahuddingfx', bg: '#2563EB', iconBg: 'rgba(255,255,255,0.2)' },
+    { icon: MessageCircle, label: 'WhatsApp', url: 'https://wa.me/8801570249299', bg: '#25D366', iconBg: 'rgba(255,255,255,0.2)' },
+    { icon: Facebook, label: 'Facebook', url: 'https://facebook.com/salahuddingfx', bg: '#1877F2', iconBg: 'rgba(255,255,255,0.2)' },
     { icon: Globe, label: 'Portfolio', url: 'https://salahuddin.codes', bg: '#BE123C', iconBg: 'rgba(255,255,255,0.2)' },
-    { icon: Mail, label: 'Email', url: 'mailto:salauddinkaderappy@gmail.com', bg: '#DC2626', iconBg: 'rgba(255,255,255,0.2)' }
+    { icon: Mail, label: 'Personal Email', url: 'mailto:salauddinkaderappy@gmail.com', bg: '#DC2626', iconBg: 'rgba(255,255,255,0.2)' }
   ];
 
   return (
@@ -115,10 +115,10 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
               <h3 className="text-2xl sm:text-3xl font-bold text-maroon dark:text-pink-600">About Me</h3>
             </div>
             <p className="text-sm sm:text-lg text-slate-700 dark:text-slate-300 leading-relaxed border-l-4 border-maroon dark:border-pink-600 pl-4 sm:pl-6 py-1 italic shadow-sm bg-maroon/5 dark:bg-pink-600/5 rounded-r-2xl">
-              "Passionate Full Stack Developer specializing in the MERN stack with 1.5+ years of experience
-              building scalable web applications. I create beautiful, user-friendly interfaces and robust
-              backend systems. Based in the scenic Cox's Bazar, I work with clients worldwide to bring
-              their digital visions to life."
+              "I am Salah Uddin Kader, a passionate Full Stack Developer specializing in the MERN stack with 1.5+ years of professional experience.
+              I pride myself on creating high-performance, visually stunning e-commerce solutions and custom web applications.
+              Based in the heart of Cox's Bazar, I'm dedicated to delivering excellence and helping businesses thrive in the digital landscape.
+              Let's build something extraordinary together!"
             </p>
           </div>
 
@@ -250,7 +250,7 @@ const DeveloperProfile = ({ isOpen, onClose }) => {
               className="inline-flex items-center space-x-3 px-8 py-4 bg-white text-maroon font-bold text-lg rounded-2xl hover:bg-cream-light hover:scale-105 transition-all duration-300 shadow-2xl"
             >
               <Mail className="h-6 w-6" />
-              <span>Get In Touch</span>
+              <span>Direct Hire / Collaborate</span>
             </a>
           </div>
         </div>

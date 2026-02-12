@@ -163,7 +163,7 @@ const createTestOrder = async () => {
     console.log('\n📧 Sending admin notification email...');
     try {
       await sendEmail(
-        process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
+        process.env.SUPER_ADMIN_EMAIL || 'info.rongrani@gmail.com',
         `🛒 New Order #${order._id} - RongRani`,
         'adminNewOrder',
         {

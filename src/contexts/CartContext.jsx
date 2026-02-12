@@ -17,6 +17,10 @@ export const CartProvider = ({ children }) => {
     const savedCart = localStorage.getItem('cart');
     return savedCart ? JSON.parse(savedCart) : [];
   });
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
 
   useEffect(() => {
     // Save cart to localStorage whenever it changes
@@ -116,7 +120,11 @@ export const CartProvider = ({ children }) => {
     addToCart,
     removeFromCart,
     updateQuantity,
-    clearCart
+    updateQuantity,
+    clearCart,
+    isCartOpen,
+    openCart,
+    closeCart
   };
 
   return (

@@ -251,7 +251,7 @@ const PrivacyPolicy = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3 text-charcoal-light">
                 <Mail className="h-5 w-5 text-emerald-600" />
-                <span>salauddinkaderappy@gmail.com</span>
+                <span>info.rongrani@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3 text-charcoal-light">
                 <Phone className="h-5 w-5 text-emerald-600" />

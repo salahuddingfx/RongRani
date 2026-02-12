@@ -1,5 +1,6 @@
 const Category = require('../models/Category');
 const Product = require('../models/Product');
+const Order = require('../models/Order');
 
 const emitEvent = (req, event, payload) => {
   const io = req.app?.get('io');
@@ -17,16 +18,28 @@ exports.getAllCategories = async (req, res) => {
     const categories = await Category.find(query)
       .sort({ order: 1, name: 1 });
 
-    // Calculate product count for each category
+    // Calculate product count and order count for each category
     const categoriesWithCount = await Promise.all(
       categories.map(async (category) => {
+        // 1. Count Products in this category
         const productCount = await Product.countDocuments({
           category: category.name,
           isActive: true
         });
+
+        // 2. Count Orders containing products from this category
+        // First, find all product IDs in this category (including inactive ones to be accurate about history)
+        const productsInCategory = await Product.find({ category: category.name }).select('_id');
+        const productIds = productsInCategory.map(p => p._id);
+
+        const orderCount = await Order.countDocuments({
+          'items.product': { $in: productIds }
+        });
+
         return {
           ...category.toObject(),
-          productCount
+          productCount,
+          orderCount
         };
       })
     );

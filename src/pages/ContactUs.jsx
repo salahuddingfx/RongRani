@@ -61,12 +61,8 @@ const ContactUs = () => {
             </div>
             <h3 className="text-xl font-bold text-charcoal mb-2">Email Us</h3>
             <p className="text-slate mb-3">We reply within 24 hours</p>
-            <a href="mailto:chirkutghor@gmail.com" className="text-maroon font-semibold hover:underline">
-              chirkutghor@gmail.com
-            </a>
-            <br />
-            <a href="mailto:salauddinkaderappy@gmail.com" className="text-maroon font-semibold hover:underline">
-              salauddinkaderappy@gmail.com
+            <a href="mailto:info.rongrani@gmail.com" className="text-maroon font-semibold hover:underline">
+              info.rongrani@gmail.com
             </a>
           </div>
 
@@ -203,13 +199,13 @@ const ContactUs = () => {
                 Stay updated with our latest gift collections and special offers
               </p>
               <div className="flex space-x-4">
-                <a href="#" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+                <a href="https://facebook.com/rongrani" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
                   <Facebook className="h-6 w-6" />
                 </a>
-                <a href="#" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+                <a href="https://instagram.com/rongrani" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
                   <Instagram className="h-6 w-6" />
                 </a>
-                <a href="#" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+                <a href="https://twitter.com/rongrani" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
                   <Twitter className="h-6 w-6" />
                 </a>
               </div>

@@ -102,7 +102,7 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     required: true,
-    enum: ['card', 'paypal', 'bank', 'cod', 'bkash', 'nagad', 'rocket', 'upay'],
+    enum: ['card', 'paypal', 'bank', 'cod', 'bkash', 'nagad', 'bkash_manual', 'nagad_manual', 'rocket', 'upay', 'sslcommerz'],
   },
   paymentDetails: {
     transactionId: String,

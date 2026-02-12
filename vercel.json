@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "https://rongrani.onrender.com/sitemap.xml"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "https://rongrani.onrender.com/api/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

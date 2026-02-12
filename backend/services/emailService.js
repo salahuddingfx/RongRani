@@ -159,7 +159,7 @@ const emailTemplates = {
             <p style="font-size: 14px; margin-top: 20px; color: #666;"><strong>Payment Method:</strong> ${order.paymentMethod?.toUpperCase()}</p>
 
             <center>
-              <a href="${process.env.FRONTEND_URL}/track-order/${order._id}${order.trackingQuery || ''}" class="button">
+              <a href="${process.env.FRONTEND_URL}/track/${order._id}${order.trackingQuery || ''}" class="button">
                 Track My Parcel 🚚
               </a>
             </center>
@@ -167,12 +167,12 @@ const emailTemplates = {
           <div class="footer">
             <p style="font-weight: bold; margin-bottom: 10px;">RongRani - Premium Handcrafted Gifts</p>
             <p>Cox's Bazar, Bangladesh</p>
-            <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
+            <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
             <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
                <p>© ${new Date().getFullYear()} RongRani. All rights reserved.</p>
                <div style="margin-top: 15px;">
-                  <a href="https://facebook.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
-                  <a href="https://instagram.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+                  <a href="https://facebook.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
+                  <a href="https://instagram.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
                   <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
                </div>
             </div>
@@ -223,20 +223,20 @@ const emailTemplates = {
             <p><strong>Order Status:</strong> <span class="status-badge">${status.toUpperCase()}</span></p>
             
             <center>
-              <a href="${process.env.FRONTEND_URL}/profile/orders/${data.orderId}" class="button">
+              <a href="${process.env.FRONTEND_URL}/track/${data.orderId}${data.trackingQuery || ''}" class="button">
                 View Order Details
               </a>
             </center>
           </div>
           <div class="footer">
             <p><strong>Questions?</strong></p>
-            <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
+            <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
             <p style="margin-top: 20px; color: #666; font-size: 12px;">
               © ${new Date().getFullYear()} RongRani. All rights reserved.
             </p>
             <div style="margin-top: 15px;">
-              <a href="https://facebook.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
-              <a href="https://instagram.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+              <a href="https://facebook.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
+              <a href="https://instagram.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
               <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
             </div>
           </div>
@@ -278,10 +278,10 @@ const emailTemplates = {
           </center>
         </div>
         <div class="footer">
-          <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
+          <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
           <div style="margin-top: 15px;">
-            <a href="https://facebook.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
-            <a href="https://instagram.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+            <a href="https://facebook.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
+            <a href="https://instagram.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
             <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
           </div>
         </div>
@@ -413,23 +413,61 @@ const emailTemplates = {
           
           <center>
             <p class="star">★★★★★</p>
-            <a href="${process.env.FRONTEND_URL}/track-order/${data.orderId}" class="button">
+            <a href="${process.env.FRONTEND_URL}/track/${data.orderId}${data.trackingQuery || ''}" class="button">
               Write a Review
             </a>
           </center>
         </div>
         <div class="footer">
           <p>Thank you for supporting handmade!</p>
-          <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
+          <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
         </div>
         <div class="footer">
           <p>Thank you for supporting handmade!</p>
-          <p>📞 01851075537 | 📧 salauddinkaderappy@gmail.com</p>
+          <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
           <div style="margin-top: 15px;">
-            <a href="https://facebook.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
-            <a href="https://instagram.com/rongranibd" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
+            <a href="https://facebook.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
+            <a href="https://instagram.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
             <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
           </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `,
+  // Low Stock Alert (Admin)
+  lowStockAlert: (data) => `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <style>
+        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }
+        .header { background: #fee2e2; color: #991b1b; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+        .content { padding: 20px; }
+        .product-box { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
+        .btn { display: inline-block; padding: 10px 20px; background: #991b1b; color: white !important; text-decoration: none; border-radius: 5px; margin-top: 10px; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h1>⚠️ Low Stock Alert</h1>
+        </div>
+        <div class="content">
+          <p>The following product is running low on stock:</p>
+          
+          <div class="product-box">
+            <h3>${data.name}</h3>
+            <p><strong>Remaining Stock:</strong> <span style="color: #dc2626; font-weight: bold; font-size: 18px;">${data.stock}</span></p>
+            <p><strong>Product ID:</strong> ${data._id}</p>
+          </div>
+
+          <p>Please restock this item soon to avoid losing sales.</p>
+          
+          <center>
+            <a href="${process.env.FRONTEND_URL}/admin/products" class="btn">Manage Inventory</a>
+          </center>
         </div>
       </div>
     </body>
@@ -551,22 +589,33 @@ const sendOrderConfirmation = (orderData, attachments = []) => {
   );
 };
 
-const sendOrderStatusUpdate = (email, name, orderId, status, trackingNumber) => {
+const sendOrderStatusUpdate = (email, name, orderId, status, trackingNumber, trackingQuery) => {
   return sendEmail(
     email,
     `Order Status Update - ${orderId}`,
     'orderStatusUpdate',
-    { name, orderId, status, trackingNumber }
+    { name, orderId, status, trackingNumber, trackingQuery }
   );
 };
 
 
-const sendReviewRequest = (email, name, orderId) => {
+const sendReviewRequest = (email, name, orderId, trackingQuery) => {
   return sendEmail(
     email,
     `Rate your experience with RongRani! ⭐`,
     'reviewRequest',
-    { name, orderId }
+    { name, orderId, trackingQuery }
+  );
+};
+
+const sendLowStockAlert = (product) => {
+  const adminEmail = process.env.SUPER_ADMIN_EMAIL || process.env.SMTP_USER || 'info.rongrani@gmail.com';
+  console.log(`⚠️ Sending Low Stock Alert for ${product.name} to ${adminEmail}`);
+  return sendEmail(
+    adminEmail,
+    `⚠️ Low Stock: ${product.name} (${product.stock} left)`,
+    'lowStockAlert',
+    product
   );
 };
 
@@ -574,5 +623,6 @@ module.exports = {
   sendEmail,
   sendOrderConfirmation,
   sendOrderStatusUpdate,
-  sendReviewRequest
+  sendReviewRequest,
+  sendLowStockAlert
 };

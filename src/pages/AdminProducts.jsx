@@ -283,7 +283,25 @@ const AdminProducts = () => {
                       className="h-16 w-16 object-cover rounded-lg shadow-soft"
                     />
                   </td>
-                  <td className="px-6 py-4 font-semibold text-charcoal">{product.name}</td>
+                  <td className="px-6 py-4 font-semibold text-charcoal">
+                    <div className="flex flex-col">
+                      <span>{product.name}</span>
+                      <div className="flex items-center gap-1 mt-1">
+                        {product.tags && product.tags.length > 0 && (
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100" title={`Tags: ${product.tags.join(', ')}`}>
+                            <Tag className="w-3 h-3 mr-1" />
+                            {product.tags.length}
+                          </span>
+                        )}
+                        {(product.seoTitle || product.seoDescription) && (
+                          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-green-50 text-green-700 border border-green-100" title="SEO Meta Data Configured">
+                            <Globe className="w-3 h-3 mr-1" />
+                            SEO
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </td>
                   <td className="px-6 py-4">
                     <span className="px-3 py-1 bg-maroon/10 text-maroon rounded-full text-sm font-medium">
                       {product.category}
@@ -434,19 +452,21 @@ const AdminProducts = () => {
                 </p>
               </div>
 
-              <div className="border-t border-slate/10 pt-6 mt-6">
-                <h3 className="text-xl font-bold text-maroon mb-6 flex items-center space-x-2">
-                  <Settings className="h-6 w-6" />
-                  <span>SEO & Search Optimization</span>
+              <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 mt-6">
+                <h3 className="text-lg font-bold text-maroon mb-4 flex items-center space-x-2 border-b border-slate-200 pb-2">
+                  <div className="bg-maroon/10 p-1.5 rounded-lg">
+                    <Settings className="h-5 w-5 text-maroon" />
+                  </div>
+                  <span>SEO & Search Optimization 🚀</span>
                 </h3>
 
-                <div className="space-y-6">
+                <div className="space-y-5">
                   <div>
-                    <label className="flex items-center text-sm font-semibold text-slate mb-2">
+                    <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
                       <Tag className="h-4 w-4 mr-2 text-maroon" />
                       Search Tags (Keywords)
-                      <span className="text-xs font-normal text-slate-500 ml-2">
-                        💡 Separate with commas (e.g., gift, handmade, birthday)
+                      <span className="text-xs font-normal text-slate-500 ml-auto bg-white px-2 py-1 rounded border border-slate-200">
+                        Separated by commas
                       </span>
                     </label>
                     <input
@@ -454,36 +474,45 @@ const AdminProducts = () => {
                       value={formData.tags}
                       onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                       className="input-field w-full"
-                      placeholder="gift, surprise, handmade, pottery"
+                      placeholder="e.g. gift, handmade, birthday, surprise box, anniversary"
                     />
+                    <p className="text-xs text-slate-500 mt-1.5 ml-1">
+                      Start typing keywords that customers might search for...
+                    </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                      <label className="flex items-center text-sm font-semibold text-slate mb-2">
+                      <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
                         <Globe className="h-4 w-4 mr-2 text-maroon" />
-                        SEO Title
+                        Meta Title
                       </label>
                       <input
                         type="text"
                         value={formData.seoTitle}
                         onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })}
                         className="input-field w-full"
-                        placeholder="Premium Handmade Pottery Vase"
+                        placeholder={formData.name || "Product Name"}
                       />
+                      <p className="text-xs text-slate-500 mt-1.5 ml-1">
+                        Leave blank to use product name
+                      </p>
                     </div>
                     <div>
-                      <label className="flex items-center text-sm font-semibold text-slate mb-2">
+                      <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
                         <Search className="h-4 w-4 mr-2 text-maroon" />
-                        SEO Description
+                        Meta Description
                       </label>
                       <textarea
                         value={formData.seoDescription}
                         onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
                         className="input-field w-full"
                         rows="2"
-                        placeholder="Best handcrafted pottery in Bangladesh with free shipping..."
+                        placeholder="Short summary for Google search results..."
                       />
+                      <p className="text-xs text-slate-500 mt-1.5 ml-1">
+                        Leave blank to auto-generate from description
+                      </p>
                     </div>
                   </div>
                 </div>

@@ -414,9 +414,9 @@ const OrderTracking = () => {
                   <Phone className="h-4 w-4" />
                   <span>+880 18510-75537</span>
                 </a>
-                <a href="mailto:salauddinkaderappy@gmail.com" className="flex items-center space-x-2 text-maroon hover:underline">
+                <a href="mailto:info.rongrani@gmail.com" className="flex items-center space-x-2 text-maroon hover:underline">
                   <Mail className="h-4 w-4" />
-                  <span>salauddinkaderappy@gmail.com</span>
+                  <span>info.rongrani@gmail.com</span>
                 </a>
               </div>
             </div>

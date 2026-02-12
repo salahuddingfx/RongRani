@@ -35,7 +35,7 @@ const Checkout = () => {
     zipCode: user?.address?.zipCode || '',
     transactionId: '',
     senderLastDigits: '',
-    paymentMethod: 'cod',
+    paymentMethod: 'cod', // Default to COD
     giftMessage: ''
   });
 
@@ -46,12 +46,13 @@ const Checkout = () => {
     });
   };
 
+  // Reset coupon only if the cart subtotal changes (items added/removed)
   useEffect(() => {
     if (couponInfo) {
       setCouponInfo(null);
       setDiscount(0);
     }
-  }, [totalPrice, couponInfo]);
+  }, [totalPrice]);
 
   // Fetch delivery charge from backend when address or total price changes
   useEffect(() => {
@@ -118,7 +119,7 @@ const Checkout = () => {
         return;
       }
 
-      if (['bkash', 'nagad', 'rocket'].includes(formData.paymentMethod)) {
+      if (['bkash_manual', 'nagad_manual', 'rocket', 'upay'].includes(formData.paymentMethod)) {
         if (!formData.transactionId || !formData.senderLastDigits) {
           toast.error('Please provide transaction ID and sender last 4 digits');
           setLoading(false);
@@ -198,7 +199,9 @@ const Checkout = () => {
       clearCart();
 
       // Handle Payment Redirection
-      if (formData.paymentMethod === 'sslcommerz') {
+      // Handle Automatic Payment Redirection (bkash, nagad, sslcommerz)
+      const gatewayMethods = ['sslcommerz', 'bkash', 'nagad'];
+      if (gatewayMethods.includes(formData.paymentMethod)) {
         try {
           const paymentResponse = await axios.post('/api/payment/init', {
             orderId: newOrder._id || newOrder.order?._id
@@ -211,7 +214,7 @@ const Checkout = () => {
         } catch (paymentError) {
           console.error('Payment init failed:', paymentError);
           toast.error('Payment initialization failed. Please check your order in dashboard.');
-          navigate('/orders'); // Fallback
+          navigate('/orders');
           return;
         }
       }
@@ -219,8 +222,8 @@ const Checkout = () => {
       // Show different messages based on payment method
       if (formData.paymentMethod === 'cod') {
         toast.success('Order placed successfully! We will contact you soon.');
-      } else if (formData.paymentMethod !== 'sslcommerz') {
-        toast.success(`Order placed! We'll call you to confirm ${formData.paymentMethod.toUpperCase()} payment.`);
+      } else if (!gatewayMethods.includes(formData.paymentMethod)) {
+        toast.success(`Order placed! We'll call you to confirm ${formData.paymentMethod.toUpperCase().replace('_MANUAL', '')} payment.`);
       }
 
       // Navigate based on auth status
@@ -348,36 +351,52 @@ const Checkout = () => {
                   <span>Subtotal</span>
                   <span>৳{totalPrice}</span>
                 </div>
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-slate">
-                    Coupon Code
+                <div className="space-y-3 bg-white/50 dark:bg-gray-700/50 p-4 rounded-xl border border-maroon/10">
+                  <label className="block text-sm font-bold text-maroon dark:text-pink-600">
+                    Apply Coupon Code
                   </label>
-                  <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex gap-2">
                     <input
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      className="input-field flex-1"
-                      placeholder="Enter coupon code"
+                      className="flex-1 bg-white border-2 border-maroon/20 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-maroon transition-all"
+                      placeholder="Enter code (e.g. WELCOME10)"
+                      disabled={couponInfo}
                     />
                     <button
                       type="button"
                       onClick={handleApplyCoupon}
-                      disabled={couponLoading}
-                      className="bg-maroon text-white px-4 py-2 rounded-lg font-semibold disabled:opacity-60"
+                      disabled={couponLoading || (!couponCode.trim() && !couponInfo)}
+                      className={`px-6 py-2 rounded-xl font-bold text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${couponInfo
+                        ? 'bg-red-500 hover:bg-red-600 text-white'
+                        : 'bg-maroon hover:bg-maroon/90 text-white disabled:opacity-50'
+                        }`}
                     >
-                      {couponInfo ? 'Remove' : couponLoading ? 'Applying...' : 'Apply'}
+                      {couponLoading ? '...' : couponInfo ? 'Remove' : 'Apply'}
                     </button>
                   </div>
                   {couponInfo && (
-                    <p className="text-xs text-green-700 font-semibold">
-                      Applied {couponInfo.code} • Saved ৳{discount.toFixed(0)}
-                    </p>
+                    <div className="flex items-center gap-2 text-green-700 bg-green-50 px-3 py-2 rounded-lg border border-green-100 animate-fade-in">
+                      <span className="text-lg">🎉</span>
+                      <p className="text-xs font-bold">
+                        Coupon "{couponInfo.code}" applied! You saved ৳{discount.toFixed(0)}
+                      </p>
+                    </div>
                   )}
                 </div>
-                <div className="flex justify-between">
-                  <span>Shipping</span>
-                  <span>{deliveryLoading ? '...' : `৳${shipping}`}</span>
+                <div className="flex justify-between py-1">
+                  <span className="text-slate-600 font-medium">Shipping Charge</span>
+                  <span className={`font-bold ${shipping === 0 && !deliveryLoading ? 'text-green-600' : ''}`}>
+                    {deliveryLoading ? (
+                      <span className="flex items-center gap-2">
+                        <div className="w-3 h-3 border-2 border-maroon border-t-transparent rounded-full animate-spin" />
+                        Calculating...
+                      </span>
+                    ) : (!formData.district || !formData.city) ? (
+                      <span className="text-xs text-slate-400 font-normal italic">Enter address to calculate</span>
+                    ) : shipping === 0 ? 'FREE' : `৳${shipping}`}
+                  </span>
                 </div>
                 {giftWrapping && (
                   <div className="flex justify-between text-amber-600">
@@ -610,100 +629,109 @@ const Checkout = () => {
                     <span className="ml-3 font-semibold text-charcoal">💵 Cash on Delivery</span>
                   </label>
 
-                  {/* SSLCommerz Option - Separate */}
-                  <label className="flex items-center p-3 border-2 border-maroon rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="sslcommerz"
-                      checked={formData.paymentMethod === 'sslcommerz'}
-                      onChange={handleChange}
-                      className="text-maroon focus:ring-maroon h-4 w-4"
-                    />
-                    <span className="ml-3 font-semibold text-charcoal">💳 Online Payment (Card/Bkash/Nagad via SSLCommerz)</span>
-                  </label>
-
-                  {/* Manual Mobile Banking */}
-                  <div className="border-2 border-maroon/30 rounded-lg p-4 bg-white/70">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-                      <p className="font-bold text-maroon">📱 Manual Mobile Banking</p>
-                      <span className="inline-flex items-center justify-center px-3 py-1 rounded-full bg-maroon text-white text-sm font-semibold">
-                        01764723083
-                      </span>
+                  {/* Manual Mobile Banking - YOUR CURRENT PRIMARY METHOD */}
+                  <div className="border-2 border-maroon/30 rounded-xl p-5 bg-white shadow-sm overflow-hidden">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="bg-maroon/10 p-2 rounded-lg">
+                        {/* Assuming User icon is available, e.g., from lucide-react or similar */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-maroon"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                      </div>
+                      <h3 className="font-bold text-gray-800">Manual Mobile Banking (Pay First)</h3>
                     </div>
-                    <ol className="text-sm text-charcoal space-y-1">
-                      <li>1) Send full payment to the number above.</li>
-                      <li>2) Use your own number for payment.</li>
-                      <li>3) Enter Transaction ID and last 4 digits below.</li>
-                    </ol>
-                    <div className="space-y-2 ml-3 mt-3">
-                      <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                      <div className="bg-pink-50 p-3 rounded-xl border border-pink-100">
+                        <p className="text-xs text-pink-600 font-bold uppercase mb-1">bKash (Personal)</p>
+                        <p className="text-lg font-black text-pink-700">01851075537</p>
+                      </div>
+                      <div className="bg-orange-50 p-3 rounded-xl border border-orange-100">
+                        <p className="text-xs text-orange-600 font-bold uppercase mb-1">Nagad (Personal)</p>
+                        <p className="text-lg font-black text-orange-700">01851075537</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3 mb-5">
+                      <label className={`flex items-center p-3 rounded-xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'bkash_manual' ? 'border-pink-500 bg-pink-50' : 'border-gray-100 hover:border-gray-200'}`}>
                         <input
                           type="radio"
                           name="paymentMethod"
-                          value="bkash"
-                          checked={formData.paymentMethod === 'bkash'}
+                          value="bkash_manual"
+                          checked={formData.paymentMethod === 'bkash_manual'}
                           onChange={handleChange}
-                          className="text-maroon focus:ring-maroon h-4 w-4"
+                          className="text-pink-600 focus:ring-pink-500 h-5 w-5"
                         />
-                        <span className="ml-3 text-charcoal">bKash (Manual)</span>
+                        <span className="ml-3 font-bold text-gray-700">bKash Manual</span>
                       </label>
-                      <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
+
+                      <label className={`flex items-center p-3 rounded-xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'nagad_manual' ? 'border-orange-500 bg-orange-50' : 'border-gray-100 hover:border-gray-200'}`}>
                         <input
                           type="radio"
                           name="paymentMethod"
-                          value="nagad"
-                          checked={formData.paymentMethod === 'nagad'}
+                          value="nagad_manual"
+                          checked={formData.paymentMethod === 'nagad_manual'}
                           onChange={handleChange}
-                          className="text-maroon focus:ring-maroon h-4 w-4"
+                          className="text-orange-600 focus:ring-orange-500 h-5 w-5"
                         />
-                        <span className="ml-3 text-charcoal">Nagad (Manual)</span>
+                        <span className="ml-3 font-bold text-gray-700">Nagad Manual</span>
                       </label>
-                      <label className="flex items-center p-2 rounded cursor-pointer hover:bg-maroon/5 transition-colors">
+
+                      <label className={`flex items-center p-3 rounded-xl border-2 cursor-pointer transition-all ${formData.paymentMethod === 'rocket' ? 'border-purple-500 bg-purple-50' : 'border-gray-100 hover:border-gray-200'}`}>
                         <input
                           type="radio"
                           name="paymentMethod"
                           value="rocket"
                           checked={formData.paymentMethod === 'rocket'}
                           onChange={handleChange}
-                          className="text-maroon focus:ring-maroon h-4 w-4"
+                          className="text-purple-600 focus:ring-purple-500 h-5 w-5"
                         />
-                        <span className="ml-3 text-charcoal">Rocket (Manual)</span>
+                        <span className="ml-3 font-bold text-gray-700">Rocket (01764723083)</span>
                       </label>
                     </div>
 
-                    {/* Show fields only for Manual Mobile Banking */}
-                    {['bkash', 'nagad', 'rocket'].includes(formData.paymentMethod) && (
-                      <div className="mt-4 ml-3 space-y-3 animate-fade-in-up">
+                    {/* Transaction Fields */}
+                    {['bkash_manual', 'nagad_manual', 'rocket', 'upay'].includes(formData.paymentMethod) && (
+                      <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-4 animate-slide-up">
+                        <p className="text-xs text-gray-500 font-medium">Please send the total amount and enter the details below:</p>
                         <div>
-                          <label className="block text-sm font-semibold text-slate mb-2">
-                            Transaction ID <span className="text-red-500">*</span>
-                          </label>
+                          <label className="block text-xs font-bold text-gray-600 mb-1 uppercase">Transaction ID</label>
                           <input
                             type="text"
                             name="transactionId"
                             value={formData.transactionId}
                             onChange={handleChange}
-                            className="input-field"
+                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-maroon/20 outline-none"
                             placeholder="e.g. 8A7B6C5D"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-semibold text-slate mb-2">
-                            Sender Number (last 4 digits) <span className="text-red-500">*</span>
-                          </label>
+                          <label className="block text-xs font-bold text-gray-600 mb-1 uppercase">Sender Last 4 Digits</label>
                           <input
                             type="text"
                             name="senderLastDigits"
                             value={formData.senderLastDigits}
                             onChange={handleChange}
-                            className="input-field"
+                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-maroon/20 outline-none"
                             placeholder="e.g. 2383"
                             maxLength={4}
                           />
                         </div>
                       </div>
                     )}
+                  </div>
+
+                  {/* Automatic Merchant PGW - FUTURE USE */}
+                  <div className="mt-8 pt-8 border-t border-gray-100">
+                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Automatic Payment (Coming Soon)</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {['bkash', 'nagad', 'sslcommerz'].map((method) => (
+                        <label key={method} className="opacity-50 grayscale cursor-not-allowed flex items-center justify-center p-3 border border-gray-200 rounded-xl relative group">
+                          <span className="text-[10px] font-bold text-gray-500 capitalize">{method}</span>
+                          <div className="absolute inset-0 flex items-center justify-center bg-white/80 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span className="text-[8px] font-bold text-maroon">API PENDING</span>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>

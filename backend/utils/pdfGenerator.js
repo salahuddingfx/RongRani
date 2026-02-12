@@ -35,7 +35,7 @@ const generateInvoice = (order) => {
       }
 
       doc.fontSize(9).fillColor('#FFFFFF').text('Cox\'s Bazar, Bangladesh', 120, 95);
-      doc.fontSize(9).text('Email: salauddinkaderappy@gmail.com', 120, 108);
+      doc.fontSize(9).text('Email: info.rongrani@gmail.com', 120, 108);
       doc.fontSize(9).text('Phone: +880 1851-075537', 120, 121);
 
       // Invoice title on the right
@@ -73,46 +73,47 @@ const generateInvoice = (order) => {
 
       // Customer details section
       let yPos = 290;
-      doc.fillColor('#8B1538').fontSize(14).font('Helvetica-Bold').text('BILL TO:', 50, yPos);
+      doc.fontSize(10).font('Helvetica-Bold').text('SHIP TO:', 50, yPos);
       doc.fillColor('#000000').font('Helvetica');
 
-      yPos += 25;
+      yPos += 20;
       const shipping = order.shippingAddress || {};
 
       doc.fontSize(12).font('Helvetica-Bold').text(shipping.name || '', 50, yPos);
       yPos += 18;
-      doc.fontSize(10).font('Helvetica').text(shipping.email || '', 50, yPos);
+      doc.fontSize(10).font('Helvetica').text(`Phone: ${shipping.phone || ''}`, 50, yPos);
       yPos += 15;
-      doc.text(shipping.phone || '', 50, yPos);
-      yPos += 15;
-      const addressParts = [
-        shipping.street,
-        shipping.union,
-        shipping.subDistrict,
-        shipping.district
-      ].filter(Boolean);
-
-      const cityParts = [
-        shipping.city,
-        shipping.zipCode || shipping.postalCode
-      ].filter(Boolean);
-
-      addressParts.forEach(part => {
-        if (part) {
-          doc.text(part, 50, yPos, { width: 280 });
-          yPos += 14;
-        }
-      });
-
-      if (cityParts.length > 0) {
-        doc.text(cityParts.join(' - '), 50, yPos, { width: 280 });
+      if (shipping.email) {
+        doc.text(`Email: ${shipping.email}`, 50, yPos);
         yPos += 15;
       }
 
+      doc.fontSize(10).font('Helvetica-Bold').text('Address:', 50, yPos);
+      yPos += 14;
+      doc.font('Helvetica');
+
+      const addressLine1 = [
+        shipping.street,
+        shipping.union
+      ].filter(Boolean).join(', ');
+
+      const addressLine2 = [
+        shipping.subDistrict,
+        shipping.district
+      ].filter(Boolean).join(', ');
+
+      const addressLine3 = [
+        shipping.city,
+        shipping.zipCode || shipping.postalCode
+      ].filter(Boolean).join(' - ');
+
+      if (addressLine1) { doc.text(addressLine1, 50, yPos, { width: 250 }); yPos += 14; }
+      if (addressLine2) { doc.text(addressLine2, 50, yPos, { width: 250 }); yPos += 14; }
+      if (addressLine3) { doc.text(addressLine3, 50, yPos, { width: 250 }); yPos += 14; }
       doc.text(shipping.country || 'Bangladesh', 50, yPos);
 
       // Items table
-      yPos += 35;
+      yPos += 45;
       const tableTop = yPos;
 
       // Table header background
@@ -120,9 +121,9 @@ const generateInvoice = (order) => {
 
       // Table headers
       doc.font('Helvetica-Bold').fontSize(11).fillColor('#FFFFFF');
-      doc.text('PRODUCT', 60, tableTop + 10, { width: 200 });
-      doc.text('QTY', 270, tableTop + 10, { width: 50, align: 'center' });
-      doc.text('UNIT PRICE', 330, tableTop + 10, { width: 100, align: 'right' });
+      doc.text('PRODUCT', 65, tableTop + 10, { width: 220 });
+      doc.text('QTY', 290, tableTop + 10, { width: 40, align: 'center' });
+      doc.text('UNIT PRICE', 340, tableTop + 10, { width: 90, align: 'right' });
       doc.text('AMOUNT', 440, tableTop + 10, { width: 95, align: 'right' });
 
       // Table rows
@@ -130,18 +131,24 @@ const generateInvoice = (order) => {
       doc.font('Helvetica').fontSize(10).fillColor('#000000');
 
       order.items.forEach((item, index) => {
-        // Alternate row background
+        // Stripe rows
         if (index % 2 === 0) {
-          doc.rect(50, yPos - 5, 495, 25).fill('#f9fafb');
+          doc.rect(50, yPos - 5, 495, 25).fill('#f8f9fa');
           doc.fillColor('#000000');
         }
 
-        doc.text(item.name || 'Product', 60, yPos, { width: 200 });
-        doc.text(item.quantity.toString(), 270, yPos, { width: 50, align: 'center' });
-        doc.text(`Tk ${item.price.toFixed(2)}`, 330, yPos, { width: 100, align: 'right' });
-        doc.font('Helvetica-Bold').text(`Tk ${(item.price * item.quantity).toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+        doc.text(item.name || 'Product', 65, yPos, { width: 220 });
+        doc.text(item.quantity.toString(), 290, yPos, { width: 40, align: 'center' });
+        doc.text(`Tk ${item.price.toLocaleString()}`, 340, yPos, { width: 90, align: 'right' });
+        doc.font('Helvetica-Bold').text(`Tk ${(item.price * item.quantity).toLocaleString()}`, 440, yPos, { width: 95, align: 'right' });
         doc.font('Helvetica');
         yPos += 25;
+
+        // Check for page break
+        if (yPos > 680) {
+          doc.addPage();
+          yPos = 50;
+        }
       });
 
       // Separator line
@@ -154,24 +161,25 @@ const generateInvoice = (order) => {
 
       doc.fontSize(10).fillColor('#666666');
       doc.text('Subtotal:', totalsX, yPos, { width: 100, align: 'right' });
-      doc.fillColor('#000000').text(`Tk ${order.subtotal.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+      doc.fillColor('#000000').text(`Tk ${order.subtotal.toLocaleString()}`, 440, yPos, { width: 95, align: 'right' });
       yPos += 18;
 
       if (order.tax && order.tax > 0) {
         doc.fillColor('#666666').text('Tax:', totalsX, yPos, { width: 100, align: 'right' });
-        doc.fillColor('#000000').text(`Tk ${order.tax.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+        doc.fillColor('#000000').text(`Tk ${order.tax.toLocaleString()}`, 440, yPos, { width: 95, align: 'right' });
         yPos += 18;
       }
 
-      if (order.shipping && order.shipping > 0) {
+      const shippingCharge = order.shipping || order.delivery?.charge || 0;
+      if (shippingCharge > 0) {
         doc.fillColor('#666666').text('Shipping:', totalsX, yPos, { width: 100, align: 'right' });
-        doc.fillColor('#000000').text(`Tk ${order.shipping.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+        doc.fillColor('#000000').text(`Tk ${shippingCharge.toLocaleString()}`, 440, yPos, { width: 95, align: 'right' });
         yPos += 18;
       }
 
       if (order.discount && order.discount > 0) {
         doc.fillColor('#666666').text('Discount:', totalsX, yPos, { width: 100, align: 'right' });
-        doc.fillColor('#16a34a').text(`-Tk ${order.discount.toFixed(2)}`, 440, yPos, { width: 95, align: 'right' });
+        doc.fillColor('#16a34a').text(`-Tk ${order.discount.toLocaleString()}`, 440, yPos, { width: 95, align: 'right' });
         yPos += 18;
       }
 
@@ -180,26 +188,44 @@ const generateInvoice = (order) => {
       doc.roundedRect(320, yPos - 8, 225, 35, 5).fill('#8B1538');
       doc.font('Helvetica-Bold').fontSize(14).fillColor('#FFFFFF');
       doc.text('TOTAL AMOUNT:', totalsX + 10, yPos + 3, { width: 100, align: 'right' });
-      doc.fontSize(16).text(`Tk ${order.total.toFixed(2)}`, 450, yPos + 3, { width: 85, align: 'right' });
+      doc.fontSize(16).text(`Tk ${order.total.toLocaleString()}`, 450, yPos + 3, { width: 85, align: 'right' });
 
-      // Footer section
-      yPos += 60;
+      // Signature section
+      yPos += 70;
+      const signatureY = yPos + 40;
+
+      // Left side: Customer Signature
+      doc.lineWidth(0.5).strokeColor('#999999');
+      doc.moveTo(50, signatureY).lineTo(180, signatureY).stroke();
+      doc.fontSize(9).fillColor('#444444').font('Helvetica');
+      doc.text('Customer\'s Signature', 50, signatureY + 5, { width: 130, align: 'center' });
+
+      // Right side: Authorized Signature
+      doc.moveTo(370, signatureY).lineTo(545, signatureY).stroke();
+
+      // Stylized internal authorized signature placeholder
+      doc.fontSize(14).fillColor('#8B1538').font('Helvetica-Bold');
+      doc.text('RongRani', 380, signatureY - 20, { width: 155, align: 'center', oblique: true });
+
+      doc.fontSize(9).fillColor('#444444').font('Helvetica');
+      doc.text('Authorized Signature', 370, signatureY + 5, { width: 175, align: 'center' });
+      doc.fontSize(8).fillColor('#999999');
+      doc.text('E-verified by RongRani Team', 370, signatureY + 18, { width: 175, align: 'center' });
 
       // Thank you message
-      doc.roundedRect(50, yPos, 495, 80, 5).fill('#f9fafb');
-      doc.fillColor('#8B1538').font('Helvetica-Bold').fontSize(14);
+      yPos += 80;
+      doc.roundedRect(50, yPos, 495, 60, 5).fill('#f8f9fa');
+      doc.fillColor('#8B1538').font('Helvetica-Bold').fontSize(12);
       doc.text('Thank You For Your Purchase!', 50, yPos + 15, { align: 'center', width: 495 });
 
-      doc.fillColor('#666666').font('Helvetica').fontSize(10);
-      doc.text('We appreciate your business. For any questions or concerns,', 50, yPos + 40, { align: 'center', width: 495 });
-      doc.text('please contact us at salauddinkaderappy@gmail.com', 50, yPos + 55, { align: 'center', width: 495 });
+      doc.fillColor('#666666').font('Helvetica').fontSize(9);
+      doc.text('We appreciate your business. For any questions, please contact info.rongrani@gmail.com', 50, yPos + 35, { align: 'center', width: 495 });
 
       // Page footer
-      const footerY = 750;
+      const footerY = 790;
       doc.moveTo(50, footerY).lineTo(545, footerY).stroke('#D4AF37');
       doc.fontSize(8).fillColor('#999999');
-      doc.text('This is a computer-generated invoice and does not require a signature.', 50, footerY + 10, { align: 'center', width: 495 });
-      doc.text('RongRani © 2026 • All Rights Reserved', 50, footerY + 25, { align: 'center', width: 495 });
+      doc.text('RongRani • Premium Handcrafted Gifts © 2026 • All Rights Reserved', 50, footerY + 10, { align: 'center', width: 495 });
 
       doc.end();
     } catch (error) {

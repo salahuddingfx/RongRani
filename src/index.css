@@ -24,6 +24,15 @@
     @apply bg-white text-charcoal transition-colors duration-300;
     background-color: #ffffff;
     /* Explicit override for line 504 */
+    cursor: none;
+    /* Hide default for custom cursor */
+  }
+
+  /* Keep cursor for mobile/touch if needed, though custom cursor is hidden there anyway */
+  @media (hover: none) and (pointer: coarse) {
+    body {
+      cursor: auto;
+    }
   }
 
   .dark body {
@@ -255,6 +264,8 @@
 
   .section-spacing {
     @apply py-20 lg:py-32;
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 500px;
   }
 
   .input-field {
@@ -638,6 +649,8 @@ body,
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  text-rendering: optimizeSpeed;
+  /* Boost rendering speed on mobile */
 }
 
 body {

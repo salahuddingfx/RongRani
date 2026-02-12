@@ -71,7 +71,7 @@ const TopNavBar = () => {
             <div className="hidden lg:flex items-center space-x-2 text-xs sm:text-sm bg-white/10 px-3 py-1 rounded-full border border-white/20">
               <span>Call: +8801851075537</span>
               <span className="text-white/60">|</span>
-              <span>Mail: salauddinkaderappy@gmail.com</span>
+              <span>Mail: info.rongrani@gmail.com</span>
             </div>
             <Globe className="h-3 w-3 sm:h-4 sm:w-4" />
             <select

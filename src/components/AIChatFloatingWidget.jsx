@@ -51,7 +51,7 @@ const AIChatFloatingWidget = () => {
     } else if (msg.includes('track') || msg.includes('order') || msg.includes('অর্ডার')) {
       return "📦 You can track your order from 'My Orders' page after logging in. We send email updates for every status change. Need help with a specific order?";
     } else if (msg.includes('contact') || msg.includes('call') || msg.includes('যোগাযোগ')) {
-      return "📞 Call us: +8801851075537 | Email: salauddinkaderappy@gmail.com | WhatsApp: Click the green button on left! We reply instantly!";
+      return "📞 Call us: +8801851075537 | Email: info.rongrani@gmail.com | WhatsApp: Click the green button on left! We reply instantly!";
     } else if (msg.includes('gift') || msg.includes('suggest') || msg.includes('উপহার')) {
       return "🎁 What's the occasion? Choose from: 💕 Love/Romance | 🎂 Birthday | 🎉 Anniversary | 💍 Proposal | 💐 Valentine's | 🎓 Graduation. Tell me and I'll suggest perfect gifts!";
     } else if (msg.includes('thanks') || msg.includes('thank') || msg.includes('ধন্যবাদ')) {
@@ -114,7 +114,7 @@ const AIChatFloatingWidget = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="floating-widget fixed bottom-24 lg:bottom-6 right-6 z-50 bg-maroon text-white rounded-full p-4 shadow-2xl hover:shadow-maroon/40 hover:scale-110 transition-all duration-300 group border-2 border-white/20"
+          className="floating-widget fixed bottom-24 lg:bottom-6 right-6 z-[1001] bg-maroon text-white rounded-full p-4 shadow-2xl hover:shadow-maroon/40 hover:scale-110 transition-all duration-300 group border-2 border-white/20"
           aria-label="Open AI Chat"
         >
           <Bot className="h-7 w-7 animate-pulse" />
@@ -127,7 +127,7 @@ const AIChatFloatingWidget = () => {
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="floating-widget fixed bottom-24 lg:bottom-6 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-[400px] sm:h-[520px] max-h-[60vh] sm:max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col animate-slide-up">
+        <div className="floating-widget fixed bottom-24 lg:bottom-6 right-4 sm:right-6 z-[1001] w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-[400px] sm:h-[520px] max-h-[60vh] sm:max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col animate-slide-up">
           {/* Header */}
           <div
             className="bg-maroon text-white p-4 flex items-center justify-between relative overflow-hidden"

@@ -74,13 +74,13 @@ const Footer = () => {
 
               {/* Social Links */}
               <div className="flex space-x-4">
-                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-maroon rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Facebook">
+                <a href="https://facebook.com/rongrani" className="w-10 h-10 bg-white/10 hover:bg-maroon rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Facebook">
                   <Facebook className="h-5 w-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-pink-600 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Instagram">
+                <a href="https://instagram.com/rongrani" className="w-10 h-10 bg-white/10 hover:bg-pink-600 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Instagram">
                   <Instagram className="h-5 w-5" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-white/10 hover:bg-blue-500 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Twitter">
+                <a href="https://twitter.com/rongrani" className="w-10 h-10 bg-white/10 hover:bg-blue-500 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Twitter">
                   <Twitter className="h-5 w-5" />
                 </a>
               </div>
@@ -173,7 +173,7 @@ const Footer = () => {
                 </div>
                 <div className="flex items-start gap-3 text-slate-300 hover:text-pink-400 transition-colors group">
                   <Mail className="h-5 w-5 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm break-all">salauddinkaderappy@gmail.com</span>
+                  <span className="text-sm break-all">info.rongrani@gmail.com</span>
                 </div>
                 <div className="flex items-start gap-3 text-slate-300 hover:text-pink-400 transition-colors group">
                   <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />

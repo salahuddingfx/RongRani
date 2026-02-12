@@ -16,6 +16,7 @@ import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
 import RecentlyViewed from './components/RecentlyViewed';
+import CartDrawer from './components/CartDrawer';
 import ScrollRevealManager from './components/ScrollRevealManager';
 
 
@@ -107,6 +108,7 @@ function App() {
                       <ScrollToTop />
 
                       <RecentlyViewed />
+                      <CartDrawer />
                       <Suspense fallback={<PageLoading />}>
                         <Routes>
                           {/* Public Routes */}

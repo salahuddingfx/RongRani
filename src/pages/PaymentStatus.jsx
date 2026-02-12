@@ -125,7 +125,7 @@ const PaymentStatus = () => {
 
                     <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-700">
                         <p className="text-xs text-slate-400">
-                            Need help? <a href="mailto:salauddinkaderappy@gmail.com" className="text-maroon font-bold">Contact Support</a>
+                            Need help? <a href="mailto:info.rongrani@gmail.com" className="text-maroon font-bold">Contact Support</a>
                         </p>
                     </div>
                 </div>

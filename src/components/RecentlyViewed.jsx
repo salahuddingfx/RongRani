@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, X } from 'lucide-react';
 
-const RecentlyViewed = () => {
+const RecentlyViewed = ({ mode = 'widget' }) => {
   const [recentProducts, setRecentProducts] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -21,7 +21,7 @@ const RecentlyViewed = () => {
     };
 
     loadRecentlyViewed();
-    
+
     // Check visibility after scroll
     const handleScroll = () => {
       setIsVisible(window.pageYOffset > 500 && recentProducts.length > 0);
@@ -36,7 +36,44 @@ const RecentlyViewed = () => {
     setRecentProducts([]);
   };
 
-  if (!isVisible || recentProducts.length === 0) return null;
+  const isWidget = mode === 'widget';
+
+  if (!recentProducts.length) return null;
+  if (isWidget && !isVisible) return null;
+
+  if (mode === 'section') {
+    return (
+      <div className="mt-12 mb-8 animate-fade-in-up">
+        <h3 className="text-2xl font-bold text-maroon mb-6 flex items-center gap-2">
+          <Eye className="h-6 w-6" />
+          <span>Recently Viewed</span>
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {recentProducts.map((product, index) => (
+            <Link
+              key={product._id || index}
+              to={`/product/${product._id}`}
+              className="card p-3 hover:shadow-lg transition-all group block"
+            >
+              <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
+                <img
+                  src={product.images?.[0]?.url || product.images?.[0] || '/placeholder.jpg'}
+                  alt={product.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+              </div>
+              <h4 className="font-bold text-slate-800 text-sm mb-1 truncate group-hover:text-maroon">
+                {product.name}
+              </h4>
+              <p className="text-maroon font-bold text-sm">
+                ৳{product.price?.toLocaleString()}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed bottom-32 sm:bottom-40 left-2 sm:left-4 z-40 bg-white rounded-2xl shadow-2xl p-3 sm:p-4 max-w-xs border-2 border-maroon/10 animate-slide-in-left">
@@ -56,7 +93,7 @@ const RecentlyViewed = () => {
           <X className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
       </div>
-      
+
       <div className="space-y-1.5 sm:space-y-2">
         {recentProducts.map((product, index) => (
           <Link
@@ -66,7 +103,7 @@ const RecentlyViewed = () => {
             className="flex items-center gap-1.5 sm:space-x-2 hover:bg-cream p-1.5 sm:p-2 rounded-xl transition-colors group"
           >
             <img
-              src={product.images?.[0] || '/placeholder.jpg'}
+              src={product.images?.[0]?.url || product.images?.[0] || '/placeholder.jpg'}
               alt={product.name}
               className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg group-hover:scale-110 transition-transform flex-shrink-0"
             />

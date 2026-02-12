@@ -4,6 +4,7 @@ import { Minus, Plus, Trash2, ShoppingBag, ShoppingCart, ArrowRight, Shield, Tru
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useDeliveryCalculation } from '../hooks/useDeliveryCalculation';
+import RecentlyViewed from '../components/RecentlyViewed';
 
 const Cart = () => {
   const { cartItems, totalItems, totalPrice, updateQuantity, removeFromCart } = useCart();
@@ -305,6 +306,9 @@ const Cart = () => {
             </div>
           </div>
         </div>
+
+        {/* Recently Viewed Section */}
+        <RecentlyViewed mode="section" />
       </div>
     </div>
   );

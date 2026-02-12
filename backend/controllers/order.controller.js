@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 const Coupon = require('../models/Coupon');
 const User = require('../models/User');
 const DeliverySetting = require('../models/DeliverySetting');
-const { sendOrderConfirmation, sendOrderStatusUpdate, sendEmail } = require('../services/emailService');
+const { sendOrderConfirmation, sendOrderStatusUpdate, sendEmail, sendLowStockAlert } = require('../services/emailService');
 const { generateInvoice } = require('../utils/pdfGenerator');
 const { calculateDelivery, getDeliveryDisplay } = require('../utils/deliveryCalculator');
 
@@ -107,6 +107,11 @@ const createOrder = async (req, res) => {
       // Update product stock (Ensure atomic update if possible, but simple save is okay for now)
       product.stock -= item.quantity;
       await product.save();
+
+      // Check for Low Stock
+      if (product.stock <= 5) {
+        sendLowStockAlert(product).catch(err => console.error('Low stock alert error:', err));
+      }
     }
 
     // Apply coupon if provided
@@ -162,22 +167,24 @@ const createOrder = async (req, res) => {
     const shipping = deliveryResult.charge;
     const total = subtotal + tax + shipping - discount;
 
-    if (paymentMethod !== 'cod') {
+    // For manual mobile banking, require transaction details upfront
+    const manualPaymentMethods = ['bkash_manual', 'nagad_manual', 'rocket', 'upay'];
+    if (manualPaymentMethods.includes(paymentMethod)) {
       const transactionId = (paymentDetails?.transactionId || '').toString().trim();
       const senderLastDigits = (paymentDetails?.senderLastDigits || '').toString().trim();
       if (!transactionId || !senderLastDigits) {
         return res.status(400).json({
-          message: 'Transaction ID and sender last digits are required for mobile banking payments',
+          message: 'Transaction ID and sender last digits are required for manual mobile banking',
         });
       }
       if (!/^\d{4}$/.test(senderLastDigits)) {
         return res.status(400).json({
-          message: 'Sender last digits must be 4 numbers',
+          message: 'Sender number last digits must be 4 numbers',
         });
       }
       if (transactionId.length < 6) {
         return res.status(400).json({
-          message: 'Transaction ID looks too short',
+          message: 'Transaction ID looks too short for a manual payment',
         });
       }
     }
@@ -294,7 +301,7 @@ const createOrder = async (req, res) => {
 
         console.log('📧 Sending new order notification to admin...');
         await sendEmail(
-          process.env.SUPER_ADMIN_EMAIL || 'salauddinkaderappy@gmail.com',
+          process.env.SUPER_ADMIN_EMAIL || 'info.rongrani@gmail.com',
           `🛒 New Order #${order._id.toString().substring(0, 8).toUpperCase()} - ${customerName}`,
           'adminOrderNotification',
           {

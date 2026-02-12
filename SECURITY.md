@@ -17,7 +17,7 @@ We take security vulnerabilities seriously. If you discover a security issue, pl
 
 ### ✅ Proper Reporting Process
 
-1. **Email**: Send details to **security@chirkutghor.com** or **salauddinkaderappy@gmail.com**
+1. **Email**: Send details to **security@chirkutghor.com** or **info.rongrani@gmail.com**
 2. **Subject**: Use subject line: `[SECURITY] Brief description`
 3. **Include**:
    - Type of vulnerability
@@ -131,7 +131,7 @@ We appreciate security researchers who responsibly disclose vulnerabilities:
 
 For security-related questions:
 - **Email**: security@chirkutghor.com
-- **Backup**: salauddinkaderappy@gmail.com
+- **Backup**: info.rongrani@gmail.com
 
 ---
 

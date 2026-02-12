@@ -22,7 +22,7 @@ const Navbar = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
-  const { totalItems } = useCart();
+  const { totalItems, openCart } = useCart();
   const { user, logout } = useAuth();
   const { t, language, toggleLanguage } = useLanguage();
   const { isDark, toggleTheme } = useTheme();
@@ -155,6 +155,12 @@ const Navbar = () => {
     : ['Search for gifts...', 'Love Combo...', 'Birthday Gifts...', 'Handmade Items...', 'Surprise Boxes...'];
 
   useEffect(() => {
+    // Disable typing effect on mobile to save main thread and battery
+    if (window.innerWidth < 768) {
+      setPlaceholder(placeholders[0]);
+      return;
+    }
+
     let currentText = placeholders[placeholderIndex];
     let charIndex = 0;
     let isDeleting = false;
@@ -165,28 +171,28 @@ const Navbar = () => {
         if (charIndex < currentText.length) {
           setPlaceholder(currentText.substring(0, charIndex + 1));
           charIndex++;
-          timer = setTimeout(type, 100);
+          timer = setTimeout(type, 150); // Slower typing 
         } else {
           timer = setTimeout(() => {
             isDeleting = true;
             type();
-          }, 2000);
+          }, 3000); // Wait longer
         }
       } else {
         if (charIndex > 0) {
           setPlaceholder(currentText.substring(0, charIndex - 1));
           charIndex--;
-          timer = setTimeout(type, 50);
+          timer = setTimeout(type, 100);
         } else {
           isDeleting = false;
           setPlaceholderIndex((prev) => (prev + 1) % placeholders.length);
           currentText = placeholders[(placeholderIndex + 1) % placeholders.length];
-          timer = setTimeout(type, 500);
+          timer = setTimeout(type, 1000);
         }
       }
     };
 
-    timer = setTimeout(type, 1000);
+    timer = setTimeout(type, 2000);
     return () => clearTimeout(timer);
   }, [placeholderIndex, language]);
 
@@ -198,33 +204,27 @@ const Navbar = () => {
         {!isSimplifiedPage && (
           <div className={topBarClasses}>
             <div className="container mx-auto flex justify-between items-center overflow-hidden">
-              {/* Animated Marquee Text */}
+              {/* Animated Marquee Text - Infinite Loop Optimized */}
               <div className="flex-1 overflow-hidden mr-4">
                 <div className="animate-marquee whitespace-nowrap inline-block">
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold">
                     🎁 {t('welcome_offer')}
                   </span>
-                  <span className="hidden sm:inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
+                  <span className="inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
                     🚚 {t('free_shipping')}
                   </span>
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">
                     ✨ Handcrafted with Love
                   </span>
-                  <span className="hidden sm:inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
-                    🛡️ Secure Payment
-                  </span>
-                  {/* Seamless Loop Duplicate */}
+                  {/* Seamless Loop Duplicate - Required for Infinite Effect */}
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold">
                     🎁 {t('welcome_offer')}
                   </span>
-                  <span className="hidden sm:inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
+                  <span className="inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
                     🚚 {t('free_shipping')}
                   </span>
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">
                     ✨ Handcrafted with Love
-                  </span>
-                  <span className="hidden sm:inline-flex items-center mr-8 md:mr-12 text-gold font-bold">
-                    🛡️ Secure Payment
                   </span>
                 </div>
               </div>
@@ -235,8 +235,8 @@ const Navbar = () => {
                   <a href="tel:+8801851075537" className="flex items-center hover:text-gold transition-colors">
                     <Phone className="w-3 h-3 mr-1.5" /> +880 1851-075537
                   </a>
-                  <a href="mailto:salauddinkaderappy@gmail.com" className="flex items-center hover:text-gold transition-colors pl-4">
-                    <Mail className="w-3 h-3 mr-1.5" /> salauddinkaderappy@gmail.com
+                  <a href="mailto:info.rongrani@gmail.com" className="flex items-center hover:text-gold transition-colors pl-4">
+                    <Mail className="w-3 h-3 mr-1.5" /> info.rongrani@gmail.com
                   </a>
                 </div>
                 <div className="flex items-center pl-4 space-x-3 text-[10px]">
@@ -527,7 +527,11 @@ const Navbar = () => {
                       </button>
 
                       {/* Cart */}
-                      <Link to="/cart" className="relative p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
+                      <Link
+                        to="/cart"
+                        onClick={(e) => { e.preventDefault(); openCart(); }}
+                        className="relative p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group"
+                      >
                         <ShoppingCart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon transition-colors" />
                         {totalItems > 0 && (
                           <span className="absolute -top-1 -right-1 bg-maroon text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm animate-bounce-short">
@@ -675,13 +679,15 @@ const Navbar = () => {
               onClick={e => e.stopPropagation()}
             >
               <div className="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-maroon p-0.5 bg-white overflow-hidden shadow-sm">
-                    <img src="/RongRani-[Recovered].png" alt="Logo" className="w-full h-full object-cover" />
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 flex items-center justify-center rounded-2xl border border-maroon/20 p-1.5 bg-white shadow-sm overflow-hidden">
+                    <img src="/RongRani-Circle.png" alt="Logo" className="w-full h-full object-contain" />
                   </div>
-                  <span className="text-xl font-black text-maroon">
-                    Rong<span className="text-slate-800 dark:text-slate-200">Rani</span>
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="text-2xl font-black text-maroon leading-none">
+                      Rong<span className="text-slate-800 dark:text-slate-200">Rani</span>
+                    </span>
+                  </div>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
                   <X className="w-6 h-6 text-slate-500" />
@@ -740,7 +746,7 @@ const Navbar = () => {
                   </button>
                 </div>
                 <p className="flex items-center justify-center"><Phone className="w-3 h-3 mr-1" /> +880 1851-075537</p>
-                <p className="flex items-center justify-center"><Mail className="w-3 h-3 mr-1" /> info@rongrani.com</p>
+                <p className="flex items-center justify-center"><Mail className="w-3 h-3 mr-1" /> info.rongrani@gmail.com</p>
               </div>
             </div>
           </div>

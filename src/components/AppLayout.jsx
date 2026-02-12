@@ -7,9 +7,30 @@ import TopNavBar from './TopNavBar';
 import AIChatFloatingWidget from './AIChatFloatingWidget';
 import Seo from './Seo';
 import ScrollRevealManager from './ScrollRevealManager';
+import CustomCursor from './CustomCursor';
 
 const AppLayout = () => {
   const location = useLocation();
+
+  // Delayed load for heavy components to boost FID/TTI
+  const [showChat, setShowChat] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowChat(true), 5000);
+    const trigger = () => {
+      setShowChat(true);
+      clearTimeout(timer);
+      window.removeEventListener('scroll', trigger);
+      window.removeEventListener('touchstart', trigger);
+    };
+    window.addEventListener('scroll', trigger, { passive: true });
+    window.addEventListener('touchstart', trigger, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', trigger);
+      window.removeEventListener('touchstart', trigger);
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900 text-charcoal dark:text-white">
@@ -24,8 +45,11 @@ const AppLayout = () => {
       </main>
       <Footer />
 
-      {/* AI Chat Widget - All Devices */}
-      <AIChatFloatingWidget />
+      {/* Custom Cursor - Premium Feel */}
+      <CustomCursor />
+
+      {/* AI Chat Widget - Delayed Load for Performance */}
+      {showChat && <AIChatFloatingWidget />}
 
       <BottomNav />
     </div>

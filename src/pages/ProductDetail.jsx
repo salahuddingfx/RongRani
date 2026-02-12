@@ -9,7 +9,9 @@ import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
 import ReviewForm from '../components/ReviewForm';
 import ProductCard from '../components/ProductCard';
+
 import Product3DViewer from '../components/Product3DViewer';
+import SocialShare from '../components/SocialShare';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -423,6 +425,14 @@ const ProductDetail = () => {
                 </button>
 
               </div>
+
+              {/* Social Share */}
+              <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
+                <span className="font-bold text-slate-700">Share with friends:</span>
+                <div className="-mt-4">
+                  <SocialShare title={`Check out ${product.name} on RongRani!`} />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -680,38 +690,42 @@ const ProductDetail = () => {
       </div>
 
       {/* Related Products Section */}
-      {relatedProducts.length > 0 && (
-        <section className="py-16 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
-          <div className="container mx-auto px-4">
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-3xl font-black text-maroon flex items-center gap-2">
-                <TrendingUp className="w-8 h-8" />
-                You May Also Like
-              </h2>
-              <Link to="/shop" className="text-slate-500 hover:text-maroon font-semibold flex items-center gap-1 group transition-colors">
-                View All <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
+      {
+        relatedProducts.length > 0 && (
+          <section className="py-16 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
+            <div className="container mx-auto px-4">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-3xl font-black text-maroon flex items-center gap-2">
+                  <TrendingUp className="w-8 h-8" />
+                  You May Also Like
+                </h2>
+                <Link to="/shop" className="text-slate-500 hover:text-maroon font-semibold flex items-center gap-1 group transition-colors">
+                  View All <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {relatedProducts.map(product => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map(product => (
-                <ProductCard key={product._id} product={product} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )
+      }
 
       {/* Review Form Modal */}
-      {showReviewForm && (
-        <ReviewForm
-          productId={id}
-          onReviewSubmitted={() => {
-            fetchReviews();
-          }}
-          onClose={() => setShowReviewForm(false)}
-        />
-      )}
-    </div>
+      {
+        showReviewForm && (
+          <ReviewForm
+            productId={id}
+            onReviewSubmitted={() => {
+              fetchReviews();
+            }}
+            onClose={() => setShowReviewForm(false)}
+          />
+        )
+      }
+    </div >
   );
 };
 

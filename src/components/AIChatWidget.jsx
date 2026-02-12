@@ -25,7 +25,7 @@ const AIChatWidget = () => {
 
   const getBotResponse = (userMessage) => {
     const msg = userMessage.toLowerCase();
-    
+
     if (msg.includes('custom') || msg.includes('customize') || msg.includes('personalize')) {
       return "Perfect! 🎁 We specialize in custom gift orders!\n\nYou can customize:\n✨ Personalized handwritten love letters\n💝 Custom gift combos\n🎀 Special occasion packages\n\nFor custom orders, click the WhatsApp button (green icon) below to chat with our team directly. They'll help you create the perfect custom gift! 💚";
     } else if (msg.includes('love') || msg.includes('romantic')) {
@@ -49,7 +49,7 @@ const AIChatWidget = () => {
     } else if (msg.includes('payment')) {
       return "We accept: Cash on Delivery (COD), bKash, Nagad, Rocket. For mobile banking, please provide Transaction ID and last 4 digits after payment. 💳";
     } else if (msg.includes('contact') || msg.includes('support')) {
-      return "Call us: +8801851075537 or email: salauddinkaderappy@gmail.com. You can also click the WhatsApp button (green icon below) for instant chat! 💬";
+      return "Call us: +8801851075537 or email: info.rongrani@gmail.com. You can also click the WhatsApp button (green icon below) for instant chat! 💬";
     } else if (msg.includes('thank') || msg.includes('thanks')) {
       return "You're welcome! Happy to help you find the perfect gift! 💝 Need anything else?";
     } else if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) {
@@ -82,7 +82,7 @@ const AIChatWidget = () => {
         sender: 'bot',
         timestamp: new Date()
       };
-      
+
       setMessages(prev => [...prev, botMessage]);
       setIsTyping(false);
     }, 1000);
@@ -142,11 +142,10 @@ const AIChatWidget = () => {
                 className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl px-3 py-2 sm:px-4 sm:py-3 ${
-                    message.sender === 'user'
+                  className={`max-w-[85%] rounded-2xl px-3 py-2 sm:px-4 sm:py-3 ${message.sender === 'user'
                       ? 'bg-maroon text-white'
                       : 'bg-white text-charcoal shadow-md'
-                  }`}
+                    }`}
                 >
                   <p className="text-xs sm:text-sm whitespace-pre-wrap">{message.text}</p>
                   <span className={`text-xs mt-1 block ${message.sender === 'user' ? 'text-white/70' : 'text-slate'}`}>
@@ -155,7 +154,7 @@ const AIChatWidget = () => {
                 </div>
               </div>
             ))}
-            
+
             {isTyping && (
               <div className="flex justify-start">
                 <div className="bg-white text-charcoal rounded-2xl px-4 py-3 shadow-md flex items-center space-x-2">

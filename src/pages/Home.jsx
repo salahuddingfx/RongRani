@@ -10,7 +10,7 @@ import { ProductCardSkeleton } from '../components/Skeletons';
 import { useSocket } from '../contexts/socketContextBase';
 import { useLanguage } from '../contexts/LanguageContext';
 
-const BannerSlider = lazy(() => import('../components/BannerSlider'));
+import BannerSlider from '../components/BannerSlider';
 const Newsletter = lazy(() => import('../components/Newsletter'));
 const FlashSale = lazy(() => import('../components/FlashSale'));
 const ProductCard = lazy(() => import('../components/ProductCard'));
@@ -38,12 +38,9 @@ const Home = () => {
     'bg-rose-600': '#E11D48',
   };
 
-  const getCategoryStyle = (color) => {
-    if (color && categoryColorMap[color]) {
-      return { backgroundColor: categoryColorMap[color] };
-    }
-    return { backgroundColor: '#BE123C' };
-  };
+  const getCategoryStyle = React.useCallback((color) => {
+    return { backgroundColor: categoryColorMap[color] || '#BE123C' };
+  }, []);
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -99,108 +96,19 @@ const Home = () => {
 
   const fetchFeaturedProducts = async () => {
     try {
-      const response = await axios.get('/api/products?limit=8');
+      const isMobile = window.innerWidth < 768;
+      const limit = isMobile ? 6 : 8; // Load fewer products on mobile for faster rendering
+      const response = await axios.get(`/api/products?limit=${limit}`);
       setFeaturedProducts(response.data.products);
     } catch (error) {
       console.error('Error fetching products:', error);
-      // Enhanced mock data with default images
+      // Fallback data...
       setFeaturedProducts([
-        {
-          _id: '1',
-          name: 'Bamboo Basket Set',
-          description: 'Set of 3 handcrafted bamboo baskets for storage',
-          price: 1800,
-          originalPrice: 1800,
-          images: [{ url: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400' }],
-          stock: 15,
-          category: 'home',
-          rating: 4.2,
-          reviewCount: 45
-        },
-        {
-          _id: '2',
-          name: 'Clay Pottery Set',
-          description: 'Traditional clay pottery set for serving',
-          price: 3200,
-          originalPrice: 3200,
-          images: [{ url: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=400' }],
-          stock: 8,
-          category: 'home',
-          rating: 4.5,
-          reviewCount: 32
-        },
-        {
-          _id: '3',
-          name: 'Handwoven Silk Scarf',
-          description: 'Beautiful handwoven silk scarf with traditional patterns',
-          price: 2500,
-          originalPrice: 2800,
-          images: [{ url: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=400' }],
-          stock: 5,
-          category: 'clothing',
-          rating: 4.8,
-          reviewCount: 67
-        },
-        {
-          _id: '4',
-          name: 'Handcrafted Gift Box',
-          description: 'Elegant gift box with traditional motifs',
-          price: 1500,
-          originalPrice: 1800,
-          images: [{ url: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400' }],
-          stock: 20,
-          category: 'gifts',
-          rating: 4.7,
-          reviewCount: 89
-        },
-        {
-          _id: '5',
-          name: 'Jute Wall Hanging',
-          description: 'Eco-friendly jute wall art with ethnic patterns',
-          price: 1200,
-          originalPrice: 1200,
-          images: [{ url: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?w=400' }],
-          stock: 12,
-          category: 'home',
-          rating: 4.3,
-          reviewCount: 28
-        },
-        {
-          _id: '6',
-          name: 'Brass Candle Holder Set',
-          description: 'Elegant brass candle holders, set of 3',
-          price: 2800,
-          originalPrice: 3200,
-          images: [{ url: 'https://images.unsplash.com/photo-1602874801006-c25e839d8889?w=400' }],
-          stock: 18,
-          category: 'home',
-          rating: 4.6,
-          reviewCount: 51
-        },
-        {
-          _id: '7',
-          name: 'Traditional Cotton Saree',
-          description: 'Handloom cotton saree with block print design',
-          price: 3500,
-          originalPrice: 4200,
-          images: [{ url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400' }],
-          stock: 6,
-          category: 'clothing',
-          rating: 4.9,
-          reviewCount: 124
-        },
-        {
-          _id: '8',
-          name: 'Wooden Jewelry Box',
-          description: 'Handcarved wooden jewelry box with mirror',
-          price: 2200,
-          originalPrice: 2500,
-          images: [{ url: 'https://images.unsplash.com/photo-1611652022419-a9419f74343a?w=400' }],
-          stock: 10,
-          category: 'gifts',
-          rating: 4.4,
-          reviewCount: 36
-        }
+        // keep some fallback items but fewer for mobile
+        { _id: '1', name: 'Bamboo Basket Set', price: 1800, images: [{ url: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format,compress&q=60&w=300' }], category: 'home', rating: 4.2 },
+        { _id: '2', name: 'Clay Pottery Set', price: 3200, images: [{ url: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format,compress&q=60&w=300' }], category: 'home', rating: 4.5 },
+        { _id: '3', name: 'Handwoven Silk Scarf', price: 2500, images: [{ url: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?auto=format,compress&q=60&w=300' }], category: 'clothing', rating: 4.8 },
+        { _id: '4', name: 'Handcrafted Gift Box', price: 1500, images: [{ url: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format,compress&q=60&w=300' }], category: 'gifts', rating: 4.7 }
       ]);
     } finally {
       setLoading(false);
@@ -262,26 +170,15 @@ const Home = () => {
               {t('hero_title')}<br />
               <span className="text-maroon">
                 <TypingEffect
-                  texts={t('language') === 'bn'
-                    ? [
-                      'ভালোবাসা ও রোমান্স ❤️',
-                      'বিশেষ মুহূর্ত ✨',
-                      'হৃদয়স্পর্শী সারপ্রাইজ 🎁',
-                      'হস্তনির্মিত অনন্য উপহার 🎨',
-                      'প্রিয়জনের স্মৃতির পাতায় 📸',
-                      'সেরা কোয়ালিটি গ্যারান্টি ⭐'
-                    ]
-                    : [
-                      'Love & Romance ❤️',
-                      'Special Moments ✨',
-                      'Heartfelt Surprises 🎁',
-                      'Unique Handmade Gifts 🎨',
-                      'Memories That Last 📸',
-                      'Premium Quality Guaranteed ⭐'
-                    ]}
-                  speed={80}
+                  texts={window.innerWidth < 768
+                    ? [t('language') === 'bn' ? 'ভালোবাসা ও রোমান্স ❤️' : 'Love & Romance ❤️']
+                    : (t('language') === 'bn'
+                      ? ['ভালোবাসা ও রোমান্স ❤️', 'বিশেষ মুহূর্ত ✨', 'হৃদয়স্পর্শী সারপ্রাইজ 🎁', 'হস্তনির্মিত অনন্য উপহার 🎨', 'প্রিয়জনের স্মৃতির পাতায় 📸', 'সেরা কোয়ালিটি গ্যারান্টি ⭐']
+                      : ['Love & Romance ❤️', 'Special Moments ✨', 'Heartfelt Surprises 🎁', 'Unique Handmade Gifts 🎨', 'Memories That Last 📸', 'Premium Quality Guaranteed ⭐']
+                    )}
+                  speed={window.innerWidth < 768 ? 150 : 80}
                   deleteSpeed={50}
-                  pauseTime={1500}
+                  pauseTime={3000}
                 />
               </span>
             </h1>

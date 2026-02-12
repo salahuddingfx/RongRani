@@ -79,7 +79,7 @@ const WhatsAppWidget = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 left-6 z-50 bg-green-600 text-white rounded-full p-4 shadow-2xl hover:shadow-green-500/50 hover:scale-110 transition-all duration-300 group"
+          className="fixed bottom-6 left-6 z-[1001] bg-green-600 text-white rounded-full p-4 shadow-2xl hover:shadow-green-500/50 hover:scale-110 transition-all duration-300 group"
           aria-label="Open WhatsApp Chat"
         >
           <MessageCircle className="h-7 w-7" />
@@ -92,7 +92,7 @@ const WhatsAppWidget = () => {
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="fixed bottom-6 left-6 z-50 w-[calc(100vw-2rem)] sm:w-96 h-[600px] max-h-[calc(100vh-5rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-green-200 flex flex-col">
+        <div className="fixed bottom-6 left-6 z-[1001] w-[calc(100vw-2rem)] sm:w-96 h-[600px] max-h-[calc(100vh-5rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border-2 border-green-200 flex flex-col">
           {/* Header */}
           <div className="bg-green-600 text-white p-4 flex items-center justify-between relative overflow-hidden">
             <div className="absolute inset-0 opacity-20">
@@ -128,8 +128,8 @@ const WhatsAppWidget = () => {
               >
                 <div
                   className={`max-w-[85%] rounded-2xl px-4 py-3 ${msg.sender === 'user'
-                      ? 'bg-green-600 text-white rounded-br-md shadow-lg'
-                      : 'bg-white text-slate border-2 border-green-200 rounded-bl-md shadow-md'
+                    ? 'bg-green-600 text-white rounded-br-md shadow-lg'
+                    : 'bg-white text-slate border-2 border-green-200 rounded-bl-md shadow-md'
                     }`}
                 >
                   {msg.sender === 'support' && (
@@ -205,7 +205,7 @@ const WhatsAppWidget = () => {
                 <Phone className="h-3 w-3" />
                 <span className="font-medium">Call Us</span>
               </a>
-              <a href="mailto:salauddinkaderappy@gmail.com" className="flex items-center space-x-1 hover:text-green-600 transition-colors">
+              <a href="mailto:info.rongrani@gmail.com" className="flex items-center space-x-1 hover:text-green-600 transition-colors">
                 <Mail className="h-3 w-3" />
                 <span className="font-medium">Email</span>
               </a>

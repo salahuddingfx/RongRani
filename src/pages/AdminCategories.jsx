@@ -215,10 +215,13 @@ const AdminCategories = () => {
               <div className="flex justify-between items-center text-sm text-slate-300 mb-4">
                 <div className="flex items-center space-x-4">
                   <span className="bg-slate-700 px-3 py-1 rounded-lg">
-                    <strong className="text-white">{category.productCount}</strong> Products
+                    <strong className="text-white">{category.productCount || 0}</strong> Products
                   </span>
                   <span className="bg-slate-700 px-3 py-1 rounded-lg">
-                    Order: <strong className="text-white">{category.order}</strong>
+                    <strong className="text-white">{category.orderCount || 0}</strong> Orders
+                  </span>
+                  <span className="bg-slate-700 px-3 py-1 rounded-lg">
+                    Sort: <strong className="text-white">{category.order}</strong>
                   </span>
                 </div>
               </div>

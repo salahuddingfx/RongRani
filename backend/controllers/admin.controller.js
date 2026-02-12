@@ -303,6 +303,7 @@ const updateOrder = async (req, res) => {
           const customerName = order.user ? order.user.name : order.guestInfo?.name || 'Customer';
 
           if (customerEmail) {
+            const trackingQuery = customerEmail ? `?email=${encodeURIComponent(customerEmail)}` : '';
             console.log(`📧 Status changed to ${order.orderStatus}. Sending email to ${customerEmail}...`);
 
             // Send primary status update email
@@ -311,7 +312,8 @@ const updateOrder = async (req, res) => {
               customerName,
               order._id,
               order.orderStatus,
-              order.trackingNumber
+              order.trackingNumber,
+              trackingQuery
             );
             console.log('✅ Status update email sent successfully');
 
@@ -321,7 +323,8 @@ const updateOrder = async (req, res) => {
               await sendReviewRequest(
                 customerEmail,
                 customerName,
-                order._id
+                order._id,
+                trackingQuery
               );
               console.log('✅ Review request email sent successfully');
             }
