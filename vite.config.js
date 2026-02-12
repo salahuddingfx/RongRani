@@ -7,10 +7,19 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['lucide-react', 'react-hot-toast', 'react-icons'],
-          utils: ['axios', 'react-helmet-async', 'i18next']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor';
+            }
+            if (id.includes('lucide-react') || id.includes('react-hot-toast') || id.includes('react-icons')) {
+              return 'ui';
+            }
+            if (id.includes('axios') || id.includes('react-helmet-async') || id.includes('i18next')) {
+              return 'utils';
+            }
+            return 'vendor'; // Fallback for other node_modules
+          }
         }
       }
     },
