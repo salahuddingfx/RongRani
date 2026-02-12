@@ -25,7 +25,6 @@ export default defineConfig({
     },
     chunkSizeWarningLimit: 800,
     cssCodeSplit: true,
-    minify: 'esbuild',
     reportCompressedSize: false
   },
   server: {
