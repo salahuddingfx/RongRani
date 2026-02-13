@@ -48,9 +48,9 @@ const HomeCategorySlider = ({ category }) => {
         };
     }, []);
 
-    // Auto-scroll logic (slower, more premium)
+    // Auto-scroll logic
     useEffect(() => {
-        if (products.length <= 4) return;
+        if (products.length <= 4 || showArrows) return;
 
         const interval = setInterval(() => {
             if (scrollRef.current) {
@@ -65,10 +65,10 @@ const HomeCategorySlider = ({ category }) => {
                     scrollRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
                 }
             }
-        }, 8000); // 8 seconds for a more relaxed feel
+        }, 4000); // 4 seconds for better visibility
 
         return () => clearInterval(interval);
-    }, [products]);
+    }, [products, showArrows]);
 
     const scroll = (direction) => {
         if (scrollRef.current) {
