@@ -83,7 +83,7 @@ const emailBaseTemplate = (title, content, preheader = '') => {
   const frontendUrl = process.env.FRONTEND_URL || 'https://rongrani.vercel.app';
   const logoUrl = `${frontendUrl}/RongRani-Circle.png`;
   const maroon = '#8B2635';
-  const gold = '#D4AF37';
+  const gold = '#C5A059'; // Sophisticated muted gold
 
   return `
     <!DOCTYPE html>
@@ -93,26 +93,26 @@ const emailBaseTemplate = (title, content, preheader = '') => {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>${title}</title>
       <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
         
         body { 
-          font-family: 'Outfit', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+          font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
           line-height: 1.6; 
           color: #1e293b; 
           margin: 0; 
           padding: 0; 
-          background-color: #f1f5f9; 
+          background-color: #fcfaf7; 
         }
         
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
+        @keyframes revealUp {
+          from { opacity: 0; transform: translateY(30px); }
           to { opacity: 1; transform: translateY(0); }
         }
         
-        @keyframes pulse {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.05); }
-          100% { transform: scale(1); }
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
         }
 
         .wrapper { 
@@ -121,156 +121,156 @@ const emailBaseTemplate = (title, content, preheader = '') => {
           margin: 40px auto; 
           background-color: #ffffff; 
           overflow: hidden; 
-          border-radius: 24px; 
-          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-          animation: fadeIn 0.8s ease-out;
+          border-radius: 32px; 
+          box-shadow: 0 40px 80px -20px rgba(139, 38, 53, 0.12);
+          animation: revealUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+          border: 1px solid rgba(226, 232, 240, 0.6);
         }
 
         .header { 
-          background: linear-gradient(135deg, ${maroon} 0%, #4a0e16 100%); 
-          padding: 60px 20px; 
+          background: linear-gradient(180deg, #2a0a0d 0%, #4a0e16 100%); 
+          padding: 80px 20px 60px; 
           text-align: center; 
           color: #ffffff;
           position: relative;
         }
 
         .logo { 
-          width: 90px; 
-          height: 90px; 
-          margin-bottom: 20px; 
+          width: 95px; 
+          height: 95px; 
+          margin-bottom: 25px; 
           border-radius: 50%; 
-          border: 4px solid rgba(255,255,255,0.3); 
-          box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-          animation: pulse 3s infinite ease-in-out;
+          border: 2px solid ${gold}; 
+          background: #ffffff;
+          padding: 3px;
+          animation: float 4s infinite ease-in-out;
         }
 
         .brand-name { 
-          font-size: 32px; 
-          font-weight: 800; 
-          letter-spacing: -0.05em; 
+          font-family: 'Playfair Display', serif;
+          font-size: 38px; 
           margin: 0;
-          text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          letter-spacing: -0.02em;
+        }
+
+        .luxury-accent {
+          width: 60px;
+          height: 1px;
+          background: ${gold};
+          margin: 20px auto;
         }
 
         .content { 
-          padding: 50px 40px; 
-          background: radial-gradient(circle at top right, rgba(139, 38, 53, 0.03), transparent 300px);
+          padding: 60px 50px; 
+          background: white;
+        }
+
+        .h-premium {
+          font-family: 'Playfair Display', serif;
+          color: #0f172a;
+          font-size: 32px;
+          margin-bottom: 24px;
+          line-height: 1.2;
         }
 
         .footer { 
-          background-color: #f8fafc; 
-          padding: 50px 20px; 
+          background-color: #0f172a; 
+          padding: 70px 40px; 
           text-align: center; 
-          border-top: 1px solid #e2e8f0;
+          color: #f8fafc;
         }
 
-        .social-links { margin: 30px 0; }
+        .social-links { margin: 40px 0; }
         .social-icon { 
           display: inline-block; 
-          margin: 0 15px; 
-          width: 44px; 
-          height: 44px; 
-          line-height: 44px; 
-          border-radius: 14px; 
-          background-color: #ffffff; 
-          box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-          transition: transform 0.2s ease;
+          margin: 0 12px; 
         }
 
         .btn { 
           display: inline-block; 
-          padding: 16px 36px; 
-          background: linear-gradient(to right, ${maroon}, #5d1a24); 
+          padding: 20px 48px; 
+          background: #8B2635; 
           color: #ffffff !important; 
           text-decoration: none; 
-          border-radius: 16px; 
-          font-weight: 700; 
-          margin-top: 30px; 
-          box-shadow: 0 10px 15px -3px rgba(139, 38, 53, 0.4);
+          border-radius: 100px; 
+          font-weight: 600; 
+          margin-top: 40px; 
+          box-shadow: 0 20px 30px -10px rgba(139, 38, 53, 0.35);
           text-transform: uppercase;
-          letter-spacing: 0.05em;
-          font-size: 14px;
+          letter-spacing: 0.15em;
+          font-size: 13px;
+          border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .order-table { 
-          width: 100%; 
-          border-collapse: separate; 
-          border-spacing: 0 8px;
-          margin: 30px 0; 
+        .gold-divider {
+          height: 1px;
+          background: linear-gradient(to right, transparent, ${gold}, transparent);
+          margin: 40px 0;
         }
-
-        .order-table th { 
-          color: #64748b; 
-          padding: 0 12px 12px; 
-          font-size: 12px; 
-          text-align: left; 
-          text-transform: uppercase; 
-          letter-spacing: 0.1em;
-          font-weight: 800;
-        }
-
-        .order-table td { 
-          padding: 20px 15px; 
-          background-color: #f8fafc;
-          border: none;
-        }
-        
-        .order-table tr td:first-child { border-radius: 12px 0 0 12px; }
-        .order-table tr td:last-child { border-radius: 0 12px 12px 0; }
 
         .contact-info { 
-          font-size: 14px; 
-          color: #64748b; 
-          margin-top: 25px; 
-          line-height: 1.8;
-          font-weight: 500;
+          font-size: 15px; 
+          color: #94a3b8; 
+          margin-top: 35px; 
+          line-height: 2;
         }
 
-        .preheader { display: none; max-height: 0px; overflow: hidden; }
-        
-        .badge {
-          display: inline-block;
-          padding: 6px 12px;
-          border-radius: 8px;
-          font-size: 11px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
+        .signature-text {
+          font-family: 'Playfair Display', serif;
+          font-style: italic;
+          font-size: 18px;
+          color: ${gold};
+          margin-top: 30px;
         }
         
-        .badge-maroon { background-color: rgba(139, 38, 53, 0.1); color: ${maroon}; }
+        .verified-badge {
+          display: inline-flex;
+          align-items: center;
+          background: rgba(197, 160, 89, 0.1);
+          color: ${gold};
+          padding: 8px 16px;
+          border-radius: 100px;
+          font-size: 11px;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin-bottom: 30px;
+          border: 1px solid rgba(197, 160, 89, 0.2);
+        }
       </style>
     </head>
     <body>
-      ${preheader ? `<span class="preheader">${preheader}</span>` : ''}
+      ${preheader ? `<span style="display:none; max-height:0; overflow:hidden;">${preheader}</span>` : ''}
       <div class="wrapper">
         <div class="header">
           <img src="${logoUrl}" alt="RongRani Logo" class="logo">
           <h1 class="brand-name">Rong<span style="color: ${gold};">Rani</span></h1>
-          <p style="margin-top: 12px; opacity: 0.9; font-weight: 600; font-size: 16px; letter-spacing: 0.1em;">PREMIUM HANDCRAFTED GIFTS ✨</p>
+          <div class="luxury-accent"></div>
+          <p style="font-size: 13px; text-transform: uppercase; letter-spacing: 4px; opacity: 0.8; font-weight: 300;">The Art of Bespoke Gifting</p>
         </div>
         <div class="content">
           ${content}
         </div>
         <div class="footer">
-          <h3 style="margin: 0; color: #1e293b; font-weight: 800; font-size: 20px;">Join Our Community</h3>
-          <p style="color: #64748b; font-size: 14px; margin-top: 8px;">Follow us for daily inspiration and exclusive offers</p>
+          <div class="verified-badge">✨ Curated for Excellence</div>
+          <h3 style="margin: 0; font-family: 'Playfair Display', serif; font-size: 26px; color: #ffffff;">Experience the Extraordinary</h3>
+          <p style="color: #64748b; font-size: 15px; margin-top: 12px; font-weight: 300;">Crafting memories through the timeless beauty of handmade art.</p>
+          
           <div class="social-links">
-            <a href="https://facebook.com/rongrani" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="22" style="vertical-align: middle;"></a>
-            <a href="https://instagram.com/rongrani" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="22" style="vertical-align: middle;"></a>
-            <a href="https://wa.me/8801851075537" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="22" style="vertical-align: middle;"></a>
+            <a href="https://facebook.com/rongrani" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="24" style="filter: invert(1);"></a>
+            <a href="https://instagram.com/rongrani" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="24" style="filter: invert(1);"></a>
+            <a href="https://wa.me/8801851075537" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="24" style="filter: invert(1);"></a>
           </div>
+          
           <div class="contact-info">
-            <strong style="color: #1e293b; font-size: 16px;">RongRani Bangladesh</strong><br>
-            Chattogram, Bangladesh<br>
-            <div style="margin-top: 15px;">
-              <span style="margin: 0 10px;">📞 +880 1851-075537</span> | <span style="margin: 0 10px;">✉️ info.rongrani@gmail.com</span>
-            </div>
-            <a href="${frontendUrl}" style="color: ${maroon}; text-decoration: none; font-weight: 800; font-size: 15px; display: block; margin-top: 15px;">www.rongrani.com</a>
+            <div style="margin-bottom: 20px; color: ${gold}; text-transform: uppercase; letter-spacing: 2px; font-size: 12px; font-weight: 800;">Contact Us</div>
+            📞 +880 1851-075537<br>
+            ✉️ info.rongrani@gmail.com<br>
+            <a href="${frontendUrl}" style="color: ${gold}; text-decoration: none; font-weight: 700; font-size: 16px; margin-top: 20px; display: inline-block;">www.rongrani.com</a>
           </div>
-          <p style="font-size: 11px; color: #94a3b8; margin-top: 40px; font-weight: 500; letter-spacing: 0.05em;">
-            &copy; ${new Date().getFullYear()} RongRani. All rights reserved.<br>
-            Crafted with passion for your special moments.
+          
+          <p style="font-size: 11px; color: #475569; margin-top: 60px; letter-spacing: 0.1em; text-transform: uppercase;">
+            &copy; ${new Date().getFullYear()} RongRani Store. All rights reserved.
           </p>
         </div>
       </div>
@@ -284,12 +284,12 @@ const emailTemplates = {
   // Order Confirmation Email
   orderConfirmation: (order) => {
     const products = order.items.map(item => `
-      <tr>
-        <td>
-          <div style="font-weight: 600; color: #1e293b; font-size: 15px;">${item.name}</div>
-          <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Quantity: ${item.quantity}</div>
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 24px 0;">
+          <div style="font-weight: 600; color: #0f172a; font-size: 16px;">${item.name}</div>
+          <div style="font-size: 13px; color: #94a3b8; margin-top: 6px;">Edition: Artisan Crafted  |  Qty: ${item.quantity}</div>
         </td>
-        <td style="text-align: right; font-weight: 800; color: #1e293b;">
+        <td style="text-align: right; font-weight: 600; color: #0f172a; font-size: 16px; padding: 24px 0;">
           ৳ ${(item.quantity * item.price).toFixed(2)}
         </td>
       </tr>
@@ -300,269 +300,260 @@ const emailTemplates = {
     const trackingQuery = order.customerEmail ? `?email=${encodeURIComponent(order.customerEmail)}` : '';
 
     const content = `
-      <div style="text-align: center; margin-bottom: 40px;">
-        <div class="badge badge-maroon" style="margin-bottom: 15px;">Success</div>
-        <h2 style="color: #1e293b; font-size: 28px; font-weight: 800; margin: 0;">Order Confirmed! 🎉</h2>
-        <p style="font-size: 16px; color: #64748b; margin-top: 10px;">Hello ${order.name}, we've received your order and we're getting it ready.</p>
-      </div>
+      <h2 class="h-premium">Thank you for letting us be part of your story.</h2>
+      <p style="font-size: 17px; color: #475569; font-weight: 300;">Hello ${order.name}, your curated selection has been reserved and is now entering the hands of our artisans.</p>
       
-      <div style="background-color: #f8fafc; border-radius: 20px; padding: 30px; text-align: center; border: 1px solid #e2e8f0;">
-        <div style="color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.1em; margin-bottom: 5px;">Tracking Number</div>
-        <div style="font-size: 24px; font-weight: 900; color: #8B2635;">#${order.orderId}</div>
+      <div style="margin: 50px 0; text-align: left; background: #fafafa; border-radius: 20px; padding: 35px; border: 1px solid #f1f5f9;">
+        <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 8px;">Order Reference</div>
+        <div style="font-size: 26px; font-weight: 400; color: #0f172a; font-family: 'Playfair Display', serif;">${order.orderId}</div>
       </div>
 
-      <h3 style="color: #1e293b; font-size: 18px; font-weight: 800; margin-top: 50px; margin-bottom: 20px;">What's inside:</h3>
-      <table class="order-table">
-        <thead>
-          <tr>
-            <th>Item Details</th>
-            <th style="text-align: right;">Amount</th>
-          </tr>
-        </thead>
+      <h3 style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; font-weight: 800; margin-bottom: 10px;">Selection Summary</h3>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tbody>
           ${products}
         </tbody>
       </table>
 
-      <div style="margin-top: 30px; padding-top: 20px; border-top: 2px dashed #e2e8f0;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-          <span style="color: #64748b; font-weight: 600;">Subtotal</span>
-          <span style="color: #1e293b; font-weight: 700;">৳ ${order.subtotal?.toFixed(2) || '0.00'}</span>
+      <div style="margin-top: 20px;">
+        <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+          <span style="color: #64748b; font-weight: 400;">Subtotal</span>
+          <span style="color: #0f172a; font-weight: 600;">৳ ${order.subtotal?.toFixed(2) || '0.00'}</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-          <span style="color: #64748b; font-weight: 600;">Shipping</span>
-          <span style="color: #1e293b; font-weight: 700;">৳ ${order.shipping?.toFixed(2) || '0.00'}</span>
+        <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+          <span style="color: #64748b; font-weight: 400;">Bespoke Shipping</span>
+          <span style="color: #0f172a; font-weight: 600;">৳ ${order.shipping?.toFixed(2) || '0.00'}</span>
         </div>
         ${order.discount > 0 ? `
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #10b981;">
-            <span style="font-weight: 600;">Discount</span>
-            <span style="font-weight: 700;">- ৳ ${order.discount?.toFixed(2)}</span>
+          <div style="display: flex; justify-content: space-between; padding: 10px 0; color: #10b981;">
+            <span style="font-weight: 600;">Preferred Client Discount</span>
+            <span style="font-weight: 600;">- ৳ ${order.discount?.toFixed(2)}</span>
           </div>
         ` : ''}
-        <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 24px;">
-          <span style="color: #1e293b; font-weight: 800;">Total</span>
-          <span style="color: #8B2635; font-weight: 900;">৳ ${order.total?.toFixed(2) || '0.00'}</span>
+        <div class="gold-divider"></div>
+        <div style="display: flex; justify-content: space-between; font-size: 28px; font-family: 'Playfair Display', serif;">
+          <span style="color: #0f172a;">Total</span>
+          <span style="color: #8B2635;">৳ ${order.total?.toFixed(2) || '0.00'}</span>
         </div>
       </div>
 
-      <div style="background: linear-gradient(to bottom right, #ffffff, #f8fafc); border: 1px solid #e2e8f0; border-radius: 20px; padding: 25px; margin-top: 40px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-        <h4 style="margin: 0 0 15px 0; color: #1e293b; font-size: 16px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Shipping Details</h4>
-        <p style="margin: 0; color: #475569; font-size: 15px; line-height: 1.8;">
-          <strong style="color: #1e293b;">${order.name}</strong><br>
+      <div style="margin-top: 60px; border-top: 1px solid #f1f5f9; padding-top: 40px;">
+        <h4 style="margin: 0 0 15px 0; color: #0f172a; font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Delivery Destination</h4>
+        <div style="font-size: 17px; line-height: 1.8; color: #475569; font-weight: 300;">
+          <strong style="color: #0f172a; font-weight: 600;">${order.name}</strong><br>
           ${address}<br>
-          <span style="color: #8B2635; font-weight: 600;">📞 ${shipping.phone || ''}</span>
-        </p>
+          <span style="color: #C5A059; font-weight: 600;">📞 ${shipping.phone || ''}</span>
+        </div>
       </div>
 
-      <center style="margin-top: 50px;">
-        <a href="${process.env.FRONTEND_URL}/order-tracking/${order.orderId}${trackingQuery}" class="btn">Track Package �</a>
+      <center>
+        <a href="${process.env.FRONTEND_URL}/order-tracking/${order.orderId}${trackingQuery}" class="btn">Monitor Status</a>
       </center>
+      
+      <div class="signature-text" style="text-align: center; margin-top: 40px;">- The RongRani Team</div>
     `;
 
-    return emailBaseTemplate(`Order Confirmation #${order.orderId}`, content, `Exciting news! Your order #${order.orderId} is confirmed.`);
+    return emailBaseTemplate(`Confirmation of Reservation #${order.orderId}`, content, `We have received your selection for order #${order.orderId}.`);
   },
 
   // 2. Order Status Update Email
   orderStatusUpdate: (data) => {
     const statusMessages = {
       processing: {
-        emoji: '⏳',
-        badge: 'Preparation',
-        title: 'We are crafting your order',
-        message: 'Great news! Your handcrafted items are now in production. We are paying attention to every detail! ❤️'
+        emoji: '✨',
+        badge: 'Bespoke Preparation',
+        title: 'Your selection is being masterfully prepared',
+        message: 'It is our pleasure to inform you that your handcrafted items have entered the final stages of refinement. We are ensuring every detail meets our standards of excellence. ❤️'
       },
       shipped: {
-        emoji: '🚚',
-        badge: 'In Transit',
-        title: 'Your parcel is on its way!',
-        message: 'Good news! Your order has been shipped and is heading towards your doorstep.'
+        emoji: '🌍',
+        badge: 'Concierge Transit',
+        title: 'In pursuit of your doorstep',
+        message: 'Good news! Your curated parcel has been released for delivery and is currently in transit to your location.'
       },
       delivered: {
-        emoji: '✅',
-        badge: 'Delivered',
-        title: 'Package Delivered!',
-        message: 'Your items have been delivered safely. We can\'t wait for you to see them!'
+        emoji: '🎁',
+        badge: 'Exquisitely Delivered',
+        title: 'Masterpiece Delivered',
+        message: 'Your items have arrived safely. We trust they will bring a touch of elegance to your special moment.'
       },
       cancelled: {
-        emoji: '❌',
-        badge: 'Cancelled',
-        title: 'Order Cancelled',
-        message: 'Your order has been cancelled. If this was a mistake, please contact us.'
+        emoji: '⚖️',
+        badge: 'Curation Revoked',
+        title: 'Order Status Notification',
+        message: 'Your order has been cancelled. If this was not by your request, please contact our concierge immediately.'
       },
     };
 
     const statusInfo = statusMessages[data.status] || statusMessages.processing;
 
     const content = `
-      <div style="text-align: center; margin-bottom: 30px;">
-        <div class="badge badge-maroon">${statusInfo.badge}</div>
-        <h2 style="color: #1e293b; font-size: 26px; font-weight: 800; margin: 15px 0;">${statusInfo.emoji} ${statusInfo.title}</h2>
-        <p style="font-size: 16px; color: #64748b;">Hello <strong>${data.name}</strong>, ${statusInfo.message}</p>
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div class="verified-badge">${statusInfo.badge}</div>
+        <h2 class="h-premium" style="margin-top: 20px;">${statusInfo.emoji} ${statusInfo.title}</h2>
+        <p style="font-size: 17px; color: #64748b; font-weight: 300;">Hello <strong>${data.name}</strong>, ${statusInfo.message}</p>
       </div>
       
-      <div style="background-color: #f8fafc; border-radius: 20px; padding: 35px; margin: 30px 0; text-align: center; border: 1px solid #e2e8f0; position: relative; overflow: hidden;">
-        <div style="color: #64748b; font-size: 11px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.15em;">Current Status</div>
-        <div style="font-size: 28px; font-weight: 900; color: #8B2635; margin: 10px 0; text-transform: uppercase;">${data.status}</div>
-        <div style="height: 2px; width: 40px; background: #8B2635; margin: 15px auto;"></div>
-        <div style="color: #64748b; font-size: 14px; font-weight: 600;">Ref: #${data.orderId}</div>
+      <div style="background-color: #fafafa; border-radius: 24px; padding: 45px; margin: 40px 0; text-align: center; border: 1px solid #f1f5f9;">
+        <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.2em; margin-bottom: 12px;">Current Status</div>
+        <div style="font-size: 32px; font-weight: 400; color: #0f172a; margin: 10px 0; font-family: 'Playfair Display', serif;">${data.status}</div>
+        <div style="height: 1px; width: 40px; background: #C5A059; margin: 25px auto;"></div>
+        <div style="color: #94a3b8; font-size: 14px; letter-spacing: 1px;">ID: #${data.orderId}</div>
       </div>
 
       ${data.trackingNumber ? `
-        <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #10b981; border-radius: 20px; padding: 25px; margin-bottom: 30px; text-align: center;">
-          <p style="margin: 0; color: #065f46; font-size: 15px; font-weight: 700;">
-            <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" width="20" style="vertical-align: middle; margin-right: 10px;">
-            Tracking: ${data.trackingNumber}
-          </p>
+        <div style="background: #ffffff; border: 1px solid #f1f5f9; border-radius: 20px; padding: 30px; margin-bottom: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+          <div style="color: #94a3b8; font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 2px; margin-bottom: 8px;">Manifest Number</div>
+          <div style="font-size: 16px; color: #0f172a; font-weight: 600; letter-spacing: 1px;">${data.trackingNumber}</div>
         </div>
       ` : ''}
 
       <center>
-        <a href="${process.env.FRONTEND_URL}/order-tracking/${data.orderId}${data.trackingQuery || ''}" class="btn">View Live Progress</a>
+        <a href="${process.env.FRONTEND_URL}/order-tracking/${data.orderId}${data.trackingQuery || ''}" class="btn">Monitor Curation</a>
       </center>
     `;
 
-    return emailBaseTemplate(`Order Update - #${data.orderId}`, content, `Your order status has been updated to ${data.status}.`);
+    return emailBaseTemplate(`Artisan Update - #${data.orderId}`, content, `Your order status has been masterfully updated.`);
   },
 
   // 3. Welcome Email
   welcome: (user) => {
     const content = `
-      <div style="text-align: center; margin-bottom: 35px;">
-        <div class="badge badge-maroon">Join The Family</div>
-        <h2 style="color: #1e293b; font-size: 30px; font-weight: 800; margin: 15px 0;">Welcome to RongRani! 🎁</h2>
-        <p style="font-size: 16px; color: #64748b;">Hello <strong>${user.name}</strong>, we're absolutely thrilled to have you here.</p>
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div class="verified-badge">Welcome to the Inner Circle</div>
+        <h2 class="h-premium" style="margin-top: 20px;">Your journey into the world of artisan gifting begins.</h2>
+        <p style="font-size: 17px; color: #64748b; font-weight: 300;">Hello <strong>${user.name}</strong>, it is a privilege to have you join our curated community.</p>
       </div>
 
-      <div style="background-color: #ffffff; border: 2px solid #f1f5f9; border-radius: 24px; padding: 30px; margin-bottom: 40px;">
-        <p style="font-size: 15px; color: #475569; line-height: 1.8; margin-bottom: 20px;">
-          At RongRani, every piece is more than just a gift—it's a story. We handcraft each item with passion, ensuring your special moments are celebrated with elegance.
+      <div style="background-color: #ffffff; border: 1px solid #f1f5f9; border-radius: 24px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+        <p style="font-size: 16px; color: #475569; line-height: 2; margin-bottom: 30px; font-weight: 300;">
+          At RongRani, we believe that a gift is not merely an object, but a vessel of emotion. Each piece you discover here is handcrafted by masters of their craft, ensuring that your most cherished moments are marked with unparalleled elegance.
         </p>
 
-        <div style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border-radius: 20px; padding: 30px; border: 1px dashed #fda4af; text-align: center;">
-          <div style="font-size: 12px; font-weight: 800; color: #9f1239; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;">Your Welcome Gift</div>
-          <div style="font-size: 18px; color: #be123c; font-weight: 700; margin-bottom: 15px;">Get 10% OFF your first order!</div>
-          <div style="display: inline-block; background-color: #ffffff; padding: 12px 25px; border-radius: 12px; font-family: monospace; font-size: 22px; font-weight: 800; color: #8B2635; border: 2px solid #8B2635;">WELCOME10</div>
+        <div style="background: linear-gradient(135deg, #2a0a0d 0%, #4a0e16 100%); border-radius: 20px; padding: 40px; text-align: center; color: white;">
+          <div style="font-size: 11px; font-weight: 800; color: #C5A059; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px;">A Token of Appreciation</div>
+          <div style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 25px;">The Privilege of First Choice</div>
+          <div style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;">Use this invitation code for 10% off your initial curation</div>
+          <div style="display: inline-block; background-color: transparent; padding: 15px 35px; border-radius: 0; font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: #C5A059; border: 1px solid #C5A059;">WELCOME10</div>
         </div>
       </div>
 
       <center>
-        <a href="${process.env.FRONTEND_URL}/shop" class="btn">Start Your Story 🌸</a>
+        <a href="${process.env.FRONTEND_URL}/shop" class="btn">Explore the Collection</a>
       </center>
+      
+      <div class="signature-text" style="text-align: center; margin-top: 40px;">- Authenticity Guaranteed</div>
     `;
 
-    return emailBaseTemplate('Welcome to the Family! 💖', content, 'Welcome to RongRani family! Claim your 10% discount inside.');
+    return emailBaseTemplate('Welcome to the Privilege of RongRani', content, 'You are cordially invited to explore our world of artisan crafts.');
   },
 
   // 4. Admin Order Notification
   adminOrderNotification: (data) => {
     const products = (data.items || []).map(item => `
-      <tr>
-        <td style="padding: 15px; background: #ffffff;">
-          <div style="font-weight: 700; color: #1e293b;">${item.name}</div>
-          <div style="font-size: 12px; color: #64748b;">Qty: ${item.quantity} units</div>
+      <tr style="border-bottom: 1px solid #f1f5f9;">
+        <td style="padding: 20px 0;">
+          <div style="font-weight: 700; color: #0f172a;">${item.name}</div>
+          <div style="font-size: 12px; color: #94a3b8;">Ref Code: Artisan Selection | ${item.quantity} units</div>
         </td>
-        <td style="padding: 15px; text-align: right; font-weight: 800; color: #8B2635; background: #ffffff;">
+        <td style="padding: 20px 0; text-align: right; font-weight: 700; color: #0f172a;">
           ৳ ${(item.price * item.quantity).toFixed(2)}
         </td>
       </tr>
     `).join('');
 
     const content = `
-      <div style="background: #fff4f6; border-radius: 16px; padding: 20px; border-left: 5px solid #8B2635; margin-bottom: 30px;">
-        <h2 style="color: #8B2635; font-size: 22px; font-weight: 800; margin: 0;">🚨 New Order Received!</h2>
-        <p style="margin-top: 5px; color: #475569; font-weight: 600;">Time to ship: Order #${data.orderId}</p>
+      <div style="border-left: 3px solid #8B2635; padding-left: 25px; margin-bottom: 40px;">
+        <h2 class="h-premium" style="font-size: 24px; margin: 0; color: #8B2635;">New Masterpiece Reservation</h2>
+        <p style="margin-top: 8px; color: #475569; font-weight: 400; font-size: 15px;">Order #${data.orderId} awaits fulfillment.</p>
       </div>
       
-      <div style="background-color: #f8fafc; border-radius: 20px; padding: 25px; margin-bottom: 30px; border: 1px solid #e2e8f0;">
-        <h4 style="margin: 0 0 15px 0; color: #64748b; text-transform: uppercase; font-size: 11px; letter-spacing: 0.1em; font-weight: 800;">Customer Information</h4>
-        <div style="color: #1e293b; line-height: 1.8;">
-          <div style="font-weight: 800; font-size: 16px;">${data.customerName}</div>
+      <div style="background-color: #fafafa; border-radius: 20px; padding: 30px; margin-bottom: 40px; border: 1px solid #f1f5f9;">
+        <h4 style="margin: 0 0 20px 0; color: #94a3b8; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: 800;">Client Dossier</h4>
+        <div style="color: #0f172a; line-height: 2; font-size: 15px;">
+          <div style="font-weight: 600; font-size: 18px; font-family: 'Playfair Display', serif;">${data.customerName}</div>
           <div>📧 ${data.customerEmail}</div>
           <div>📞 ${data.customerPhone || 'N/A'}</div>
-          <div style="margin-top: 10px; color: #475569; font-size: 13px;">📍 ${data.shippingAddress}</div>
+          <div style="margin-top: 15px; color: #64748b; font-size: 14px; border-top: 1px solid #f1f5f9; padding-top: 15px;">📍 ${data.shippingAddress}</div>
         </div>
       </div>
 
-      <table class="order-table" style="background-color: #e2e8f0;">
-        <thead>
-          <tr>
-            <th style="padding: 12px; color: #475569;">Item</th>
-            <th style="padding: 12px; text-align: right; color: #475569;">Revenue</th>
-          </tr>
-        </thead>
+      <h4 style="margin: 0 0 10px 0; color: #94a3b8; text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: 800;">Artisan Summary</h4>
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tbody>
           ${products}
         </tbody>
       </table>
       
-      <div style="text-align: right; padding: 20px; background: #f8fafc; border-radius: 0 0 20px 20px; border: 1px solid #e2e8f0;">
-        <span style="color: #64748b; font-weight: 700; font-size: 14px;">Total Order Value</span><br>
-        <span style="color: #8B2635; font-size: 28px; font-weight: 900;">৳ ${data.total}</span>
+      <div style="text-align: right; padding: 30px 0; border-top: 1px solid #f1f5f9; margin-top: 10px;">
+        <span style="color: #94a3b8; font-weight: 400; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Estimated Allocation</span><br>
+        <span style="color: #0f172a; font-size: 32px; font-family: 'Playfair Display', serif;">৳ ${data.total}</span>
       </div>
 
-      <center style="margin-top: 40px;">
-        <a href="${process.env.FRONTEND_URL}/admin/orders/${data.orderId}" class="btn">Manage Order</a>
+      <center>
+        <a href="${process.env.FRONTEND_URL}/admin/orders/${data.orderId}" class="btn" style="background: #0f172a;">Review Dossier</a>
       </center>
     `;
 
-    return emailBaseTemplate(`Alert: New Order #${data.orderId}`, content, `New order received from ${data.customerName}.`);
+    return emailBaseTemplate(`Priority Alert: Reservation #${data.orderId}`, content, `A new curation has been requested by ${data.customerName}.`);
   },
 
   // 5. Review Request Email
   reviewRequest: (data) => {
     const content = `
-      <div style="text-align: center; margin-bottom: 35px;">
-        <div class="badge badge-maroon">Feedback</div>
-        <h2 style="color: #1e293b; font-size: 28px; font-weight: 800; margin: 15px 0;">How did we do? ⭐</h2>
-        <p style="font-size: 16px; color: #64748b;">Hello <strong>${data.name}</strong>, we hope you're loving your purchase!</p>
+      <div style="text-align: center; margin-bottom: 45px;">
+        <div class="verified-badge">Client Experience</div>
+        <h2 class="h-premium" style="margin-top: 25px;">How did our craftsmanship speak to you?</h2>
+        <p style="font-size: 17px; color: #64748b; font-weight: 300;">Hello <strong>${data.name}</strong>, we hope your new curation brings you joy.</p>
       </div>
       
-      <p style="font-size: 15px; color: #475569; line-height: 1.8; text-align: center; max-width: 400px; margin: 0 auto;">
-        Your feedback is the heart of RongRani. It helps us grow and helps others shop with confidence. Would you mind sharing your experience?
+      <p style="font-size: 16px; color: #475569; line-height: 2; text-align: center; max-width: 450px; margin: 0 auto; font-weight: 300;">
+        Your feedback is the soul of RongRani. It inspires our artisans and guides our community. We would be honored if you shared your experience.
       </p>
 
-      <center style="margin: 50px 0;">
-        <div style="font-size: 48px; letter-spacing: 10px; margin-bottom: 30px; text-shadow: 0 4px 6px rgba(0,0,0,0.1);">⭐⭐⭐⭐⭐</div>
-        <a href="${process.env.FRONTEND_URL}/order-tracking/${data.orderId}${data.trackingQuery || ''}" class="btn">Share Your Story</a>
+      <center style="margin: 60px 0;">
+        <div style="font-size: 44px; letter-spacing: 15px; margin-bottom: 40px; color: #C5A059; text-shadow: 0 2px 4px rgba(0,0,0,0.05);">⭐⭐⭐⭐⭐</div>
+        <a href="${process.env.FRONTEND_URL}/order-tracking/${data.orderId}${data.trackingQuery || ''}" class="btn">Share Your Impression</a>
       </center>
       
-      <div style="background-color: #f1f5f9; border-radius: 16px; padding: 20px; text-align: center;">
-        <p style="margin: 0; color: #64748b; font-size: 13px; font-weight: 600;">
-          📸 Share a photo in your review for a chance to be featured on our Instagram!
+      <div style="background-color: #fcfaf7; border-radius: 24px; padding: 30px; text-align: center; border: 1px solid #f1f5f9;">
+        <p style="margin: 0; color: #C5A059; font-size: 14px; font-weight: 400; font-style: italic; font-family: 'Playfair Display', serif;">
+          "Every review is a story shared."
         </p>
       </div>
     `;
 
-    return emailBaseTemplate('Your feedback matters! ❤️', content, 'We would love to hear your feedback on your recent purchase.');
+    return emailBaseTemplate('Our artisans value your perspective', content, 'We invite you to share your thoughts on your recent RongRani acquisition.');
   },
 
   // 6. Low Stock Alert (Admin)
   lowStockAlert: (data) => {
     const content = `
-      <div style="background: #fef2f2; border-radius: 16px; padding: 20px; border-left: 5px solid #dc2626; margin-bottom: 30px;">
-        <h2 style="color: #dc2626; font-size: 22px; font-weight: 800; margin: 0;">⚠️ Low Stock Alert</h2>
-        <p style="margin-top: 5px; color: #991b1b; font-weight: 600;">Inventory needs attention!</p>
-      </div>
-      
-      <div style="background-color: #ffffff; border: 2px solid #fee2e2; border-radius: 24px; padding: 40px; text-align: center; margin: 30px 0;">
-        <div style="color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.1em; margin-bottom: 10px;">Product Name</div>
-        <h3 style="margin: 0; color: #1e293b; font-size: 22px; font-weight: 800;">${data.name}</h3>
+      <div style="background: #ffffff; border-radius: 24px; padding: 40px; border: 1px solid #fee2e2; text-align: center;">
+        <div style="display: inline-block; background: #dc2626; color: white; padding: 8px 16px; border-radius: 100px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px;">Inventory Integrity</div>
+        <h2 class="h-premium" style="color: #0f172a; margin: 0;">Supply Scarcity Alert</h2>
         
-        <div style="font-size: 48px; font-weight: 900; color: #dc2626; margin: 25px 0;">${data.stock}</div>
-        <div style="font-size: 14px; color: #991b1b; font-weight: 700; text-transform: uppercase;">Units Remaining</div>
+        <div class="gold-divider"></div>
         
-        <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid #fee2e2; color: #64748b; font-size: 13px;">
-          Product ID: <span style="font-family: monospace;">${data._id}</span>
+        <p style="color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 10px;">Masterpiece</p>
+        <h3 style="margin: 0 0 30px 0; color: #0f172a; font-size: 24px; font-family: 'Playfair Display', serif;">${data.name}</h3>
+        
+        <div style="font-size: 64px; font-weight: 400; color: #dc2626; font-family: 'Playfair Display', serif;">${data.stock}</div>
+        <div style="font-size: 12px; color: #94a3b8; font-weight: 800; text-transform: uppercase; letter-spacing: 3px;">Units Remaining in Vault</div>
+        
+        <div style="margin-top: 40px; border-top: 1px solid #f1f5f9; padding-top: 30px; color: #94a3b8; font-size: 12px; font-weight: 300;">
+          REFERENCE Dossier: <span style="font-family: monospace; color: #0f172a;">${data._id}</span>
         </div>
       </div>
 
       <center>
-        <a href="${process.env.FRONTEND_URL}/admin/products" class="btn" style="background: #dc2626; box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4);">Restock Inventory</a>
+        <a href="${process.env.FRONTEND_URL}/admin/products" class="btn" style="background: #dc2626;">Execute Restock</a>
       </center>
     `;
 
-    return emailBaseTemplate(`Critical: Low Stock [${data.name}]`, content, `Action required: ${data.name} has only ${data.stock} units left.`);
+    return emailBaseTemplate(`Critical Alert: Scarcity of [${data.name}]`, content, `Immediate action: ${data.name} is nearly depleted.`);
   },
+};
 };
 
 // Send email function
