@@ -246,6 +246,7 @@ const submitReview = async (req, res) => {
     // Check if user has ordered this product
     let hasOrdered = false;
     let userEmail = null;
+    let userName = null;
 
     if (req.user) {
       // Logged-in user - check order history
@@ -256,6 +257,7 @@ const submitReview = async (req, res) => {
       });
       hasOrdered = userOrders.length > 0;
       userEmail = req.user.email;
+      userName = req.user.name;
     } else if (guestEmail && orderId) {
       // Guest user - verify order with email and orderId
       const guestOrder = await Order.findById(orderId);
@@ -267,6 +269,7 @@ const submitReview = async (req, res) => {
       ) {
         hasOrdered = true;
         userEmail = guestEmail;
+        userName = guestOrder.guestInfo?.name || guestOrder.shippingAddress?.name || 'Valued Guest';
       }
     }
 
@@ -281,6 +284,7 @@ const submitReview = async (req, res) => {
       product: productId,
       $or: [
         { user: req.user?._id },
+        { guestName: userName }, // Check by name/email
         { guestName: userEmail },
       ],
     });
@@ -293,7 +297,7 @@ const submitReview = async (req, res) => {
     const review = await Review.create({
       product: productId,
       user: req.user?._id || null,
-      guestName: !req.user ? userEmail : null,
+      guestName: !req.user ? userName : null,
       rating,
       title: title || '',
       comment,
@@ -325,20 +329,16 @@ const submitReview = async (req, res) => {
     // Emit real-time event
     emitEvent(req, 'review:submitted', { review, productId });
 
-    // Get user details for email
-    const reviewerName = req.user ? req.user.name : (guestName || 'Valued Customer');
-    const reviewerEmail = req.user ? req.user.email : guestEmail;
-
     // Send Thank You Email
-    if (reviewerEmail) {
+    if (userEmail) {
       // We don't await this to avoid blocking the response
       const { sendEmail } = require('../services/emailService');
       sendEmail(
-        reviewerEmail,
+        userEmail,
         'Thanks for your review! 💖',
         'reviewThankYou',
         {
-          name: reviewerName,
+          name: userName,
           productName: product.name,
           comment: comment
         }
@@ -346,7 +346,7 @@ const submitReview = async (req, res) => {
     }
 
     res.status(201).json({
-      message: 'Review submitted! Check your email for a surprise! 🎁',
+      message: 'Review submitted! It will be published after admin approval. ✨',
       review,
     });
   } catch (error) {
