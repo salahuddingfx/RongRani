@@ -3,31 +3,37 @@ const nodemailer = require('nodemailer');
 // Email transporter configuration
 const createTransporter = () => {
   // Check for Brevo (Sendinblue) Configuration
-  const smtpHost = process.env.BREVO_SMTP_HOST || process.env.SMTP_HOST;
-  let smtpPort = process.env.BREVO_SMTP_PORT || process.env.SMTP_PORT || 2525;
+  const smtpHost = process.env.SMTP_HOST || process.env.BREVO_SMTP_HOST;
+  let smtpPort = process.env.SMTP_PORT || process.env.BREVO_SMTP_PORT || 587;
 
-  // FORCE PORT 2525 for Brevo on Cloud environments (Render/Vercel/etc)
-  // because port 587 is almost always blocked or times out.
-  if (smtpHost && smtpHost.includes('brevo.com')) {
+  // Gmail detection
+  if (smtpHost && smtpHost.includes('gmail.com')) {
+    console.log('📧 Gmail detected, applying Gmail optimization...');
+    smtpPort = 587;
+  }
+  // FORCE PORT 2525 for Brevo on Cloud environments
+  else if (smtpHost && smtpHost.includes('brevo.com')) {
     console.log('🚀 Brevo detected, forcing Port 2525 for better reliability...');
     smtpPort = 2525;
   }
 
-  const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
-  const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
+  const smtpUser = process.env.SMTP_USER || process.env.BREVO_SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS || process.env.BREVO_SMTP_PASS;
 
   console.log('🔍 Checking Email Config:');
   console.log('Host:', smtpHost);
   console.log('Port:', smtpPort);
   console.log('User:', smtpUser);
-  console.log('Pass Length:', smtpPass ? smtpPass.length : 0);
 
   if (smtpHost && smtpUser && smtpPass) {
-    console.log(`✅ Configuring Email Service: ${smtpHost.includes('brevo') ? 'Brevo' : 'SMTP'} on Port ${smtpPort}`);
+    const isGmail = smtpHost.includes('gmail.com');
+    console.log(`✅ Configuring Email Service: ${isGmail ? 'Gmail' : 'SMTP'} on Port ${smtpPort}`);
+
     return nodemailer.createTransport({
       host: smtpHost,
       port: Number(smtpPort),
-      secure: false, // true for 465, false for other ports
+      secure: isGmail ? false : (smtpPort == 465), // Gmail usually uses 587/false or 465/true
+      service: isGmail ? 'gmail' : undefined, // Explicitly set gmail service if detected
       auth: {
         user: smtpUser,
         pass: smtpPass,
