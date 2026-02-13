@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { Plus, Edit, Trash2, X, Package, Eye, EyeOff, Search } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Package, Eye, EyeOff, Search, Star } from 'lucide-react';
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
