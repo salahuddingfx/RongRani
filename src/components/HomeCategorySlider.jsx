@@ -100,7 +100,7 @@ const HomeCategorySlider = ({ category }) => {
             onMouseEnter={() => setShowArrows(true)}
             onMouseLeave={() => setShowArrows(false)}
         >
-            <div className="flex items-center justify-between mb-6 px-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 px-4 gap-4">
                 <div>
                     <h2 className="text-2xl md:text-3xl font-bold text-charcoal flex items-center gap-2">
                         <span className="w-2 h-8 bg-maroon rounded-full inline-block"></span>
@@ -110,29 +110,39 @@ const HomeCategorySlider = ({ category }) => {
                         {category.description || `Explore our ${category.name.toLowerCase()} collection`}
                     </p>
                 </div>
-                <Link
-                    to={`/shop?category=${encodeURIComponent(category.name)}`}
-                    className="flex items-center text-maroon font-bold hover:underline group/link"
-                >
-                    {t('view_all')}
-                    <ArrowRight className="ml-2 w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
-                </Link>
+
+                <div className="flex items-center gap-4">
+                    <Link
+                        to={`/shop?category=${encodeURIComponent(category.name)}`}
+                        className="flex items-center text-maroon font-bold hover:underline group/link text-sm md:text-base mr-2"
+                    >
+                        {t('view_all')}
+                        <ArrowRight className="ml-2 w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+                    </Link>
+
+                    {/* Navigation Buttons in Header */}
+                    <div className="hidden md:flex items-center gap-2">
+                        <button
+                            onClick={() => scroll('left')}
+                            className="w-10 h-10 bg-white border border-maroon/20 rounded-full flex items-center justify-center shadow-sm text-maroon hover:bg-maroon hover:text-white transition-all duration-300"
+                            aria-label="Previous"
+                        >
+                            <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <button
+                            onClick={() => scroll('right')}
+                            className="w-10 h-10 bg-white border border-maroon/20 rounded-full flex items-center justify-center shadow-sm text-maroon hover:bg-maroon hover:text-white transition-all duration-300"
+                            aria-label="Next"
+                        >
+                            <ChevronRight className="w-5 h-5" />
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div className="relative overflow-visible">
-                {/* Navigation Buttons */}
-                <button
-                    onClick={() => scroll('left')}
-                    className={`absolute -left-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/90 backdrop-blur-sm border border-maroon/10 rounded-full flex items-center justify-center shadow-xl text-maroon transition-all duration-300 ${showArrows ? 'opacity-100' : 'opacity-0 md:opacity-0 pointer-events-none md:pointer-events-auto shadow-none'}`}
-                >
-                    <ChevronLeft className="w-6 h-6" />
-                </button>
-                <button
-                    onClick={() => scroll('right')}
-                    className={`absolute -right-2 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-white/90 backdrop-blur-sm border border-maroon/10 rounded-full flex items-center justify-center shadow-xl text-maroon transition-all duration-300 ${showArrows ? 'opacity-100' : 'opacity-0 md:opacity-0 pointer-events-none md:pointer-events-auto shadow-none'}`}
-                >
-                    <ChevronRight className="w-6 h-6" />
-                </button>
+                {/* Mobile arrows removed from sides for cleaner look, but we can keep them subtle if needed. 
+                    Actually, for mobile, touch scroll is enough. I'll remove the absolute buttons. */}
 
                 {/* Products Scroll Container */}
                 <div
