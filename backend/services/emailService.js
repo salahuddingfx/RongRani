@@ -361,7 +361,7 @@ const emailTemplates = {
       </div>
 
       <center>
-        <a href="${process.env.FRONTEND_URL}/order-tracking/${order.orderId}${trackingQuery}" class="btn">Monitor Status</a>
+        <a href="${process.env.FRONTEND_URL}/track/${order.orderId}${trackingQuery}" class="btn">Monitor Status</a>
       </center>
       
       <div class="signature-text" style="text-align: center; margin-top: 40px;">- The RongRani Team</div>
@@ -423,7 +423,7 @@ const emailTemplates = {
       ` : ''}
 
       <center>
-        <a href="${process.env.FRONTEND_URL}/order-tracking/${data.orderId}${data.trackingQuery || ''}" class="btn">Monitor Curation</a>
+        <a href="${process.env.FRONTEND_URL}/track/${data.orderId}${data.trackingQuery || ''}" class="btn">Monitor Curation</a>
       </center>
     `;
 
@@ -514,6 +514,13 @@ const emailTemplates = {
 
   // 5. Review Request Email
   reviewRequest: (data) => {
+    const products = (data.items || []).map(item => `
+      <div style="display: inline-block; width: 100px; text-align: center; margin: 10px; vertical-align: top;">
+        <img src="${item.image}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 15px; border: 1px solid #f1f5f9; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+        <div style="font-size: 11px; color: #475569; margin-top: 8px; font-weight: 600; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 26px;">${item.name}</div>
+      </div>
+    `).join('');
+
     const content = `
       <div style="text-align: center; margin-bottom: 45px;">
         <div class="verified-badge">Client Experience</div>
@@ -521,13 +528,20 @@ const emailTemplates = {
         <p style="font-size: 17px; color: #64748b; font-weight: 300;">Hello <strong>${data.name}</strong>, we hope your new curation brings you joy.</p>
       </div>
       
+      ${products ? `
+        <div style="text-align: center; margin-bottom: 40px; background: #fafafa; border-radius: 24px; padding: 30px 15px; border: 1px solid #f1f5f9;">
+          <div style="color: #94a3b8; font-size: 10px; text-transform: uppercase; letter-spacing: 3px; font-weight: 800; margin-bottom: 20px;">Your Curated Selection</div>
+          ${products}
+        </div>
+      ` : ''}
+      
       <p style="font-size: 16px; color: #475569; line-height: 2; text-align: center; max-width: 450px; margin: 0 auto; font-weight: 300;">
         Your feedback is the soul of RongRani. It inspires our artisans and guides our community. We would be honored if you shared your experience.
       </p>
 
       <center style="margin: 60px 0;">
         <div style="font-size: 44px; letter-spacing: 15px; margin-bottom: 40px; color: #C5A059; text-shadow: 0 2px 4px rgba(0,0,0,0.05);">⭐⭐⭐⭐⭐</div>
-        <a href="${process.env.FRONTEND_URL}/order-tracking/${data.orderId}${data.trackingQuery || ''}" class="btn">Share Your Impression</a>
+        <a href="${process.env.FRONTEND_URL}/track/${data.orderId}${data.trackingQuery || ''}" class="btn">Share Your Impression</a>
       </center>
       
       <div style="background-color: #fcfaf7; border-radius: 24px; padding: 30px; text-align: center; border: 1px solid #f1f5f9;">
@@ -847,12 +861,12 @@ const sendOrderStatusUpdate = (email, name, orderId, status, trackingNumber, tra
 };
 
 
-const sendReviewRequest = (email, name, orderId, trackingQuery) => {
+const sendReviewRequest = (email, name, orderId, items, trackingQuery) => {
   return sendEmail(
     email,
     `Rate your experience with RongRani! ⭐`,
     'reviewRequest',
-    { name, orderId, trackingQuery }
+    { name, orderId, items, trackingQuery }
   );
 };
 

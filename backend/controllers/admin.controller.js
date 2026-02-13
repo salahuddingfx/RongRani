@@ -324,6 +324,7 @@ const updateOrder = async (req, res) => {
                 customerEmail,
                 customerName,
                 order._id,
+                order.items,
                 trackingQuery
               );
               console.log('✅ Review request email sent successfully');
