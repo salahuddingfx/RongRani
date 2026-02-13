@@ -3,19 +3,25 @@ import { Star, X, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const ReviewForm = ({ productId, onReviewSubmitted = () => { }, onClose = () => { } }) => {
+const ReviewForm = ({
+  productId,
+  onReviewSubmitted = () => { },
+  onClose = () => { },
+  initialGuestEmail = '',
+  initialOrderId = ''
+}) => {
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+  const token = localStorage.getItem('token');
+
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
   const [hoveredRating, setHoveredRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [guestEmail, setGuestEmail] = useState('');
-  const [orderId, setOrderId] = useState('');
-  const [isGuest, setIsGuest] = useState(false);
-
-  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
-  const token = localStorage.getItem('token');
+  const [guestEmail, setGuestEmail] = useState(initialGuestEmail);
+  const [orderId, setOrderId] = useState(initialOrderId);
+  const [isGuest, setIsGuest] = useState(!!(initialGuestEmail && initialOrderId) && !user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -150,8 +156,8 @@ const ReviewForm = ({ productId, onReviewSubmitted = () => { }, onClose = () => 
                 >
                   <Star
                     className={`h-10 w-10 ${star <= (hoveredRating || rating)
-                        ? 'fill-gold text-gold'
-                        : 'text-slate/30'
+                      ? 'fill-gold text-gold'
+                      : 'text-slate/30'
                       } transition-colors`}
                   />
                 </button>

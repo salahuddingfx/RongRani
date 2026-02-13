@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import { Package, Truck, CheckCircle, MapPin, Calendar, DollarSign, ArrowLeft, Phone, Mail } from 'lucide-react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 import io from 'socket.io-client';
+import ReviewForm from '../components/ReviewForm';
 
 const OrderTracking = () => {
   const { orderId } = useParams();
@@ -16,6 +18,7 @@ const OrderTracking = () => {
   const [contactPhone, setContactPhone] = useState('');
   const [error, setError] = useState('');
   const [socket, setSocket] = useState(null);
+  const [reviewingProductId, setReviewingProductId] = useState(null);
 
   useEffect(() => {
     // Initialize Socket
@@ -306,20 +309,36 @@ const OrderTracking = () => {
               </h2>
               <div className="space-y-4">
                 {order.items.map((item, index) => (
-                  <div key={index} className="flex items-center space-x-4 p-4 bg-cream-light rounded-xl">
-                    <img
-                      src={item.product?.images?.[0] || item.image || 'https://via.placeholder.com/100'}
-                      alt={item.product?.name || item.name}
-                      className="w-20 h-20 object-cover rounded-lg shadow-soft"
-                    />
-                    <div className="flex-1">
-                      <h3 className="font-bold text-charcoal">{item.product?.name || item.name}</h3>
-                      <p className="text-slate text-sm">Quantity: {item.quantity}</p>
+                  <div key={index} className="flex flex-col space-y-3 p-4 bg-cream-light rounded-xl shadow-sm border border-maroon/5">
+                    <div className="flex items-center space-x-4">
+                      <img
+                        src={item.product?.images?.[0] || item.image || 'https://via.placeholder.com/100'}
+                        alt={item.product?.name || item.name}
+                        className="w-20 h-20 object-cover rounded-lg shadow-soft"
+                      />
+                      <div className="flex-1">
+                        <Link to={`/product/${item.product?._id || item.product}`} className="font-bold text-charcoal hover:text-maroon transition-colors">
+                          {item.product?.name || item.name}
+                        </Link>
+                        <p className="text-slate text-sm">Quantity: {item.quantity}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-maroon text-lg">৳{item.price * item.quantity}</p>
+                        <p className="text-sm text-slate">৳{item.price} each</p>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-bold text-maroon text-lg">৳{item.price * item.quantity}</p>
-                      <p className="text-sm text-slate">৳{item.price} each</p>
-                    </div>
+
+                    {order.orderStatus === 'delivered' && (
+                      <div className="pt-2 border-t border-maroon/5 flex justify-end">
+                        <button
+                          onClick={() => setReviewingProductId(item.product?._id || item.product)}
+                          className="flex items-center space-x-2 text-sm font-bold text-maroon hover:bg-maroon/5 px-4 py-2 rounded-lg transition-all border border-maroon/20"
+                        >
+                          <CheckCircle className="h-4 w-4" />
+                          <span>Review this product</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
@@ -423,6 +442,20 @@ const OrderTracking = () => {
           </div>
         </div>
       </div>
+
+      {/* Review Modal */}
+      {reviewingProductId && (
+        <ReviewForm
+          productId={reviewingProductId}
+          initialGuestEmail={contactEmail || order.guestInfo?.email}
+          initialOrderId={order._id}
+          onClose={() => setReviewingProductId(null)}
+          onReviewSubmitted={() => {
+            // Optional: Re-fetch or update UI to show it's reviewed
+            toast.success('Thank you for your review!');
+          }}
+        />
+      )}
     </div>
   );
 };
