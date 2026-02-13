@@ -67,13 +67,13 @@
 
 #### 🌟 Enhanced Features
 - ✅ **Hot Offers** banner system
-- ✅ **Recently Viewed** products
-- ✅ **Related Products** suggestions
+- ✅ **Recently Viewed** function
+- ✅ **WhatsApp Integration** (Live Support)
+- ✅ **PWA Support** (Installable as App)
 - ✅ **AI-Powered Recommendations**
 - ✅ **Real-time Notifications** (Socket.io)
 - ✅ **Newsletter** subscription
 - ✅ **Responsive Design** (Mobile-first)
-- ✅ **Page Transitions** & animations
 
 </td>
 </tr>
@@ -145,6 +145,43 @@ graph LR
 </td>
 </tr>
 </table>
+</div>
+
+### 📱 PWA & Mobile App
+<div align="center">
+
+| Feature | Details |
+|---------|---------|
+| 📲 **Installable App** | Add to Home Screen on iOS & Android |
+| 📴 **Offline Support** | Browse key pages without internet |
+| 🔔 **Push Experience** | App-like feel with smooth transitions |
+| ⚡ **Performance** | Cached assets for instant loading |
+
+</div>
+
+### 🚚 Delivery Logistics & Fees
+<div align="center">
+
+| Location | Charge | Threshold for Free Shipping |
+|----------|--------|-----------------------------|
+| 🏙️ **Inside Cox's Bazar** | ৳70 | > ৳2500 Order |
+| 🌄 **Outside Cox's Bazar** | ৳150 | > ৳2500 Order |
+
+*Dynamic fee calculation based on shipping address selection.*
+
+</div>
+
+### 💬 Customer Support Channels
+<div align="center">
+
+| Channel | Availability | Features |
+|---------|--------------|----------|
+| 🟢 **WhatsApp** | 24/7 | Instant Chat, Quick Replies |
+| 🤖 **AI Assistant** | Always On | Product Suggestions, FAQs |
+| 📧 **Email Support** | 24 Hours | Order Issues, Detailed Queries |
+| 📞 **Hotline** | 10 AM - 10 PM | Direct Phone Support |
+
+</div>
 
 ### 🎨 Design & UX
 
@@ -246,6 +283,9 @@ graph LR
 | 🎨 **PostCSS** | CSS Processing |
 | 🚀 **Vite** | Build Tool |
 | 📝 **dotenv** | Environment Variables |
+| ⚡ **Vercel**  | Frontend Hosting  |
+| 🖥️ **Render**  | Backend Hosting   |
+| 📱 **PWA**     | Mobile Experience |
 
 </div>
 
@@ -609,7 +649,7 @@ DELETE /api/reviews/:id         # Delete review
 ### Phase 3 - Advanced Features 🚧
 - [ ] AI Product Recommendations
 - [ ] Advanced Analytics
-- [ ] Mobile App (React Native)
+- [x] Mobile App (PWA Supported)
 - [ ] Multi-vendor Support
 - [ ] Live Chat Support
 - [ ] Voice Search
@@ -617,7 +657,7 @@ DELETE /api/reviews/:id         # Delete review
 ### Phase 4 - Optimization 📋
 - [ ] Performance Optimization
 - [ ] SEO Improvements
-- [ ] PWA Support
+- [x] PWA Support (Installable App)
 - [ ] Automated Testing
 - [ ] CI/CD Pipeline
 - [ ] Docker Containerization
