@@ -14,6 +14,7 @@ import BannerSlider from '../components/BannerSlider';
 const Newsletter = lazy(() => import('../components/Newsletter'));
 const FlashSale = lazy(() => import('../components/FlashSale'));
 const ProductCard = lazy(() => import('../components/ProductItem'));
+const HomeCategorySlider = lazy(() => import('../components/HomeCategorySlider'));
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -365,6 +366,17 @@ const Home = () => {
               </div>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Category Wise Sliders */}
+      <section className="py-12 bg-gray-50 dark:bg-slate-800/50 overflow-hidden">
+        <div className="section-container">
+          {categories.slice(0, 3).map((category, index) => (
+            <Suspense key={category._id || index} fallback={<div className="h-96 animate-pulse bg-gray-100 rounded-3xl mb-12" />}>
+              <HomeCategorySlider category={category} />
+            </Suspense>
+          ))}
         </div>
       </section>
 
