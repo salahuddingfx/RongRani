@@ -112,12 +112,31 @@ const ProductItem = ({ product }) => {
 
                     {/* Footer: Rating & Cart */}
                     <div className="mt-auto flex items-center justify-between border-t border-slate-50 pt-2">
-                        {/* Rating */}
-                        <div className="flex items-center gap-0.5">
-                            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                            <span className="text-[10px] font-medium text-slate-600">
-                                {productRating > 0 ? productRating.toFixed(1) : 'New'}
-                            </span>
+                        {/* Rating & Sales */}
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-center gap-1.5">
+                                <div className="flex items-center">
+                                    {[...Array(5)].map((_, i) => (
+                                        <Star
+                                            key={i}
+                                            className={`w-2.5 h-2.5 ${i < Math.floor(productRating) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
+                                        />
+                                    ))}
+                                </div>
+                                <span className="text-[10px] font-bold text-slate-700">
+                                    {productRating > 0 ? productRating.toFixed(1) : '5.0'}
+                                </span>
+                            </div>
+
+                            <div className="flex items-center gap-1">
+                                <div className="w-1 h-1 rounded-full bg-slate-300"></div>
+                                <span className="text-[9px] font-medium text-slate-500">
+                                    {product.salesCount > 0
+                                        ? `${product.salesCount >= 1000 ? (product.salesCount / 1000).toFixed(1) + 'k' : product.salesCount}+ purchased`
+                                        : 'Newly Launched'
+                                    }
+                                </span>
+                            </div>
                         </div>
 
                         {/* Cart Button */}

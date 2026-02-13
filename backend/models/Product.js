@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema({
   },
   originalPrice: {
     type: Number,
-    default: function() {
+    default: function () {
       return this.price;
     },
   },
@@ -40,7 +40,7 @@ const productSchema = new mongoose.Schema({
     type: [String],
     default: [],
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return v.length >= 1;
       },
       message: 'At least one image is required'
@@ -88,6 +88,11 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  salesCount: {
+    type: Number,
+    default: 0,
+    min: 0,
+  },
   attributes: [{
     name: String,
     value: String,
@@ -114,7 +119,7 @@ const productSchema = new mongoose.Schema({
 });
 
 // Update updatedAt on save
-productSchema.pre('save', function(next) {
+productSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });

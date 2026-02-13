@@ -300,24 +300,37 @@ const ProductDetail = () => {
               </h1>
 
               {/* Rating */}
-              <div className="flex items-center space-x-4 mb-6 pb-6 border-b-2 border-maroon/10">
-                <div className="flex items-center space-x-1 bg-gold/10 px-3 py-2 rounded-xl">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-5 w-5 ${i < Math.floor(product.rating || 0)
-                        ? 'text-gold fill-current'
-                        : 'text-slate/30'
-                        }`}
-                    />
-                  ))}
-                </div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 pb-6 border-b-2 border-maroon/10">
                 <div className="flex items-center space-x-3">
-                  <span className="text-2xl font-bold text-maroon">
-                    {product.rating?.toFixed(1) || '0.0'}
-                  </span>
-                  <span className="text-slate/60 font-medium">
-                    ({product.reviewCount || 0} reviews)
+                  <div className="flex items-center space-x-1 bg-gold/10 px-3 py-2 rounded-xl">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-5 w-5 ${i < Math.floor(product.rating || 5) // Default to 5 if no rating
+                          ? 'text-gold fill-current'
+                          : 'text-slate/30'
+                          }`}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl font-bold text-maroon">
+                      {product.rating?.toFixed(1) || '5.0'}
+                    </span>
+                    <span className="text-slate/60 font-medium">
+                      ({product.reviewCount || 0} reviews)
+                    </span>
+                  </div>
+                </div>
+
+                {/* Purchase Count Badge */}
+                <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-xl border border-blue-100 shadow-sm">
+                  <TrendingUp className="w-4 h-4" />
+                  <span className="text-sm font-bold">
+                    {product.salesCount > 0
+                      ? `${product.salesCount >= 1000 ? (product.salesCount / 1000).toFixed(1) + 'k' : product.salesCount}+ items sold`
+                      : 'Hot New Arrival'
+                    }
                   </span>
                 </div>
               </div>

@@ -108,8 +108,9 @@ const createOrder = async (req, res) => {
         attributes: item.attributes || [],
       });
 
-      // Update product stock (Ensure atomic update if possible, but simple save is okay for now)
+      // Update product stock and sales count
       product.stock -= item.quantity;
+      product.salesCount = (product.salesCount || 0) + item.quantity;
       await product.save();
 
       // Check for Low Stock
