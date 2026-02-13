@@ -14,6 +14,7 @@ import BannerSlider from '../components/BannerSlider';
 const Newsletter = lazy(() => import('../components/Newsletter'));
 const FlashSale = lazy(() => import('../components/FlashSale'));
 import HomeCategorySlider from '../components/HomeCategorySlider';
+import ProductCard from '../components/ProductItem';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
