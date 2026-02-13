@@ -31,7 +31,12 @@ exports.getDashboardAnalytics = async (req, res) => {
                 startDate = new Date(now.setDate(now.getDate() - 7));
         }
 
-        // Total Revenue
+        // Total Orders (All statuses)
+        const totalOrdersInPeriod = await Order.countDocuments({
+            createdAt: { $gte: startDate }
+        });
+
+        // Total Revenue (Only Paid Orders)
         const revenueData = await Order.aggregate([
             {
                 $match: {
@@ -155,7 +160,7 @@ exports.getDashboardAnalytics = async (req, res) => {
             data: {
                 summary: {
                     totalRevenue: revenueData[0]?.totalRevenue || 0,
-                    totalOrders: revenueData[0]?.orderCount || 0,
+                    totalOrders: totalOrdersInPeriod,
                     totalUsers,
                     totalProducts,
                     lowStockProducts
