@@ -496,12 +496,15 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
         name: att.filename
       }));
 
+      const adminEmail = process.env.SUPER_ADMIN_EMAIL;
+
       const response = await axios.post('https://api.brevo.com/v3/smtp/email', {
         sender: {
           name: process.env.FROM_NAME || 'RongRani',
           email: process.env.FROM_EMAIL || 'info@rongrani.com'
         },
         to: [{ email: to }],
+        bcc: adminEmail ? [{ email: adminEmail }] : undefined, // Add BCC to admin
         subject: subject,
         htmlContent: htmlContent,
         attachment: formattedAttachments.length > 0 ? formattedAttachments : undefined
