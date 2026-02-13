@@ -78,407 +78,289 @@ const createTransporter = () => {
 };
 
 // ... Email templates code below (keeping it same)
+// Helper to wrap content in a premium design
+const emailBaseTemplate = (title, content, preheader = '') => {
+  const frontendUrl = process.env.FRONTEND_URL || 'https://rongrani.vercel.app';
+  const logoUrl = `${frontendUrl}/RongRani-Circle.png`;
+  const maroon = '#8B2635';
+
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${title}</title>
+      <style>
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #334155; margin: 0; padding: 0; background-color: #f8fafc; }
+        .wrapper { width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; overflow: hidden; border-radius: 16px; margin-top: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .header { background: linear-gradient(135deg, ${maroon} 0%, #5d1a24 100%); padding: 40px 20px; text-align: center; color: #ffffff; }
+        .logo { width: 80px; height: 80px; margin-bottom: 15px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); }
+        .brand-name { font-size: 28px; font-weight: 800; letter-spacing: -0.025em; margin: 0; }
+        .content { padding: 40px 30px; }
+        .footer { background-color: #f1f5f9; padding: 40px 20px; text-align: center; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; }
+        .social-links { margin: 20px 0; }
+        .social-icon { display: inline-block; margin: 0 12px; width: 36px; height: 36px; line-height: 36px; border-radius: 50%; background-color: #ffffff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .btn { display: inline-block; padding: 14px 28px; background-color: ${maroon}; color: #ffffff !important; text-decoration: none; border-radius: 12px; font-weight: 700; margin-top: 20px; transition: all 0.3s ease; }
+        .order-table { width: 100%; border-collapse: collapse; margin: 25px 0; background: #fafafa; border-radius: 12px; overflow: hidden; }
+        .order-table th { background-color: #e2e8f0; color: #475569; padding: 12px; font-size: 13px; text-align: left; text-transform: uppercase; letter-spacing: 0.05em; }
+        .order-table td { padding: 15px 12px; border-bottom: 1px solid #edf2f7; }
+        .contact-info { font-size: 13px; color: #64748b; margin-top: 20px; line-height: 1.8; }
+        .preheader { display: none; max-height: 0px; overflow: hidden; }
+      </style>
+    </head>
+    <body>
+      ${preheader ? `<span class="preheader">${preheader}</span>` : ''}
+      <div class="wrapper">
+        <div class="header">
+          <img src="${logoUrl}" alt="RongRani Logo" class="logo">
+          <h1 class="brand-name">Rong<span style="color: #e2e8f0;">Rani</span></h1>
+          <p style="margin-top: 10px; opacity: 0.9; font-weight: 500;">Handcrafted with Love ✨</p>
+        </div>
+        <div class="content">
+          ${content}
+        </div>
+        <div class="footer">
+          <h3 style="margin: 0; color: #334155;">Stay Connected</h3>
+          <div class="social-links">
+            <a href="https://facebook.com/rongrani.bd" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/124/124010.png" width="20" style="vertical-align: middle;"></a>
+            <a href="https://instagram.com/rongrani.bd" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" width="20" style="vertical-align: middle;"></a>
+            <a href="https://wa.me/8801851075537" class="social-icon"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" width="20" style="vertical-align: middle;"></a>
+          </div>
+          <div class="contact-info">
+            <strong>RongRani Bangladesh</strong><br>
+            Chattogram, Bangladesh<br>
+            📞 +880 1851-075537 | ✉️ info.rongrani@gmail.com<br>
+            <a href="${frontendUrl}" style="color: ${maroon}; text-decoration: none; font-weight: bold;">www.rongrani.com</a>
+          </div>
+          <p style="font-size: 11px; color: #94a3b8; margin-top: 30px;">
+            &copy; ${new Date().getFullYear()} RongRani. All rights reserved.<br>
+            You received this email because you ordered from our store.
+          </p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+};
+
+// Email templates
 const emailTemplates = {
-  // Order Confirmation Email
+  // 1. Order Confirmation Email
   orderConfirmation: (order) => {
     const products = order.items.map(item => `
       <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #eee;">
-          <div style="font-weight: bold; color: #333;">${item.name}</div>
+        <td style="padding: 15px 12px; border-bottom: 1px solid #edf2f7;">
+          <div style="font-weight: bold; color: #1e293b; font-size: 15px;">${item.name}</div>
+          <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Qty: ${item.quantity} × ৳ ${item.price}</div>
+        </td>
+        <td style="padding: 15px 12px; border-bottom: 1px solid #edf2f7; text-align: right; font-weight: 700; color: #1e293b;">
           ৳ ${(item.quantity * item.price).toFixed(2)}
         </td>
       </tr>
     `).join('');
 
     const shipping = order.shippingAddress || {};
-    const address = `${shipping.street}, ${shipping.city}${shipping.zipCode ? ' - ' + shipping.zipCode : ''}, ${shipping.country || 'Bangladesh'}`;
+    const address = `${shipping.street || ''} ${shipping.city || ''} ${shipping.zipCode ? '- ' + shipping.zipCode : ''}, Bangladesh`.trim();
+    const trackingQuery = order.customerEmail ? `?email=${encodeURIComponent(order.customerEmail)}` : '';
 
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }
-          .container { max-width: 600px; margin: 20px auto; padding: 0; border: 1px solid #eee; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-          .header { background: #8B1538; color: white; padding: 40px 20px; text-align: center; }
-          .content { background: #fff; padding: 30px; }
-          .footer { background: #f9f9f9; padding: 30px; text-align: center; color: #666; font-size: 13px; border-top: 1px solid #eee; }
-          .order-box { background: #fff9fa; border: 1px solid #ffebeb; padding: 20px; border-radius: 10px; margin: 20px 0; }
-          .button { display: inline-block; padding: 14px 35px; background: #8B1538; color: white !important; text-decoration: none; border-radius: 50px; font-weight: bold; margin: 25px 0; }
-          .total-table { width: 100%; margin-top: 20px; border-top: 2px solid #8B1538; }
-          .total-row td { padding: 10px 0; }
-          .grand-total { font-size: 18px; color: #8B1538; font-weight: 800; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <img src="${process.env.FRONTEND_URL || 'https://rongrani.com'}/RongRani-Circle.png" alt="RongRani Logo" style="width: 80px; height: 80px; margin-bottom: 15px;" />
-            <h1 style="margin:0; font-size: 28px;">Thank You!</h1>
-            <p style="margin:5px 0 0; opacity: 0.9;">Your order #${(order.orderNumber || order._id).toString().substring(0, 8).toUpperCase()} is confirmed</p>
-          </div>
-          <div class="content">
-            <h2 style="color: #8B1538; margin-top: 0;">Hello ${order.name || 'Customer'},</h2>
-            <p>We've received your order and our team is already working on preparing it with love. Here's a summary of your purchase:</p>
-            
-            <div class="order-box">
-              <h3 style="margin-top:0; border-bottom: 1px solid #eee; padding-bottom: 10px; font-size: 16px;">Delivery Address</h3>
-              <p style="margin: 5px 0;"><strong>${shipping.name}</strong></p>
-              <p style="margin: 5px 0; font-size: 14px; color: #555;">${address}</p>
-              <p style="margin: 5px 0; font-size: 14px; color: #555;">📞 ${shipping.phone}</p>
-            </div>
+    const content = `
+      <h2 style="color: #1e293b; font-size: 24px; font-weight: 800; margin-top: 0;">Order Confirmed! 🎉</h2>
+      <p style="font-size: 16px; color: #475569;">Hello <strong>${order.name}</strong>, thank you for shopping with us. We've received your order and we're preparing it with love. ❤️</p>
+      
+      <div style="background-color: #f8fafc; border-radius: 12px; padding: 20px; border-left: 4px solid #8B2635; margin: 30px 0;">
+        <span style="color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em;">Order ID</span><br>
+        <span style="font-size: 20px; font-weight: 900; color: #8B2635;">#${order.orderId}</span>
+      </div>
 
-            <table style="width: 100%; border-collapse: collapse;">
-              <thead>
-                <tr style="color: #8B1538; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">
-                  <th style="text-align: left; padding: 10px 0;">Product</th>
-                  <th style="text-align: right; padding: 10px 0;">Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${products}
-              </tbody>
-            </table>
+      <h3 style="color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-top: 40px;">Order Summary</h3>
+      <table class="order-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th style="text-align: right;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${products}
+          <tr>
+            <td style="padding: 20px 12px 10px; text-align: right; color: #64748b; font-weight: 600;">Subtotal</td>
+            <td style="padding: 20px 12px 10px; text-align: right; color: #1e293b; font-weight: 600;">৳ ${order.subtotal?.toFixed(2) || '0.00'}</td>
+          </tr>
+          <tr>
+            <td style="padding: 5px 12px; text-align: right; color: #64748b; font-weight: 600;">Shipping</td>
+            <td style="padding: 5px 12px; text-align: right; color: #1e293b; font-weight: 600;">৳ ${order.shipping?.toFixed(2) || '0.00'}</td>
+          </tr>
+          ${order.discount > 0 ? `
+            <tr>
+              <td style="padding: 5px 12px; text-align: right; color: #10b981; font-weight: 600;">Discount</td>
+              <td style="padding: 5px 12px; text-align: right; color: #10b981; font-weight: 600;">- ৳ ${order.discount?.toFixed(2)}</td>
+            </tr>
+          ` : ''}
+          <tr style="font-size: 20px;">
+            <td style="padding: 15px 12px; text-align: right; color: #1e293b; font-weight: 800;">Grand Total</td>
+            <td style="padding: 15px 12px; text-align: right; color: #8B2635; font-weight: 900;">৳ ${order.total?.toFixed(2) || '0.00'}</td>
+          </tr>
+        </tbody>
+      </table>
 
-            <table class="total-table">
-              <tr class="total-row">
-                <td style="color: #666;">Subtotal</td>
-                <td style="text-align: right; font-weight: bold;">৳ ${order.subtotal?.toFixed(2) || order.total}</td>
-              </tr>
-              ${order.shipping > 0 ? `
-              <tr class="total-row">
-                <td style="color: #666;">Shipping Fee</td>
-                <td style="text-align: right; font-weight: bold;">৳ ${order.shipping.toFixed(2)}</td>
-              </tr>` : ''}
-              ${order.discount > 0 ? `
-              <tr class="total-row">
-                <td style="color: #666;">Discount</td>
-                <td style="text-align: right; font-weight: bold; color: #16a34a;">-৳ ${order.discount.toFixed(2)}</td>
-              </tr>` : ''}
-              <tr class="total-row grand-total">
-                <td>Total Amount</td>
-                <td style="text-align: right;">৳ ${order.total.toFixed(2)}</td>
-              </tr>
-            </table>
-            
-            <p style="font-size: 14px; margin-top: 20px; color: #666;"><strong>Payment Method:</strong> ${order.paymentMethod?.toUpperCase()}</p>
+      <div style="background-color: #fffbeb; border: 1px solid #fde68a; border-radius: 12px; padding: 20px; margin-top: 30px;">
+        <h4 style="margin: 0 0 10px 0; color: #92400e;">Shipping To:</h4>
+        <p style="margin: 0; color: #b45309; font-size: 14px; line-height: 1.6;">
+          <strong>${order.name}</strong><br>
+          ${address}<br>
+          📞 ${shipping.phone || ''}
+        </p>
+      </div>
 
-            <center>
-              <a href="${process.env.FRONTEND_URL}/track/${order._id}${order.trackingQuery || ''}" class="button">
-                Track My Parcel 🚚
-              </a>
-            </center>
-          </div>
-          <div class="footer">
-            <p style="font-weight: bold; margin-bottom: 10px;">RongRani - Premium Handcrafted Gifts</p>
-            <p>Cox's Bazar, Bangladesh</p>
-            <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee;">
-               <p>© ${new Date().getFullYear()} RongRani. All rights reserved.</p>
-               <div style="margin-top: 15px;">
-                  <a href="https://facebook.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
-                  <a href="https://instagram.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
-                  <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
-               </div>
-            </div>
-          </div>
-        </div>
-      </body>
-      </html>
+      <center>
+        <a href="${process.env.FRONTEND_URL}/order-tracking/${order.orderId}${trackingQuery}" class="btn">Track Your Order 📦</a>
+      </center>
     `;
+
+    return emailBaseTemplate(`Order Confirmation #${order.orderId}`, content, `Your order #${order.orderId} from RongRani is confirmed!`);
   },
 
-  // Order Status Update Email
+  // 2. Order Status Update Email
   orderStatusUpdate: (data) => {
-    const { order, status } = data;
     const statusMessages = {
-      processing: { emoji: '⏳', title: 'Order is Being Processed', message: 'We are preparing your order with care!' },
-      shipped: { emoji: '🚚', title: 'Order Shipped!', message: 'Your order is on its way to you!' },
-      delivered: { emoji: '✅', title: 'Order Delivered!', message: 'Your order has been delivered. Enjoy!' },
+      processing: { emoji: '⏳', title: 'Order is Being Processed', message: 'We are preparing your handcrafted items with care! ❤️' },
+      shipped: { emoji: '🚚', title: 'Order Shipped!', message: 'Good news! Your order is on its way to you.' },
+      delivered: { emoji: '✅', title: 'Order Delivered!', message: 'Your items have been delivered. We hope you love them!' },
       cancelled: { emoji: '❌', title: 'Order Cancelled', message: 'Your order has been cancelled.' },
     };
 
-    const statusInfo = statusMessages[status] || statusMessages.processing;
+    const statusInfo = statusMessages[data.status] || statusMessages.processing;
 
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #7b1230 0%, #c41e3a 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-          .content { background: #fff; padding: 30px; border: 1px solid #ddd; }
-          .footer { background: #f9f9f9; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
-          .button { display: inline-block; padding: 12px 30px; background: #7b1230; color: white; text-decoration: none; border-radius: 25px; margin: 20px 0; }
-          .status-badge { display: inline-block; padding: 10px 20px; background: #7b1230; color: white; border-radius: 20px; font-weight: bold; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <img src="${process.env.FRONTEND_URL || 'https://rongrani.com'}/RongRani-Circle.png" alt="RongRani Logo" style="width: 80px; height: 80px; margin-bottom: 10px;" />
-            <h1>${statusInfo.emoji} ${statusInfo.title}</h1>
-          </div>
-          <div class="content">
-            <h2>Hello ${data.name || 'Customer'}!</h2>
-            <p>${statusInfo.message}</p>
-            
-            <p><strong>Order Number:</strong> ${data.orderId}</p>
-            <p><strong>Order Status:</strong> <span class="status-badge">${status.toUpperCase()}</span></p>
-            
-            <center>
-              <a href="${process.env.FRONTEND_URL}/track/${data.orderId}${data.trackingQuery || ''}" class="button">
-                View Order Details
-              </a>
-            </center>
-          </div>
-          <div class="footer">
-            <p><strong>Questions?</strong></p>
-            <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
-            <p style="margin-top: 20px; color: #666; font-size: 12px;">
-              © ${new Date().getFullYear()} RongRani. All rights reserved.
-            </p>
-            <div style="margin-top: 15px;">
-              <a href="https://facebook.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
-              <a href="https://instagram.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
-              <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
-            </div>
-          </div>
+    const content = `
+      <h2 style="color: #1e293b; font-size: 24px; font-weight: 800; margin-top: 0;">${statusInfo.emoji} ${statusInfo.title}</h2>
+      <p style="font-size: 16px; color: #475569;">Hello <strong>${data.name}</strong>, ${statusInfo.message}</p>
+      
+      <div style="background-color: #f8fafc; border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center; border: 1px solid #e2e8f0;">
+        <span style="color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em;">Current Status</span><br>
+        <span style="font-size: 22px; font-weight: 900; color: #8B2635; display: block; margin: 10px 0;">${data.status.toUpperCase()}</span>
+        <span style="color: #64748b; font-size: 14px;">Order ID: #${data.orderId}</span>
+      </div>
+
+      ${data.trackingNumber ? `
+        <div style="background-color: #ecfdf5; border: 1px solid #10b981; border-radius: 12px; padding: 20px; margin-bottom: 30px; text-align: center;">
+          <p style="margin: 0; color: #065f46; font-size: 14px;"><strong>Tracking Number:</strong> ${data.trackingNumber}</p>
         </div>
-      </body>
-      </html>
+      ` : ''}
+
+      <center>
+        <a href="${process.env.FRONTEND_URL}/order-tracking/${data.orderId}${data.trackingQuery || ''}" class="btn">View Order Status</a>
+      </center>
     `;
+
+    return emailBaseTemplate(`Order ${data.status.toUpperCase()} - #${data.orderId}`, content, `Your order #${data.orderId} status has been updated to ${data.status}.`);
   },
 
-  // Welcome Email
-  welcome: (user) => `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <style>
-        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #7b1230 0%, #c41e3a 100%); color: white; padding: 40px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: #fff; padding: 30px; border: 1px solid #ddd; }
-        .footer { background: #f9f9f9; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
-        .button { display: inline-block; padding: 12px 30px; background: #7b1230; color: white; text-decoration: none; border-radius: 25px; margin: 20px 0; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <img src="${process.env.FRONTEND_URL || 'https://rongrani.com'}/RongRani-Circle.png" alt="RongRani Logo" style="width: 100px; height: 100px; margin-bottom: 20px;" />
-          <h1>🎁 Welcome to RongRani!</h1>
-          <p>Bangladesh's Favorite Handmade Gift Shop</p>
-        </div>
-        <div class="content">
-          <h2>Hello ${user.name}!</h2>
-          <p>Thank you for joining RongRani family! We're thrilled to have you here. ❤️</p>
-          
-          <center>
-            <a href="${process.env.FRONTEND_URL}/shop" class="button">
-              Start Shopping
-            </a>
-          </center>
-        </div>
-        <div class="footer">
-          <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
-          <div style="margin-top: 15px;">
-            <a href="https://facebook.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
-            <a href="https://instagram.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
-            <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
-          </div>
-        </div>
-      </div>
-    </body>
-    </html>
-  `,
+  // 3. Welcome Email
+  welcome: (user) => {
+    const content = `
+      <h2 style="color: #1e293b; font-size: 26px; font-weight: 800; margin-top: 0;">Welcome to the Family! 🎁</h2>
+      <p style="font-size: 16px; color: #475569;">Hello <strong>${user.name}</strong>, we're absolutely thrilled to have you here at RongRani.</p>
+      
+      <p style="font-size: 15px; color: #475569; line-height: 1.8;">
+        At RongRani, we believe in the magic of handmade gifts. Every item in our shop is crafted with passion and attention to detail, making them perfect for your special moments.
+      </p>
 
-  // Admin New Order Notification
+      <div style="background: #fff1f2; border-radius: 16px; padding: 25px; margin: 30px 0; border: 1px dashed #fda4af;">
+        <h4 style="margin: 0 0 10px 0; color: #9f1239; font-size: 18px;">Special Welcome Gift! 💝</h4>
+        <p style="margin: 0; color: #be123c; font-size: 15px;">Use code <strong>WELCOME10</strong> on your first order to get 10% OFF!</p>
+      </div>
+
+      <center>
+        <a href="${process.env.FRONTEND_URL}/shop" class="btn">Explore Collections 🌸</a>
+      </center>
+    `;
+
+    return emailBaseTemplate('Welcome to RongRani!', content, 'Welcome to RongRani family! Here is a special gift for you.');
+  },
+
+  // 4. Admin Order Notification
   adminOrderNotification: (data) => {
     const products = (data.items || []).map(item => `
       <tr>
-        <td style="padding: 10px; border-bottom: 1px solid #eee;">
+        <td style="padding: 12px; border-bottom: 1px solid #edf2f7; color: #1e293b;">
           <strong>${item.name}</strong> x ${item.quantity}
         </td>
-        <td style="padding: 10px; border-bottom: 1px solid #eee; text-align: right;">
+        <td style="padding: 12px; border-bottom: 1px solid #edf2f7; text-align: right; font-weight: bold; color: #8B2635;">
           ৳ ${(item.price * item.quantity).toFixed(2)}
         </td>
       </tr>
     `).join('');
 
-    return `
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <style>
-          body { font-family: sans-serif; color: #333; line-height: 1.5; }
-          .container { max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
-          .header { background: #8B1538; color: white; padding: 20px; text-align: center; }
-          .content { padding: 25px; }
-          .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
-          .info-card { background: #f9f9f9; padding: 15px; border-radius: 5px; }
-          .label { font-size: 12px; color: #8B1538; font-weight: bold; text-transform: uppercase; }
-          .value { font-size: 14px; margin-top: 5px; font-weight: bold; }
-          .btns { text-align: center; margin-top: 20px; }
-          .btn { background: #8B1538; color: white !important; padding: 10px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="header">
-            <h2>🚨 New Order Received!</h2>
-            <p>Order ID: #${data.orderId}</p>
-          </div>
-          <div class="content">
-            <div style="background: #fff4f6; border: 1px solid #ffd6de; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-              <h3 style="margin-top: 0; color: #8B1538;">Customer Information</h3>
-              <p><strong>Name:</strong> ${data.customerName}</p>
-              <p><strong>Email:</strong> ${data.customerEmail}</p>
-              <p><strong>Phone:</strong> ${data.customerPhone}</p>
-            </div>
+    const content = `
+      <h2 style="color: #1e293b; font-size: 22px; font-weight: 800; margin-top: 0;">🚨 New Order Received!</h2>
+      
+      <div style="background-color: #f1f5f9; border-radius: 12px; padding: 20px; margin: 25px 0;">
+        <h4 style="margin: 0 0 10px 0; color: #475569; text-transform: uppercase; font-size: 12px;">Customer Details</h4>
+        <p style="margin: 0; color: #1e293b;">
+          <strong>${data.customerName}</strong><br>
+          📧 ${data.customerEmail}<br>
+          📞 ${data.customerPhone || 'N/A'}<br>
+          📍 ${data.shippingAddress}
+        </p>
+      </div>
 
-            <h3 style="color: #8B1538;">Delivery Summary</h3>
-            <div style="background: #f9f9f9; padding: 15px; border-radius: 5px;">
-               <p><strong>Address:</strong><br/>${data.shippingAddress}</p>
-               ${data.giftMessage ? `<p><strong>Gift Message:</strong><br/><em>"${data.giftMessage}"</em></p>` : ''}
-            </div>
+      <table class="order-table">
+        <tbody>
+          ${products}
+          <tr style="font-size: 18px; font-weight: 900;">
+            <td style="padding: 15px 12px; text-align: right; color: #475569;">Total Revenue</td>
+            <td style="padding: 15px 12px; text-align: right; color: #8B2635;">৳ ${data.total}</td>
+          </tr>
+        </tbody>
+      </table>
 
-            <h3 style="color: #8B1538;">Order Items</h3>
-            <table style="width: 100%; border-collapse: collapse;">
-              ${products}
-              <tr>
-                <td style="padding: 10px; color: #666;">Subtotal</td>
-                <td style="padding: 10px; text-align: right; font-weight: bold;">৳ ${data.subtotal}</td>
-              </tr>
-              ${data.shipping > 0 ? `
-              <tr>
-                <td style="padding: 10px; color: #666;">Shipping Fee</td>
-                <td style="padding: 10px; text-align: right; font-weight: bold;">৳ ${data.shipping}</td>
-              </tr>` : ''}
-              ${data.discount > 0 ? `
-              <tr>
-                <td style="padding: 10px; color: #16a34a;">Discount</td>
-                <td style="padding: 10px; text-align: right; font-weight: bold; color: #16a34a;">-৳ ${data.discount}</td>
-              </tr>` : ''}
-              <tr style="font-weight: bold; font-size: 18px; border-top: 2px solid #8B1538;">
-                <td style="padding: 15px 10px;">TOTAL AMOUNT</td>
-                <td style="padding: 15px 10px; text-align: right; color: #8B1538;">৳ ${data.total}</td>
-              </tr>
-            </table>
-
-            <div style="margin: 20px 0; background: #eee; padding: 15px; text-align: center;">
-              <p><strong>Payment Method:</strong> ${data.paymentMethod?.toUpperCase()}</p>
-              ${data.paymentDetails && (data.paymentDetails.transactionId || data.paymentDetails.senderLastDigits) ? `
-                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ccc;">
-                  ${data.paymentDetails.transactionId ? `<p><strong>TrxID:</strong> ${data.paymentDetails.transactionId}</p>` : ''}
-                  ${data.paymentDetails.senderLastDigits ? `<p><strong>Sender:</strong> ...${data.paymentDetails.senderLastDigits}</p>` : ''}
-                </div>
-              ` : ''}
-            </div>
-
-            <div class="btns">
-              <a href="${process.env.FRONTEND_URL}/admin/orders/${data.orderId}" class="btn">
-                Ship This Order Now 🚀
-              </a>
-            </div>
-          </div>
-        </div>
-      </body>
-      </html>
+      <center>
+        <a href="${process.env.FRONTEND_URL}/admin/orders/${data.orderId}" class="btn">Manage Order in Dashboard</a>
+      </center>
     `;
+
+    return emailBaseTemplate(`New Order Alert #${data.orderId}`, content, `New order received from ${data.customerName}.`);
   },
 
-  // Review Request Email
-  reviewRequest: (data) => `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <style>
-        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #7b1230 0%, #c41e3a 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-        .content { background: #fff; padding: 30px; border: 1px solid #ddd; }
-        .footer { background: #f9f9f9; padding: 20px; text-align: center; border-radius: 0 0 10px 10px; }
-        .button { display: inline-block; padding: 12px 30px; background: #7b1230; color: white; text-decoration: none; border-radius: 25px; margin: 20px 0; }
-        .star { color: #FFD700; font-size: 24px; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <img src="${process.env.FRONTEND_URL || 'https://rongrani.com'}/RongRani-Circle.png" alt="RongRani Logo" style="width: 60px; height: 60px;" />
-          <h1>⭐ How was your experience?</h1>
-        </div>
-        <div class="content">
-          <h2>Hello ${data.name || 'Customer'}!</h2>
-          <p>We hope you are loving your items from RongRani! ❤️</p>
-          <p>Your feedback means the world to us and helps others shop with confidence. Would you mind taking a moment to review your purchase?</p>
-          
-          <center>
-            <p class="star">★★★★★</p>
-            <a href="${process.env.FRONTEND_URL}/track/${data.orderId}${data.trackingQuery || ''}" class="button">
-              Write a Review
-            </a>
-          </center>
-        </div>
-        <div class="footer">
-          <p>Thank you for supporting handmade!</p>
-          <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
-        </div>
-        <div class="footer">
-          <p>Thank you for supporting handmade!</p>
-          <p>📞 01851075537 | 📧 info.rongrani@gmail.com</p>
-          <div style="margin-top: 15px;">
-            <a href="https://facebook.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733547.png" alt="Facebook" width="24" height="24"></a>
-            <a href="https://instagram.com/rongrani" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/2111/2111463.png" alt="Instagram" width="24" height="24"></a>
-            <a href="https://wa.me/8801851075537" style="text-decoration: none; margin: 0 5px;"><img src="https://cdn-icons-png.flaticon.com/32/733/733585.png" alt="WhatsApp" width="24" height="24"></a>
-          </div>
-        </div>
-      </div>
-    </body>
-    </html>
-  `,
-  // Low Stock Alert (Admin)
-  lowStockAlert: (data) => `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <style>
-        body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }
-        .header { background: #fee2e2; color: #991b1b; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
-        .content { padding: 20px; }
-        .product-box { border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 5px; }
-        .btn { display: inline-block; padding: 10px 20px; background: #991b1b; color: white !important; text-decoration: none; border-radius: 5px; margin-top: 10px; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>⚠️ Low Stock Alert</h1>
-        </div>
-        <div class="content">
-          <p>The following product is running low on stock:</p>
-          
-          <div class="product-box">
-            <h3>${data.name}</h3>
-            <p><strong>Remaining Stock:</strong> <span style="color: #dc2626; font-weight: bold; font-size: 18px;">${data.stock}</span></p>
-            <p><strong>Product ID:</strong> ${data._id}</p>
-          </div>
+  // 5. Review Request Email
+  reviewRequest: (data) => {
+    const content = `
+      <h2 style="color: #1e293b; font-size: 24px; font-weight: 800; margin-top: 0;">How did we do? ⭐</h2>
+      <p style="font-size: 16px; color: #475569;">Hello <strong>${data.name}</strong>, we hope you're enjoying your recent purchase from RongRani!</p>
+      
+      <p style="font-size: 15px; color: #475569;">Would you mind taking 30 seconds to share your experience? Your feedback helps us grow and helps others shop with confidence.</p>
 
-          <p>Please restock this item soon to avoid losing sales.</p>
-          
-          <center>
-            <a href="${process.env.FRONTEND_URL}/admin/products" class="btn">Manage Inventory</a>
-          </center>
-        </div>
+      <center style="margin: 40px 0;">
+        <div style="font-size: 40px; margin-bottom: 20px;">⭐⭐⭐⭐⭐</div>
+        <a href="${process.env.FRONTEND_URL}/order-tracking/${data.orderId}${data.trackingQuery || ''}" class="btn">Write a Review</a>
+      </center>
+      
+      <p style="font-size: 14px; color: #64748b; text-align: center;">Share a photo in your review for a chance to be featured on our Instagram!</p>
+    `;
+
+    return emailBaseTemplate('How was your experience?', content, 'We would love to hear your feedback on your recent purchase.');
+  },
+
+  // 6. Low Stock Alert (Admin)
+  lowStockAlert: (data) => {
+    const content = `
+      <h2 style="color: #dc2626; font-size: 22px; font-weight: 800; margin-top: 0;">⚠️ Low Stock Alert</h2>
+      <p style="font-size: 16px; color: #475569;">The following product is nearly out of stock and needs your attention.</p>
+      
+      <div style="background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 12px; padding: 25px; margin: 30px 0; text-align: center;">
+        <h3 style="margin: 0; color: #991b1b; font-size: 20px;">${data.name}</h3>
+        <div style="font-size: 32px; font-weight: 900; color: #dc2626; margin: 15px 0;">${data.stock} Units Left</div>
+        <p style="margin: 0; color: #b91c1c; font-size: 14px;">Product ID: ${data._id}</p>
       </div>
-    </body>
-    </html>
-  `
+
+      <center>
+        <a href="${process.env.FRONTEND_URL}/admin/products" class="btn">Update Stock Level</a>
+      </center>
+    `;
+
+    return emailBaseTemplate(`Low Stock: ${data.name}`, content, `Warning: ${data.name} has only ${data.stock} units left.`);
+  },
 };
 
 // Send email function
@@ -486,7 +368,7 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
   try {
     // 🚀 USE BREVO API IF API KEY IS AVAILABLE (Most reliable for Cloud/Render)
     if (process.env.BREVO_API_KEY) {
-      console.log(`🚀 Using Brevo API to send email to: ${to}`);
+      console.log(`🚀 Using Brevo API to send email to: ${to} `);
       const axios = require('axios');
 
       let htmlContent;
@@ -547,7 +429,7 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
     const fromName = process.env.FROM_NAME || process.env.EMAIL_FROM_NAME || 'RongRani';
 
     const mailOptions = {
-      from: `"${fromName}" <${fromEmail}>`,
+      from: `"${fromName}" < ${fromEmail}> `,
       to,
       subject,
       html: htmlContent,
@@ -591,7 +473,7 @@ const sendOrderConfirmation = (orderData, attachments = []) => {
 
   return sendEmail(
     customerEmail,
-    `Order Confirmation - ${data.orderId}`,
+    `Order Confirmation - ${data.orderId} `,
     'orderConfirmation',
     data,
     attachments
@@ -601,7 +483,7 @@ const sendOrderConfirmation = (orderData, attachments = []) => {
 const sendOrderStatusUpdate = (email, name, orderId, status, trackingNumber, trackingQuery) => {
   return sendEmail(
     email,
-    `Order Status Update - ${orderId}`,
+    `Order Status Update - ${orderId} `,
     'orderStatusUpdate',
     { name, orderId, status, trackingNumber, trackingQuery }
   );
@@ -619,7 +501,7 @@ const sendReviewRequest = (email, name, orderId, trackingQuery) => {
 
 const sendLowStockAlert = (product) => {
   const adminEmail = process.env.SUPER_ADMIN_EMAIL || process.env.SMTP_USER || 'info.rongrani@gmail.com';
-  console.log(`⚠️ Sending Low Stock Alert for ${product.name} to ${adminEmail}`);
+  console.log(`⚠️ Sending Low Stock Alert for ${product.name} to ${adminEmail} `);
   return sendEmail(
     adminEmail,
     `⚠️ Low Stock: ${product.name} (${product.stock} left)`,
