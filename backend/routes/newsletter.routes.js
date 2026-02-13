@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Newsletter = require('../models/Newsletter');
-const { sendEmail } = require('../utils/emailService');
+const { sendEmail } = require('../services/emailService');
 
 // Subscribe to newsletter
 router.post('/subscribe', async (req, res) => {
@@ -30,7 +30,7 @@ router.post('/subscribe', async (req, res) => {
     const subscription = await Newsletter.create({
       email: email.toLowerCase()
     });
-    
+
     // Send welcome email
     try {
       await sendEmail(
@@ -44,9 +44,9 @@ router.post('/subscribe', async (req, res) => {
       // Don't fail the subscription if email fails
     }
 
-    res.status(201).json({ 
+    res.status(201).json({
       message: 'Successfully subscribed! Check your email for a special gift.',
-      subscription 
+      subscription
     });
   } catch (error) {
     console.error('Newsletter subscription error:', error);
@@ -58,7 +58,7 @@ router.post('/subscribe', async (req, res) => {
 router.post('/unsubscribe', async (req, res) => {
   try {
     const { email } = req.body;
-    
+
     const subscription = await Newsletter.findOne({ email: email.toLowerCase() });
     if (!subscription) {
       return res.status(404).json({ message: 'Email not found in our subscribers list' });

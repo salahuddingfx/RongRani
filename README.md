@@ -111,7 +111,7 @@ graph LR
 - 💰 **bKash Integration** - Secure mobile payment
 - 📦 **Multiple Delivery Options**
 - 🎟️ **Coupon System** with validation
-- 📧 **Email Notifications** for orders
+- 📧 **Premium Luxury Email System** - Animated, bespoke theme notifications
 - 📱 **SMS Notifications** (optional)
 - 🔄 **Refund System** (Admin)
 

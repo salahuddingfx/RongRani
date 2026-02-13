@@ -1,20 +1,28 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
-const { sendEmail } = require('../utils/emailService');
+const { sendEmail } = require('../services/emailService');
 
 const createTestOrder = async () => {
   try {
     console.log('🔌 Connecting to MongoDB...');
+    if (!process.env.MONGO_URI) {
+      throw new Error('MONGO_URI is not defined in .env file');
+    }
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ MongoDB connected\n');
 
-    // Get test user
-    const user = await User.findOne({ email: 'usala7948@gmail.com' });
+    // Get test user (Try admin first, then any user)
+    let user = await User.findOne({ email: 'salauddinkaderappy@gmail.com' });
     if (!user) {
-      console.error('❌ Test user not found! Create user first.');
+      user = await User.findOne();
+    }
+
+    if (!user) {
+      console.error('❌ No users found in database! Create a user first.');
       process.exit(1);
     }
     console.log(`👤 Found user: ${user.name} (${user.email})\n`);
@@ -165,7 +173,7 @@ const createTestOrder = async () => {
       await sendEmail(
         process.env.SUPER_ADMIN_EMAIL || 'info.rongrani@gmail.com',
         `🛒 New Order #${order._id} - RongRani`,
-        'adminNewOrder',
+        'adminOrderNotification',
         {
           orderId: order._id,
           customerName: user.name,

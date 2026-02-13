@@ -555,7 +555,7 @@ const sendToCourier = async (req, res) => {
 
     // Send notification email to customer
     try {
-      const { sendEmail } = require('../utils/emailService');
+      const { sendEmail } = require('../services/emailService');
       const customerEmail = order.user ? order.user.email : order.guestInfo?.email;
       const customerName = order.user ? order.user.name : order.guestInfo?.name || 'Customer';
       const trackingQuery = customerEmail ? `?email=${encodeURIComponent(customerEmail)}` : '';

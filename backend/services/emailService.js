@@ -1,5 +1,19 @@
 const nodemailer = require('nodemailer');
 
+// 🏁 INITIALIZATION LOGS
+const hasBrevoKey = !!process.env.BREVO_API_KEY;
+const smtpHost = process.env.SMTP_HOST || process.env.BREVO_SMTP_HOST;
+const smtpUser = process.env.SMTP_USER || process.env.BREVO_SMTP_USER;
+
+if (hasBrevoKey) {
+  console.log('✅ Brevo (Sendinblue) API Email Service configured');
+} else if (smtpHost && smtpUser) {
+  const isGmail = smtpHost.includes('gmail.com');
+  console.log(`✅ ${isGmail ? 'Gmail' : 'SMTP'} Email Service configured`);
+} else {
+  console.log('⚠️  Email Service NOT configured (Missing environment variables)');
+}
+
 // Email transporter configuration
 const createTransporter = () => {
   // Check for Brevo (Sendinblue) Configuration
@@ -129,16 +143,16 @@ const emailBaseTemplate = (title, content, preheader = '') => {
 
         .header { 
           background: linear-gradient(180deg, #2a0a0d 0%, #4a0e16 100%); 
-          padding: 80px 20px 60px; 
+          padding: 60px 20px 40px; 
           text-align: center; 
           color: #ffffff;
           position: relative;
         }
 
         .logo { 
-          width: 95px; 
-          height: 95px; 
-          margin-bottom: 25px; 
+          width: 80px; 
+          height: 80px; 
+          margin-bottom: 20px; 
           border-radius: 50%; 
           border: 2px solid ${gold}; 
           background: #ffffff;
@@ -148,34 +162,34 @@ const emailBaseTemplate = (title, content, preheader = '') => {
 
         .brand-name { 
           font-family: 'Playfair Display', serif;
-          font-size: 38px; 
+          font-size: 34px; 
           margin: 0;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.01em;
         }
 
         .luxury-accent {
-          width: 60px;
+          width: 50px;
           height: 1px;
           background: ${gold};
-          margin: 20px auto;
+          margin: 15px auto;
         }
 
         .content { 
-          padding: 60px 50px; 
+          padding: 45px 40px; 
           background: white;
         }
 
         .h-premium {
           font-family: 'Playfair Display', serif;
           color: #0f172a;
-          font-size: 32px;
-          margin-bottom: 24px;
+          font-size: 28px;
+          margin-bottom: 20px;
           line-height: 1.2;
         }
 
         .footer { 
           background-color: #0f172a; 
-          padding: 70px 40px; 
+          padding: 50px 30px; 
           text-align: center; 
           color: #f8fafc;
         }
@@ -553,7 +567,157 @@ const emailTemplates = {
 
     return emailBaseTemplate(`Critical Alert: Scarcity of [${data.name}]`, content, `Immediate action: ${data.name} is nearly depleted.`);
   },
-};
+
+  // 7. Newsletter Welcome Email
+  newsletterWelcome: (data) => {
+    const content = `
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div class="verified-badge">Subscription Confirmed</div>
+        <h2 class="h-premium" style="margin-top: 20px;">Welcome to the RongRani Inner Circle.</h2>
+        <p style="font-size: 17px; color: #64748b; font-weight: 300;">It is a pleasure to have you with us.</p>
+      </div>
+
+      <div style="background-color: #ffffff; border: 1px solid #f1f5f9; border-radius: 24px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);">
+        <p style="font-size: 16px; color: #475569; line-height: 2; margin-bottom: 30px; text-align: center; font-weight: 300;">
+          As a member of our curated community, you will be the first to witness our newest masterpieces, exclusive artisan stories, and private collection releases.
+        </p>
+
+        <div style="background: linear-gradient(135deg, #2a0a0d 0%, #4a0e16 100%); border-radius: 20px; padding: 40px; text-align: center; color: white;">
+          <div style="font-size: 11px; font-weight: 800; color: #C5A059; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px;">A Welcome Gesture</div>
+          <div style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 25px;">The Privilege of an Insider</div>
+          <div style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;">Enjoy an exclusive 10% off your next curated acquisition</div>
+          <div style="display: inline-block; background-color: transparent; padding: 15px 35px; border-radius: 0; font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: #C5A059; border: 1px solid #C5A059;">WELCOME10</div>
+        </div>
+      </div>
+
+      <center>
+        <a href="${process.env.FRONTEND_URL}/shop" class="btn">Begin Your Exploration</a>
+      </center>
+      
+      <div class="signature-text" style="text-align: center; margin-top: 40px;">- Curated with Passion</div>
+    `;
+
+    return emailBaseTemplate('Welcome to the World of RongRani', content, 'Thank you for joining our exclusive circle of art and craftsmanship.');
+  },
+
+  // 8. Password Reset Email
+  passwordReset: (data) => {
+    const content = `
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div class="verified-badge">Security Protocol</div>
+        <h2 class="h-premium" style="margin-top: 20px;">Requested Access Restoration</h2>
+        <p style="font-size: 17px; color: #64748b; font-weight: 300;">Hello <strong>${data.name}</strong>, we received a request to reset your vault credentials.</p>
+      </div>
+
+      <div style="background-color: #ffffff; border: 1px solid #f1f5f9; border-radius: 24px; padding: 40px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); text-align: center;">
+        <p style="font-size: 16px; color: #475569; line-height: 2; margin-bottom: 30px; font-weight: 300;">
+          If you did not initiate this request, please disregard this message. For your security, this invitation will expire in exactly 60 minutes.
+        </p>
+
+        <center>
+          <a href="${data.resetLink}" class="btn">Reset Credentials</a>
+        </center>
+      </div>
+
+      <div class="signature-text" style="text-align: center; margin-top: 40px;">- Security Guaranteed</div>
+    `;
+
+    return emailBaseTemplate('Credential Restoration - RongRani', content, 'Securely reset your account password.');
+  },
+
+  // 9. Admin: New User Notification
+  adminNewUser: (data) => {
+    const content = `
+      <div style="border-left: 3px solid #8B2635; padding-left: 25px; margin-bottom: 40px;">
+        <h2 class="h-premium" style="font-size: 24px; margin: 0; color: #8B2635;">New Member Registered</h2>
+        <p style="margin-top: 8px; color: #475569; font-weight: 400; font-size: 15px;">A new account has been established in the RongRani registry.</p>
+      </div>
+      
+      <div style="background-color: #fafafa; border-radius: 20px; padding: 35px; border: 1px solid #f1f5f9;">
+        <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 20px;">Identity Details</div>
+        <div style="color: #0f172a; line-height: 2.5; font-size: 16px;">
+          <div style="font-weight: 600; font-size: 20px; font-family: 'Playfair Display', serif;">${data.userName}</div>
+          <div style="color: #64748b;">📧 ${data.userEmail}</div>
+          <div style="color: #64748b; font-size: 14px;">📅 Joined: ${data.registeredAt}</div>
+        </div>
+      </div>
+
+      <center style="margin-top: 40px;">
+        <a href="${process.env.FRONTEND_URL}/admin/users" class="btn" style="background: #0f172a;">Review Registry</a>
+      </center>
+    `;
+
+    return emailBaseTemplate('Priority: New User Membership', content, `A new member, ${data.userName}, has joined the community.`);
+  },
+
+  // 10. Admin: Payment Received Notification
+  adminPaymentReceived: (data) => {
+    const content = `
+      <div style="border-left: 3px solid #10b981; padding-left: 25px; margin-bottom: 40px;">
+        <h2 class="h-premium" style="font-size: 24px; margin: 0; color: #10b981;">Funds Successfully Acquired</h2>
+        <p style="margin-top: 8px; color: #475569; font-weight: 400; font-size: 15px;">Payment for Reservation #${data.orderId} has been verified.</p>
+      </div>
+      
+      <div style="background-color: #fafafa; border-radius: 20px; padding: 35px; border: 1px solid #f1f5f9;">
+        <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 20px;">Transaction Dossier</div>
+        <div style="color: #0f172a; font-size: 16px;">
+          <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+            <span style="color: #64748b;">Client</span>
+            <span style="font-weight: 600;">${data.customerName}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+            <span style="color: #64748b;">Amount Acquired</span>
+            <span style="font-weight: 600; color: #10b981;">৳${data.amount}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+            <span style="color: #64748b;">Portal</span>
+            <span style="font-weight: 600;">${data.paymentMethod}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 10px 0; border-top: 1px solid #f1f5f9; margin-top: 10px; padding-top: 20px;">
+            <span style="color: #64748b;">Reference</span>
+            <span style="font-family: monospace; font-size: 14px;">${data.transactionId || 'N/A'}</span>
+          </div>
+        </div>
+      </div>
+
+      <center style="margin-top: 40px;">
+        <a href="${process.env.FRONTEND_URL}/admin/orders/${data.orderId}" class="btn" style="background: #10b981;">Review Transaction</a>
+      </center>
+    `;
+
+    return emailBaseTemplate('Priority: Payment Verification Received', content, `Payment of ৳${data.amount} received for order #${data.orderId}.`);
+  },
+
+  // 11. Review Thank You Email
+  reviewThankYou: (data) => {
+    const content = `
+      <div style="text-align: center; margin-bottom: 40px;">
+        <div class="verified-badge">Gratitude Expressed</div>
+        <h2 class="h-premium" style="margin-top: 20px;">Your voice resonates with us.</h2>
+        <p style="font-size: 17px; color: #64748b; font-weight: 300;">Dear <strong>${data.name}</strong>, thank you for sharing your experience.</p>
+      </div>
+
+      <div style="background-color: #fcfaf7; border: 1px solid #f1f5f9; border-radius: 24px; padding: 40px; margin-bottom: 40px; text-align: center;">
+        <p style="font-size: 14px; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 15px;">Your Impression</p>
+        <p style="font-style: italic; color: #475569; font-size: 18px; font-family: 'Playfair Display', serif; line-height: 1.8;">
+          "${data.comment.length > 120 ? data.comment.substring(0, 120) + '...' : data.comment}"
+        </p>
+      </div>
+
+      <div style="background: linear-gradient(135deg, #2a0a0d 0%, #4a0e16 100%); border-radius: 20px; padding: 40px; text-align: center; color: white;">
+        <div style="font-size: 11px; font-weight: 800; color: #C5A059; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px;">A token of our Appreciation</div>
+        <div style="font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 25px;">The Honor of a Recurring Guest</div>
+        <div style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;">Enjoy 5% off your next curated selection</div>
+        <div style="display: inline-block; background-color: transparent; padding: 15px 35px; border-radius: 0; font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700; color: #C5A059; border: 1px solid #C5A059;">GUEST5</div>
+      </div>
+
+      <center>
+        <a href="${process.env.FRONTEND_URL}/shop" class="btn">Explore Again</a>
+      </center>
+    `;
+
+    return emailBaseTemplate('Our Gratitude for Your Feedback', content, 'Thank you for sharing your perspective on your recent RongRani acquisition.');
+  },
 };
 
 // Send email function

@@ -332,7 +332,7 @@ const submitReview = async (req, res) => {
     // Send Thank You Email
     if (reviewerEmail) {
       // We don't await this to avoid blocking the response
-      const { sendEmail } = require('../utils/emailService');
+      const { sendEmail } = require('../services/emailService');
       sendEmail(
         reviewerEmail,
         'Thanks for your review! 💖',
