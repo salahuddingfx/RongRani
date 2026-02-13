@@ -13,24 +13,42 @@ const HomeCategorySlider = ({ category }) => {
     const { t } = useLanguage();
     const [showArrows, setShowArrows] = useState(false);
 
-    useEffect(() => {
-        const fetchCategoryProducts = async () => {
-            try {
-                const response = await axios.get(`/api/products?category=${encodeURIComponent(category.name)}&limit=10`);
-                setProducts(response.data.products);
-            } catch (error) {
-                console.error(`Error fetching products for category ${category.name}:`, error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchCategoryProducts = async () => {
+        try {
+            const response = await axios.get(`/api/products?category=${encodeURIComponent(category.name)}&limit=10`);
+            setProducts(response.data.products);
+        } catch (error) {
+            // console.error(`Error fetching products for category ${category.name}:`, error); // Removed console.error
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         if (category?.name) {
             fetchCategoryProducts();
         }
     }, [category]);
 
-    // Auto-scroll logic
+    // Real-time Updates
+    useEffect(() => {
+        const socket = window.socket; // Assuming socket is attached to window or use context
+        if (!socket) return;
+
+        const handleUpdate = () => fetchCategoryProducts();
+
+        socket.on('product:created', handleUpdate);
+        socket.on('product:updated', handleUpdate);
+        socket.on('product:deleted', handleUpdate);
+
+        return () => {
+            socket.off('product:created', handleUpdate);
+            socket.off('product:updated', handleUpdate);
+            socket.off('product:deleted', handleUpdate);
+        };
+    }, []);
+
+    // Auto-scroll logic (slower, more premium)
     useEffect(() => {
         if (products.length <= 4) return;
 
@@ -42,10 +60,12 @@ const HomeCategorySlider = ({ category }) => {
                 if (scrollLeft >= maxScroll - 10) {
                     scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
                 } else {
-                    scrollRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+                    // Scroll by one card width
+                    const cardWidth = 300;
+                    scrollRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
                 }
             }
-        }, 5000);
+        }, 8000); // 8 seconds for a more relaxed feel
 
         return () => clearInterval(interval);
     }, [products]);
@@ -76,7 +96,7 @@ const HomeCategorySlider = ({ category }) => {
 
     return (
         <div
-            className="mb-16 reveal relative group"
+            className="mb-16 relative group"
             onMouseEnter={() => setShowArrows(true)}
             onMouseLeave={() => setShowArrows(false)}
         >

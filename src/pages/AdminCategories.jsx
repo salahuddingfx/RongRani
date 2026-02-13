@@ -17,6 +17,7 @@ const AdminCategories = () => {
     color: 'bg-maroon',
     order: 0,
     isActive: true,
+    showOnHome: false,
   });
 
   const iconOptions = ['Heart', 'Sparkles', 'ShoppingBag', 'Gift', 'Star', 'Clock', 'Package', 'Shirt', 'Flower', 'Pencil'];
@@ -111,6 +112,20 @@ const AdminCategories = () => {
     }
   };
 
+  const toggleShowOnHome = async (category) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`/api/categories/${category._id}`,
+        { showOnHome: !category.showOnHome },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success(`Category ${!category.showOnHome ? 'added to' : 'removed from'} home sliders`);
+      fetchCategories();
+    } catch {
+      toast.error('Failed to update home display status');
+    }
+  };
+
   const handleEdit = (category) => {
     setEditingCategory(category);
     setFormData({
@@ -121,6 +136,7 @@ const AdminCategories = () => {
       color: category.color || 'bg-maroon',
       order: category.order || 0,
       isActive: category.isActive,
+      showOnHome: category.showOnHome || false,
     });
     setShowModal(true);
   };
@@ -134,6 +150,7 @@ const AdminCategories = () => {
       color: 'bg-maroon',
       order: 0,
       isActive: true,
+      showOnHome: false,
     });
     setEditingCategory(null);
     setShowModal(false);
@@ -205,6 +222,13 @@ const AdminCategories = () => {
                     ) : (
                       <EyeOff className="h-5 w-5 text-white" />
                     )}
+                  </button>
+                  <button
+                    onClick={() => toggleShowOnHome(category)}
+                    className={`p-2 ${category.showOnHome ? 'bg-amber-500/50' : 'bg-slate-500/30'} hover:bg-white/30 rounded-xl transition-all backdrop-blur-md ml-2`}
+                    title={category.showOnHome ? 'Remove from Home Slider' : 'Show as Home Slider'}
+                  >
+                    <Star className={`h-5 w-5 text-white ${category.showOnHome ? 'fill-current' : ''}`} />
                   </button>
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2 group-hover:scale-105 transition-transform">{category.name}</h3>
@@ -384,6 +408,19 @@ const AdminCategories = () => {
                       className="w-5 h-5 text-maroon rounded focus:ring-maroon border-slate-600"
                     />
                     <span className="text-sm font-bold text-white">Active Status</span>
+                  </label>
+                </div>
+
+                <div className="flex items-end">
+                  <label className="flex items-center space-x-3 cursor-pointer bg-slate-700 px-4 py-3 rounded-xl w-full hover:bg-slate-600 transition-colors">
+                    <input
+                      type="checkbox"
+                      name="showOnHome"
+                      checked={formData.showOnHome}
+                      onChange={handleInputChange}
+                      className="w-5 h-5 text-amber-500 rounded focus:ring-amber-500 border-slate-600"
+                    />
+                    <span className="text-sm font-bold text-white">Show as Slider on Home</span>
                   </label>
                 </div>
               </div>

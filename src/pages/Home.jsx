@@ -13,8 +13,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import BannerSlider from '../components/BannerSlider';
 const Newsletter = lazy(() => import('../components/Newsletter'));
 const FlashSale = lazy(() => import('../components/FlashSale'));
-const ProductCard = lazy(() => import('../components/ProductItem'));
-const HomeCategorySlider = lazy(() => import('../components/HomeCategorySlider'));
+import HomeCategorySlider from '../components/HomeCategorySlider';
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -372,11 +371,35 @@ const Home = () => {
       {/* Category Wise Sliders */}
       <section className="py-12 bg-gray-50 dark:bg-slate-800/50 overflow-hidden">
         <div className="section-container">
-          {categories.slice(0, 3).map((category, index) => (
-            <Suspense key={category._id || index} fallback={<div className="h-96 animate-pulse bg-gray-100 rounded-3xl mb-12" />}>
-              <HomeCategorySlider category={category} />
-            </Suspense>
-          ))}
+          {categories.length === 0 ? (
+            <div className="text-center py-10 opacity-50">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-maroon mx-auto"></div>
+            </div>
+          ) : (
+            <>
+              {(() => {
+                // Priority 1: Admin explicitly marked 'showOnHome'
+                let displayCategories = categories.filter(c => c.showOnHome && c.isActive);
+
+                // Priority 2: Fallback to active categories with products
+                if (displayCategories.length === 0) {
+                  displayCategories = categories
+                    .filter(c => c.isActive && (c.productCount > 0))
+                    .sort((a, b) => (b.productCount || 0) - (a.productCount || 0))
+                    .slice(0, 3);
+                }
+
+                // Priority 3: Final fallback to first 3 active categories
+                if (displayCategories.length === 0) {
+                  displayCategories = categories.filter(c => c.isActive).slice(0, 3);
+                }
+
+                return displayCategories.map((category, index) => (
+                  <HomeCategorySlider key={category._id || index} category={category} />
+                ));
+              })()}
+            </>
+          )}
         </div>
       </section>
 
