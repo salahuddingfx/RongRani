@@ -3,11 +3,11 @@ import { X, Eye, ArrowRight, ShoppingCart, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import toast from 'react-hot-toast';
+import Product3DViewer from './Product3DViewer';
 
 const QuickViewModal = ({ product, onClose }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const QuickViewModal = ({ product, onClose }) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in-up"
       onClick={onClose}
     >
       <div
@@ -45,7 +45,7 @@ const QuickViewModal = ({ product, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b border-cream-dark p-4 flex items-center justify-between z-10 rounded-t-3xl">
+        <div className="sticky top-0 bg-white border-b border-cream-dark p-4 flex items-center justify-between z-50 rounded-t-3xl">
           <div className="flex items-center space-x-2">
             <Eye className="h-5 w-5 text-maroon" />
             <h2 className="text-xl font-bold text-charcoal">Quick View</h2>
@@ -62,42 +62,13 @@ const QuickViewModal = ({ product, onClose }) => {
         {/* Content */}
         <div className="p-6 grid md:grid-cols-2 gap-8">
           {/* Image Section */}
-          <div>
-            <div className="relative aspect-square rounded-2xl overflow-hidden bg-cream mb-4 group">
-              {discount > 0 && (
-                <div className="absolute top-4 left-4 bg-maroon text-white px-3 py-1 rounded-full text-sm font-bold z-10">
-                  -{discount}%
-                </div>
-              )}
-              <img
-                src={product.images?.[selectedImage]?.url || product.images?.[selectedImage] || '/placeholder.jpg'}
-                alt={product.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-            </div>
-
-            {/* Thumbnail Navigation */}
-            {product.images && product.images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedImage(idx)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                      selectedImage === idx
-                        ? 'border-maroon scale-105'
-                        : 'border-cream-dark hover:border-gold'
-                    }`}
-                  >
-                    <img
-                      src={img.url || img || '/placeholder.jpg'}
-                      alt={`${product.name} ${idx + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className="h-full">
+            <Product3DViewer
+              images={product.images}
+              productName={product.name}
+              discount={discount > 0 ? discount : null}
+              compact={true}
+            />
           </div>
 
           {/* Details Section */}
@@ -131,11 +102,10 @@ const QuickViewModal = ({ product, onClose }) => {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-5 w-5 ${
-                          i < Math.floor(product.rating)
-                            ? 'text-gold fill-gold'
-                            : 'text-gray-300'
-                        }`}
+                        className={`h-5 w-5 ${i < Math.floor(product.rating)
+                          ? 'text-gold fill-gold'
+                          : 'text-gray-300'
+                          }`}
                       />
                     ))}
                   </div>

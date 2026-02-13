@@ -5,9 +5,9 @@ import toast from 'react-hot-toast';
 const AdminDeliverySettings = () => {
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    chittagongFee: 60,
-    outsideChittagongFee: 130,
-    freeShippingThreshold: 2000,
+    chittagongFee: 70,
+    outsideChittagongFee: 150,
+    freeShippingThreshold: 2500,
   });
 
   useEffect(() => {
@@ -19,9 +19,9 @@ const AdminDeliverySettings = () => {
         });
         if (response.data) {
           setFormData({
-            chittagongFee: response.data.chittagongFee ?? response.data.dhakaFee ?? 60,
-            outsideChittagongFee: response.data.outsideChittagongFee ?? response.data.outsideDhakaFee ?? 130,
-            freeShippingThreshold: response.data.freeShippingThreshold ?? 2000,
+            chittagongFee: response.data.chittagongFee ?? response.data.dhakaFee ?? 70,
+            outsideChittagongFee: response.data.outsideChittagongFee ?? response.data.outsideDhakaFee ?? 150,
+            freeShippingThreshold: response.data.freeShippingThreshold ?? 2500,
           });
         }
       } catch {
@@ -75,8 +75,8 @@ const AdminDeliverySettings = () => {
 
       <form onSubmit={handleSubmit} className="card space-y-6 max-w-2xl">
         <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4">
-          <label className="block text-sm font-bold text-blue-900 mb-1">🏙️ Cox's Bazar & Chittagong Division Delivery Fee (BDT)</label>
-          <p className="text-xs text-blue-800 mb-3">Apply this fee for deliveries within Chittagong Division (Cox's Bazar, Chittagong, Khagrachari, Rangamati)</p>
+          <label className="block text-sm font-bold text-blue-900 mb-1">🏙️ Inside Cox's Bazar City Delivery Fee (BDT)</label>
+          <p className="text-xs text-blue-800 mb-3">Apply this fee for deliveries within Cox's Bazar City</p>
           <input
             name="chittagongFee"
             type="number"
@@ -88,8 +88,8 @@ const AdminDeliverySettings = () => {
           />
         </div>
         <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4">
-          <label className="block text-sm font-bold text-green-900 mb-1">🌍 Outside Chittagong Division Delivery Fee (BDT)</label>
-          <p className="text-xs text-green-800 mb-3">Apply this fee for deliveries outside Chittagong (Dhaka, Sylhet, Rajshahi, Barisal, Khulna, Mymensingh, Rangpur)</p>
+          <label className="block text-sm font-bold text-green-900 mb-1">🌍 Outside Cox's Bazar City Delivery Fee (BDT)</label>
+          <p className="text-xs text-green-800 mb-3">Apply this fee for deliveries to all other districts/areas</p>
           <input
             name="outsideChittagongFee"
             type="number"

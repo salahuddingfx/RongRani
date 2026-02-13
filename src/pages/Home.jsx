@@ -13,7 +13,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import BannerSlider from '../components/BannerSlider';
 const Newsletter = lazy(() => import('../components/Newsletter'));
 const FlashSale = lazy(() => import('../components/FlashSale'));
-const ProductCard = lazy(() => import('../components/ProductCard'));
+const ProductCard = lazy(() => import('../components/ProductItem'));
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -381,7 +381,7 @@ const Home = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
               {[...Array(8)].map((_, index) => (
                 <div
                   key={index}
@@ -393,7 +393,7 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
               {featuredProducts.map((product, index) => (
                 <Suspense key={product._id} fallback={<ProductCardSkeleton />}>
                   <div

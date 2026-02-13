@@ -164,7 +164,7 @@ const CartDrawer = () => {
                         </div>
 
                         <p className="text-xs text-center text-slate-400">
-                            Free shipping on orders over ৳2000
+                            Free shipping on orders over ৳2500
                         </p>
                     </div>
                 )}

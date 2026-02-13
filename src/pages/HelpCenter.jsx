@@ -57,7 +57,7 @@ const HelpCenter = () => {
         },
         {
           q: 'What are the delivery charges?',
-          a: 'Dhaka city: ৳60, Outside Dhaka: ৳120. FREE delivery on orders above ৳2000!'
+          a: 'Inside Cox\'s Bazar City: ৳70, Outside Cox\'s Bazar City: ৳150. FREE delivery on orders above ৳2500!'
         },
         {
           q: 'Can I choose a specific delivery time?',

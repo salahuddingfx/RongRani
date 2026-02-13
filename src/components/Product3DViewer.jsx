@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Maximize2, X, RotateCw, Sparkles, TrendingUp } from 'lucide-react';
 
-const Product3DViewer = ({ images = [], productName = '', discount = null }) => {
+const Product3DViewer = ({ images = [], productName = '', discount = null, compact = false }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [zoom, setZoom] = useState(1);
     const [rotation, setRotation] = useState(0);
@@ -137,6 +137,10 @@ const Product3DViewer = ({ images = [], productName = '', discount = null }) => 
 
     const currentImage = images[currentIndex];
 
+    const stopPropagation = (e) => {
+        e.stopPropagation();
+    };
+
     return (
         <>
             {/* Main Viewer */}
@@ -153,10 +157,12 @@ const Product3DViewer = ({ images = [], productName = '', discount = null }) => 
                 )}
 
                 {/* Trending Badge */}
-                <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
-                    <Sparkles className="h-4 w-4" />
-                    TRENDING
-                </div>
+                {!compact && (
+                    <div className="absolute top-4 right-4 z-20 bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg flex items-center gap-2">
+                        <Sparkles className="h-4 w-4" />
+                        TRENDING
+                    </div>
+                )}
 
                 {/* Main Image Container */}
                 <div
@@ -189,23 +195,31 @@ const Product3DViewer = ({ images = [], productName = '', discount = null }) => 
                         <>
                             <button
                                 onClick={handlePrev}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 bg-maroon hover:bg-maroon-dark text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-all z-10"
+                                onMouseDown={stopPropagation}
+                                onTouchStart={stopPropagation}
+                                className={`absolute left-3 top-1/2 -translate-y-1/2 bg-maroon hover:bg-maroon-dark text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-all z-10 ${compact ? 'p-2' : 'p-3'}`}
                                 aria-label="Previous image"
                             >
-                                <ChevronLeft className="h-6 w-6" />
+                                <ChevronLeft className={`h-6 w-6 ${compact ? 'h-4 w-4' : ''}`} />
                             </button>
                             <button
                                 onClick={handleNext}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 bg-maroon hover:bg-maroon-dark text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-all z-10"
+                                onMouseDown={stopPropagation}
+                                onTouchStart={stopPropagation}
+                                className={`absolute right-3 top-1/2 -translate-y-1/2 bg-maroon hover:bg-maroon-dark text-white p-3 rounded-full shadow-2xl hover:scale-110 transition-all z-10 ${compact ? 'p-2' : 'p-3'}`}
                                 aria-label="Next image"
                             >
-                                <ChevronRight className="h-6 w-6" />
+                                <ChevronRight className={`h-6 w-6 ${compact ? 'h-4 w-4' : ''}`} />
                             </button>
                         </>
                     )}
 
                     {/* Control Panel */}
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/80 backdrop-blur-md px-4 py-3 rounded-full z-10">
+                    <div
+                        className={`absolute left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/80 backdrop-blur-md rounded-full z-10 ${compact ? 'bottom-2 px-3 py-2 scale-90' : 'bottom-4 px-4 py-3'}`}
+                        onMouseDown={stopPropagation}
+                        onTouchStart={stopPropagation}
+                    >
                         {/* Zoom Out */}
                         <button
                             onClick={handleZoomOut}
@@ -257,17 +271,21 @@ const Product3DViewer = ({ images = [], productName = '', discount = null }) => 
                             </button>
                         )}
 
-                        <div className="w-px h-6 bg-white/30 mx-2" />
+                        {!compact && (
+                            <>
+                                <div className="w-px h-6 bg-white/30 mx-2" />
 
-                        {/* Fullscreen */}
-                        <button
-                            onClick={() => setIsFullscreen(true)}
-                            className="text-white hover:text-maroon transition-colors"
-                            aria-label="Fullscreen"
-                            title="Fullscreen"
-                        >
-                            <Maximize2 className="h-5 w-5" />
-                        </button>
+                                {/* Fullscreen */}
+                                <button
+                                    onClick={() => setIsFullscreen(true)}
+                                    className="text-white hover:text-maroon transition-colors"
+                                    aria-label="Fullscreen"
+                                    title="Fullscreen"
+                                >
+                                    <Maximize2 className="h-5 w-5" />
+                                </button>
+                            </>
+                        )}
                     </div>
 
                     {/* Image Counter */}

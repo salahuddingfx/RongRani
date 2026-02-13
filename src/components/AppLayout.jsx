@@ -8,6 +8,7 @@ import AIChatFloatingWidget from './AIChatFloatingWidget';
 import Seo from './Seo';
 import ScrollRevealManager from './ScrollRevealManager';
 import CustomCursor from './CustomCursor';
+import CustomCursor from './CustomCursor';
 
 const AppLayout = () => {
   const location = useLocation();

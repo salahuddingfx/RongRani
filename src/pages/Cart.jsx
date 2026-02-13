@@ -63,7 +63,7 @@ const Cart = () => {
               </div>
               <div className="hidden md:flex items-center space-x-2">
                 <span>🚚</span>
-                <span>Free Shipping Above ৳2000</span>
+                <span>Free Shipping Above ৳2500</span>
               </div>
               <div className="hidden md:flex items-center space-x-2">
                 <span>💝</span>
@@ -292,7 +292,7 @@ const Cart = () => {
                 <Truck className="h-6 sm:h-8 w-6 sm:w-8 text-maroon flex-shrink-0" />
                 <div className="min-w-0">
                   <h4 className="font-semibold text-maroon text-sm sm:text-base">Free Shipping</h4>
-                  <p className="text-xs sm:text-sm text-slate">On orders over ৳2000</p>
+                  <p className="text-xs sm:text-sm text-slate">On orders over ৳2500</p>
                 </div>
               </div>
 

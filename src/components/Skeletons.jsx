@@ -2,46 +2,29 @@ import React from 'react';
 
 const ProductCardSkeleton = () => {
   return (
-    <div className="card animate-fade-in-up">
-      <div className="relative overflow-hidden">
-        <div className="w-full h-72 bg-gray-200 skeleton rounded-t-2xl"></div>
-        <div className="absolute top-4 right-4 p-3 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg">
-          <div className="w-5 h-5 bg-gray-200 skeleton rounded"></div>
-        </div>
-        <div className="absolute top-4 left-4 px-4 py-2 bg-gray-200 skeleton rounded-2xl">
-          <div className="w-16 h-4 bg-gray-300 skeleton rounded"></div>
-        </div>
+    <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-100 flex flex-col h-full animate-fade-in-up">
+      {/* Image Skeleton */}
+      <div className="relative aspect-square bg-slate-100 skeleton">
+        <div className="absolute top-2 left-2 w-8 h-4 bg-slate-200 rounded-full"></div>
       </div>
 
-      <div className="p-6 bg-white">
-        <div className="mb-4">
-          <div className="w-20 h-6 bg-gray-200 skeleton rounded-2xl"></div>
-        </div>
+      {/* Content Skeleton */}
+      <div className="p-3 flex flex-col flex-grow">
+        {/* Title */}
+        <div className="h-3 bg-slate-200 rounded w-3/4 mb-1"></div>
+        <div className="h-3 bg-slate-200 rounded w-1/2 mb-2"></div>
 
-        <div className="mb-3">
-          <div className="w-full h-6 bg-gray-200 skeleton rounded mb-2"></div>
-          <div className="w-3/4 h-6 bg-gray-200 skeleton rounded"></div>
-        </div>
+        {/* Price */}
+        <div className="h-5 bg-slate-200 rounded w-1/3 mb-2"></div>
 
-        <div className="mb-5">
-          <div className="w-full h-4 bg-gray-200 skeleton rounded"></div>
-        </div>
-
-        <div className="flex items-center space-x-2 mb-4">
-          <div className="flex space-x-1">
+        {/* Rating and Button */}
+        <div className="mt-auto flex items-center justify-between">
+          <div className="flex space-x-0.5">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="w-4 h-4 bg-gray-200 skeleton rounded"></div>
+              <div key={i} className="w-2.5 h-2.5 bg-slate-200 rounded-full"></div>
             ))}
           </div>
-          <div className="w-24 h-4 bg-gray-200 skeleton rounded"></div>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-20 h-8 bg-gray-200 skeleton rounded"></div>
-            <div className="w-16 h-6 bg-gray-200 skeleton rounded"></div>
-          </div>
-          <div className="w-16 h-6 bg-gray-200 skeleton rounded"></div>
+          <div className="w-8 h-8 bg-slate-200 rounded-full"></div>
         </div>
       </div>
     </div>

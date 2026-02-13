@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import ProductCard from '../components/ProductCard';
+import ProductItem from '../components/ProductItem';
 import { Search, Filter, X } from 'lucide-react';
 import Seo from '../components/Seo';
 import { useSocket } from '../contexts/socketContextBase';
@@ -623,14 +623,14 @@ const Shop = () => {
                     Showing <span className="font-semibold text-maroon">{products.length}</span> products
                   </p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
                   {products && products.map((product, index) => (
                     <div
                       key={product._id}
                       className="animate-slide-up"
                       style={{ animationDelay: `${index * 0.1}s` }}
                     >
-                      <ProductCard product={product} />
+                      <ProductItem product={product} />
                     </div>
                   ))}
                 </div>

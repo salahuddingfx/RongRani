@@ -27,19 +27,24 @@ const DELIVERY_CONFIG = require('../config/deliveryConfig');
  * //   provider: 'STEADFAST'
  * // }
  */
-function calculateDelivery({ subtotal = 0, district = '', city = '' } = {}) {
+function calculateDelivery({ subtotal = 0, district = '', city = '', settings = null } = {}) {
   // Normalize inputs
   const districtLower = (district || '').toString().trim().toLowerCase();
   const cityLower = (city || '').toString().trim().toLowerCase();
 
+  // effective config values (DB settings override static config)
+  const insideCharge = settings?.chittagongFee ?? DELIVERY_CONFIG.COXS_BAZAR_CHARGE;
+  const outsideCharge = settings?.outsideChittagongFee ?? DELIVERY_CONFIG.OUTSIDE_COXS_BAZAR_CHARGE;
+  const freeThreshold = settings?.freeShippingThreshold ?? DELIVERY_CONFIG.FREE_DELIVERY_LIMIT;
+
   // Check if it's Cox's Bazar area
-  const isCoxsBazar = 
-    districtLower.includes('cox') || 
+  const isCoxsBazar =
+    districtLower.includes('cox') ||
     cityLower.includes('cox') ||
     DELIVERY_CONFIG.COXS_BAZAR_DISTRICTS.some(d => districtLower.includes(d) || cityLower.includes(d));
 
   // Check if eligible for free delivery
-  const isFreeDelivery = subtotal >= DELIVERY_CONFIG.FREE_DELIVERY_LIMIT;
+  const isFreeDelivery = subtotal >= freeThreshold;
 
   // Calculate charge
   let charge = 0;
@@ -53,13 +58,13 @@ function calculateDelivery({ subtotal = 0, district = '', city = '' } = {}) {
     provider = DELIVERY_CONFIG.PROVIDERS.STEADFAST;
   } else if (isCoxsBazar) {
     // Cox's Bazar area delivery
-    charge = DELIVERY_CONFIG.COXS_BAZAR_CHARGE;
-    label = `কক্সবাজারের ভিতরে ডেলিভারি (৳${charge})`; // Cox's Bazar Delivery
-    provider = isCoxsBazar ? DELIVERY_CONFIG.PROVIDERS.LOCAL : DELIVERY_CONFIG.PROVIDERS.STEADFAST;
+    charge = insideCharge;
+    label = `কক্সবাজার সিটির ভিতরে ডেলিভারি (৳${charge})`; // Cox's Bazar City Delivery
+    provider = DELIVERY_CONFIG.PROVIDERS.LOCAL;
   } else {
     // Outside Cox's Bazar delivery
-    charge = DELIVERY_CONFIG.OUTSIDE_COXS_BAZAR_CHARGE;
-    label = `কক্সবাজারের বাইরে ডেলিভারি (৳${charge})`; // Outside Cox's Bazar Delivery
+    charge = outsideCharge;
+    label = `কক্সবাজার সিটির বাইরে ডেলিভারি (৳${charge})`; // Outside Cox's Bazar City Delivery
     provider = DELIVERY_CONFIG.PROVIDERS.STEADFAST;
   }
 
@@ -69,9 +74,9 @@ function calculateDelivery({ subtotal = 0, district = '', city = '' } = {}) {
     isFree: isFreeDelivery,
     provider,
     // Additional useful fields
-    threshold: DELIVERY_CONFIG.FREE_DELIVERY_LIMIT,
+    threshold: freeThreshold,
     subtotal,
-    eligibleForFree: subtotal >= DELIVERY_CONFIG.FREE_DELIVERY_LIMIT,
+    eligibleForFree: subtotal >= freeThreshold,
   };
 }
 
@@ -87,7 +92,7 @@ function getDeliveryDisplay(delivery) {
     charge: delivery.charge,
     label: delivery.label,
     isFree: delivery.isFree,
-    amountNeededForFree: Math.max(0, DELIVERY_CONFIG.FREE_DELIVERY_LIMIT - (delivery.subtotal || 0)),
+    amountNeededForFree: Math.max(0, (delivery.threshold || DELIVERY_CONFIG.FREE_DELIVERY_LIMIT) - (delivery.subtotal || 0)),
   };
 }
 

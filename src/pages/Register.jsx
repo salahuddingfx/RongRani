@@ -96,7 +96,7 @@ const Register = () => {
             <div className="text-center">
               <div className="text-2xl mb-1">🚚</div>
               <p className="font-semibold">Free Shipping</p>
-              <p className="text-cream-light text-xs">Above ৳2000</p>
+              <p className="text-cream-light text-xs">Above ৳2500</p>
             </div>
             <div className="text-center">
               <div className="text-2xl mb-1">📦</div>

@@ -30,11 +30,15 @@ const calculateDeliveryCharge = async (req, res) => {
       });
     }
 
+    // Fetch dynamic delivery settings
+    const settings = await DeliverySetting.findOne();
+
     // Calculate delivery
     const delivery = calculateDelivery({
       subtotal,
       district,
       city,
+      settings: settings ? settings.toObject() : null,
     });
 
     // Return delivery info
@@ -157,11 +161,13 @@ const createOrder = async (req, res) => {
     }
 
     // Calculate final totals using centralized delivery calculator
+    const settings = await DeliverySetting.findOne();
     const tax = 0; // No tax
     const deliveryResult = calculateDelivery({
       subtotal,
       district: shippingAddress?.district || '',
       city: shippingAddress?.city || '',
+      settings: settings ? settings.toObject() : null,
     });
 
     const shipping = deliveryResult.charge;

@@ -21,7 +21,7 @@ const TopNavBar = () => {
 
   const importantMessages = [
     "🎁 Valentine's Day Special: Up to 50% OFF on selected items!",
-    "🚚 FREE Shipping on orders above ৳2000 - Limited Time!",
+    "🚚 FREE Shipping on orders above ৳2500 - Limited Time!",
     "💝 New Arrivals: Exclusive Romantic Gift Combos just added!",
     "⭐ Become a Lifetime Customer: Get exclusive perks on registration!",
     "🎉 Flash Sale: Today Only - Extra 10% OFF with code FLASH10"

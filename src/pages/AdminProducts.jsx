@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link } from 'react-router-dom';
 import { Plus, Trash2, Edit, Search, Package, Globe, Tag, Settings } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -18,6 +17,7 @@ const AdminProducts = () => {
     name: '',
     description: '',
     price: '',
+    originalPrice: '',
     category: '',
     stock: '',
     images: '',
@@ -25,6 +25,18 @@ const AdminProducts = () => {
     seoTitle: '',
     seoDescription: ''
   });
+
+  const getImageCount = () => {
+    if (!formData.images) return 0;
+    return formData.images.split(',').filter(url => url.trim().length > 0).length;
+  };
+
+  const getDiscountPercentage = () => {
+    const original = parseFloat(formData.originalPrice);
+    const selling = parseFloat(formData.price);
+    if (!original || !selling || original <= selling) return 0;
+    return Math.round(((original - selling) / original) * 100);
+  };
 
   const fetchProducts = useCallback(async () => {
     try {
@@ -35,7 +47,6 @@ const AdminProducts = () => {
       setProducts(response.data.products || response.data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
-      // Use mock data on error
     } finally {
       setLoading(false);
     }
@@ -149,6 +160,7 @@ const AdminProducts = () => {
         images: formData.images.split(',').map(img => img.trim()),
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         price: parseFloat(formData.price),
+        originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : parseFloat(formData.price),
         stock: parseInt(formData.stock)
       };
 
@@ -170,6 +182,7 @@ const AdminProducts = () => {
         name: '',
         description: '',
         price: '',
+        originalPrice: '',
         category: '',
         stock: '',
         images: '',
@@ -194,6 +207,7 @@ const AdminProducts = () => {
       name: product.name || '',
       description: product.description || '',
       price: product.price || '',
+      originalPrice: product.originalPrice || product.price || '',
       category: product.category || '',
       stock: product.stock ?? '',
       images: imagesValue,
@@ -229,6 +243,7 @@ const AdminProducts = () => {
               name: '',
               description: '',
               price: '',
+              originalPrice: '',
               category: '',
               stock: '',
               images: '',
@@ -392,30 +407,51 @@ const AdminProducts = () => {
                   placeholder="Beautiful handcrafted pottery..."
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+
+              {/* Price & Stock Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-slate mb-2">Price (৳)</label>
+                  <label className="block text-sm font-semibold text-slate mb-2">Original Price (Main)</label>
+                  <input
+                    type="number"
+                    value={formData.originalPrice}
+                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                    className="input-field w-full"
+                    placeholder="e.g. 2000"
+                  />
+                  <p className="text-[10px] text-slate-400 mt-1">Leave blank if same as selling price</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2 flex justify-between">
+                    <span>Selling Price</span>
+                    {getDiscountPercentage() > 0 && (
+                      <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+                        -{getDiscountPercentage()}% OFF
+                      </span>
+                    )}
+                  </label>
                   <input
                     type="number"
                     required
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="input-field w-full"
-                    placeholder="1500"
+                    className="input-field w-full bg-green-50/50 border-green-200 focus:border-green-500 focus:ring-green-500"
+                    placeholder="e.g. 1500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate mb-2">Stock</label>
+                  <label className="block text-sm font-semibold text-slate mb-2">Stock Inventory</label>
                   <input
                     type="number"
                     required
                     value={formData.stock}
                     onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                     className="input-field w-full"
-                    placeholder="25"
+                    placeholder="e.g. 50"
                   />
                 </div>
               </div>
+
               <div>
                 <label className="block text-sm font-semibold text-slate mb-2">Category</label>
                 <select
@@ -432,24 +468,30 @@ const AdminProducts = () => {
                   ))}
                 </select>
               </div>
+
               <div>
-                <label className="block text-sm font-semibold text-slate mb-2">
-                  Product Images (Multiple URLs)
-                  <span className="text-xs font-normal text-slate-500 ml-2">
-                    💡 Separate multiple image URLs with commas
+                <label className="block text-sm font-semibold text-slate mb-2 flex justify-between items-center">
+                  <span>Product Images (URLs)</span>
+                  <span className={`text-xs px-2 py-1 rounded-full font-bold transition-colors ${getImageCount() > 0 ? 'bg-maroon/10 text-maroon' : 'bg-slate-100 text-slate-500'}`}>
+                    {getImageCount()} Image{getImageCount() !== 1 ? 's' : ''} Added
                   </span>
                 </label>
                 <textarea
                   required
                   value={formData.images}
                   onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                  className="input-field w-full"
-                  rows="3"
-                  placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg, https://example.com/image3.jpg"
+                  className="input-field w-full font-mono text-xs"
+                  rows="4"
+                  placeholder={`https://example.com/image1.jpg\nhttps://example.com/image2.jpg\nhttps://example.com/image3.jpg`}
                 />
-                <p className="text-xs text-slate-500 mt-1">
-                  📌 First image will be the main product image. You can add up to 5 images.
-                </p>
+                <div className="flex justify-between items-start mt-1">
+                  <p className="text-xs text-slate-500">
+                    📌 Enter multiple image URLs separated by commas or new lines.
+                  </p>
+                  <p className="text-xs text-maroon font-medium">
+                    First image = Main Display
+                  </p>
+                </div>
               </div>
 
               <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 mt-6">
@@ -476,9 +518,6 @@ const AdminProducts = () => {
                       className="input-field w-full"
                       placeholder="e.g. gift, handmade, birthday, surprise box, anniversary"
                     />
-                    <p className="text-xs text-slate-500 mt-1.5 ml-1">
-                      Start typing keywords that customers might search for...
-                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -494,9 +533,6 @@ const AdminProducts = () => {
                         className="input-field w-full"
                         placeholder={formData.name || "Product Name"}
                       />
-                      <p className="text-xs text-slate-500 mt-1.5 ml-1">
-                        Leave blank to use product name
-                      </p>
                     </div>
                     <div>
                       <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
@@ -510,9 +546,6 @@ const AdminProducts = () => {
                         rows="2"
                         placeholder="Short summary for Google search results..."
                       />
-                      <p className="text-xs text-slate-500 mt-1.5 ml-1">
-                        Leave blank to auto-generate from description
-                      </p>
                     </div>
                   </div>
                 </div>

@@ -8,7 +8,7 @@ import { addToRecentlyViewed } from '../utils/productUtils';
 import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
 import ReviewForm from '../components/ReviewForm';
-import ProductCard from '../components/ProductCard';
+import ProductItem from '../components/ProductItem';
 
 import Product3DViewer from '../components/Product3DViewer';
 import SocialShare from '../components/SocialShare';
@@ -27,8 +27,8 @@ const ProductDetail = () => {
   const [canReview, setCanReview] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
   const [deliverySettings, setDeliverySettings] = useState({
-    chittagongFee: 60,
-    outsideChittagongFee: 130,
+    chittagongFee: 70,
+    outsideChittagongFee: 150,
   });
   const [relatedProducts, setRelatedProducts] = useState([]);
   const { addToCart } = useCart();
@@ -703,9 +703,9 @@ const ProductDetail = () => {
                   View All <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
                 {relatedProducts.map(product => (
-                  <ProductCard key={product._id} product={product} />
+                  <ProductItem key={product._id} product={product} />
                 ))}
               </div>
             </div>

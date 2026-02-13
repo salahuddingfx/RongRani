@@ -46,15 +46,12 @@ export const useDeliveryCalculation = () => {
     } catch (err) {
       console.error('Delivery calculation error:', err);
       // Fallback to safe defaults
-      setDelivery({
-        charge: 0,
-        label: 'Delivery charge pending',
-        isFree: false,
-        provider: 'STEADFAST',
+      setDelivery((prev) => ({
+        ...prev,
+        charge: subtotal >= 2500 ? 0 : 150, // Safe default charge if backend fails
         threshold: 2500,
-        subtotal,
         eligibleForFree: subtotal >= 2500,
-      });
+      }));
       setError(err.message);
     } finally {
       setLoading(false);
