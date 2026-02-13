@@ -18,6 +18,7 @@ import ScrollToTop from './components/ScrollToTop';
 import RecentlyViewed from './components/RecentlyViewed';
 import CartDrawer from './components/CartDrawer';
 import ScrollRevealManager from './components/ScrollRevealManager';
+import CustomCursor from './components/CustomCursor';
 
 
 // Loading Component
@@ -109,6 +110,7 @@ function App() {
 
                       <RecentlyViewed />
                       <CartDrawer />
+                      <CustomCursor />
                       <Suspense fallback={<PageLoading />}>
                         <Routes>
                           {/* Public Routes */}

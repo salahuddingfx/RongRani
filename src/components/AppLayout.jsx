@@ -7,7 +7,6 @@ import TopNavBar from './TopNavBar';
 import AIChatFloatingWidget from './AIChatFloatingWidget';
 import Seo from './Seo';
 import ScrollRevealManager from './ScrollRevealManager';
-import CustomCursor from './CustomCursor';
 
 const AppLayout = () => {
   const location = useLocation();
@@ -44,9 +43,6 @@ const AppLayout = () => {
         <Outlet />
       </main>
       <Footer />
-
-      {/* Custom Cursor - Premium Feel */}
-      <CustomCursor />
 
       {/* AI Chat Widget - Delayed Load for Performance */}
       {showChat && <AIChatFloatingWidget />}
