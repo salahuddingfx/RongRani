@@ -59,8 +59,9 @@
 - ✅ **Wishlist** functionality
 - ✅ **Shopping Cart** with quantity management
 - ✅ **Guest Checkout** support
-- ✅ **Order Tracking** system
-- ✅ **Product Reviews** & ratings
+- ✅ **Order Tracking** system with direct reviews
+- ✅ **Product Reviews** & ratings (Guest & User)
+- ✅ **Ultra-Premium Invoices** (Bespoke Curation Registry)
 
 </td>
 <td width="50%">
@@ -112,6 +113,8 @@ graph LR
 - 📦 **Multiple Delivery Options**
 - 🎟️ **Coupon System** with validation
 - 📧 **Premium Luxury Email System** - Animated, bespoke theme notifications
+- 📜 **Bespoke Curation Registry** - High-end PDF invoices with loyalty rewards
+- 🎁 **Loyalty Discount System** - Incentivize repeat purchases with codes
 - 📱 **SMS Notifications** (optional)
 - 🔄 **Refund System** (Admin)
 
@@ -398,6 +401,16 @@ npm run dev
 - 🔧 **Backend API**: http://localhost:5000
 - 👨‍💼 **Admin Panel**: http://localhost:3000/admin
 
+#### 8️⃣ Database Seeding (Optional)
+
+To populate your database with premium starting data (categories & products):
+
+```bash
+cd backend
+node scripts/seedCategories.js
+node scripts/seedProducts.js
+```
+
 </details>
 
 ### Default Admin Credentials
@@ -647,7 +660,7 @@ DELETE /api/reviews/:id         # Delete review
 - [x] bKash Integration
 
 ### Phase 3 - Advanced Features 🚧
-- [ ] AI Product Recommendations
+- [x] AI Product Recommendations (Curated)
 - [ ] Advanced Analytics
 - [x] Mobile App (PWA Supported)
 - [ ] Multi-vendor Support

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Category = require('../models/Category');
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config();
 
 const categories = [
   {
