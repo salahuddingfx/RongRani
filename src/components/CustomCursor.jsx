@@ -44,11 +44,7 @@ const CustomCursor = () => {
         return () => removeEventListeners();
     }, [isVisible]);
 
-    if (typeof window === 'undefined' || !isVisible) return null;
-
-    // Only show on non-touch devices
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (isTouchDevice) return null;
+    if (typeof window === 'undefined') return null;
 
     return (
         <>
@@ -58,8 +54,9 @@ const CustomCursor = () => {
                 style={{
                     left: `${position.x}px`,
                     top: `${position.y}px`,
+                    opacity: isVisible ? 1 : 0,
                     transform: 'translate(-50%, -50%)',
-                    transition: 'width 0.3s, height 0.3s, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                    transition: 'width 0.3s, height 0.3s, opacity 0.3s, transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
                 }}
             >
                 <div
@@ -78,8 +75,9 @@ const CustomCursor = () => {
                 style={{
                     left: `${position.x}px`,
                     top: `${position.y}px`,
+                    opacity: isVisible ? 1 : 0,
                     transform: 'translate(-50%, -50%)',
-                    transition: 'transform 0.05s linear'
+                    transition: 'transform 0.05s linear, opacity 0.2s'
                 }}
             />
         </>
