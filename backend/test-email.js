@@ -14,23 +14,27 @@ const testEmail = async () => {
     try {
         const result = await sendEmail(
             to,
-            '🧪 RongRani Email Service Test - Working! 🚀',
-            `
-            <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-                <h2 style="color: #7b1230;">🎉 It Works!</h2>
-                <p>Hello Salahuddin,</p>
-                <p>This is a test email from your <strong>RongRani</strong> backend.</p>
-                <p>If you are reading this, your <strong>Brevo SMTP</strong> configuration is working perfectly.</p>
-                <hr>
-                <p><strong>Config Used:</strong></p>
-                <ul>
-                    <li>Host: ${process.env.BREVO_SMTP_HOST || process.env.SMTP_HOST}</li>
-                    <li>User: ${process.env.BREVO_SMTP_USER || process.env.SMTP_USER}</li>
-                </ul>
-                <p style="color: green; font-weight: bold;">✅ Email Service is Ready for Launch!</p>
-            </div>
-            `,
-            {}
+            '🧪 RongRani Premium Email Test 🚀',
+            'orderConfirmation',
+            {
+                name: 'Salahuddin',
+                orderId: 'RR-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
+                customerEmail: to,
+                subtotal: 1250,
+                shipping: 60,
+                discount: 100,
+                total: 1210,
+                items: [
+                    { name: 'Red Velvet Gift Box', quantity: 1, price: 850 },
+                    { name: 'Handmade Anniversary Card', quantity: 2, price: 200 }
+                ],
+                shippingAddress: {
+                    street: 'Road 5, Block A',
+                    city: 'Chattogram',
+                    zipCode: '4000',
+                    phone: '+880 1851-075537'
+                }
+            }
         );
 
         if (result.success) {
