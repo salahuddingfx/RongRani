@@ -31,40 +31,11 @@ const Reviews = () => {
             setStats(response.data.stats || stats);
         } catch (error) {
             console.error('Error fetching reviews:', error);
-            // Mock data for demo
-            setReviews([
-                {
-                    _id: '1',
-                    user: { name: 'আয়েশা খান', avatar: null },
-                    product: { _id: 'p1', name: 'হস্তনির্মিত শাড়ি', image: '/api/placeholder/100/100' },
-                    rating: 5,
-                    comment: 'অসাধারণ পণ্য! কোয়ালিটি অনেক ভালো। ডেলিভারিও সময়মতো হয়েছে।',
-                    createdAt: new Date().toISOString(),
-                    helpful: 24
-                },
-                {
-                    _id: '2',
-                    user: { name: 'Rafiq Ahmed', avatar: null },
-                    product: { _id: 'p2', name: 'Handmade Gift Box', image: '/api/placeholder/100/100' },
-                    rating: 5,
-                    comment: 'Excellent quality and beautiful packaging. My wife loved it!',
-                    createdAt: new Date(Date.now() - 86400000).toISOString(),
-                    helpful: 18
-                },
-                {
-                    _id: '3',
-                    user: { name: 'সানজিদা রহমান', avatar: null },
-                    product: { _id: 'p3', name: 'সারপ্রাইজ বক্স', image: '/api/placeholder/100/100' },
-                    rating: 4,
-                    comment: 'পণ্যটি ভালো তবে প্যাকেজিং আরো ভালো হতে পারতো।',
-                    createdAt: new Date(Date.now() - 172800000).toISOString(),
-                    helpful: 12
-                }
-            ]);
+            setReviews([]);
             setStats({
-                totalReviews: 156,
-                averageRating: 4.7,
-                ratingDistribution: { 5: 98, 4: 42, 3: 12, 2: 3, 1: 1 }
+                totalReviews: 0,
+                averageRating: 0,
+                ratingDistribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
             });
         } finally {
             setLoading(false);

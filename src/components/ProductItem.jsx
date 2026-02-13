@@ -115,13 +115,26 @@ const ProductItem = ({ product }) => {
                         {/* Rating & Sales */}
                         <div className="flex flex-col gap-1">
                             <div className="flex items-center gap-1.5">
-                                <div className="flex items-center">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className={`w-2.5 h-2.5 ${i < Math.floor(productRating) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`}
-                                        />
-                                    ))}
+                                <div className="flex items-center -space-x-0.5">
+                                    {[...Array(5)].map((_, i) => {
+                                        const ratingValue = i + 1;
+                                        const isFull = productRating >= ratingValue;
+                                        const isHalf = !isFull && productRating >= ratingValue - 0.5;
+
+                                        return (
+                                            <div key={i} className="relative">
+                                                <Star className="w-2.5 h-2.5 text-slate-200" />
+                                                {(isFull || isHalf) && (
+                                                    <div
+                                                        className="absolute inset-0 overflow-hidden"
+                                                        style={{ width: isFull ? '100%' : '50%' }}
+                                                    >
+                                                        <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                                 <span className="text-[10px] font-bold text-slate-700">
                                     {productRating > 0 ? productRating.toFixed(1) : '5.0'}

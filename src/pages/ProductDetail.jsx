@@ -303,15 +303,26 @@ const ProductDetail = () => {
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 pb-6 border-b-2 border-maroon/10">
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-1 bg-gold/10 px-3 py-2 rounded-xl">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`h-5 w-5 ${i < Math.floor(product.rating || 5) // Default to 5 if no rating
-                          ? 'text-gold fill-current'
-                          : 'text-slate/30'
-                          }`}
-                      />
-                    ))}
+                    {[...Array(5)].map((_, i) => {
+                      const starValue = i + 1;
+                      const rating = product.rating || 5;
+                      const isFull = rating >= starValue;
+                      const isHalf = !isFull && rating >= starValue - 0.5;
+
+                      return (
+                        <div key={i} className="relative">
+                          <Star className="h-5 w-5 text-slate/20" />
+                          {(isFull || isHalf) && (
+                            <div
+                              className="absolute inset-0 overflow-hidden"
+                              style={{ width: isFull ? '100%' : '50%' }}
+                            >
+                              <Star className="h-5 w-5 text-gold fill-current" />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                   <div className="flex items-center space-x-2">
                     <span className="text-2xl font-bold text-maroon">

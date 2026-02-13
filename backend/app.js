@@ -95,6 +95,7 @@ app.use('/api/payment', require('./routes/payment.routes'));
 app.use('/api/flash-sales', require('./routes/flashSale.routes'));
 app.use('/api/analytics', require('./routes/analytics.routes'));
 app.use('/api/search', require('./routes/search.routes'));
+app.use('/api/reviews', require('./routes/review.routes'));
 app.use('/', require('./routes/sitemap.routes')); // SEO: Dynamic sitemap
 
 /* -------------------- PLACEHOLDER IMAGE -------------------- */

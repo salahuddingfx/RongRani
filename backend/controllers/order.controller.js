@@ -108,9 +108,8 @@ const createOrder = async (req, res) => {
         attributes: item.attributes || [],
       });
 
-      // Update product stock and sales count
+      // Update product stock
       product.stock -= item.quantity;
-      product.salesCount = (product.salesCount || 0) + item.quantity;
       await product.save();
 
       // Check for Low Stock
@@ -456,11 +455,24 @@ const updateOrderStatus = async (req, res) => {
 
     // Update Order Status
     if (orderStatus) {
-      order.orderStatus = orderStatus;
-      if (orderStatus === 'delivered' && !order.deliveredAt) {
+      // If status is changing to delivered, increment salesCount for products
+      if (orderStatus === 'delivered' && order.orderStatus !== 'delivered') {
         order.deliveredAt = new Date();
-        // Often, delivered COD orders are implicitly paid, but let's keep it manual as requested unless admin sets it
+
+        // Logically increment salesCount for each item
+        for (const item of order.items) {
+          try {
+            const product = await Product.findById(item.product);
+            if (product) {
+              product.salesCount = (product.salesCount || 0) + item.quantity;
+              await product.save();
+            }
+          } catch (itemErr) {
+            console.error(`Failed to update salesCount for product ${item.product}:`, itemErr);
+          }
+        }
       }
+      order.orderStatus = orderStatus;
     }
 
     // Update Tracking
