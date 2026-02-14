@@ -36,198 +36,179 @@ const generateInvoice = async (order) => {
         danger: '#EF4444'
       };
 
-      // 1. HEADER: Minimalist & High-End
-      // Instead of full block, use white space with distinct typography
-
-      // Top Accent Line
-      doc.rect(0, 0, 595, 6).fill(colors.royalMaroon);
-
-      // Brand Section (Left)
-      const logoPath = path.join(__dirname, '../../public/RongRani-Circle.png');
-      if (fs.existsSync(logoPath)) {
-        // Watermark (Centered & Large)
-        doc.save();
-        doc.opacity(0.03);
-        doc.image(logoPath, 147, 250, { width: 300, align: 'center', valign: 'center' });
-        doc.restore();
+      // --- Helper Functions for Consistent Layout ---
+      const drawHeader = (pageNum) => {
+        // Top Accent Line
+        doc.rect(0, 0, 595, 6).fill(colors.royalMaroon);
 
         // Header Logo
-        doc.image(logoPath, 40, 30, { width: 50 });
-      }
+        const logoPath = path.join(__dirname, '../../public/RongRani-Circle.png');
+        if (fs.existsSync(logoPath)) {
+          doc.image(logoPath, 40, 30, { width: 50 });
+        }
 
-      // Brand Name
-      doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').fontSize(26).text('RongRani', 100, 35);
+        // Brand Name
+        doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').fontSize(26).text('RongRani', 100, 35);
 
-      // Header Decoration (Nav-like block)
-      doc.rect(40, 135, 515, 2).fill(colors.royalMaroon);
-      doc.rect(40, 137, 515, 12).fill(colors.lightGray);
-      doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').fontSize(7).text('QUALITY • AUTHENTICITY • ELEGANCE', 40, 140, { align: 'center', width: 515, characterSpacing: 2 });
+        // Tagline
+        doc.fillColor(colors.bespokeGold).font('Helvetica').fontSize(8);
+        doc.text('E L E G A N C E   I N   E V E R Y   H U E', 100, 62, { characterSpacing: 1 });
 
-      // Tagline: "ELEGANCE IN EVERY HUE" (Sophisticated Typography)
-      const taglineY = 62;
-      doc.fillColor(colors.bespokeGold).font('Helvetica').fontSize(8);
-      // Clean spacing
-      doc.text('E L E G A N C E   I N   E V E R Y   H U E', 100, taglineY, { characterSpacing: 1 });
+        // Invoice Header Block (Only on first page)
+        if (pageNum === 1) {
+          doc.rect(400, 30, 155, 45, 4).fill(colors.royalMaroon);
+          doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(18).text('INVOICE', 400, 38, { align: 'center', width: 155 });
+          doc.fontSize(7).font('Helvetica').fillColor('#FFFFFF').text('OFFICIAL MANIFEST', 400, 58, { align: 'center', width: 155, characterSpacing: 1 });
 
-      // Header Accent Box (Simulating a Premium Nav/Header)
-      doc.rect(40, 140, 515, 2).fill(colors.royalMaroon);
-      doc.rect(40, 142, 515, 8).fill(colors.lightGray);
+          doc.fillColor(colors.slate).fontSize(8).text(`ID: #${order.orderId || order._id.toString().substring(0, 8).toUpperCase()}`, 350, 85, { align: 'right', width: 200 });
 
-      // Invoice Details (Right Aligned)
-      doc.rect(400, 30, 155, 45, 4).fill(colors.royalMaroon);
-      doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(18).text('INVOICE', 400, 38, { align: 'center', width: 155 });
-      doc.fontSize(7).font('Helvetica').fillColor('#FFFFFF').text('OFFICIAL MANIFEST', 400, 58, { align: 'center', width: 155, characterSpacing: 1 });
+          if (qrBuffer) {
+            doc.image(qrBuffer, 500, 85, { width: 50 });
+            doc.fontSize(6).fillColor(colors.bespokeGold).text('Scan to Track', 500, 138, { width: 50, align: 'center' });
+          }
+        } else {
+          // Smaller identifier on subsequent pages
+          doc.fillColor(colors.slate).fontSize(8).text(`Invoice #${order.orderId || order._id.toString().substring(0, 8).toUpperCase()} - Page ${pageNum}`, 400, 40, { align: 'right', width: 155 });
+        }
 
-      doc.fillColor(colors.slate).fontSize(8).text(`ID: #${order.orderId || order._id.toString().substring(0, 8).toUpperCase()}`, 350, 85, { align: 'right', width: 200 });
-
-      // QR Code (Neatly positioned below Invoice ID)
-      if (qrBuffer) {
-        doc.image(qrBuffer, 500, 85, { width: 50 });
-        doc.fontSize(6).fillColor(colors.bespokeGold).text('Scan to Track', 500, 138, { width: 50, align: 'center' });
-      }
-
-      // Divider
-      doc.moveTo(40, 150).lineTo(555, 150).strokeColor(colors.lightGray).lineWidth(1).stroke();
-
-      // 2. DOSSIER (Client & Order Info) - Clean 2-Column Layout
-      const infoY = 170;
-
-      // Left: Client Details
-      doc.fontSize(9).font('Helvetica-Bold').fillColor(colors.bespokeGold).text('BILLED TO', 40, infoY);
-
-      const shipping = order.shippingAddress || {};
-      doc.fontSize(12).font('Helvetica-Bold').fillColor(colors.midnight).text(shipping.name || 'Valued Guest', 40, infoY + 15);
-
-      doc.fontSize(9).font('Helvetica').fillColor(colors.slate).lineGap(4);
-      doc.text(shipping.phone || '', 40, infoY + 32);
-      if (shipping.email) doc.text(shipping.email);
-
-      const addressLines = [
-        shipping.street,
-        `${shipping.city || ''} ${shipping.zipCode || ''}`.trim(),
-        shipping.country || 'Bangladesh'
-      ].filter(Boolean);
-
-      doc.text(addressLines.join('\n'), { width: 250 });
-
-      // Right: Order Logistics
-      const rightColX = 350;
-      doc.fontSize(9).font('Helvetica-Bold').fillColor(colors.bespokeGold).text('ORDER DETAILS', rightColX, infoY);
-
-      doc.font('Helvetica').fillColor(colors.midnight).lineGap(6);
-
-      const orderDate = new Date(order.createdAt).toLocaleDateString('en-BD', { day: 'numeric', month: 'long', year: 'numeric' });
-
-      // Label-Value Pairs
-      const drawField = (label, value, y) => {
-        doc.fontSize(8).fillColor(colors.slate).text(label, rightColX, y);
-        doc.fontSize(9).fillColor(colors.midnight).text(value, rightColX + 90, y, { align: 'right', width: 110 });
+        // Navigation Line
+        doc.rect(40, 140, 515, 2).fill(colors.royalMaroon);
+        doc.rect(40, 142, 515, 12).fill(colors.lightGray);
+        doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').fontSize(7).text('QUALITY • AUTHENTICITY • ELEGANCE', 40, 145, { align: 'center', width: 515, characterSpacing: 2 });
       };
 
-      let currentY = infoY + 15;
-      drawField('Date:', orderDate, currentY); currentY += 15;
-      drawField('Pay Method:', order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod?.toUpperCase(), currentY); currentY += 15;
-      drawField('Status:', (order.paymentStatus || 'Pending').toUpperCase(), currentY); currentY += 15;
-      drawField('Courier:', 'RedX / Pathao', currentY); // Placeholder for future integration
+      const drawFooter = () => {
+        const footerY = 780;
+        doc.rect(40, footerY - 5, 515, 1).fill(colors.lightGray);
+        doc.fontSize(7).fillColor(colors.slate).text('Thank you for choosing RongRani. For support, contact 01851075537', 40, footerY, { align: 'center', width: 515 });
+        doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').text('FB: /rongrani • IG: @rongrani • WA: +8801851075537', 40, footerY + 12, { align: 'center', width: 515 });
+        doc.fillColor(colors.slate).font('Helvetica').text('www.rongrani.com', 40, footerY + 24, { align: 'center', width: 515 });
+      };
 
-      // Payment Status Stamp (Creative Placement)
-      const isPaid = order.paymentStatus === 'paid';
-      const isCod = order.paymentMethod === 'cod' && order.paymentStatus !== 'paid';
+      const drawTableHeader = (yPos) => {
+        doc.rect(40, yPos, 515, 25).fill(colors.cream);
+        doc.fontSize(8).font('Helvetica-Bold').fillColor(colors.royalMaroon);
+        doc.text('DESCRIPTION', 55, yPos + 8);
+        doc.text('QTY', 320, yPos + 8, { width: 40, align: 'center' });
+        doc.text('UNIT PRICE', 380, yPos + 8, { width: 60, align: 'right' });
+        doc.text('AMOUNT', 460, yPos + 8, { width: 90, align: 'right' });
+      };
 
-      if (isPaid || isCod) {
+      // --- Page 1 Initialization ---
+      let currentPage = 1;
+      drawHeader(currentPage);
+      drawFooter();
+
+      // Watermark
+      const logoPath = path.join(__dirname, '../../public/RongRani-Circle.png');
+      if (fs.existsSync(logoPath)) {
         doc.save();
-        doc.opacity(0.1);
-        const stampText = isPaid ? 'PAID' : 'DUE';
-        const stampColor = isPaid ? colors.success : colors.danger;
-
-        doc.translate(rightColX + 50, infoY + 80);
-        doc.rotate(-10);
-        doc.roundedRect(0, 0, 80, 30, 4).strokeColor(stampColor).lineWidth(2).stroke();
-        doc.fontSize(14).font('Helvetica-Bold').fillColor(stampColor).text(stampText, 0, 8, { width: 80, align: 'center' });
+        doc.opacity(0.03);
+        doc.image(logoPath, 147, 250, { width: 300 });
         doc.restore();
       }
 
-      // 3. ITEMIZATION (Modern Table)
-      const tableY = 300;
+      // Client & Order Info
+      const infoY = 170;
+      doc.fontSize(9).font('Helvetica-Bold').fillColor(colors.bespokeGold).text('BILLED TO', 40, infoY);
+      const shipping = order.shippingAddress || {};
+      doc.fontSize(12).font('Helvetica-Bold').fillColor(colors.midnight).text(shipping.name || 'Valued Guest', 40, infoY + 15);
+      doc.fontSize(8).font('Helvetica').fillColor(colors.slate).lineGap(2);
+      doc.text(shipping.phone || '', 40, infoY + 32);
+      if (shipping.email) doc.text(shipping.email);
+      const addressLines = [shipping.street, shipping.city, shipping.district, shipping.country || 'Bangladesh'].filter(Boolean);
+      doc.text(addressLines.join(', '), { width: 250 });
 
-      // Header
-      doc.rect(40, tableY, 515, 25).fill(colors.cream);
-      doc.fontSize(8).font('Helvetica-Bold').fillColor(colors.royalMaroon);
+      const rightColX = 350;
+      doc.fontSize(9).font('Helvetica-Bold').fillColor(colors.bespokeGold).text('ORDER DETAILS', rightColX, infoY);
+      const orderDate = new Date(order.createdAt).toLocaleDateString('en-BD', { day: 'numeric', month: 'long', year: 'numeric' });
 
-      doc.text('DESCRIPTION', 55, tableY + 8);
-      doc.text('QTY', 320, tableY + 8, { width: 40, align: 'center' });
-      doc.text('UNIT PRICE', 380, tableY + 8, { width: 60, align: 'right' });
-      doc.text('AMOUNT', 460, tableY + 8, { width: 90, align: 'right' });
-
-      // Rows
-      let y = tableY + 30;
-      doc.font('Helvetica').fontSize(9).fillColor(colors.midnight);
-
-      order.items.forEach((item, i) => {
-        const rowHeight = 25;
-
-        // Row Line
-        doc.moveTo(40, y + rowHeight).lineTo(555, y + rowHeight).strokeColor(colors.lightGray).lineWidth(0.5).stroke();
-
-        doc.text(item.name, 55, y + 8, { width: 260, ellipsis: true });
-        doc.text(item.quantity, 320, y + 8, { width: 40, align: 'center' });
-        doc.text(item.price.toLocaleString(), 380, y + 8, { width: 60, align: 'right' });
-
-        doc.font('Helvetica-Bold');
-        doc.text((item.price * item.quantity).toLocaleString(), 460, y + 8, { width: 90, align: 'right' });
-        doc.font('Helvetica');
-
-        y += rowHeight;
-      });
-
-      // 4. FINANCIAL SUMMARY (Clean, Right-Aligned)
-      const summaryY = y + 20;
-      const sumX = 350;
-      const sumW = 205;
-
-      const drawSum = (label, value, bold = false, color = colors.midnight) => {
-        doc.fontSize(9).font(bold ? 'Helvetica-Bold' : 'Helvetica').fillColor(colors.slate).text(label, sumX, y, { width: 100, align: 'right' });
-        doc.fillColor(color).text(value, 460, y, { width: 90, align: 'right' });
-        y += 18;
+      const drawField = (label, value, y) => {
+        doc.fontSize(8).fillColor(colors.slate).text(label, rightColX, y);
+        doc.fontSize(8).fillColor(colors.midnight).text(value, rightColX + 90, y, { align: 'right', width: 110 });
       };
 
-      y = summaryY;
-      drawSum('Subtotal', `Tk ${order.subtotal.toLocaleString()}`);
-      drawSum('Shipping', `Tk ${(order.shipping || 0).toLocaleString()}`);
-      if (order.discount > 0) drawSum('Discount', `- Tk ${order.discount.toLocaleString()}`, false, colors.success);
+      drawField('Date:', orderDate, infoY + 15);
+      drawField('Pay Method:', (order.paymentMethod || '').toUpperCase(), infoY + 30);
+      drawField('Status:', (order.paymentStatus || 'Pending').toUpperCase(), infoY + 45);
+      drawField('Courier:', 'Standard Delivery', infoY + 60);
 
-      // Divider
-      doc.moveTo(sumX + 20, y).lineTo(555, y).strokeColor(colors.royalMaroon).lineWidth(1).stroke();
-      y += 10;
+      // --- Itemization Table ---
+      let tableY = 280;
+      drawTableHeader(tableY);
+      let currentY = tableY + 30;
 
-      // Total
-      doc.fontSize(14).font('Helvetica-Bold').fillColor(colors.royalMaroon).text('Total', sumX, y, { width: 100, align: 'right' });
-      doc.text(`Tk ${order.total.toLocaleString()}`, 460, y, { width: 90, align: 'right' });
+      order.items.forEach((item, i) => {
+        const productData = item.product || {};
 
+        // Calculate height
+        const textWidth = 260;
+        const mainTextHeight = doc.heightOfString(item.name, { width: textWidth, font: 'Helvetica-Bold', size: 9 });
+        const descTextHeight = productData.description ? doc.heightOfString(productData.description, { width: textWidth, font: 'Helvetica', size: 7 }) : 0;
+        const rowHeight = Math.max(30, mainTextHeight + descTextHeight + 15);
 
-      // 5. SIGNATURES (Script Style for Authority)
+        // Check for page overflow
+        if (currentY + rowHeight > 720) {
+          doc.addPage();
+          currentPage++;
+          drawHeader(currentPage);
+          drawFooter();
+          currentY = 170;
+          drawTableHeader(currentY);
+          currentY += 30;
+        }
+
+        // Draw Row
+        doc.moveTo(40, currentY + rowHeight).lineTo(555, currentY + rowHeight).strokeColor(colors.lightGray).lineWidth(0.5).stroke();
+
+        doc.fillColor(colors.midnight).font('Helvetica-Bold').fontSize(9).text(item.name, 55, currentY + 5, { width: textWidth });
+        if (productData.description) {
+          doc.fillColor(colors.slate).font('Helvetica').fontSize(7).text(productData.description, 55, currentY + 5 + mainTextHeight + 2, { width: textWidth });
+        }
+
+        doc.fillColor(colors.midnight).font('Helvetica').fontSize(9);
+        doc.text(item.quantity, 320, currentY + (rowHeight / 2 - 5), { width: 40, align: 'center' });
+        doc.text(item.price.toLocaleString(), 380, currentY + (rowHeight / 2 - 5), { width: 60, align: 'right' });
+        doc.font('Helvetica-Bold').text((item.price * item.quantity).toLocaleString(), 460, currentY + (rowHeight / 2 - 5), { width: 90, align: 'right' });
+
+        currentY += rowHeight;
+      });
+
+      // --- Financial Summary ---
+      if (currentY + 100 > 720) {
+        doc.addPage();
+        currentPage++;
+        drawHeader(currentPage);
+        drawFooter();
+        currentY = 170;
+      }
+
+      currentY += 20;
+      const drawSum = (label, value, isTotal = false) => {
+        doc.fontSize(isTotal ? 12 : 9).font(isTotal ? 'Helvetica-Bold' : 'Helvetica').fillColor(isTotal ? colors.royalMaroon : colors.slate).text(label, 350, currentY, { width: 100, align: 'right' });
+        doc.fillColor(isTotal ? colors.royalMaroon : colors.midnight).text(value, 460, currentY, { width: 90, align: 'right' });
+        currentY += isTotal ? 25 : 18;
+      };
+
+      drawSum('Subtotal:', `Tk ${order.subtotal.toLocaleString()}`);
+      drawSum('Shipping:', `Tk ${(order.shipping || 0).toLocaleString()}`);
+      if (order.discount > 0) drawSum('Discount:', `- Tk ${order.discount.toLocaleString()}`);
+
+      doc.moveTo(370, currentY).lineTo(555, currentY).strokeColor(colors.royalMaroon).lineWidth(1).stroke();
+      currentY += 10;
+      drawSum('Total Amount:', `Tk ${order.total.toLocaleString()}`, true);
+
+      // --- Signatures (Fixed at bottom of last page) ---
       const sigY = 740;
+      doc.moveTo(40, sigY).lineTo(170, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
+      doc.fontSize(7).font('Helvetica').fillColor(colors.slate).text('ADMIN SIGNATURE', 40, sigY + 5, { align: 'center', width: 130 });
 
-      // Admin / Authority (Left Side this time? Standard is Right for Auth, Left for Customer. Let's keep Right for Auth)
+      doc.moveTo(232, sigY).lineTo(362, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
+      doc.fontSize(7).font('Helvetica').fillColor(colors.slate).text('CUSTOMER SIGNATURE', 232, sigY + 5, { align: 'center', width: 130 });
 
-      // Authorized Signature (Script Style)
-      // Using Times-Italic to simulate script/handwriting elegance
-      doc.font('Times-Italic').fontSize(16).fillColor(colors.royalMaroon).text('RongRani', 400, sigY - 20, { align: 'center', width: 150 });
-      doc.moveTo(400, sigY).lineTo(550, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
-      doc.fontSize(7).font('Helvetica').fillColor(colors.slate).text('AUTHORIZED SIGNATURE', 400, sigY + 5, { align: 'center', width: 150, characterSpacing: 1 });
-
-      // Admin Signature (Left Side)
-      doc.font('Times-Italic').fontSize(14).fillColor(colors.royalMaroon).text('Prepared By', 40, sigY - 15, { align: 'center', width: 150 });
-      doc.moveTo(40, sigY).lineTo(190, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
-      doc.fontSize(7).font('Helvetica').fillColor(colors.slate).text('ADMIN SIGNATURE', 40, sigY + 5, { align: 'center', width: 150, characterSpacing: 1 });
-
-
-      // Footer Info
-      const footerY = 780;
-      doc.rect(40, footerY - 5, 515, 1).fill(colors.lightGray);
-      doc.fontSize(7).fillColor(colors.slate).text('Thank you for choosing RongRani. For support, contact 01851075537', 40, footerY, { align: 'center', width: 515 });
-      doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').text('FB: /rongrani • IG: @rongrani • WA: +8801851075537', 40, footerY + 12, { align: 'center', width: 515 });
-      doc.fillColor(colors.slate).font('Helvetica').text('www.rongrani.com', 40, footerY + 24, { align: 'center', width: 515 });
+      doc.font('Times-Italic').fontSize(16).fillColor(colors.royalMaroon).text('RongRani', 425, sigY - 20, { align: 'center', width: 130 });
+      doc.moveTo(425, sigY).lineTo(555, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
+      doc.fontSize(7).font('Helvetica').fillColor(colors.slate).text('AUTHORIZED SIGNATURE', 425, sigY + 5, { align: 'center', width: 130 });
 
       doc.end();
     } catch (error) {

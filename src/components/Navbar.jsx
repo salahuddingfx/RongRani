@@ -142,10 +142,10 @@ const Navbar = () => {
     ...(user?.role === 'admin' ? [{ to: '/admin', label: 'admin_panel', icon: Crown }] : []),
   ];
 
-  const topBarClasses = 'bg-maroon/85 backdrop-blur-md backdrop-saturate-150 text-white text-[10px] md:text-xs py-1 md:py-2 px-3 md:px-4 block transition-all duration-300 ring-1 ring-white/10 relative z-50 mx-2 md:mx-4 mt-1 md:mt-2 rounded-xl shadow-lg';
+  const topBarClasses = 'bg-maroon/90 backdrop-blur-md backdrop-saturate-150 text-white text-[10px] md:text-xs py-1.5 md:py-2 px-3 md:px-4 block transition-all duration-300 ring-1 ring-white/10 relative z-50 transition-all duration-500 mx-0 md:mx-4 mt-0 md:mt-2 rounded-none md:rounded-xl shadow-lg';
   const mainNavClasses = isScrolled || isOpen
-    ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl backdrop-saturate-150 shadow-xl ring-1 ring-white/20 dark:ring-white/5 py-1.5 sm:py-3 rounded-2xl mx-2 md:mx-4 mt-2 md:mt-3 transition-all duration-500 hover:shadow-2xl hover:bg-white/90 dark:hover:bg-slate-900/90'
-    : 'bg-white/70 dark:bg-slate-900/70 backdrop-blur-lg backdrop-saturate-150 shadow-lg ring-1 ring-white/20 dark:ring-white/5 py-2 sm:py-4 rounded-2xl mx-2 md:mx-4 mt-2 md:mt-3 transition-all duration-500 hover:shadow-xl hover:-translate-y-0.5 hover:bg-white/80 dark:hover:bg-slate-900/80';
+    ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl backdrop-saturate-150 shadow-xl ring-1 ring-white/10 dark:ring-white/5 py-1.5 sm:py-3 rounded-none md:rounded-2xl mx-0 md:mx-4 mt-0 md:mt-3 transition-all duration-500'
+    : 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg backdrop-saturate-150 shadow-lg ring-1 ring-white/10 dark:ring-white/5 py-2 sm:py-4 rounded-none md:rounded-2xl mx-0 md:mx-4 mt-0 md:mt-3 transition-all duration-500';
 
   const [placeholder, setPlaceholder] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -265,30 +265,30 @@ const Navbar = () => {
                 <div className="lg:hidden">
                   <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="p-2 -ml-2 text-slate-800 dark:text-white focus:outline-none hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                    className="p-2 -ml-2 text-slate-800 dark:text-white focus:outline-none hover:bg-slate-100/50 dark:hover:bg-slate-800/50 rounded-full transition-colors active:scale-90"
                     aria-label="Menu"
                   >
-                    {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                    {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                   </button>
                 </div>
 
-                <Link to="/" className="flex items-center gap-2 group shrink-0" aria-label="RongRani Home">
+                <Link to="/" className="flex items-center gap-1.5 md:gap-2 group shrink-0" aria-label="RongRani Home">
                   {/* Gift Icon with creative rotation */}
                   <div
-                    className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-xl border border-maroon/20 dark:border-white/20 p-1 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm shadow-sm group-hover:rotate-12 group-hover:scale-110 transition-all duration-300 ease-out"
-                    role="presentation" // Changed from img to presentation as the img tag inside handles the semantic image
+                    className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center rounded-lg md:rounded-xl border border-maroon/20 dark:border-white/10 p-1 bg-white dark:bg-slate-800 backdrop-blur-sm shadow-sm transition-all duration-300 ease-out"
+                    role="presentation"
                   >
                     <img
                       src="/RongRani-Circle.png"
                       alt="RongRani Logo"
-                      className="w-full h-full object-contain drop-shadow-md"
+                      className="w-full h-full object-contain"
                       width="48"
                       height="48"
                     />
                   </div>
                   {/* Text Logo */}
                   <div className="flex flex-col leading-none">
-                    <span className="text-2xl md:text-3xl font-black text-maroon dark:text-white tracking-tight group-hover:opacity-90 transition-opacity">
+                    <span className="text-xl md:text-3xl font-black text-maroon dark:text-white tracking-tighter sm:tracking-tight">
                       Rong<span className="text-slate-800 dark:text-slate-200">Rani</span>
                     </span>
                   </div>
@@ -520,21 +520,21 @@ const Navbar = () => {
                       {/* Theme Toggle */}
                       <button
                         onClick={toggleTheme}
-                        className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300"
+                        className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300"
                         aria-label={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
                       >
-                        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                        {isDark ? <Sun className="w-5 h-5 md:w-5 md:h-5" /> : <Moon className="w-5 h-5 md:w-5 md:h-5" />}
                       </button>
 
                       {/* Cart */}
                       <Link
                         to="/cart"
                         onClick={(e) => { e.preventDefault(); openCart(); }}
-                        className="relative p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group"
+                        className="relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group"
                       >
                         <ShoppingCart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon transition-colors" />
                         {totalItems > 0 && (
-                          <span className="absolute -top-1 -right-1 bg-maroon text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white dark:border-slate-900 shadow-sm animate-bounce-short">
+                          <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-bounce-short">
                             {totalItems}
                           </span>
                         )}
@@ -550,7 +550,7 @@ const Navbar = () => {
                             aria-haspopup="true"
                             aria-expanded={showUserMenu}
                           >
-                            <div className="w-8 h-8 rounded-full bg-maroon flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:shadow-lg transition-all ring-2 ring-transparent group-hover:ring-maroon/20">
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-maroon flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md transition-all ring-1 ring-white/20">
                               {user.name.charAt(0)}
                             </div>
                           </button>
@@ -602,7 +602,10 @@ const Navbar = () => {
                     type="text"
                     placeholder={placeholder}
                     aria-label={t('search_placeholder') || "Search for gifts"}
-                    className="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 pl-4 pr-10 focus:ring-2 focus:ring-maroon text-xs"
+                    className="w-full bg-slate-100 dark:bg-slate-800/80 border 
+                                               border-slate-200 dark:border-slate-700/50 rounded-xl py-2.5 pl-4 pr-10 
+                                               focus:ring-2 focus:ring-maroon focus:bg-white dark:focus:bg-slate-800 
+                                               text-[13px] font-medium transition-all"
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value);

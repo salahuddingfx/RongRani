@@ -672,18 +672,25 @@ const generateOrderInvoice = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('user', 'name email address phone')
-      .populate('items.product', 'name price');
+      .populate('items.product', 'name price description');
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    // Check if user owns the order or is admin
-    if (
-      order.user._id.toString() !== req.user._id.toString() &&
-      req.user.role !== 'admin' &&
-      req.user.role !== 'super_admin'
-    ) {
+    // Check authorization
+    const requester = req.user;
+    const email = (req.query.email || '').toString().trim().toLowerCase();
+    const phone = (req.query.phone || '').toString().trim().replace(/\s+/g, '');
+
+    const orderEmail = (order.user?.email || order.guestInfo?.email || order.shippingAddress?.email || '').toLowerCase();
+    const orderPhone = (order.user?.phone || order.guestInfo?.phone || order.shippingAddress?.phone || '').toString().replace(/\s+/g, '');
+
+    const isOwner = requester && order.user && order.user._id.toString() === requester._id.toString();
+    const isAdmin = requester && ['admin', 'super_admin'].includes(requester.role);
+    const isVerifiedContact = (!!email && orderEmail && orderEmail === email) || (!!phone && orderPhone && orderPhone === phone);
+
+    if (!isOwner && !isAdmin && !isVerifiedContact) {
       return res.status(403).json({ message: 'Not authorized to view this invoice' });
     }
 

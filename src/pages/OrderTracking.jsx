@@ -99,6 +99,10 @@ const OrderTracking = () => {
     try {
       setDownloading(true);
       const response = await axios.get(`/api/orders/${order._id}/invoice`, {
+        params: {
+          email: contactEmail || undefined,
+          phone: contactPhone || undefined,
+        },
         responseType: 'blob',
         headers: {
           'Accept': 'application/pdf'

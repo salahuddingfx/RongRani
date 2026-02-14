@@ -17,6 +17,9 @@ exports.getActiveFlashSale = async (req, res) => {
             return res.status(200).json({ success: true, flashSale: null });
         }
 
+        // Filter out products that might have been deleted but are still in the flash sale list
+        flashSale.products = flashSale.products.filter(p => p.product !== null);
+
         res.status(200).json({
             success: true,
             flashSale
@@ -35,20 +38,27 @@ exports.createFlashSale = async (req, res) => {
     try {
         const { name, startTime, endTime, products, backgroundColor } = req.body;
 
-        // Basic validation
-        if (!name || !startTime || !endTime || !products || products.length === 0) {
-            return res.status(400).json({
-                success: false,
-                message: 'Please provide all required fields'
-            });
+        // Detailed validation
+        if (!name) return res.status(400).json({ success: false, message: 'Campaign name is required' });
+        if (!startTime) return res.status(400).json({ success: false, message: 'Start time is required' });
+        if (!endTime) return res.status(400).json({ success: false, message: 'End time is required' });
+        if (!products || products.length === 0) return res.status(400).json({ success: false, message: 'At least one product must be added' });
+
+        // Ensure dates are valid and logic is sound
+        const start = new Date(startTime);
+        const end = new Date(endTime);
+
+        if (start >= end) {
+            return res.status(400).json({ success: false, message: 'End time must be after start time' });
         }
 
         const flashSale = await FlashSale.create({
             name,
-            startTime,
-            endTime,
+            startTime: start,
+            endTime: end,
             products,
-            backgroundColor
+            backgroundColor: backgroundColor || 'bg-white',
+            isActive: true
         });
 
         res.status(201).json({
@@ -56,10 +66,10 @@ exports.createFlashSale = async (req, res) => {
             flashSale
         });
     } catch (error) {
-        console.error('Error creating flash sale:', error);
+        console.error('🔥 Flash Sale Create Error:', error);
         res.status(500).json({
             success: false,
-            message: error.message || 'Server Error'
+            message: error.message || 'Failed to create flash sale'
         });
     }
 };
@@ -118,7 +128,9 @@ exports.deleteFlashSale = async (req, res) => {
 // Get all flash sales (Admin)
 exports.getAllFlashSales = async (req, res) => {
     try {
-        const flashSales = await FlashSale.find().sort({ createdAt: -1 });
+        const flashSales = await FlashSale.find()
+            .populate('products.product', 'name price images')
+            .sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,

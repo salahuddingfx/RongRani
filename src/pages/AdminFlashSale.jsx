@@ -128,6 +128,35 @@ const AdminFlashSale = () => {
         }
     };
 
+    const handleDelete = async (id) => {
+        if (!window.confirm('Are you sure you want to delete this flash sale?')) return;
+        try {
+            const token = localStorage.getItem('token');
+            await axios.delete(`/api/flash-sales/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success('Flash Sale Deleted');
+            fetchFlashSales();
+        } catch (error) {
+            toast.error('Failed to delete');
+        }
+    };
+
+    const toggleStatus = async (sale) => {
+        try {
+            const token = localStorage.getItem('token');
+            await axios.put(`/api/flash-sales/${sale._id}`, {
+                isActive: !sale.isActive
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success(`Campaign ${!sale.isActive ? 'Activated' : 'Deactivated'}`);
+            fetchFlashSales();
+        } catch (error) {
+            toast.error('Failed to update status');
+        }
+    };
+
     return (
         <div className="p-6">
             <div className="flex justify-between items-center mb-8">
@@ -348,9 +377,21 @@ const AdminFlashSale = () => {
                             )}
                         </div>
 
-                        {/* Actions could go here (Delete/Edit) */}
-                        <div className="flex justify-end mt-4 pt-4 border-t border-slate-100">
-                            {/* Placeholder for delete/edit actions */}
+                        {/* Actions */}
+                        <div className="flex justify-between mt-4 pt-4 border-t border-slate-100 items-center">
+                            <button
+                                onClick={() => toggleStatus(sale)}
+                                className={`text-xs font-black uppercase px-3 py-1.5 rounded-lg transition-colors ${sale.isActive ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-green-50 text-green-600 hover:bg-green-100'}`}
+                            >
+                                {sale.isActive ? 'Deactivate' : 'Activate Ahora'}
+                            </button>
+                            <button
+                                onClick={() => handleDelete(sale._id)}
+                                className="text-slate-400 hover:text-red-500 p-2 transition-colors"
+                                title="Delete Campaign"
+                            >
+                                <Trash2 className="w-5 h-5" />
+                            </button>
                         </div>
                     </div>
                 ))}
