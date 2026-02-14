@@ -114,14 +114,14 @@ const ReviewForm = ({
 
           {/* Guest Info */}
           {isGuest && (
-            <div className="space-y-4 bg-slate-50 dark:bg-slate-700/20 p-4 rounded-2xl">
-              <p className="text-xs text-slate-500 font-medium mb-1">Guest Reviewer Details:</p>
+            <div className="space-y-4 bg-slate-100/50 dark:bg-slate-700/40 p-5 rounded-3xl border border-slate-200 dark:border-slate-600">
+              <p className="text-[11px] text-maroon font-bold mb-1 uppercase tracking-wider">Reviewer Information</p>
               <input
                 type="text"
-                placeholder="Your Name *"
+                placeholder="Full Name *"
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
-                className="w-full px-4 py-2 border-2 border-slate/20 rounded-xl focus:border-maroon outline-none dark:bg-slate-800"
+                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl focus:border-maroon focus:ring-4 focus:ring-maroon/10 outline-none transition-all font-medium text-charcoal dark:text-white"
                 required={isGuest}
               />
               <input
@@ -129,16 +129,19 @@ const ReviewForm = ({
                 placeholder="Email Address (Optional)"
                 value={guestEmail}
                 onChange={(e) => setGuestEmail(e.target.value)}
-                className="w-full px-4 py-2 border-2 border-slate/20 rounded-xl focus:border-maroon outline-none dark:bg-slate-800"
+                className="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl focus:border-maroon focus:ring-4 focus:ring-maroon/10 outline-none transition-all font-medium text-charcoal dark:text-white"
               />
-              <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
-                <p className="text-[10px] text-slate-400 mb-2 uppercase tracking-wider font-bold">Verify Purchase (Optional):</p>
+              <div className="pt-3 mt-1 border-t border-slate-200 dark:border-slate-600">
+                <p className="text-[10px] text-slate-500 mb-2 uppercase tracking-widest font-black flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                  Verify Purchase (Optional)
+                </p>
                 <input
                   type="text"
-                  placeholder="Order ID (To get Verified Badge)"
+                  placeholder="Order ID / TrxID (For Verified Badge)"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
-                  className="w-full px-4 py-2 border-2 border-slate/20 rounded-xl focus:border-maroon outline-none dark:bg-slate-800"
+                  className="w-full px-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl focus:border-maroon focus:ring-4 focus:ring-maroon/10 outline-none transition-all font-bold text-maroon dark:text-pink-400 placeholder:font-normal placeholder:text-slate-400"
                 />
               </div>
             </div>
@@ -180,32 +183,32 @@ const ReviewForm = ({
 
           {/* Review Title */}
           <div className="space-y-2">
-            <label className="block text-lg font-bold text-maroon">Review Title (Optional)</label>
+            <label className="block text-lg font-black text-maroon">Headline / Summary (Optional)</label>
             <input
               type="text"
-              placeholder="e.g., Perfect gift for my sister!"
+              placeholder="e.g., Absolutely stunning quality! Highly recommended."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={120}
-              className="w-full px-4 py-3 border-2 border-slate/20 rounded-2xl focus:border-maroon outline-none dark:bg-slate-700 dark:text-white"
+              className="w-full px-4 py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl focus:border-maroon focus:ring-4 focus:ring-maroon/10 outline-none transition-all font-medium text-charcoal dark:text-white"
             />
-            <p className="text-xs text-slate/60">{title.length}/120 characters</p>
+            <p className="text-xs text-slate/50 text-right font-medium">{title.length}/120 characters</p>
           </div>
 
           {/* Review Comment */}
           <div className="space-y-2">
-            <label className="block text-lg font-bold text-maroon">Your Review *</label>
+            <label className="block text-lg font-black text-maroon">Tell us more! *</label>
             <textarea
-              placeholder="Share your honest experience with this product... What did you love? Any tips for other buyers?"
+              placeholder="What did you like or dislike? How was the fabric/design? Share your experience..."
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               maxLength={1000}
               rows={5}
-              className="w-full px-4 py-3 border-2 border-slate/20 rounded-2xl focus:border-maroon outline-none resize-none dark:bg-slate-700 dark:text-white"
+              className="w-full px-4 py-4 bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-2xl focus:border-maroon focus:ring-4 focus:ring-maroon/10 outline-none transition-all font-medium text-charcoal dark:text-white resize-none"
               required
             />
-            <div className="flex justify-between text-xs text-slate/60">
-              <span>Minimum 10 characters</span>
+            <div className="flex justify-between text-[10px] text-slate/50 font-bold uppercase tracking-wider">
+              <span>Min 10 chars</span>
               <span>{comment.length}/1000 characters</span>
             </div>
           </div>
