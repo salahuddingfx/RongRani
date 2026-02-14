@@ -9,9 +9,9 @@
 <img src="https://img.shields.io/badge/TailwindCSS-3.3-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="TailwindCSS"/>
 <img src="https://img.shields.io/badge/bKash-Payment-E2136E?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAA&logoColor=white" alt="bKash"/>
 
-### 🌟 Full-Stack E-Commerce Platform with Bengali Support
+### 🌟 Full-Stack Premium E-Commerce Platform with Bilingual Support
 
-![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=800020&center=true&vCenter=true&width=600&lines=Modern+MERN+Stack+Application;Bilingual+(English+%2B+Bengali);bKash+Payment+Integration;Real-time+Notifications;AI-Powered+Recommendations)
+![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=800020&center=true&vCenter=true&width=600&lines=Modern+MERN+Stack+Application;Bilingual+(English+%2B+Bengali);bKash+Payment+Integration;Flash+Sale+Campaigns;Premium+Manifest+Invoices;AI-Powered+Recommendations)
 
 [🚀 Live Demo](#) | [📖 Documentation](#-features) | [🐛 Report Bug](https://github.com/salahuddingfx/rongrani/issues) | [✨ Request Feature](https://github.com/salahuddingfx/rongrani/issues)
 
@@ -61,7 +61,9 @@
 - ✅ **Guest Checkout** support
 - ✅ **Order Tracking** system with direct reviews
 - ✅ **Product Reviews** & ratings (Guest & User)
+- ✅ **Flash Sales** with real-time countdowns
 - ✅ **Ultra-Premium Invoices** (Bespoke Curation Registry)
+- ✅ **Guest Checkout** with automated verification
 
 </td>
 <td width="50%">
@@ -209,22 +211,28 @@ graph LR
 
 <img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
 
-### 🏠 Home Page
-![Home Page](screenshots/home.png)
-*Beautiful hero section with Bengali support*
+### ✨ User Experience
+| **🏠 Home Page** | **🛍️ Shop Collection** |
+|:---:|:---:|
+| ![Home](screenshots/home.png) | ![Shop](screenshots/shop.png) |
+| *Premium Landing & Hero* | *Dynamic Filters & Search* |
 
-### 🛍️ Shop & Products
-![Shop Page](screenshots/shop.png)
-*Advanced filtering and search capabilities*
+| **⚡ Flash Sales** | **🔍 Order Tracking** |
+|:---:|:---:|
+| ![Flash Sale](screenshots/flash-sale.png) | ![Tracking](screenshots/tracking.png) |
+| *Time-Limited Excitement* | *Live Status Updates* |
 
-### 📱 Mobile Responsive
-<img src="screenshots/mobile.png" width="300" alt="Mobile View"/>
+### 👨‍💼 Management Hub
+| **📊 Dashboard** | **📦 Products** |
+|:---:|:---:|
+| ![Admin](screenshots/admin-dashboard.png) | ![Admin Products](screenshots/admin-products.png) |
+| *Real-time Analytics* | *Inventory Control* |
 
-*Optimized for all screen sizes*
-
-### 👨‍💼 Admin Dashboard
-![Admin Dashboard](screenshots/admin.png)
-*Comprehensive admin panel with analytics*
+### 📜 Brand Assets
+| **📑 Premium Invoice** | **📲 Mobile PWA** |
+|:---:|:---:|
+| ![Invoice](screenshots/invoice.png) | ![Mobile](screenshots/mobile.png) |
+| *Bespoke Manifest Design* | *App-like Experience* |
 
 </div>
 
