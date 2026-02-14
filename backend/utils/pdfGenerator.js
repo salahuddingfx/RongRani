@@ -176,7 +176,7 @@ const generateInvoice = (order) => {
       doc.fontSize(9).fillColor(colors.midnight).font('Helvetica-Bold').text('EXPERIENCE THE EXTRAORDINARY', 40, footerY + 30);
       doc.fontSize(8).fillColor(colors.slate).font('Helvetica').text('Share your story: @rongrani • info.rongrani@gmail.com', 40, footerY + 44);
 
-      doc.fontSize(7).fillColor(colors.slate).text('© 2026 RongRani - Curated with Passion in Bangladesh. All Rights Reserved.', 0, 810, { align: 'center', width: 595 });
+      doc.fontSize(7).fillColor(colors.slate).text('© 2026 RongRani - Curated with Passion in Bangladesh. All Rights Reserved.', 0, 790, { align: 'center', width: 595 });
 
       doc.end();
     } catch (error) {

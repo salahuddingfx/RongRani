@@ -173,8 +173,8 @@ const createOrder = async (req, res) => {
     const shipping = deliveryResult.charge;
     const total = subtotal + tax + shipping - discount;
 
-    // For manual mobile banking, require transaction details upfront
-    const manualPaymentMethods = ['bkash_manual', 'nagad_manual', 'rocket', 'upay'];
+    // For manual mobile banking AND COD (Advance Payment), require transaction details upfront
+    const manualPaymentMethods = ['bkash_manual', 'nagad_manual', 'rocket', 'upay', 'cod'];
     if (manualPaymentMethods.includes(paymentMethod)) {
       const transactionId = (paymentDetails?.transactionId || '').toString().trim();
       const senderLastDigits = (paymentDetails?.senderLastDigits || '').toString().trim();
