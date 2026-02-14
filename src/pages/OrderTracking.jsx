@@ -233,111 +233,144 @@ const OrderTracking = () => {
   const estimatedDelivery = order.deliveredAt || new Date(new Date(order.createdAt).getTime() + 4 * 24 * 60 * 60 * 1000).toISOString();
 
   return (
-    <div className="min-h-screen bg-pink-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-cream to-pink-100 py-12 px-4 transition-all duration-500">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-6">
-          <Link to="/dashboard" className="text-maroon font-semibold hover:underline flex items-center space-x-2 mb-4">
-            <ArrowLeft className="h-5 w-5" />
-            <span>Back to Orders</span>
-          </Link>
-          <h1 className="text-4xl font-bold text-maroon">Track Order #{order.orderId || order._id}</h1>
+        {/* Header with Animation */}
+        <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in-up">
+          <div>
+            <Link to="/dashboard" className="text-maroon/70 font-semibold hover:text-maroon hover:underline flex items-center space-x-2 mb-2 transition-colors">
+              <ArrowLeft className="h-4 w-4" />
+              <span>Back to Orders</span>
+            </Link>
+            <h1 className="text-3xl md:text-5xl font-black text-maroon tracking-tight">
+              Order #{order.orderId || order._id}
+            </h1>
+            <p className="text-slate-500 mt-1 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+              Tracking Live Updates
+            </p>
+          </div>
+
+          <div className="flex gap-3">
+            {/* Invoice Download Button */}
+            <a
+              href={`/api/orders/${order._id}/invoice`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 bg-white border border-maroon/20 text-maroon px-6 py-3 rounded-xl font-bold shadow-sm hover:shadow-md hover:scale-105 transition-all"
+            >
+              <DollarSign className="h-5 w-5" />
+              <span>Download Invoice</span>
+            </a>
+
+            <a href="tel:+8801851075537" className="flex items-center gap-2 bg-maroon text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-maroon/20 hover:shadow-xl hover:scale-105 transition-all">
+              <Phone className="h-5 w-5 animate-wiggle" />
+              <span>Need Help?</span>
+            </a>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Tracking Timeline */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Status Card */}
-            <div className="card">
-              <div className="flex items-center justify-between mb-6">
+          <div className="lg:col-span-2 space-y-8">
+            {/* Status Card with Glassmorphism */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-8 border border-white/50 shadow-xl animate-scale-up">
+              <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-charcoal mb-2">Order Status</h2>
-                  <p className="text-slate">Last updated: {new Date(lastUpdated).toLocaleString()}</p>
+                  <h2 className="text-2xl font-bold text-gray-800 mb-1">Status Timeline</h2>
+                  <p className="text-slate-500 text-sm">Last updated: {new Date(lastUpdated).toLocaleString()}</p>
                 </div>
-                <div className={`${getStatusColor(order.orderStatus)} text-white px-6 py-3 rounded-xl font-bold text-lg capitalize shadow-lg`}>
+                <div className={`${getStatusColor(order.orderStatus)} text-white px-6 py-2 rounded-full font-bold text-sm uppercase tracking-wide shadow-lg animate-pulse`}>
                   {order.orderStatus}
                 </div>
               </div>
 
-              {/* Timeline */}
-              <div className="relative">
-                {trackingHistory.map((history, index) => (
-                  <div key={index} className="flex items-start mb-8 last:mb-0">
-                    {/* Icon */}
-                    <div className={`flex-shrink-0 w-14 h-14 rounded-full ${history.completed ? getStatusColor(history.status) : 'bg-slate/20'} flex items-center justify-center text-white relative z-10 shadow-lg`}>
-                      {history.completed ? (
-                        getStatusIcon(history.status)
-                      ) : (
-                        <div className="w-3 h-3 rounded-full bg-white"></div>
-                      )}
-                    </div>
+              {/* Enhanced animated Timeline */}
+              <div className="relative pl-4 space-y-12 before:absolute before:left-[27px] before:top-2 before:bottom-2 before:w-1 before:bg-gray-100">
+                {/* Active Line Animation */}
+                <div
+                  className="absolute left-[27px] top-2 w-1 bg-gradient-to-b from-maroon to-pink-500 transition-all duration-1000 ease-out rounded-full"
+                  style={{
+                    height: `${Math.min(((trackingHistory.findIndex(h => h.status === order.orderStatus) + 1) / trackingHistory.length) * 100, 100)}%`
+                  }}
+                ></div>
 
-                    {/* Line */}
-                    {index < trackingHistory.length - 1 && (
-                      <div className={`absolute left-7 top-14 w-0.5 h-16 ${history.completed ? 'bg-maroon' : 'bg-slate/20'}`}></div>
-                    )}
+                {trackingHistory.map((history, index) => {
+                  const isActive = history.completed;
+                  const isCurrent = history.status === order.orderStatus;
 
-                    {/* Content */}
-                    <div className="ml-6 flex-1">
-                      <h3 className={`text-lg font-bold ${history.completed ? 'text-charcoal' : 'text-slate'} capitalize`}>
-                        {history.status}
-                      </h3>
-                      <p className={`${history.completed ? 'text-slate' : 'text-slate/50'} mb-1`}>
-                        {history.message}
-                      </p>
-                      {history.timestamp && (
-                        <p className="text-sm text-slate/70">
-                          {new Date(history.timestamp).toLocaleString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
+                  return (
+                    <div key={index} className={`relative flex items-start group ${isActive ? 'opacity-100' : 'opacity-60 grayscale'}`}>
+                      {/* Animated Dot */}
+                      <div className={`
+                        relative z-10 flex items-center justify-center w-14 h-14 rounded-full border-4 border-white shadow-lg transition-all duration-500
+                        ${isActive ? 'bg-gradient-to-br from-maroon to-pink-600 scale-110' : 'bg-gray-100'}
+                        ${isCurrent ? 'ring-4 ring-pink-200 animate-bounce-slow' : ''}
+                      `}>
+                        {isActive ? (
+                          getStatusIcon(history.status)
+                        ) : (
+                          <div className="w-4 h-4 rounded-full bg-gray-300"></div>
+                        )}
+                      </div>
+
+                      <div className="ml-6 pt-2 transition-all duration-500 group-hover:translate-x-2">
+                        <h3 className={`text-lg font-bold ${isActive ? 'text-gray-800' : 'text-gray-400'}`}>
+                          {history.status.charAt(0).toUpperCase() + history.status.slice(1)}
+                        </h3>
+                        <p className={`text-sm mt-1 ${isActive ? 'text-gray-600' : 'text-gray-400'}`}>
+                          {history.message}
                         </p>
-                      )}
+                        {history.timestamp && (
+                          <span className="inline-block mt-2 text-xs font-semibold px-2 py-1 bg-gray-100 text-gray-500 rounded-md">
+                            {new Date(history.timestamp).toLocaleString('en-US', {
+                              month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                            })}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             {/* Items Card */}
-            <div className="card">
-              <h2 className="text-2xl font-bold text-maroon mb-6 flex items-center">
-                <Package className="mr-3 h-7 w-7" />
-                Order Items
+            <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3">
+                <Package className="text-maroon" />
+                <span>Package Contents</span>
+                <span className="text-sm font-normal text-gray-400 ml-auto">{order.items.length} Items</span>
               </h2>
               <div className="space-y-4">
                 {order.items.map((item, index) => (
-                  <div key={index} className="flex flex-col space-y-3 p-4 bg-cream-light rounded-xl shadow-sm border border-maroon/5">
-                    <div className="flex items-center space-x-4">
+                  <div key={index} className="group flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-2xl hover:bg-pink-50/50 border border-transparent hover:border-pink-100 transition-all duration-300">
+                    <div className="w-20 h-20 rounded-xl overflow-hidden shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                       <img
                         src={item.product?.images?.[0] || item.image || 'https://via.placeholder.com/100'}
-                        alt={item.product?.name || item.name}
-                        className="w-20 h-20 object-cover rounded-lg shadow-soft"
+                        alt={item.name}
+                        className="w-full h-full object-cover"
                       />
-                      <div className="flex-1">
-                        <Link to={`/product/${item.product?._id || item.product}`} className="font-bold text-charcoal hover:text-maroon transition-colors">
-                          {item.product?.name || item.name}
-                        </Link>
-                        <p className="text-slate text-sm">Quantity: {item.quantity}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-bold text-maroon text-lg">৳{item.price * item.quantity}</p>
-                        <p className="text-sm text-slate">৳{item.price} each</p>
-                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <Link to={`/product/${item.product?._id || item.product}`} className="font-bold text-gray-800 hover:text-maroon transition-colors line-clamp-1 block">
+                        {item.product?.name || item.name}
+                      </Link>
+                      <p className="text-slate-400 text-sm mt-1">Quantity: <span className="text-gray-800 font-semibold">{item.quantity}</span></p>
+                    </div>
+                    <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1">
+                      <p className="font-bold text-maroon text-lg">৳{(item.price * item.quantity).toLocaleString()}</p>
+                      <p className="text-xs text-slate-400">৳{item.price.toLocaleString()} / unit</p>
                     </div>
 
                     {order.orderStatus === 'delivered' && (
-                      <div className="pt-2 border-t border-maroon/5 flex justify-end">
-                        <button
-                          onClick={() => setReviewingProductId(item.product?._id || item.product)}
-                          className="flex items-center space-x-2 text-sm font-bold text-maroon hover:bg-maroon/5 px-4 py-2 rounded-lg transition-all border border-maroon/20"
-                        >
-                          <CheckCircle className="h-4 w-4" />
-                          <span>Review this product</span>
-                        </button>
-                      </div>
+                      <button
+                        onClick={() => setReviewingProductId(item.product?._id || item.product)}
+                        className="w-full sm:w-auto mt-2 sm:mt-0 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 flex items-center justify-center gap-2 text-sm font-bold text-maroon bg-white border border-maroon hover:bg-maroon hover:text-white px-4 py-2 rounded-xl transition-all shadow-sm"
+                      >
+                        <CheckCircle className="h-4 w-4" />
+                        <span>Review</span>
+                      </button>
                     )}
                   </div>
                 ))}
@@ -346,97 +379,107 @@ const OrderTracking = () => {
           </div>
 
           {/* Right Column - Order Details */}
-          <div className="space-y-6">
-            {/* Customer Info */}
-            <div className="card">
-              <h2 className="text-xl font-bold text-maroon mb-4">Customer Info</h2>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-start space-x-3">
-                  <Phone className="h-5 w-5 text-maroon mt-0.5" />
+          <div className="space-y-6 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+            {/* Customer Info Card */}
+            <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
+                  <Package className="w-4 h-4 text-blue-500" />
+                </div>
+                Customer Details
+              </h2>
+              <div className="space-y-4">
+                <div className="bg-slate-50 p-4 rounded-xl flex items-center gap-3">
+                  <Phone className="h-5 w-5 text-slate-400" />
                   <div>
-                    <p className="text-slate">Phone</p>
-                    <p className="font-semibold text-charcoal">{contactInfo.phone || shipping.phone || 'Not provided'}</p>
+                    <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">Phone</p>
+                    <p className="font-semibold text-slate-700">{contactInfo.phone || shipping.phone || 'N/A'}</p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3">
-                  <Mail className="h-5 w-5 text-maroon mt-0.5" />
+                <div className="bg-slate-50 p-4 rounded-xl flex items-center gap-3">
+                  <Mail className="h-5 w-5 text-slate-400" />
                   <div>
-                    <p className="text-slate">Email</p>
-                    <p className="font-semibold text-charcoal">{contactInfo.email || shipping.email || 'Not provided'}</p>
+                    <p className="text-xs text-slate-400 uppercase font-bold tracking-wider">Email</p>
+                    <p className="font-semibold text-slate-700 truncate max-w-[200px]">{contactInfo.email || shipping.email || 'N/A'}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Shipping Address */}
-            <div className="card">
-              <h2 className="text-xl font-bold text-maroon mb-4 flex items-center">
-                <MapPin className="mr-2 h-6 w-6" />
+            {/* Delivery Card */}
+            <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center">
+                  <MapPin className="w-4 h-4 text-orange-500" />
+                </div>
                 Delivery Address
               </h2>
-              <div className="text-sm text-charcoal leading-relaxed">
-                <p className="font-semibold">{contactInfo.name || 'Customer'}</p>
-                <p>{shipping.street}</p>
-                <p>{shipping.union}</p>
-                <p>{shipping.subDistrict}</p>
-                <p>{shipping.district}, {shipping.division}</p>
-                <p>{shipping.city} - {shipping.postalCode || shipping.zipCode}</p>
-                <p>{shipping.country}</p>
+              <div className="pl-2 border-l-2 border-dashed border-gray-200">
+                <p className="font-bold text-gray-800 mb-1">{shipping.name}</p>
+                <p className="text-sm text-slate-500 leading-relaxed">
+                  {shipping.street && <span className="block">{shipping.street}</span>}
+                  {shipping.subDistrict && <span>{shipping.subDistrict}, </span>}
+                  {shipping.district} - {shipping.postalCode}<br />
+                  <span className="text-xs font-bold bg-gray-100 px-2 py-0.5 rounded text-gray-500 mt-1 inline-block">
+                    {shipping.country}
+                  </span>
+                </p>
               </div>
             </div>
 
             {/* Estimated Delivery */}
-            <div className="card bg-maroon text-white">
-              <div className="flex items-center space-x-3 mb-3">
-                <Calendar className="h-6 w-6" />
-                <h2 className="text-lg font-bold">Estimated Delivery</h2>
+            <div className="bg-gradient-to-br from-maroon to-pink-800 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16 group-hover:scale-110 transition-transform duration-500"></div>
+
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-2 opacity-80">
+                  <Calendar className="h-5 w-5" />
+                  <span className="font-medium text-sm">Estimated Delivery</span>
+                </div>
+                <p className="text-3xl font-black tracking-tight">
+                  {new Date(estimatedDelivery).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric'
+                  })}
+                </p>
+                <div className="mt-4 pt-4 border-t border-white/20 flex justify-between items-center text-sm">
+                  <span>Courier Partner</span>
+                  <span className="font-bold bg-white/20 px-2 py-1 rounded">Steadfast</span>
+                </div>
               </div>
-              <p className="text-2xl font-bold">
-                {new Date(estimatedDelivery).toLocaleDateString('en-US', {
-                  month: 'long',
-                  day: 'numeric',
-                  year: 'numeric'
-                })}
-              </p>
             </div>
 
-            {/* Payment Info */}
-            <div className="card">
-              <h2 className="text-xl font-bold text-maroon mb-4 flex items-center">
-                <DollarSign className="mr-2 h-6 w-6" />
-                Payment Details
-              </h2>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-slate">Method</span>
-                  <span className="font-semibold text-charcoal uppercase">{order.paymentMethod}</span>
+            {/* Payment Summary */}
+            <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
+                  <DollarSign className="w-4 h-4 text-green-500" />
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-slate">Status</span>
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                Payment Summary
+              </h2>
+
+              <div className="space-y-3">
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                  <span className="text-sm text-gray-500">Method</span>
+                  <span className="font-bold text-gray-800 uppercase flex items-center gap-2">
+                    {order.paymentMethod === 'cod' ? 'Cash On Delivery' : order.paymentMethod}
+                    {order.paymentMethod === 'cod' && (
+                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" title="Payment pending on delivery"></span>
+                    )}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center p-3 bg-gray-50 rounded-xl">
+                  <span className="text-sm text-gray-500">Status</span>
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${order.paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+                    }`}>
                     {order.paymentStatus}
                   </span>
                 </div>
-                <div className="flex justify-between pt-3 border-t border-slate/20">
-                  <span className="font-bold text-charcoal">Total</span>
-                  <span className="font-bold text-maroon text-xl">৳{order.total}</span>
-                </div>
-              </div>
-            </div>
 
-            {/* Help */}
-            <div className="card bg-cream-light">
-              <h3 className="font-bold text-charcoal mb-2">Need Help?</h3>
-              <p className="text-sm text-slate mb-4">Contact our support team for any queries</p>
-              <div className="space-y-2 text-sm">
-                <a href="tel:+8801851075537" className="flex items-center space-x-2 text-maroon hover:underline">
-                  <Phone className="h-4 w-4" />
-                  <span>+880 18510-75537</span>
-                </a>
-                <a href="mailto:info.rongrani@gmail.com" className="flex items-center space-x-2 text-maroon hover:underline">
-                  <Mail className="h-4 w-4" />
-                  <span>info.rongrani@gmail.com</span>
-                </a>
+                <div className="pt-4 mt-2 border-t border-dashed border-gray-200 flex justify-between items-end">
+                  <span className="text-sm font-bold text-gray-400">Total Amount</span>
+                  <span className="text-2xl font-black text-maroon">৳{order.total.toLocaleString()}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -451,8 +494,10 @@ const OrderTracking = () => {
           initialOrderId={order._id}
           onClose={() => setReviewingProductId(null)}
           onReviewSubmitted={() => {
-            // Optional: Re-fetch or update UI to show it's reviewed
-            toast.success('Thank you for your review!');
+            toast.success('Thank you for your review!', {
+              icon: '💖',
+              style: { borderRadius: '10px', background: '#FFF0F5', color: '#BE123C' }
+            });
           }}
         />
       )}
