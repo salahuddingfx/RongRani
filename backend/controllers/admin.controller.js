@@ -288,10 +288,38 @@ const updateOrder = async (req, res) => {
     }
 
     const previousStatus = order.orderStatus;
+    const previousPaymentStatus = order.paymentStatus;
+
     order.orderStatus = req.body.orderStatus || order.orderStatus;
     order.paymentStatus = req.body.paymentStatus || order.paymentStatus;
+    order.isPaid = req.body.isPaid !== undefined ? req.body.isPaid : order.isPaid;
     order.trackingNumber = req.body.trackingNumber || order.trackingNumber;
     order.notes = req.body.notes || order.notes;
+
+    // Handle Revenue Tracking Logic (isPaid/paidAt)
+    if (order.paymentStatus === 'paid' && previousPaymentStatus !== 'paid') {
+      order.isPaid = true;
+      order.paidAt = new Date();
+    } else if (order.paymentStatus !== 'paid' && previousPaymentStatus === 'paid') {
+      order.isPaid = false;
+      order.paidAt = null;
+    }
+
+    // Direct isPaid toggle handling
+    if (req.body.isPaid === true && !order.paidAt) {
+      order.isPaid = true;
+      order.paidAt = new Date();
+      order.paymentStatus = 'paid';
+    } else if (req.body.isPaid === false) {
+      order.isPaid = false;
+      order.paidAt = null;
+      if (order.paymentStatus === 'paid') order.paymentStatus = 'pending';
+    }
+
+    const updatedOrder = await order.save();
+
+    // Emit event for real-time dashboard updates
+    emitEvent(req, 'order:updated', updatedOrder);
 
     // Check for status change
     if (order.orderStatus !== previousStatus) {

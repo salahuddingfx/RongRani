@@ -174,8 +174,8 @@ const createOrder = async (req, res) => {
     const shipping = deliveryResult.charge;
     const total = subtotal + tax + shipping - discount;
 
-    // For manual mobile banking AND COD (Advance Payment), require transaction details upfront
-    const manualPaymentMethods = ['bkash_manual', 'nagad_manual', 'rocket', 'upay', 'cod'];
+    // For manual mobile banking, COD (Advance Payment), and Full Prepayment, require transaction details upfront
+    const manualPaymentMethods = ['bkash_manual', 'nagad_manual', 'rocket', 'upay', 'cod', 'full_payment'];
     if (manualPaymentMethods.includes(paymentMethod)) {
       const transactionId = (paymentDetails?.transactionId || '').toString().trim();
       const senderLastDigits = (paymentDetails?.senderLastDigits || '').toString().trim();
@@ -263,6 +263,8 @@ const createOrder = async (req, res) => {
         createdAt: order.createdAt,
         customerName: isGuest ? guestInfo.name : req.user?.name,
         customerEmail: isGuest ? guestInfo.email : req.user?.email,
+        paymentMethod: order.paymentMethod,
+        paymentDetails: order.paymentDetails,
         isGuest,
       });
     } catch (socketError) {
@@ -488,7 +490,7 @@ const getOrderForTracking = async (req, res) => {
 // @access  Private/Admin
 const updateOrderStatus = async (req, res) => {
   try {
-    const { orderStatus, trackingNumber, paymentStatus } = req.body;
+    const { orderStatus, trackingNumber, paymentStatus, isPaid } = req.body;
 
     const order = await Order.findById(req.params.id);
 
@@ -538,7 +540,22 @@ const updateOrderStatus = async (req, res) => {
       }
     }
 
+    // Direct isPaid toggle (to fix admin dashboard issues)
+    if (isPaid !== undefined) {
+      order.isPaid = isPaid;
+      if (isPaid && !order.paidAt) {
+        order.paidAt = new Date();
+        order.paymentStatus = 'paid';
+      } else if (!isPaid) {
+        order.paidAt = null;
+        if (order.paymentStatus === 'paid') order.paymentStatus = 'pending';
+      }
+    }
+
     await order.save();
+
+    // Emit real-time update for dashboard
+    emitEvent(req, 'order:updated', order);
 
     // Send status update email in BACKGROUND
     (async () => {

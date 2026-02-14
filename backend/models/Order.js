@@ -106,7 +106,7 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     required: true,
-    enum: ['card', 'paypal', 'bank', 'cod', 'bkash', 'nagad', 'bkash_manual', 'nagad_manual', 'rocket', 'upay', 'sslcommerz'],
+    enum: ['card', 'paypal', 'bank', 'cod', 'bkash', 'nagad', 'bkash_manual', 'nagad_manual', 'rocket', 'upay', 'sslcommerz', 'full_payment'],
   },
   paymentDetails: {
     transactionId: String,
@@ -116,6 +116,13 @@ const orderSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'paid', 'failed', 'refunded'],
     default: 'pending',
+  },
+  isPaid: {
+    type: Boolean,
+    default: false,
+  },
+  paidAt: {
+    type: Date,
   },
   orderStatus: {
     type: String,

@@ -135,12 +135,15 @@ const Checkout = () => {
         return;
       }
 
-      // Validate Transaction ID for Mobile Banking AND COD (Advance Delivery Charge)
-      if (['bkash_manual', 'nagad_manual', 'rocket', 'upay', 'cod'].includes(formData.paymentMethod)) {
+      // Validate Transaction ID for all manual payment methods (Mobile Banking, COD Advance, Full Payment)
+      const manualMethods = ['bkash_manual', 'nagad_manual', 'rocket', 'upay', 'cod', 'full_payment'];
+      if (manualMethods.includes(formData.paymentMethod)) {
         if (!formData.transactionId || !formData.senderLastDigits) {
-          toast.error(formData.paymentMethod === 'cod'
-            ? 'Please pay delivery charge & enter TrxID'
-            : 'Please provide transaction ID and sender last 4 digits');
+          let errorMsg = 'Please provide transaction ID and sender last 4 digits';
+          if (formData.paymentMethod === 'cod') errorMsg = 'Please pay delivery charge & enter TrxID';
+          if (formData.paymentMethod === 'full_payment') errorMsg = 'Please pay full amount & enter TrxID';
+
+          toast.error(errorMsg);
           setLoading(false);
           return;
         }
@@ -181,7 +184,7 @@ const Checkout = () => {
           country: 'Bangladesh',
         },
         paymentMethod: formData.paymentMethod,
-        paymentDetails: ['bkash', 'nagad', 'rocket'].includes(formData.paymentMethod) ? {
+        paymentDetails: manualMethods.includes(formData.paymentMethod) ? {
           transactionId: formData.transactionId,
           senderLastDigits: formData.senderLastDigits,
         } : undefined,
@@ -443,8 +446,8 @@ const Checkout = () => {
             </div>
           </div>
 
-          {/* Checkout Form */}
-          <div className="card p-6 lg:p-8">
+          {/* Checkout Form Container - Using custom style instead of .card to avoid global hover transform */}
+          <div className="bg-white rounded-3xl shadow-xl border border-maroon/10 p-6 lg:p-8 hover:shadow-2xl transition-all duration-300">
             <h2 className="text-2xl font-bold text-maroon mb-6 flex items-center">
               <MapPin className="h-6 w-6 mr-2" />
               Shipping Information
@@ -636,7 +639,7 @@ const Checkout = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <label className="flex items-center p-3 border-2 border-maroon rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors">
+                  <label className="flex items-center p-3 border-2 border-slate-200 rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors">
                     <input
                       type="radio"
                       name="paymentMethod"
@@ -645,10 +648,25 @@ const Checkout = () => {
                       onChange={handleChange}
                       className="text-maroon focus:ring-maroon h-4 w-4"
                     />
-                    <span className="ml-3 font-semibold text-charcoal">💵 Cash on Delivery</span>
+                    <span className="ml-3 font-semibold text-charcoal">💵 Cash on Delivery (Advance Delivery Charge)</span>
                   </label>
 
-                  {/* COD Warning Message */}
+                  <label className="flex items-center p-3 border-2 border-maroon rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors shadow-sm">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="full_payment"
+                      checked={formData.paymentMethod === 'full_payment'}
+                      onChange={handleChange}
+                      className="text-maroon focus:ring-maroon h-4 w-4"
+                    />
+                    <div className="ml-3">
+                      <span className="font-bold text-maroon block text-sm">💰 Full Prepayment (bKash/Nagad)</span>
+                      <span className="text-[10px] text-slate-500 font-medium">Pay 100% upfront to skip delivery charge queues</span>
+                    </div>
+                  </label>
+
+                  {/* Payment Warning Messages */}
                   {formData.paymentMethod === 'cod' && (
                     <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg animate-fade-in my-3">
                       <div className="flex items-start">
@@ -673,42 +691,87 @@ const Checkout = () => {
                     </div>
                   )}
 
-                  {/* Manual Mobile Banking Options */}
-                  <div className="border-2 border-maroon/30 rounded-xl p-5 bg-white shadow-sm overflow-hidden">
-                    {/* ... (existing banking options UI remains unchanged, just need to ensure inputs show for COD) */}
-
-                    {/* Transaction Fields - Now including COD */}
-                    {['bkash_manual', 'nagad_manual', 'rocket', 'upay', 'cod'].includes(formData.paymentMethod) && (
-                      <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-4 animate-slide-up mt-4">
-                        <p className="text-xs text-gray-500 font-medium">
-                          {formData.paymentMethod === 'cod'
-                            ? 'Please enter the Transaction ID for the delivery charge payment:'
-                            : 'Please send the total amount and enter the details below:'}
-                        </p>
-                        <div>
-                          <label className="block text-xs font-bold text-gray-600 mb-1 uppercase">Transaction ID <span className="text-red-500">*</span></label>
-                          <input
-                            type="text"
-                            name="transactionId"
-                            value={formData.transactionId}
-                            onChange={handleChange}
-                            required
-                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-maroon/20 outline-none uppercase"
-                            placeholder="e.g. 8A7B6C5D"
-                          />
+                  {formData.paymentMethod === 'full_payment' && (
+                    <div className="bg-maroon/5 border-l-4 border-maroon p-4 rounded-r-lg animate-fade-in my-3">
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0">
+                          <CreditCard className="h-5 w-5 text-maroon" />
                         </div>
-                        <div>
-                          <label className="block text-xs font-bold text-gray-600 mb-1 uppercase">Sender Number (Last 4 Digits) <span className="text-red-500">*</span></label>
+                        <div className="ml-3">
+                          <h3 className="text-sm font-bold text-maroon">Full Prepayment Required</h3>
+                          <div className="mt-2 text-sm text-maroon/80">
+                            <p>Please pay the full amount <strong>৳{total.toFixed(2)}</strong> to confirm your order.</p>
+                            <div className="mt-3 mb-2 font-mono bg-white p-2 rounded border border-maroon/20 inline-block select-all text-maroon">
+                              Send Money to: <strong>01851075537</strong> (bKash/Nagad Personal)
+                            </div>
+                            <p className="text-xs font-semibold text-maroon mt-1">
+                              Enter your TrxID and last 4 digits below. We will verify and process your order immediately.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Manual Mobile Banking Options */}
+                  <div className="border-2 border-maroon/10 rounded-2xl p-5 bg-white shadow-sm overflow-visible">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Other Manual Methods</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                      {['bkash_manual', 'nagad_manual', 'rocket', 'upay'].map((method) => (
+                        <label
+                          key={method}
+                          className={`flex flex-col items-center justify-center p-2 rounded-xl border-2 transition-all cursor-pointer ${formData.paymentMethod === method ? 'border-maroon bg-maroon/5' : 'border-slate-100 hover:border-maroon/30'}`}
+                        >
                           <input
-                            type="text"
-                            name="senderLastDigits"
-                            value={formData.senderLastDigits}
+                            type="radio"
+                            name="paymentMethod"
+                            value={method}
+                            checked={formData.paymentMethod === method}
                             onChange={handleChange}
-                            required
-                            className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-maroon/20 outline-none"
-                            placeholder="e.g. 2383"
-                            maxLength={4}
+                            className="hidden"
                           />
+                          <span className="text-[10px] font-bold text-charcoal capitalize">{method.replace('_manual', '')}</span>
+                        </label>
+                      ))}
+                    </div>
+
+                    {/* Transaction Fields - Visible for COD, Full Payment, and Manual Methods */}
+                    {['bkash_manual', 'nagad_manual', 'rocket', 'upay', 'cod', 'full_payment'].includes(formData.paymentMethod) && (
+                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4 animate-slide-up">
+                        <p className="text-[11px] text-slate-500 font-bold leading-relaxed">
+                          {formData.paymentMethod === 'cod'
+                            ? '✅ Please enter the TrxID for the ৳' + shipping + ' delivery charge payment:'
+                            : formData.paymentMethod === 'full_payment'
+                              ? '✅ Please enter the TrxID for the ৳' + total.toFixed(0) + ' full payment:'
+                              : '✅ Please enter your payment verification details:'}
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-[10px] font-black text-slate-600 mb-1 uppercase tracking-tight">Transaction ID <span className="text-red-500">*</span></label>
+                            <input
+                              type="text"
+                              name="transactionId"
+                              value={formData.transactionId}
+                              onChange={handleChange}
+                              required
+                              className="w-full bg-white border-2 border-maroon/20 rounded-xl px-4 py-2.5 text-sm font-bold text-charcoal focus:border-maroon focus:ring-4 focus:ring-maroon/10 outline-none transition-all uppercase placeholder:text-slate-300"
+                              placeholder="e.g. 8A7B6C5D"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-[10px] font-black text-slate-600 mb-1 uppercase tracking-tight">Sender Number (Last 4) <span className="text-red-500">*</span></label>
+                            <input
+                              type="text"
+                              name="senderLastDigits"
+                              value={formData.senderLastDigits}
+                              onChange={handleChange}
+                              required
+                              maxLength={4}
+                              className="w-full bg-white border-2 border-maroon/20 rounded-xl px-4 py-2.5 text-sm font-bold text-charcoal focus:border-maroon focus:ring-4 focus:ring-maroon/10 outline-none transition-all placeholder:text-slate-300"
+                              placeholder="e.g. 2383"
+                            />
+                          </div>
                         </div>
                       </div>
                     )}

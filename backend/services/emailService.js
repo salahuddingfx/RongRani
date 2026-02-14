@@ -219,11 +219,16 @@ const emailTemplates = {
       </div>
 
       <div style="background-color: #f9fafb; border-radius: 8px; padding: 20px; border: 1px solid #e5e7eb; margin-bottom: 30px;">
-        <h3 style="margin-top: 0; color: #1f2937; font-size: 16px;">Delivery Details</h3>
+        <h3 style="margin-top: 0; color: #1f2937; font-size: 16px;">Delivery & Payment Details</h3>
         <p style="color: #4b5563; font-size: 14px; line-height: 1.6; margin: 0;">
           <strong>Name:</strong> ${order.name}<br>
           <strong>Phone:</strong> ${shipping.phone || 'N/A'}<br>
-          <strong>Address:</strong> ${address}
+          <strong>Address:</strong> ${address}<br>
+          <span style="display: block; margin-top: 10px; border-top: 1px dashed #d1d5db; padding-top: 10px;">
+            <strong>Payment Method:</strong> ${order.paymentMethod?.toUpperCase().replace('_', ' ') || 'N/A'}<br>
+            ${order.paymentDetails?.transactionId ? `<strong>TrxID:</strong> ${order.paymentDetails.transactionId}<br>` : ''}
+            ${order.paymentDetails?.senderLastDigits ? `<strong>Sender (Last 4):</strong> ${order.paymentDetails.senderLastDigits}` : ''}
+          </span>
         </p>
       </div>
 
@@ -364,6 +369,12 @@ const emailTemplates = {
           <div style="font-weight: 600; font-size: 18px; font-family: 'Playfair Display', serif;">${data.customerName}</div>
           <div>📧 ${data.customerEmail}</div>
           <div>📞 ${data.customerPhone || 'N/A'}</div>
+          <div style="margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+            <div style="font-weight: 700; color: #8B2635;">💳 PAYMENT: ${data.paymentMethod?.toUpperCase()}</div>
+            <div style="font-size: 11px; color: #f59e0b; font-weight: bold; margin-bottom: 5px;">⚠️ STATUS: PENDING VERIFICATION</div>
+            ${data.paymentDetails?.transactionId ? `<div style="font-size: 13px;">TrxID: <strong>${data.transactionId || data.paymentDetails.transactionId}</strong></div>` : ''}
+            ${data.paymentDetails?.senderLastDigits ? `<div style="font-size: 13px;">Sender: ****${data.senderLastDigits || data.paymentDetails.senderLastDigits}</div>` : ''}
+          </div>
           <div style="margin-top: 15px; color: #64748b; font-size: 14px; border-top: 1px solid #f1f5f9; padding-top: 15px;">📍 ${data.shippingAddress}</div>
         </div>
       </div>
