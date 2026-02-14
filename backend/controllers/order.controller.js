@@ -6,6 +6,7 @@ const DeliverySetting = require('../models/DeliverySetting');
 const { sendOrderConfirmation, sendOrderStatusUpdate, sendEmail, sendLowStockAlert } = require('../services/emailService');
 const { generateInvoice } = require('../utils/pdfGenerator');
 const { calculateDelivery, getDeliveryDisplay } = require('../utils/deliveryCalculator');
+const { detectFraud } = require('../utils/fraudDetector');
 
 const emitEvent = (req, event, payload) => {
   const io = req.app?.get('io');
@@ -195,7 +196,6 @@ const createOrder = async (req, res) => {
       }
     }
 
-    // Create order
     const normalizedShippingAddress = {
       ...shippingAddress,
       email: shippingAddress?.email || guestInfo?.email || '',
@@ -203,6 +203,22 @@ const createOrder = async (req, res) => {
       zipCode: shippingAddress?.zipCode || shippingAddress?.postalCode || '',
       postalCode: shippingAddress?.postalCode || shippingAddress?.zipCode || '',
     };
+
+    // --- FRAUD DETECTION ---
+    const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.ip;
+    const fraudCheck = await detectFraud({
+      guestInfo: isGuest ? guestInfo : {},
+      shippingAddress: normalizedShippingAddress,
+      items: orderItems,
+      total,
+      user: req.user
+    }, clientIp);
+
+    // Log if fraud detected
+    if (fraudCheck.riskLevel !== 'Low') {
+      console.warn(`⚠️ Fraud Alert: Order flagged as ${fraudCheck.riskLevel}. Reasons: ${fraudCheck.reasons.join(', ')}`);
+    }
+    // -----------------------
 
     const order = await Order.create({
       user: userId,
@@ -227,6 +243,10 @@ const createOrder = async (req, res) => {
       coupon: coupon?._id,
       notes,
       giftMessage,
+      // Fraud Data
+      ipAddress: clientIp,
+      fraudRisk: fraudCheck.riskLevel,
+      fraudReason: fraudCheck.reasons,
     });
 
     // Send response IMMEDIATELY

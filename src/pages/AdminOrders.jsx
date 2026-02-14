@@ -206,10 +206,32 @@ const AdminOrders = () => {
       case 'processing': return <Eye className="h-5 w-5" />;
       case 'shipped': return <ShoppingBag className="h-5 w-5" />;
       case 'delivered': return <CheckCircle className="h-5 w-5" />;
-      case 'cancelled': return <XCircle className="h-5 w-5" />;
       case 'returned': return <XCircle className="h-5 w-5" />;
       default: return null;
     }
+  };
+
+  const getFraudBadge = (risk, reasons) => {
+    if (!risk || risk === 'Low') return null;
+
+    let color = 'bg-yellow-100 text-yellow-800 border-yellow-300';
+    if (risk === 'High') color = 'bg-orange-100 text-orange-800 border-orange-300';
+    if (risk === 'Critical') color = 'bg-red-100 text-red-800 border-red-300';
+
+    return (
+      <div className={`group relative inline-flex items-center px-2 py-0.5 rounded text-xs font-bold border ${color} ml-2 cursor-help`}>
+        <span>⚠️ {risk} Risk</span>
+        {reasons && reasons.length > 0 && (
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-slate-800 text-white text-[10px] rounded shadow-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <p className="font-bold border-b border-slate-600 pb-1 mb-1">Risk Reasons:</p>
+            <ul className="list-disc pl-3">
+              {Array.isArray(reasons) ? reasons.map((r, i) => <li key={i}>{r}</li>) : <li>{reasons}</li>}
+            </ul>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800"></div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   const filteredOrders = orders.filter(order => {
@@ -249,12 +271,12 @@ const AdminOrders = () => {
             />
           </div>
 
-          <div className="flex space-x-3">
+          <div className="flex space-x-3 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
             {['all', 'pending', 'processing', 'shipped', 'delivered', 'cancelled'].map((status) => (
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                className={`px-4 py-2 rounded-lg font-semibold capitalize transition-all ${statusFilter === status
+                className={`px-4 py-2 rounded-lg font-semibold capitalize transition-all whitespace-nowrap ${statusFilter === status
                   ? 'bg-maroon text-white shadow-medium'
                   : 'bg-cream-light text-charcoal hover:bg-maroon/10'
                   }`}
@@ -275,6 +297,7 @@ const AdminOrders = () => {
               <div className="flex-1">
                 <div className="flex items-center space-x-4 mb-3">
                   <h3 className="text-xl font-bold text-maroon">#{order._id}</h3>
+                  {getFraudBadge(order.fraudRisk, order.fraudReason)}
                   <span className={`px-4 py-1 rounded-full text-sm font-semibold border-2 flex items-center space-x-2 ${getStatusColor(order.orderStatus)}`}>
                     {getStatusIcon(order.orderStatus)}
                     <span className="capitalize">{order.orderStatus}</span>

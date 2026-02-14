@@ -276,8 +276,8 @@ const AdminProducts = () => {
 
       {/* Products Table */}
       <div className="card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto custom-scrollbar pb-2">
+          <table className="w-full min-w-[800px]">
             <thead className="bg-maroon text-white">
               <tr>
                 <th className="px-6 py-4 text-left">Image</th>
@@ -368,9 +368,9 @@ const AdminProducts = () => {
 
       {/* Add Product Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="card max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="card w-full max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div className="flex justify-between items-center mb-6 sticky top-0 bg-white z-10 py-2 border-b border-slate-100">
               <h2 className="text-2xl font-bold text-maroon">
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h2>

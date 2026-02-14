@@ -180,7 +180,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Analytics Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
         {/* Revenue & Orders Chart */}
         <div className="card">
           <h2 className="text-xl font-bold text-maroon mb-6 flex items-center">
@@ -273,9 +273,9 @@ const AdminDashboard = () => {
                 <div key={product._id || idx} className="flex items-center justify-between p-4 bg-cream-light rounded-lg hover:shadow-md transition-all">
                   <div className="flex items-center space-x-3">
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${idx === 0 ? 'bg-gold/20 text-gold' :
-                        idx === 1 ? 'bg-slate/20 text-slate' :
-                          idx === 2 ? 'bg-amber-500/20 text-amber-600' :
-                            'bg-slate/10 text-slate'
+                      idx === 1 ? 'bg-slate/20 text-slate' :
+                        idx === 2 ? 'bg-amber-500/20 text-amber-600' :
+                          'bg-slate/10 text-slate'
                       }`}>
                       <span className="font-black text-lg">#{idx + 1}</span>
                     </div>

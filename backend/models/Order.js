@@ -224,6 +224,14 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  // Fraud Detection Fields
+  ipAddress: String, // Store customer IP
+  fraudRisk: {
+    type: String,
+    enum: ['Low', 'Medium', 'High', 'Critical'],
+    default: 'Low',
+  },
+  fraudReason: [String], // Array of reasons why it was flagged
 });
 
 // Update updatedAt on save
