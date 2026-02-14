@@ -4,21 +4,23 @@
 
 # 🌸 RongRani
 
-### *Elegance In Every Hue*
-
-[![Maintained by Salah Uddin](https://img.shields.io/badge/Maintained%20by-Salah%20Uddin-bb9af7?style=for-the-badge&logo=github&logoColor=white)](https://github.com/salahuddingfx)
-[![MERN Stack](https://img.shields.io/badge/Stack-MERN-73daca?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/mern-stack)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-f7768e?style=for-the-badge&logo=vercel&logoColor=white)](https://rongrani.vercel.app)
-[![License: MIT](https://img.shields.io/badge/License-MIT-7aa2f7?style=for-the-badge&logo=mit&logoColor=white)](LICENSE)
-
-![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=28&duration=3000&pause=1000&color=7AA2F7&center=true&vCenter=true&multiline=true&width=800&height=120&lines=Premium+Handmade+Gifts+%26+Crafts;Modern+MERN+Stack+Application;Bilingual+Support+(English+%2B+Bengali);Flash+Sale+Campaigns;Seamless+bKash+Integration)
-
----
+![RongRani Banner](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=35&duration=3000&pause=1000&color=7AA2F7&center=true&vCenter=true&multiline=true&repeat=false&width=800&height=100&lines=🎁+RongRani;Premium+Handmade+Gifts+%26+Crafts)
 
 <p align="center">
-  <b>RongRani</b> is an ultra-premium e-commerce experience crafted for the curated artisan market in Bangladesh. 
-  Built with the modern <b>MERN</b> stack, it blends traditional craftsmanship with high-end digital aesthetics.
+  <img src="https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/Node.js-18.x-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/MongoDB-6.0-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/Express-4.18-000000?style=for-the-badge&logo=express&logoColor=white" />
+  <img src="https://img.shields.io/badge/bKash-Payment-E2136E?style=for-the-badge&logo=bkash&logoColor=white" />
 </p>
+
+### 🌟 Full-Stack Premium E-Commerce Platform with Bilingual Support
+
+![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=bb9af7&center=true&vCenter=true&width=600&lines=Modern+MERN+Stack+Application;Bilingual+(English+%2B+Bengali);bKash+Payment+Integration;Flash+Sale+Campaigns;Premium+Manifest+Invoices;AI+Powered+Manifests)
+
+[🚀 Live Demo](https://rongrani.vercel.app) | [📖 Documentation](#-features) | [🐛 Report Bug](https://github.com/salahuddingfx/rongrani/issues) | [✨ Request Feature](https://github.com/salahuddingfx/rongrani/issues)
+
+<img src="https://user-images.githubusercontent.com/74038190/212284100-561aa473-3905-4a80-b561-0d28506553ee.gif" width="700">
 
 </div>
 
@@ -34,29 +36,110 @@
 - [🌐 API Documentation](#-api-documentation)
 - [🎯 Roadmap](#-roadmap)
 - [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [👨‍💻 Author](#-author)
 
 ---
 
+<div align="center">
+
 ## ✨ Features
+
+<img src="https://user-images.githubusercontent.com/74038190/212284115-f47cd8ff-2ffb-4b04-b5bf-4d1c14c0247f.gif" width="1000">
+
+</div>
+
+### �️ Customer Features
+
+<table width="100%">
+<tr>
+<td width="50%">
+
+#### 🎯 Core Shopping Experience
+- ✅ **Product Browsing** with advanced filters
+- ✅ **Smart Search** with real-time suggestions
+- ✅ **Product Categories** with beautiful UI
+- ✅ **Wishlist** functionality
+- ✅ **Shopping Cart** with quantity management
+- ✅ **Guest Checkout** with automated verification
+- ✅ **Order Tracking** system with direct reviews
+- ✅ **Flash Sales** with real-time countdowns
+- ✅ **Premium Invoices** (Bespoke Curation Registry)
+
+</td>
+<td width="50%">
+
+#### 🌟 Enhanced Features
+- ✅ **Hot Offers** banner system
+- ✅ **Recently Viewed** function
+- ✅ **WhatsApp Integration** (Live Support)
+- ✅ **PWA Support** (Installable as App)
+- ✅ **AI-Powered Recommendations**
+- ✅ **Real-time Notifications** (Socket.io)
+- ✅ **Newsletter** subscription
+- ✅ **Responsive Design** (Mobile-first)
+- ✅ **Luxury Email Notifications**
+
+</td>
+</tr>
+</table>
+
+### 🌐 Bilingual Support
 
 <div align="center">
 
-| 🏷️ **Bespoke Shopping** | 👨‍💼 **Management Hub** | 💳 **Seamless UX** |
-| :--- | :--- | :--- |
-| • **Advanced Filtering** & Smart Search | • **Real-time Analytics** Dashboard | • **bKash Tokenized** Integration |
-| • **Flash Sales** with Countdown Timers | • **Dynamic Banner** & Content Control | • **PWA Support** (Installable App) |
-| • **Bespoke Invoices** (Manifest Style) | • **Automated Inventory** Tracking | • **Bilingual (BN/EN)** Persistence |
-| • **Order Tracking** with Guest Reviews | • **Review Moderation** System | • **Luxury Email** Notifications |
+| Feature | Status |
+|:---:|:---:|
+| 🇧🇩 **Full Bengali Translation** | ✅ UI/Content Complete |
+| 🇬🇧 **English Support** | ✅ Seamless Switching |
+| 💾 **Persistent Language** | ✅ Preference Saved |
+| 🔄 **Dynamic Content** | ✅ Instant Translation |
+
+</div>
+
+### 💳 Payment & Checkout
+
+<div align="center">
+
+```mermaid
+graph LR
+    A[Cart] --> B[Checkout]
+    B --> C[bKash Payment]
+    C --> D{Payment Status}
+    D -->|Success| E[Order Confirmed]
+    D -->|Failed| F[Retry Payment]
+    D -->|Cancelled| G[Return to Cart]
+```
+
+</div>
+
+- 💰 **bKash Integration** - Secure mobile payment
+- 📦 **Multiple Delivery Options** - Dynamic fee calculation
+- 🎟️ **Coupon System** - Sophisticated validation
+- 📧 **Luxury Email System** - Animated, bespoke theme notifications
+- 📜 **Bespoke Curation Registry** - High-end PDF invoices with stylized signatures
+- 🎁 **Loyalty Discount System** - Incentivize repeat purchases
+
+### 🚚 Delivery Logistics & Fees
+
+<div align="center">
+
+| Location | Charge | Free Shipping Threshold |
+|:---:|:---:|:---:|
+| 🏙️ **Inside Cox's Bazar** | ৳70 | > ৳2500 Order |
+| 🌄 **Outside Cox's Bazar** | ৳150 | > ৳2500 Order |
 
 </div>
 
 ---
 
-## 🎨 Creative Showcase (Screenshots)
-
 <div align="center">
 
-### 💎 User Experience
+## 🎨 Creative Showcase (Screenshots)
+
+<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
+
+### ✨ User Experience
 | **🏠 Home Manifest** | **🛍️ Premium Shop** |
 |:---:|:---:|
 | <img src="screenshots/Home_Pages.png" width="400" /> | <img src="screenshots/Shop_Pages.png" width="400" /> |
@@ -83,13 +166,20 @@
 
 ---
 
-## �️ The MERN Stack Architecture
+## 🛠️ The MERN Stack Architecture
 
 <div align="center">
   <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" />
   <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" />
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
   <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+</div>
+
+<div align="center">
+<img src="https://user-images.githubusercontent.com/74038190/212257454-16e3712e-945a-4ca2-b238-408ad0bf87e6.gif" width="50">
+<img src="https://user-images.githubusercontent.com/74038190/212257472-08e52665-c503-4bd9-aa20-f5a4dae769b5.gif" width="50">
+<img src="https://user-images.githubusercontent.com/74038190/212257468-1e9a91f1-b626-4baa-b15d-5c385dfa7ed2.gif" width="50">
+<img src="https://user-images.githubusercontent.com/74038190/212257465-7ce8d493-cac5-494e-982a-5a9deb852c4b.gif" width="50">
 </div>
 
 ### 💻 Frontend (React.js)
@@ -101,8 +191,9 @@
   "routing": "React Router DOM v6",
   "http_client": "Axios",
   "pwa": "Vite PWA Plugin (Offline Support)",
-  "icons": "Lucide React",
-  "notifications": "React Hot Toast"
+  "seo": "React Helmet Async",
+  "charts": "Recharts",
+  "icons": "Lucide React"
 }
 ```
 
@@ -122,54 +213,81 @@
 
 ---
 
-## � Getting Started
+## 🚀 Getting Started
+
+<div align="center">
+<img src="https://user-images.githubusercontent.com/74038190/212284136-03988914-d899-44b4-b1d9-4eeccf656e44.gif" width="1000">
+</div>
 
 ### Prerequisites
-Ensure you have the following installed:
+Before you begin, ensure you have the following installed:
 - **Node.js**: v18.x or higher
 - **MongoDB**: v6.0 or higher
 - **npm**: v9.x or higher
+- **Git**: v2.x or higher
 
 ### 📥 Installation Steps
 
-1. **Clone the project**:
-   ```bash
-   git clone https://github.com/salahuddingfx/rongrani.git
-   cd rongrani
-   ```
+<details>
+<summary><b>🛠️ Full Comprehensive Install Guide (CLICK TO EXPAND)</b></summary>
 
-2. **Setup Backend**:
-   ```bash
-   cd backend
-   npm install
-   # Create a .env file based on .env.example
-   npm run dev
-   ```
+#### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/salahuddingfx/rongrani.git
+cd rongrani
+```
 
-3. **Setup Frontend**:
-   ```bash
-   # Back to root
-   cd ..
-   npm install
-   npm run dev
-   ```
+#### 2️⃣ Install Backend Dependencies
+```bash
+cd backend
+npm install
+```
 
-### 🔑 Configuration (Environment Variables)
+#### 3️⃣ Install Frontend Dependencies
+```bash
+cd ..
+npm install
+```
+
+#### 4️⃣ Configure Environment
+Create `.env` file in the `backend` folder:
 ```env
 PORT=5000
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_secret
+NODE_ENV=development
+MONGO_URI=mongodb://localhost:27017/rongrani
+JWT_SECRET=your_jwt_secret
 BKASH_APP_KEY=your_key
 BKASH_APP_SECRET=your_secret
 BKASH_USERNAME=your_username
 BKASH_PASSWORD=your_password
-EMAIL_USER=your_gmail
-EMAIL_PASS=your_app_password
+EMAIL_USER=your_email
+EMAIL_PASS=your_app_pass
 ```
+
+#### 5️⃣ Populate Starting Data
+```bash
+cd backend
+node scripts/seedCategories.js
+node scripts/seedProducts.js
+```
+
+#### 6️⃣ Run the App
+```bash
+# Terminal 1 (Backend)
+cd backend && npm run dev
+
+# Terminal 2 (Frontend)
+cd .. && npm run dev
+```
+</details>
 
 ---
 
 ## 💳 bKash Integration
+
+<div align="center">
+<img src="https://user-images.githubusercontent.com/74038190/212284087-bbe7e430-757e-4901-90bf-4cd2ce3e1852.gif" width="100">
+</div>
 
 ```mermaid
 sequenceDiagram
@@ -178,14 +296,16 @@ sequenceDiagram
     participant B as Backend
     participant bK as bKash API
     
-    C->>F: Checkout
-    F->>B: Init Payment
-    B->>bK: Create Agreement
+    C->>F: Initiate Checkout
+    F->>B: POST /api/payment/init
+    B->>bK: Create Payment
     bK-->>B: Payment URL
-    B-->>F: Redirect
-    C->>bK: Pay
-    bK->>B: Callback
-    B-->>F: Success
+    B-->>F: bKash URL
+    F->>C: Redirect to bKash
+    C->>bK: Complete Payment
+    bK->>B: Callback (Success)
+    B->>B: Update Order Status
+    B-->>F: Redirect to Success Page
 ```
 
 ---
@@ -193,51 +313,77 @@ sequenceDiagram
 ## 📁 Project Structure
 ```text
 rongrani/
-├── 📂 backend/         # Node.js API
-│   ├── 📂 controllers/ # Logic
-│   ├── 📂 models/      # Database Schemas
-│   ├── 📂 routes/      # API Endpoints
-│   └── 📂 utils/       # PDF & Helpers
-├── 📂 src/             # React Frontend
-│   ├── 📂 components/  # Shared UI
-│   ├── 📂 pages/       # View Logic
-│   └── 📂 contexts/    # State Management
-└── 📂 public/          # Static Assets
+├── 📂 backend/                 # Backend Node.js application
+│   ├── 📂 config/             # DB & Env Config
+│   ├── 📂 controllers/        # Business Logic
+│   ├── 📂 middlewares/        # Auth & Security
+│   ├── 📂 models/             # Mongoose Schemas
+│   ├── 📂 routes/             # API Endpoints
+│   ├── 📂 utils/              # PDF Generator & Email
+│   └── 📄 server.js           # Entry Point
+├── 📂 src/                     # Frontend React application
+│   ├── 📂 components/         # Atomic UI Components
+│   ├── 📂 contexts/           # Global State (Auth, Cart)
+│   ├── 📂 locales/            # Language Translations
+│   ├── 📂 pages/              # Routed Page Views
+│   └── 📄 App.jsx             # Root Component
+└── 📂 public/                  # Manifest, Icons & Static
 ```
 
 ---
 
 ## 🌐 API Documentation
 
-| Method | Endpoint | Description |
-| :--- | :--- | :--- |
-| **POST** | `/api/auth/login` | Secure JWT Login |
-| **GET** | `/api/products` | Paginated Product List |
-| **POST** | `/api/orders` | Create New Order |
-| **GET** | `/api/flash-sales/active` | Current Live Deals |
-| **POST** | `/api/payment/init` | Start bKash Process |
+<div align="center">
+<img src="https://user-images.githubusercontent.com/74038190/212257467-871d32b7-e401-42e8-a166-fcfd7baa4c6b.gif" width="100">
+</div>
+
+| Category | Method | Endpoint | Description |
+| :--- | :--- | :--- | :--- |
+| **Auth** | POST | `/api/auth/register` | User Onboarding |
+| **Auth** | POST | `/api/auth/login` | JWT Authentication |
+| **Products** | GET | `/api/products` | Paginated Collection |
+| **Orders** | POST | `/api/orders` | Checkout Process |
+| **Orders** | GET | `/api/orders/track/:id` | Live Tracking |
+| **Reviews** | POST | `/api/reviews` | Guest & User Feedback |
+| **Payment** | POST | `/api/payment/init` | bKash Tunneling |
+| **Flash Sale** | GET | `/api/flash-sales/active` | Live Blitz Deals |
 
 ---
 
 ## 🎯 Roadmap
-- [x] **MERN Core Flow** (DONE)
-* [x] **Premium Signature Invoices** (DONE)
-- [x] **Flash Sale Manager** (DONE)
-- [ ] **AI-Powered Gift Finder** (WIP)
-- [ ] **Multi-vendor Dashboard**
+
+<div align="center">
+<img src="https://user-images.githubusercontent.com/74038190/212284094-e50ac1fc-b785-43c4-96ca-e2284152a053.gif" width="200">
+</div>
+
+- [x] **Phase 1: Foundation** - Auth, Product CRUD, Cart (DONE)
+- [x] **Phase 2: Premium Expansion** - bKash, Invoices, Bengali (DONE)
+- [x] **Phase 3: Engagement** - Flash Sales, Tracking, Real-time (DONE)
+- [ ] **Phase 4: AI Core** - Personalized Gifting Assistant (WIP)
+- [ ] **Phase 5: Logistics** - Automated RedX/Pathao Integration (PLANNED)
 
 ---
 
-## 👨‍💻 Author
+## 🛡️ License
+Distributed under the **MIT License**. See `LICENSE` for more information.
+
+---
+
+## 👨‍💻 Author & Visionary
 
 <div align="center">
+
+<img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="400">
 
 <img src="https://img.shields.io/badge/Author-Salah%20Uddin%20Kader-7aa2f7?style=for-the-badge&logo=github&logoColor=white" />
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/salahuddingfx)
 [![Portfolio](https://img.shields.io/badge/Portfolio-f7768e?style=for-the-badge&logo=google-chrome&logoColor=white)](https://salahuddin.codes)
+[![Email](https://img.shields.io/badge/Email-73daca?style=for-the-badge&logo=gmail&logoColor=white)](mailto:info.rongrani@gmail.com)
 
-**Visionary Architect behind RongRani**
+**Full Stack Architect | UI/UX Designer | MERN Specialist**
+*Crafting seamless digital experiences with passion and precision.*
 
 </div>
 
@@ -245,11 +391,11 @@ rongrani/
 
 <div align="center">
 
-### ⭐ Star if you find this project helpful!
+### ⭐ Star this repository if you love the manifest!
 
 ![GitHub stars](https://img.shields.io/github/stars/salahuddingfx/rongrani?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/salahuddingfx/rongrani?style=social)
 
-**Made with ❤️ by Salah Uddin Kader**
+**RongRani™ 2026 - Elevated E-Commerce for Artisan Gifting**
 
 </div>
