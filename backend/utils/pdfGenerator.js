@@ -43,8 +43,37 @@ const generateInvoice = async (order) => {
       doc.moveTo(40, 95).lineTo(555, 95).stroke();
       doc.opacity(1);
 
-      // Logo & Brand
+      // Watermark (Background Brand)
       const logoPath = path.join(__dirname, '../../public/RongRani-Circle.png');
+      if (fs.existsSync(logoPath)) {
+        doc.save();
+        doc.opacity(0.04); // subtle opacity
+        // Center the watermark
+        doc.image(logoPath, 172, 280, { width: 250, align: 'center', valign: 'center' });
+        doc.restore();
+      }
+
+      // Payment Status STAMP (Visual Indicator)
+      const isPaid = order.paymentStatus === 'paid';
+      const isCod = order.paymentMethod === 'cod' && order.paymentStatus !== 'paid';
+
+      if (isPaid || isCod) {
+        doc.save();
+        doc.opacity(0.15); // Stamp opacity
+        doc.translate(430, 150);
+        doc.rotate(-15);
+
+        const stampText = isPaid ? 'PAID' : 'CASH DUE';
+        const stampColor = isPaid ? '#10B981' : '#EF4444'; // Green or Red
+
+        doc.fontSize(35).font('Helvetica-Bold').fillColor(stampColor).text(stampText, 0, 0);
+        doc.rect(-5, -5, doc.widthOfString(stampText) + 10, 42)
+          .lineWidth(3).strokeColor(stampColor).stroke();
+
+        doc.restore();
+      }
+
+      // Logo & Brand Header
       if (fs.existsSync(logoPath)) {
         doc.image(logoPath, 45, 20, { width: 60 }); // Slightly smaller logo
         doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(26).text('RongRani', 115, 30);
