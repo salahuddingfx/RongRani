@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Package, Truck, CheckCircle, MapPin, Calendar, DollarSign, ArrowLeft, Phone, Mail } from 'lucide-react';
+import { Package, Truck, CheckCircle, MapPin, Calendar, DollarSign, ArrowLeft, Phone, Mail, Download } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-import io from 'socket.io-client';
+import { useSocket } from '../contexts/socketContextBase';
 import ReviewForm from '../components/ReviewForm';
 
 const OrderTracking = () => {
@@ -17,16 +17,10 @@ const OrderTracking = () => {
   const [contactEmail, setContactEmail] = useState('');
   const [contactPhone, setContactPhone] = useState('');
   const [error, setError] = useState('');
-  const [socket, setSocket] = useState(null);
+
+  const { socket } = useSocket();
   const [reviewingProductId, setReviewingProductId] = useState(null);
-
-  useEffect(() => {
-    // Initialize Socket
-    const newSocket = io(import.meta.env.VITE_API_URL || 'http://localhost:5000');
-    setSocket(newSocket);
-
-    return () => newSocket.close();
-  }, []);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     if (!socket || !order) return;
@@ -96,6 +90,38 @@ const OrderTracking = () => {
 
     const query = params.toString();
     navigate(`/track/${trackingInput.trim()}${query ? `?${query}` : ''}`);
+  };
+
+  const handleDownloadInvoice = async (e) => {
+    e.preventDefault();
+    if (!order?._id) return;
+
+    try {
+      setDownloading(true);
+      const response = await axios.get(`/api/orders/${order._id}/invoice`, {
+        responseType: 'blob',
+        headers: {
+          'Accept': 'application/pdf'
+        }
+      });
+
+      // Create a blob link to download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Invoice-${order.orderId || order._id}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Invoice downloaded successfully', { id: 'download-success' });
+    } catch (err) {
+      console.error('Download failed:', err);
+      toast.error('Failed to download invoice. Please try again.');
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const getStatusColor = (status) => {
@@ -251,19 +277,22 @@ const OrderTracking = () => {
             </p>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
             {/* Invoice Download Button */}
-            <a
-              href={`/api/orders/${order._id}/invoice`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 bg-white border border-maroon/20 text-maroon px-6 py-3 rounded-xl font-bold shadow-sm hover:shadow-md hover:scale-105 transition-all"
+            <button
+              onClick={handleDownloadInvoice}
+              disabled={downloading}
+              className="flex items-center justify-center gap-2 bg-white border border-maroon/20 text-maroon px-6 py-3 rounded-xl font-bold shadow-sm hover:shadow-md hover:scale-105 transition-all whitespace-nowrap disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              <DollarSign className="h-5 w-5" />
-              <span>Download Invoice</span>
-            </a>
+              {downloading ? (
+                <div className="w-5 h-5 border-2 border-maroon border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Download className="h-5 w-5" />
+              )}
+              <span>{downloading ? 'Downloading...' : 'Download Invoice'}</span>
+            </button>
 
-            <a href="tel:+8801851075537" className="flex items-center gap-2 bg-maroon text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-maroon/20 hover:shadow-xl hover:scale-105 transition-all">
+            <a href="tel:+8801851075537" className="flex items-center justify-center gap-2 bg-maroon text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-maroon/20 hover:shadow-xl hover:scale-105 transition-all whitespace-nowrap">
               <Phone className="h-5 w-5 animate-wiggle" />
               <span>Need Help?</span>
             </a>

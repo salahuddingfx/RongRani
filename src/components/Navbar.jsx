@@ -542,7 +542,7 @@ const Navbar = () => {
 
                       {/* User Dropdown */}
                       {user ? (
-                        <div className="relative ml-1">
+                        <div className="relative ml-1 user-menu-container">
                           <button
                             onClick={() => setShowUserMenu(!showUserMenu)}
                             className="flex items-center gap-2 focus:outline-none group"
