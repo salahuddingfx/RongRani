@@ -24,216 +24,195 @@ const generateInvoice = async (order) => {
       doc.on('data', buffers.push.bind(buffers));
       doc.on('end', () => resolve(Buffer.concat(buffers)));
 
-      // Colors & Fonts
+      // Premium Colors (Refined)
       const colors = {
         royalMaroon: '#8B2635',
-        bespokeGold: '#C5A059',
-        midnight: '#0F172A',
-        slate: '#64748B',
-        cream: '#FEFAF2',
-        success: '#10B981'
+        bespokeGold: '#C5A059', // Gold for accents
+        midnight: '#1E293B',    // Softer black
+        slate: '#64748B',       // Muted text
+        cream: '#FAFAF9',       // Very light bg
+        lightGray: '#F1F5F9',
+        success: '#10B981',
+        danger: '#EF4444'
       };
 
-      // 1. HEADER: Compact & Elegant
-      doc.rect(0, 0, 595, 115).fill(colors.royalMaroon); // Reduced height
-      doc.rect(0, 115, 595, 4).fill(colors.bespokeGold);
+      // 1. HEADER: Minimalist & High-End
+      // Instead of full block, use white space with distinct typography
 
-      // Decorative Accent
-      doc.lineWidth(0.5).strokeColor(colors.bespokeGold).opacity(0.3);
-      doc.moveTo(40, 95).lineTo(555, 95).stroke();
-      doc.opacity(1);
+      // Top Accent Line
+      doc.rect(0, 0, 595, 6).fill(colors.royalMaroon);
 
-      // Watermark (Background Brand)
+      // Brand Section (Left)
       const logoPath = path.join(__dirname, '../../public/RongRani-Circle.png');
       if (fs.existsSync(logoPath)) {
+        // Watermark (Centered & Large)
         doc.save();
-        doc.opacity(0.04); // subtle opacity
-        // Center the watermark
-        doc.image(logoPath, 172, 280, { width: 250, align: 'center', valign: 'center' });
+        doc.opacity(0.03);
+        doc.image(logoPath, 147, 250, { width: 300, align: 'center', valign: 'center' });
         doc.restore();
+
+        // Header Logo
+        doc.image(logoPath, 40, 30, { width: 50 });
       }
 
-      // Payment Status STAMP (Visual Indicator)
+      // Brand Name
+      doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').fontSize(24).text('RongRani', 100, 35);
+
+      // Tagline: "ELEGANCE IN EVERY HUE" (Sophisticated Typography)
+      const taglineY = 62;
+      doc.fillColor(colors.bespokeGold).font('Helvetica').fontSize(8);
+      // Clean spacing
+      doc.text('E L E G A N C E   I N   E V E R Y   H U E', 100, taglineY, { characterSpacing: 1 });
+
+      // Invoice Details (Right Aligned)
+      doc.font('Helvetica-Bold').fontSize(20).fillColor(colors.midnight).text('INVOICE', 350, 35, { align: 'right', width: 200 });
+      doc.fontSize(8).font('Helvetica').fillColor(colors.slate).text('OFFICIAL CURATION MANIFEST', 350, 60, { align: 'right', width: 200, characterSpacing: 1 });
+      doc.text(`ID: #${order.orderId || order._id.toString().substring(0, 8).toUpperCase()}`, 350, 72, { align: 'right', width: 200 });
+
+      // QR Code (Neatly positioned below Invoice ID)
+      if (qrBuffer) {
+        doc.image(qrBuffer, 500, 85, { width: 50 });
+        doc.fontSize(6).fillColor(colors.bespokeGold).text('Scan to Track', 500, 138, { width: 50, align: 'center' });
+      }
+
+      // Divider
+      doc.moveTo(40, 150).lineTo(555, 150).strokeColor(colors.lightGray).lineWidth(1).stroke();
+
+      // 2. DOSSIER (Client & Order Info) - Clean 2-Column Layout
+      const infoY = 170;
+
+      // Left: Client Details
+      doc.fontSize(9).font('Helvetica-Bold').fillColor(colors.bespokeGold).text('BILLED TO', 40, infoY);
+
+      const shipping = order.shippingAddress || {};
+      doc.fontSize(12).font('Helvetica-Bold').fillColor(colors.midnight).text(shipping.name || 'Valued Guest', 40, infoY + 15);
+
+      doc.fontSize(9).font('Helvetica').fillColor(colors.slate).lineGap(4);
+      doc.text(shipping.phone || '', 40, infoY + 32);
+      if (shipping.email) doc.text(shipping.email);
+
+      const addressLines = [
+        shipping.street,
+        `${shipping.city || ''} ${shipping.zipCode || ''}`.trim(),
+        shipping.country || 'Bangladesh'
+      ].filter(Boolean);
+
+      doc.text(addressLines.join('\n'), { width: 250 });
+
+      // Right: Order Logistics
+      const rightColX = 350;
+      doc.fontSize(9).font('Helvetica-Bold').fillColor(colors.bespokeGold).text('ORDER DETAILS', rightColX, infoY);
+
+      doc.font('Helvetica').fillColor(colors.midnight).lineGap(6);
+
+      const orderDate = new Date(order.createdAt).toLocaleDateString('en-BD', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      // Label-Value Pairs
+      const drawField = (label, value, y) => {
+        doc.fontSize(8).fillColor(colors.slate).text(label, rightColX, y);
+        doc.fontSize(9).fillColor(colors.midnight).text(value, rightColX + 90, y, { align: 'right', width: 110 });
+      };
+
+      let currentY = infoY + 15;
+      drawField('Date:', orderDate, currentY); currentY += 15;
+      drawField('Pay Method:', order.paymentMethod === 'cod' ? 'Cash on Delivery' : order.paymentMethod?.toUpperCase(), currentY); currentY += 15;
+      drawField('Status:', (order.paymentStatus || 'Pending').toUpperCase(), currentY); currentY += 15;
+      drawField('Courier:', 'RedX / Pathao', currentY); // Placeholder for future integration
+
+      // Payment Status Stamp (Creative Placement)
       const isPaid = order.paymentStatus === 'paid';
       const isCod = order.paymentMethod === 'cod' && order.paymentStatus !== 'paid';
 
       if (isPaid || isCod) {
         doc.save();
-        doc.opacity(0.15); // Stamp opacity
-        doc.translate(430, 150);
-        doc.rotate(-15);
+        doc.opacity(0.1);
+        const stampText = isPaid ? 'PAID' : 'DUE';
+        const stampColor = isPaid ? colors.success : colors.danger;
 
-        const stampText = isPaid ? 'PAID' : 'CASH DUE';
-        const stampColor = isPaid ? '#10B981' : '#EF4444'; // Green or Red
-
-        doc.fontSize(35).font('Helvetica-Bold').fillColor(stampColor).text(stampText, 0, 0);
-        doc.rect(-5, -5, doc.widthOfString(stampText) + 10, 42)
-          .lineWidth(3).strokeColor(stampColor).stroke();
-
+        doc.translate(rightColX + 50, infoY + 80);
+        doc.rotate(-10);
+        doc.roundedRect(0, 0, 80, 30, 4).strokeColor(stampColor).lineWidth(2).stroke();
+        doc.fontSize(14).font('Helvetica-Bold').fillColor(stampColor).text(stampText, 0, 8, { width: 80, align: 'center' });
         doc.restore();
       }
 
-      // Logo & Brand Header
-      if (fs.existsSync(logoPath)) {
-        doc.image(logoPath, 45, 20, { width: 60 }); // Slightly smaller logo
-        doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(26).text('RongRani', 115, 30);
+      // 3. ITEMIZATION (Modern Table)
+      const tableY = 300;
 
-        // TAGLINE: "ELEGANCE IN EVERY HUE" (Small Caps Style)
-        const taglineY = 62;
-        const bigReq = 10;
-        const smallReq = 7.5;
+      // Header
+      doc.rect(40, tableY, 515, 25).fill(colors.cream);
+      doc.fontSize(8).font('Helvetica-Bold').fillColor(colors.royalMaroon);
 
-        doc.fillColor('#E2E8F0').font('Helvetica');
-        // E
-        doc.fontSize(bigReq).text('E', 115, taglineY, { continued: true, characterSpacing: 1 });
-        doc.fontSize(smallReq).text('LEGANCE ', { continued: true, characterSpacing: 2 });
-        // I
-        doc.fontSize(bigReq).text('I', { continued: true, characterSpacing: 1 });
-        doc.fontSize(smallReq).text('N ', { continued: true, characterSpacing: 2 });
-        // E
-        doc.fontSize(bigReq).text('E', { continued: true, characterSpacing: 1 });
-        doc.fontSize(smallReq).text('VERY ', { continued: true, characterSpacing: 2 });
-        // H
-        doc.fontSize(bigReq).text('H', { continued: true, characterSpacing: 1 });
-        doc.fontSize(smallReq).text('UE', { characterSpacing: 2 });
+      doc.text('DESCRIPTION', 55, tableY + 8);
+      doc.text('QTY', 320, tableY + 8, { width: 40, align: 'center' });
+      doc.text('UNIT PRICE', 380, tableY + 8, { width: 60, align: 'right' });
+      doc.text('AMOUNT', 460, tableY + 8, { width: 90, align: 'right' });
 
-      } else {
-        doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(36).text('RongRani', 45, 35);
-      }
+      // Rows
+      let y = tableY + 30;
+      doc.font('Helvetica').fontSize(9).fillColor(colors.midnight);
 
-      // Registry Title & Challan Header (Moved Up)
-      doc.fontSize(22).font('Helvetica-Bold').fillColor('#FFFFFF').text('INVOICE / CHALLAN', 330, 35, { align: 'right', width: 220 });
-      doc.fontSize(9).font('Helvetica').text('OFFICIAL DELIVERY MANIFEST', 330, 62, { align: 'right', width: 220, characterSpacing: 1.5 });
+      order.items.forEach((item, i) => {
+        const rowHeight = 25;
 
-      // QR Code Placement (Compact)
-      if (qrBuffer) {
-        doc.image(qrBuffer, 495, 75, { width: 40 });
-        doc.fontSize(6).fillColor(colors.bespokeGold).text('Scan to Track', 495, 118, { width: 40, align: 'center' });
-      }
+        // Row Line
+        doc.moveTo(40, y + rowHeight).lineTo(555, y + rowHeight).strokeColor(colors.lightGray).lineWidth(0.5).stroke();
 
-      // 2. REGISTRY DETAILS (Compact Floating Box)
-      let yPos = 135; // Moved up from 165
-      doc.roundedRect(40, yPos, 515, 55, 4).fill(colors.cream); // Reduced height
-      doc.roundedRect(40, yPos, 515, 55, 4).lineWidth(1).strokeColor(colors.bespokeGold).stroke();
+        doc.text(item.name, 55, y + 8, { width: 260, ellipsis: true });
+        doc.text(item.quantity, 320, y + 8, { width: 40, align: 'center' });
+        doc.text(item.price.toLocaleString(), 380, y + 8, { width: 60, align: 'right' });
 
-      doc.fontSize(7).fillColor(colors.slate).font('Helvetica-Bold');
-      doc.text('ORDER REFERENCE', 60, yPos + 12);
-      doc.text('ORDER DATE', 200, yPos + 12);
-      doc.text('PAYMENT METHOD', 330, yPos + 12);
-      doc.text('PAYMENT STATUS', 460, yPos + 12);
-
-      doc.fontSize(12).fillColor(colors.royalMaroon).font('Helvetica-Bold');
-      doc.text(`#${order.orderId || order._id.toString().substring(0, 8).toUpperCase()}`, 60, yPos + 28);
-
-      const orderDate = new Date(order.createdAt).toLocaleDateString('en-BD', {
-        day: '2-digit', month: 'short', year: 'numeric'
-      });
-      doc.fontSize(10).fillColor(colors.midnight).font('Helvetica').text(orderDate, 200, yPos + 30);
-      doc.text(order.paymentMethod === 'cod' ? 'CASH ON DELIVERY' : order.paymentMethod?.toUpperCase(), 330, yPos + 30);
-
-      const pStatus = order.paymentStatus || 'pending';
-      const statusColor = pStatus === 'paid' ? colors.success : '#D97706';
-      doc.fillColor(statusColor).font('Helvetica-Bold').text(pStatus.toUpperCase(), 460, yPos + 30);
-
-      // 3. DESTINATION DOSSIER (Compact)
-      yPos = 210; // Moved up from 260
-      doc.fontSize(10).fillColor(colors.bespokeGold).font('Helvetica-Bold').text('CLIENT DESTINATION', 40, yPos, { characterSpacing: 1 });
-      doc.rect(40, yPos + 14, 515, 0.5).fill(colors.slate).opacity(0.1);
-      doc.opacity(1);
-
-      yPos += 20;
-      const shipping = order.shippingAddress || {};
-
-      // Address Box (Compact)
-      doc.rect(40, yPos, 300, 70).fill('#F8FAFC');
-
-      doc.fontSize(14).fillColor(colors.midnight).font('Helvetica-Bold').text(shipping.name || 'Valued Guest', 50, yPos + 8);
-
-      doc.fontSize(9).fillColor(colors.midnight).font('Helvetica').text(shipping.phone || 'N/A', 50, yPos + 28);
-      if (shipping.email) doc.text(shipping.email, 160, yPos + 28);
-
-      const fullAddress = [
-        shipping.street,
-        shipping.union,
-        shipping.subDistrict,
-        shipping.district,
-        shipping.zipCode
-      ].filter(Boolean).join(', ');
-
-      doc.fontSize(9).fillColor(colors.slate).text(fullAddress, 50, yPos + 42, { width: 280, lineGap: 1 });
-
-      // Right side: Badge (Aligned)
-      doc.image(logoPath, 420, yPos + 5, { width: 35, opacity: 0.5 });
-      doc.fillColor(colors.bespokeGold).fontSize(7).font('Helvetica-Bold').text('CERTIFIED ARTISAN QUALITY', 380, yPos + 45, { align: 'center', width: 120 });
-
-      // 4. THE CURATION TABLE (Compact)
-      yPos = 310; // Moved up/calculated
-      doc.rect(40, yPos, 515, 20).fill(colors.royalMaroon);
-      doc.font('Helvetica-Bold').fontSize(8).fillColor('#FFFFFF');
-      doc.text('ITEM DESCRIPTION', 60, yPos + 6);
-      doc.text('QTY', 320, yPos + 6, { width: 40, align: 'center' });
-      doc.text('PRICE', 370, yPos + 6, { width: 70, align: 'right' });
-      doc.text('TOTAL', 450, yPos + 6, { width: 90, align: 'right' });
-
-      yPos += 20;
-      doc.fillColor(colors.midnight).font('Helvetica').fontSize(9);
-
-      // Limit items to fit on page (if many) or just list them compactly
-      order.items.forEach((item, index) => {
-        if (index % 2 === 0) {
-          doc.rect(40, yPos, 515, 20).fill('#F9FAFB'); // Reduced height
-        }
-        doc.fillColor(colors.midnight).text(item.name || 'Artisan Work', 60, yPos + 6, { width: 250, ellipsis: true });
-        doc.text(item.quantity.toString(), 320, yPos + 6, { width: 40, align: 'center' });
-        doc.text(item.price.toLocaleString(), 370, yPos + 6, { width: 70, align: 'right' });
-        doc.font('Helvetica-Bold').text((item.price * item.quantity).toLocaleString(), 450, yPos + 6, { width: 90, align: 'right' });
+        doc.font('Helvetica-Bold');
+        doc.text((item.price * item.quantity).toLocaleString(), 460, y + 8, { width: 90, align: 'right' });
         doc.font('Helvetica');
-        yPos += 20;
+
+        y += rowHeight;
       });
 
-      // 5. FINANCIAL SUMMARY
-      yPos += 10;
-      const summaryX = 350;
-      doc.moveTo(summaryX, yPos).lineTo(555, yPos).strokeColor(colors.slate).lineWidth(0.5).stroke();
-      yPos += 5;
+      // 4. FINANCIAL SUMMARY (Clean, Right-Aligned)
+      const summaryY = y + 20;
+      const sumX = 350;
+      const sumW = 205;
 
-      doc.fontSize(8).fillColor(colors.slate).font('Helvetica');
-      doc.text('Subtotal:', summaryX, yPos, { width: 100, align: 'right' });
-      doc.fillColor(colors.midnight).text(`Tk ${order.subtotal.toLocaleString()}`, 450, yPos, { width: 90, align: 'right' });
-      yPos += 12;
+      const drawSum = (label, value, bold = false, color = colors.midnight) => {
+        doc.fontSize(9).font(bold ? 'Helvetica-Bold' : 'Helvetica').fillColor(colors.slate).text(label, sumX, y, { width: 100, align: 'right' });
+        doc.fillColor(color).text(value, 460, y, { width: 90, align: 'right' });
+        y += 18;
+      };
 
-      const shippingCharge = order.shipping || order.delivery?.charge || 0;
-      doc.fillColor(colors.slate).text('Delivery Charge:', summaryX, yPos, { width: 100, align: 'right' });
-      doc.fillColor(colors.midnight).text(`Tk ${shippingCharge.toLocaleString()}`, 450, yPos, { width: 90, align: 'right' });
-      yPos += 12;
+      y = summaryY;
+      drawSum('Subtotal', `Tk ${order.subtotal.toLocaleString()}`);
+      drawSum('Shipping', `Tk ${(order.shipping || 0).toLocaleString()}`);
+      if (order.discount > 0) drawSum('Discount', `- Tk ${order.discount.toLocaleString()}`, false, colors.success);
 
-      if (order.discount > 0) {
-        doc.fillColor(colors.slate).text('Discount:', summaryX, yPos, { width: 100, align: 'right' });
-        doc.fillColor('#10B981').text(`-Tk ${order.discount.toLocaleString()}`, 450, yPos, { width: 90, align: 'right' });
-        yPos += 12;
-      }
+      // Divider
+      doc.moveTo(sumX + 20, y).lineTo(555, y).strokeColor(colors.royalMaroon).lineWidth(1).stroke();
+      y += 10;
 
-      // Grand Total
-      doc.rect(summaryX, yPos + 3, 205, 25).fill(colors.royalMaroon);
-      doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(11).text('TOTAL DUE', summaryX + 10, yPos + 10);
-      doc.fontSize(14).text(`Tk ${order.total.toLocaleString()}`, 450, yPos + 8, { width: 90, align: 'right' });
+      // Total
+      doc.fontSize(14).font('Helvetica-Bold').fillColor(colors.royalMaroon).text('Total', sumX, y, { width: 100, align: 'right' });
+      doc.text(`Tk ${order.total.toLocaleString()}`, 460, y, { width: 90, align: 'right' });
 
 
-      // 6. SIGNATURE SECTION (Fixed at Bottom, but ensured enough space)
-      // Check if yPos is too close to bottom (max page height approx 840)
-      // Signatures at 750 is safe.
+      // 5. SIGNATURES (Script Style for Authority)
       const sigY = 740;
 
+      // Admin / Authority (Left Side this time? Standard is Right for Auth, Left for Customer. Let's keep Right for Auth)
+
+      // Authorized Signature (Script Style)
+      // Using Times-Italic to simulate script/handwriting elegance
+      doc.font('Times-Italic').fontSize(16).fillColor(colors.royalMaroon).text('RongRani', 400, sigY - 20, { align: 'center', width: 150 });
+      doc.moveTo(400, sigY).lineTo(550, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
+      doc.fontSize(7).font('Helvetica').fillColor(colors.slate).text('AUTHORIZED SIGNATURE', 400, sigY + 5, { align: 'center', width: 150, characterSpacing: 1 });
+
       // Customer Signature
-      doc.moveTo(60, sigY).lineTo(200, sigY).strokeColor(colors.midnight).lineWidth(1).stroke();
-      doc.fontSize(9).fillColor(colors.midnight).font('Helvetica-Bold').text('Customer Signature', 60, sigY + 8, { width: 140, align: 'center' });
+      doc.moveTo(40, sigY).lineTo(190, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
+      doc.text('CUSTOMER SIGNATURE', 40, sigY + 5, { align: 'center', width: 150, characterSpacing: 1 });
 
-      // Admin/Authority Signature
-      doc.moveTo(395, sigY).lineTo(535, sigY).strokeColor(colors.midnight).lineWidth(1).stroke();
-      doc.fontSize(9).fillColor(colors.royalMaroon).font('Helvetica-Bold').text('Authorized Signature', 395, sigY + 8, { width: 140, align: 'center' });
 
-      // Footer Branding
-      doc.fontSize(7).fillColor(colors.slate).text('© 2026 RongRani - Curated with Passion by Salah Uddin Kader. All Rights Reserved.', 0, 790, { align: 'center', width: 595 });
+      // Footer Info
+      doc.fontSize(7).fillColor(colors.slate).text('Thank you for choosing RongRani. For support, contact 01851075537', 40, 780, { align: 'center', width: 515 });
+      doc.text('www.rongrani.com', 40, 792, { align: 'center', width: 515 });
 
       doc.end();
     } catch (error) {
