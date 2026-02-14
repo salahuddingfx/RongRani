@@ -4,7 +4,7 @@ class SteadfastService {
   constructor() {
     this.apiKey = process.env.STEADFAST_API_KEY;
     this.apiSecret = process.env.STEADFAST_API_SECRET;
-    this.baseURL = process.env.STEADFAST_BASE_URL || 'https://portal.steadfast.com.bd/api/v1';
+    this.baseURL = process.env.STEADFAST_BASE_URL || 'https://portal.packzy.com/api/v1';
     this.isConfigured = !!(this.apiKey && this.apiSecret);
 
     if (!this.isConfigured) {
@@ -20,6 +20,7 @@ class SteadfastService {
         'Api-Key': this.apiKey,
         'Secret-Key': this.apiSecret,
         'Content-Type': 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       },
     });
   }
@@ -84,11 +85,20 @@ class SteadfastService {
         };
       }
     } catch (error) {
-      console.error('❌ Steadfast Create Order Error:', error.response?.data || error.message);
+      const errorDetails = error.response?.data;
+      const errorMessage = typeof errorDetails === 'string' && errorDetails.includes('<!DOCTYPE html>')
+        ? 'Steadfast API returned HTML (likely Cloudflare block). Check User-Agent/URL.'
+        : (errorDetails?.message || error.message);
+
+      console.error('❌ Steadfast Create Order Error:', errorMessage);
+      if (typeof errorDetails !== 'string') {
+        console.error('Details:', JSON.stringify(errorDetails, null, 2));
+      }
+
       return {
         success: false,
-        error: error.response?.data?.message || error.message,
-        details: error.response?.data,
+        error: errorMessage,
+        details: typeof errorDetails === 'object' ? errorDetails : { rawResponse: 'HTML Response Truncated' },
       };
     }
   }
@@ -113,10 +123,15 @@ class SteadfastService {
         status: response.data.delivery_status,
       };
     } catch (error) {
-      console.error('❌ Steadfast Track Order Error:', error.response?.data || error.message);
+      const errorDetails = error.response?.data;
+      const errorMessage = typeof errorDetails === 'string' && errorDetails.includes('<!DOCTYPE html>')
+        ? 'Steadfast API returned HTML (likely Cloudflare block).'
+        : (errorDetails?.message || error.message);
+
+      console.error('❌ Steadfast Track Order Error:', errorMessage);
       return {
         success: false,
-        error: error.response?.data?.message || error.message,
+        error: errorMessage,
       };
     }
   }
@@ -145,10 +160,15 @@ class SteadfastService {
         data: response.data,
       };
     } catch (error) {
-      console.error('❌ Steadfast Get Charge Error:', error.response?.data || error.message);
+      const errorDetails = error.response?.data;
+      const errorMessage = typeof errorDetails === 'string' && errorDetails.includes('<!DOCTYPE html>')
+        ? 'Steadfast API returned HTML (likely Cloudflare block).'
+        : (errorDetails?.message || error.message);
+
+      console.error('❌ Steadfast Get Charge Error:', errorMessage);
       return {
         success: false,
-        error: error.response?.data?.message || error.message,
+        error: errorMessage,
         charge: 60, // Fallback to default
       };
     }
@@ -176,10 +196,15 @@ class SteadfastService {
         message: 'Order cancelled successfully',
       };
     } catch (error) {
-      console.error('❌ Steadfast Cancel Order Error:', error.response?.data || error.message);
+      const errorDetails = error.response?.data;
+      const errorMessage = typeof errorDetails === 'string' && errorDetails.includes('<!DOCTYPE html>')
+        ? 'Steadfast API returned HTML (likely Cloudflare block).'
+        : (errorDetails?.message || error.message);
+
+      console.error('❌ Steadfast Cancel Order Error:', errorMessage);
       return {
         success: false,
-        error: error.response?.data?.message || error.message,
+        error: errorMessage,
       };
     }
   }
@@ -204,10 +229,15 @@ class SteadfastService {
         data: response.data,
       };
     } catch (error) {
-      console.error('❌ Steadfast Balance Check Error:', error.response?.data || error.message);
+      const errorDetails = error.response?.data;
+      const errorMessage = typeof errorDetails === 'string' && errorDetails.includes('<!DOCTYPE html>')
+        ? 'Steadfast API returned HTML (likely Cloudflare block).'
+        : (errorDetails?.message || error.message);
+
+      console.error('❌ Steadfast Balance Check Error:', errorMessage);
       return {
         success: false,
-        error: error.response?.data?.message || error.message,
+        error: errorMessage,
       };
     }
   }

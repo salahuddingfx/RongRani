@@ -8,26 +8,33 @@ const AppInitializer = ({ children }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        // Simulate progress
-        const progressInterval = setInterval(() => {
-          setProgress(prev => Math.min(prev + Math.random() * 15, 90));
-        }, 200);
+    let interval;
 
-        clearInterval(progressInterval);
-        setProgress(100);
-      } catch (error) {
-        console.error('App initialization error:', error);
-        setProgress(100);
-      } finally {
-        // Small delay to ensure smooth transition
-        setTimeout(() => setInitComplete(true), 800);
-      }
+    if (isLoading) {
+      // Simulate progress up to 90% while loading
+      interval = setInterval(() => {
+        setProgress(prev => {
+          const increment = Math.random() * 5;
+          return Math.min(prev + increment, 90);
+        });
+      }, 200);
+    } else {
+      // Complete progress when loading finishes
+      setProgress(100);
+      if (interval) clearInterval(interval);
+
+      // Delay completion to allow 100% animation to show
+      const timeout = setTimeout(() => {
+        setInitComplete(true);
+      }, 800);
+
+      return () => clearTimeout(timeout);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
     };
-
-    initializeApp();
-  }, []);
+  }, [isLoading]);
 
   // Show loader until initialization is complete
   if (!initComplete || isLoading) {
@@ -57,7 +64,7 @@ const AppInitializer = ({ children }) => {
             </div>
             <div className="relative">
               <div className="w-20 h-20 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>
-              <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-gold rounded-full animate-spin mx-auto" style={{animationDirection: 'reverse', animationDuration: '1.5s'}}></div>
+              <div className="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-gold rounded-full animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
             </div>
           </div>
 
@@ -80,9 +87,9 @@ const AppInitializer = ({ children }) => {
           {/* Progress Dots */}
           <div className="flex justify-center space-x-3 animate-fade-in-up stagger-2">
             <div className="w-3 h-3 bg-white rounded-full animate-bounce"></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></div>
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
           </div>
 
           {/* Inspirational text */}

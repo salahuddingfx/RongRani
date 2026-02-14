@@ -430,8 +430,9 @@ const sendToCourier = async (req, res) => {
 
     // Shorten Invoice ID for Courier API (Use last 8 chars to be safe and unique enough)
     // Steadfast often errors on very long invoice IDs
-    const shortId = order._id.toString().slice(-8).toUpperCase();
-    const invoice = details.invoice || `RR-${shortId}`;
+    // Use short orderId for invoice if available, else fallback to ObjectId suffix
+    const invoiceId = order.orderId || order._id.toString().slice(-8).toUpperCase();
+    const invoice = details.invoice || `RR-${invoiceId}`;
 
     const rawNote = details.note || order.notes || `Order from RongRani - ${order.items.length} items`;
     const note = rawNote.toString().replace(/[^\x20-\x7E]/g, '').trim() || 'Order from RongRani';

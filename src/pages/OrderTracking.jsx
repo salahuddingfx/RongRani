@@ -241,7 +241,7 @@ const OrderTracking = () => {
             <ArrowLeft className="h-5 w-5" />
             <span>Back to Orders</span>
           </Link>
-          <h1 className="text-4xl font-bold text-maroon">Track Order #{order._id}</h1>
+          <h1 className="text-4xl font-bold text-maroon">Track Order #{order.orderId || order._id}</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

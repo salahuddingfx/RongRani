@@ -40,9 +40,25 @@ const Checkout = () => {
   });
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Show warning toast for COD
+    if (name === 'paymentMethod' && value === 'cod') {
+      toast('Please pay delivery charge in advance for confirmation.', {
+        icon: '⚠️',
+        style: {
+          borderRadius: '10px',
+          background: '#FFFBEB',
+          color: '#B45309',
+          border: '1px solid #FCD34D',
+        },
+        duration: 4000,
+      });
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
   };
 
@@ -628,6 +644,28 @@ const Checkout = () => {
                     />
                     <span className="ml-3 font-semibold text-charcoal">💵 Cash on Delivery</span>
                   </label>
+
+                  {/* COD Warning Message */}
+                  {formData.paymentMethod === 'cod' && (
+                    <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg animate-fade-in my-3">
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0">
+                          <svg className="h-5 w-5 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="ml-3">
+                          <h3 className="text-sm font-bold text-amber-800">Advance Payment Required</h3>
+                          <div className="mt-2 text-sm text-amber-700">
+                            <p>To confirm your Cash on Delivery order, please pay the delivery charge <strong>(৳{shipping})</strong> in advance.</p>
+                            <div className="mt-2 text-xs font-mono bg-white p-2 rounded border border-amber-200 inline-block">
+                              Payment Number: <strong>01851075537</strong> (bKash/Nagad Personal)
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Manual Mobile Banking - YOUR CURRENT PRIMARY METHOD */}
                   <div className="border-2 border-maroon/30 rounded-xl p-5 bg-white shadow-sm overflow-hidden">

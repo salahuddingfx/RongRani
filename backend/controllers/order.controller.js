@@ -364,7 +364,17 @@ const getMyOrders = async (req, res) => {
 // @access  Private
 const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate(
+    const id = req.params.id;
+    let query;
+
+    // Check if valid ObjectId
+    if (/^[0-9a-fA-F]{24}$/.test(id)) {
+      query = { $or: [{ _id: id }, { orderId: id }] };
+    } else {
+      query = { orderId: id };
+    }
+
+    const order = await Order.findOne(query).populate(
       'items.product',
       'name images price'
     );
@@ -393,7 +403,18 @@ const getOrderById = async (req, res) => {
 // @access  Public (email/phone) or Private (token)
 const getOrderForTracking = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id)
+    const id = req.params.id;
+    let query;
+
+    // Check if valid ObjectId
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+    if (isObjectId) {
+      query = { $or: [{ _id: id }, { orderId: id }] };
+    } else {
+      query = { orderId: id };
+    }
+
+    const order = await Order.findOne(query)
       .populate('user', 'name email phone')
       .populate('items.product', 'name images price');
 
@@ -418,6 +439,7 @@ const getOrderForTracking = async (req, res) => {
 
     res.json({
       _id: order._id,
+      orderId: order.orderId,
       user: order.user ? {
         name: order.user.name,
         email: order.user.email,

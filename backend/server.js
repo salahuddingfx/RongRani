@@ -34,10 +34,18 @@ const socketOrigins = [
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
-      if (!origin || socketOrigins.includes(origin) || (origin.endsWith('.vercel.app') && origin.includes('rongrani'))) {
+      const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://rongrani.vercel.app'
+      ];
+
+      if (!origin || allowedOrigins.includes(origin) || origin.includes('localhost') || (origin.endsWith('.vercel.app') && origin.includes('rongrani'))) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        console.log('Socket blocked origin:', origin);
+        callback(null, false); // Block gracefully
       }
     },
     credentials: true,

@@ -6,6 +6,10 @@ const orderSchema = new mongoose.Schema({
     ref: 'User',
     required: false, // Allow guest orders
   },
+  orderId: {
+    type: String,
+    unique: true,
+  },
   guestInfo: {
     name: String,
     email: String,
@@ -223,15 +227,34 @@ const orderSchema = new mongoose.Schema({
 });
 
 // Update updatedAt on save
-orderSchema.pre('save', function (next) {
+orderSchema.pre('save', async function (next) {
   this.updatedAt = Date.now();
+
+  // Generate short order ID if not exists
+  if (!this.orderId) {
+    // Generate 7-digit random number (1000000 - 9999999)
+    // Using a loop to ensure uniqueness (though collision probability is low)
+    let isUnique = false;
+    while (!isUnique) {
+      const min = 1000000;
+      const max = 9999999;
+      const randomId = Math.floor(Math.random() * (max - min + 1)) + min;
+      const potentialId = randomId.toString();
+
+      const existing = await mongoose.models.Order.findOne({ orderId: potentialId });
+      if (!existing) {
+        this.orderId = potentialId;
+        isUnique = true;
+      }
+    }
+  }
   next();
 });
 
-// Index
 orderSchema.index({ user: 1, createdAt: -1 });
 orderSchema.index({ orderStatus: 1 });
 orderSchema.index({ paymentStatus: 1 });
 orderSchema.index({ createdAt: -1 });
+orderSchema.index({ orderId: 1 }, { unique: true, sparse: true });
 
 module.exports = mongoose.model('Order', orderSchema);
