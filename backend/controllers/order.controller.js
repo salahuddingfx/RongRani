@@ -324,7 +324,8 @@ const createOrder = async (req, res) => {
             paymentDetails: paymentDetails || {},
             shippingAddress: fullAddress,
             giftMessage: giftMessage || '',
-          }
+          },
+          attachments // Attach the generated PDF invoice for the admin
         );
         console.log('✅ Admin order notification sent');
 

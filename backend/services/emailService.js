@@ -95,7 +95,7 @@ const createTransporter = () => {
 // Helper to wrap content in a clean, responsive design (Daraz Inspired)
 const emailBaseTemplate = (title, content, preheader = '') => {
   const frontendUrl = process.env.FRONTEND_URL || 'https://rongrani.vercel.app';
-  const logoUrl = `${frontendUrl}/logo.png`; // Assuming a clear logo exists, fallback to text if needed
+  const logoUrl = `${frontendUrl}/RongRani-Circle.png`; // Updated to correct logo file
   const primaryColor = '#8B2635'; // RongRani Maroon
   const secondaryColor = '#C5A059'; // Gold Accent
 
@@ -113,7 +113,7 @@ const emailBaseTemplate = (title, content, preheader = '') => {
         img { border: 0; -ms-interpolation-mode: bicubic; }
         .wrapper { width: 100%; table-layout: fixed; background-color: #f3f4f6; padding-bottom: 40px; }
         .main-table { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .header { padding: 20px 0; text-align: center; border-bottom: 3px solid ${primaryColor}; background-color: #ffffff; }
+        .header { padding: 25px 0; text-align: center; border-bottom: 3px solid ${primaryColor}; background-color: #ffffff; }
         .logo { width: 120px; height: auto; display: block; margin: 0 auto; }
         .content { padding: 30px 25px; background-color: #ffffff; }
         .footer { padding: 30px 20px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; }
@@ -147,7 +147,7 @@ const emailBaseTemplate = (title, content, preheader = '') => {
             <tr>
               <td class="header">
                  <a href="${frontendUrl}" target="_blank" style="text-decoration: none;">
-                   <h1 style="color: ${primaryColor}; margin: 0; font-family: 'Georgia', serif; font-size: 28px; letter-spacing: 1px;">Rong<span style="color: ${secondaryColor};">Rani</span></h1>
+                   <img src="${logoUrl}" alt="RongRani" style="width: 80px; height: auto; display: block; margin: 0 auto;">
                  </a>
               </td>
             </tr>
