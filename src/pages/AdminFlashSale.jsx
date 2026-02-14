@@ -105,8 +105,11 @@ const AdminFlashSale = () => {
             const token = localStorage.getItem('token');
             // Check current active sale
             // Pass only necessary product data
+            // Convert picked local times to actual date objects for proper timezone handling
             const payload = {
                 ...formData,
+                startTime: new Date(formData.startTime).toISOString(),
+                endTime: new Date(formData.endTime).toISOString(),
                 products: formData.products.map(p => ({
                     product: p.product,
                     discountPrice: p.discountPrice,
@@ -353,11 +356,11 @@ const AdminFlashSale = () => {
                         <div className="space-y-2 mb-6 text-sm text-slate-600">
                             <div className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4" />
-                                <span>Start: {new Date(sale.startTime).toLocaleString()}</span>
+                                <span>Start: {new Date(sale.startTime).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Calendar className="w-4 h-4" />
-                                <span>End: {new Date(sale.endTime).toLocaleString()}</span>
+                                <span>End: {new Date(sale.endTime).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</span>
                             </div>
                         </div>
 

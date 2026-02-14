@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/RongRani-[Recovered].png" width="180" alt="RongRani Logo" style="border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid #7aa2f7;" />
+<img src="public/RongRani-Logo.png" width="180" alt="RongRani Logo" style="border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 2px solid #7aa2f7;" />
 
 # 🌸 RongRani
 

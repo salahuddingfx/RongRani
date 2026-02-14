@@ -101,7 +101,7 @@ const NotFound = () => {
         <div className="mt-20 opacity-40">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-white rounded-full p-1 overflow-hidden">
-              <img src="/RongRani-[Recovered].png" alt="RongRani" className="w-full h-full object-cover" />
+              <img src="/RongRani-Logo.png" alt="RongRani" className="w-full h-full object-cover" />
             </div>
             <span className="text-white font-bold tracking-widest text-xs uppercase">RongRani Handmade</span>
           </div>

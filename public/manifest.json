@@ -9,13 +9,13 @@
     "orientation": "portrait-primary",
     "icons": [
         {
-            "src": "/RongRani-[Recovered].png",
+            "src": "/RongRani-Logo.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any maskable"
         },
         {
-            "src": "/RongRani-[Recovered].png",
+            "src": "/RongRani-Logo.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any maskable"
@@ -37,7 +37,7 @@
             "url": "/shop",
             "icons": [
                 {
-                    "src": "/RongRani-[Recovered].png",
+                    "src": "/RongRani-Logo.png",
                     "sizes": "192x192"
                 }
             ]
@@ -49,7 +49,7 @@
             "url": "/profile/orders",
             "icons": [
                 {
-                    "src": "/RongRani-[Recovered].png",
+                    "src": "/RongRani-Logo.png",
                     "sizes": "192x192"
                 }
             ]
@@ -61,7 +61,7 @@
             "url": "/wishlist",
             "icons": [
                 {
-                    "src": "/RongRani-[Recovered].png",
+                    "src": "/RongRani-Logo.png",
                     "sizes": "192x192"
                 }
             ]
