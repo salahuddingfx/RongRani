@@ -240,44 +240,37 @@ graph LR
 
 <div align="center">
 
-## 🛠️ Tech Stack
+## 🛠️ The MERN Stack Architecture
 
-<img src="https://user-images.githubusercontent.com/74038190/212257454-16e3712e-945a-4ca2-b238-408ad0bf87e6.gif" width="100">
-<img src="https://user-images.githubusercontent.com/74038190/212257472-08e52665-c503-4bd9-aa20-f5a4dae769b5.gif" width="100">
-<img src="https://user-images.githubusercontent.com/74038190/212257468-1e9a91f1-b626-4baa-b15d-5c385dfa7ed2.gif" width="100">
-<img src="https://user-images.githubusercontent.com/74038190/212257465-7ce8d493-cac5-494e-982a-5a9deb852c4b.gif" width="100">
-
+<div align="center">
+  <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
 </div>
 
-### Frontend
-
+### 💻 Frontend (React.js)
 ```javascript
 {
-  "framework": "React 18.2.0",
-  "routing": "React Router DOM 6.x",
-  "styling": "TailwindCSS 3.3",
-  "state": "Context API",
-  "http": "Axios",
-  "icons": "Lucide React",
-  "notifications": "React Hot Toast",
-  "seo": "React Helmet Async",
-  "charts": "Recharts",
-  "animations": "Custom CSS + Framer Motion"
+  "framework": "React 18.2.0 (Vite Fast Refresh)",
+  "styling": "TailwindCSS + Custom Animations",
+  "state_management": "Context API",
+  "routing": "React Router DOM v6",
+  "http_client": "Axios",
+  "pwa": "Vite PWA Plugin (Offline Support)",
+  "icons": "Lucide React"
 }
 ```
 
-### Backend
-
+### ⚙️ Backend (Node.js & Express)
 ```javascript
 {
-  "runtime": "Node.js 18.x",
-  "framework": "Express 4.18",
-  "database": "MongoDB 6.0",
-  "odm": "Mongoose",
-  "authentication": "JWT",
-  "payment": "bKash Tokenized API",
-  "email": "Nodemailer",
+  "runtime": "Node.js (LTS)",
+  "framework": "Express.js",
+  "database": "MongoDB (Mongoose ODM)",
+  "auth": "JWT (JSON Web Tokens)",
   "realtime": "Socket.io",
+  "payments": "bKash Tokenized API",
   "security": "Helmet, CORS, Rate Limiting"
 }
 ```
