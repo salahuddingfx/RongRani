@@ -56,7 +56,12 @@ const generateInvoice = async (order) => {
       }
 
       // Brand Name
-      doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').fontSize(24).text('RongRani', 100, 35);
+      doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').fontSize(26).text('RongRani', 100, 35);
+
+      // Header Decoration (Nav-like block)
+      doc.rect(40, 135, 515, 2).fill(colors.royalMaroon);
+      doc.rect(40, 137, 515, 12).fill(colors.lightGray);
+      doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').fontSize(7).text('QUALITY • AUTHENTICITY • ELEGANCE', 40, 140, { align: 'center', width: 515, characterSpacing: 2 });
 
       // Tagline: "ELEGANCE IN EVERY HUE" (Sophisticated Typography)
       const taglineY = 62;
@@ -64,10 +69,16 @@ const generateInvoice = async (order) => {
       // Clean spacing
       doc.text('E L E G A N C E   I N   E V E R Y   H U E', 100, taglineY, { characterSpacing: 1 });
 
+      // Header Accent Box (Simulating a Premium Nav/Header)
+      doc.rect(40, 140, 515, 2).fill(colors.royalMaroon);
+      doc.rect(40, 142, 515, 8).fill(colors.lightGray);
+
       // Invoice Details (Right Aligned)
-      doc.font('Helvetica-Bold').fontSize(20).fillColor(colors.midnight).text('INVOICE', 350, 35, { align: 'right', width: 200 });
-      doc.fontSize(8).font('Helvetica').fillColor(colors.slate).text('OFFICIAL CURATION MANIFEST', 350, 60, { align: 'right', width: 200, characterSpacing: 1 });
-      doc.text(`ID: #${order.orderId || order._id.toString().substring(0, 8).toUpperCase()}`, 350, 72, { align: 'right', width: 200 });
+      doc.rect(400, 30, 155, 45, 4).fill(colors.royalMaroon);
+      doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(18).text('INVOICE', 400, 38, { align: 'center', width: 155 });
+      doc.fontSize(7).font('Helvetica').fillColor('#FFFFFF').text('OFFICIAL MANIFEST', 400, 58, { align: 'center', width: 155, characterSpacing: 1 });
+
+      doc.fillColor(colors.slate).fontSize(8).text(`ID: #${order.orderId || order._id.toString().substring(0, 8).toUpperCase()}`, 350, 85, { align: 'right', width: 200 });
 
       // QR Code (Neatly positioned below Invoice ID)
       if (qrBuffer) {
@@ -205,14 +216,18 @@ const generateInvoice = async (order) => {
       doc.moveTo(400, sigY).lineTo(550, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
       doc.fontSize(7).font('Helvetica').fillColor(colors.slate).text('AUTHORIZED SIGNATURE', 400, sigY + 5, { align: 'center', width: 150, characterSpacing: 1 });
 
-      // Customer Signature
+      // Admin Signature (Left Side)
+      doc.font('Times-Italic').fontSize(14).fillColor(colors.royalMaroon).text('Prepared By', 40, sigY - 15, { align: 'center', width: 150 });
       doc.moveTo(40, sigY).lineTo(190, sigY).strokeColor(colors.slate).lineWidth(0.5).stroke();
-      doc.text('CUSTOMER SIGNATURE', 40, sigY + 5, { align: 'center', width: 150, characterSpacing: 1 });
+      doc.fontSize(7).font('Helvetica').fillColor(colors.slate).text('ADMIN SIGNATURE', 40, sigY + 5, { align: 'center', width: 150, characterSpacing: 1 });
 
 
       // Footer Info
-      doc.fontSize(7).fillColor(colors.slate).text('Thank you for choosing RongRani. For support, contact 01851075537', 40, 780, { align: 'center', width: 515 });
-      doc.text('www.rongrani.com', 40, 792, { align: 'center', width: 515 });
+      const footerY = 780;
+      doc.rect(40, footerY - 5, 515, 1).fill(colors.lightGray);
+      doc.fontSize(7).fillColor(colors.slate).text('Thank you for choosing RongRani. For support, contact 01851075537', 40, footerY, { align: 'center', width: 515 });
+      doc.fillColor(colors.royalMaroon).font('Helvetica-Bold').text('FB: /rongrani • IG: @rongrani • WA: +8801851075537', 40, footerY + 12, { align: 'center', width: 515 });
+      doc.fillColor(colors.slate).font('Helvetica').text('www.rongrani.com', 40, footerY + 24, { align: 'center', width: 515 });
 
       doc.end();
     } catch (error) {

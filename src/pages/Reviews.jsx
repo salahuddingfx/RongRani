@@ -227,7 +227,15 @@ const Reviews = () => {
                                                         {review.product.name}
                                                     </Link>
                                                     <div className="flex items-center gap-2 mt-1">
-                                                        <span className="text-slate-600 text-xs md:text-sm">{review.user.name}</span>
+                                                        <span className="text-slate-600 font-bold text-xs md:text-sm">
+                                                            {review.user?.name || review.guestName || 'Valued Guest'}
+                                                        </span>
+                                                        {review.isVerifiedPurchase && (
+                                                            <span className="flex items-center gap-1 text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                                                                <Award className="w-3 h-3" />
+                                                                Verified
+                                                            </span>
+                                                        )}
                                                         <span className="text-slate-400 text-xs">•</span>
                                                         <span className="text-slate-400 text-xs">{formatDate(review.createdAt)}</span>
                                                     </div>

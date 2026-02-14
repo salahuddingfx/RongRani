@@ -143,6 +143,8 @@ function App() {
                             <Route path="cart" element={<Cart />} />
                             <Route path="checkout" element={<Checkout />} />
                             <Route path="reviews" element={<Reviews />} />
+                            <Route path="user/reviews" element={<Reviews />} />
+                            <Route path="my-reviews" element={<Reviews />} />
 
 
                             {/* Private Routes */}

@@ -663,7 +663,15 @@ const ProductDetail = () => {
                         </span>
                       </div>
                       <div className="flex-1">
-                        <div className="font-bold text-maroon text-lg">{review.user?.name || review.guestName || 'Anonymous User'}</div>
+                        <div className="flex items-center gap-3">
+                          <div className="font-bold text-maroon text-lg">{review.user?.name || review.guestName || 'Anonymous User'}</div>
+                          {review.isVerifiedPurchase && (
+                            <div className="flex items-center gap-1.5 text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-sm">
+                              <Shield className="h-3 w-3" />
+                              Verified Purchase
+                            </div>
+                          )}
+                        </div>
                         <div className="flex items-center space-x-3">
                           <div className="flex items-center">
                             {[...Array(5)].map((_, i) => (
@@ -701,10 +709,13 @@ const ProductDetail = () => {
                   </button>
                 ) : (
                   <div className="text-center">
-                    <p className="text-slate/60 mb-4">You can only review products you've ordered and received.</p>
-                    <Link to="/shop" className="text-maroon font-bold hover:underline">
-                      Browse our collection →
-                    </Link>
+                    <p className="text-slate-500 mb-4 font-medium">Have you purchased this product? Please share your thoughts!</p>
+                    <button
+                      onClick={() => setShowReviewForm(true)}
+                      className="bg-maroon text-white px-8 py-3 rounded-2xl font-bold hover:shadow-xl transition-all"
+                    >
+                      Write a Review ✨
+                    </button>
                   </div>
                 )}
               </div>

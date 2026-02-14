@@ -14,6 +14,14 @@ const reviewSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  guestEmail: {
+    type: String,
+    trim: true,
+  },
+  isVerifiedPurchase: {
+    type: Boolean,
+    default: false,
+  },
   rating: {
     type: Number,
     required: true,
@@ -45,7 +53,7 @@ const reviewSchema = new mongoose.Schema({
   },
 });
 
-reviewSchema.pre('save', function(next) {
+reviewSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });

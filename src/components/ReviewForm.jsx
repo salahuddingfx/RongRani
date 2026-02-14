@@ -19,9 +19,11 @@ const ReviewForm = ({
   const [hoveredRating, setHoveredRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState(initialGuestEmail);
   const [orderId, setOrderId] = useState(initialOrderId);
-  const [isGuest, setIsGuest] = useState(!!(initialGuestEmail && initialOrderId) && !user);
+  const [isGuest, setIsGuest] = useState(!user); // Default to guest if not logged in
+  const [isVerifiedOption, setIsVerifiedOption] = useState(!!(initialGuestEmail && initialOrderId));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,11 +53,12 @@ const ReviewForm = ({
 
       // Add guest info if applicable
       if (isGuest) {
-        if (!guestEmail || !orderId) {
-          setError('Please enter your email and order ID');
+        if (!user && !guestName) {
+          setError('Please enter your name');
           setLoading(false);
           return;
         }
+        payload.guestName = guestName;
         payload.guestEmail = guestEmail;
         payload.orderId = orderId;
       }
@@ -68,7 +71,10 @@ const ReviewForm = ({
         config
       );
 
-      toast.success('✅ Review submitted! It will be published after admin approval.');
+      toast.success('✅ Review submitted successfully! Thank you for your feedback.', {
+        duration: 4000,
+        icon: '✨'
+      });
       onReviewSubmitted();
       onClose();
 
@@ -104,39 +110,37 @@ const ReviewForm = ({
 
         <form onSubmit={handleSubmit} className="p-8 space-y-6">
           {/* User Type Selection */}
-          {!user && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-2xl">
-              <label className="flex items-center space-x-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={isGuest}
-                  onChange={(e) => setIsGuest(e.target.checked)}
-                  className="w-5 h-5 rounded"
-                />
-                <span className="text-slate">I'm a guest reviewer (verify with order email & ID)</span>
-              </label>
-            </div>
-          )}
+
 
           {/* Guest Info */}
           {isGuest && (
             <div className="space-y-4 bg-slate-50 dark:bg-slate-700/20 p-4 rounded-2xl">
-              <input
-                type="email"
-                placeholder="Your email from the order"
-                value={guestEmail}
-                onChange={(e) => setGuestEmail(e.target.value)}
-                className="w-full px-4 py-2 border-2 border-slate/20 rounded-xl focus:border-maroon outline-none"
-                required={isGuest}
-              />
+              <p className="text-xs text-slate-500 font-medium mb-1">Guest Reviewer Details:</p>
               <input
                 type="text"
-                placeholder="Order ID"
-                value={orderId}
-                onChange={(e) => setOrderId(e.target.value)}
-                className="w-full px-4 py-2 border-2 border-slate/20 rounded-xl focus:border-maroon outline-none"
+                placeholder="Your Name *"
+                value={guestName}
+                onChange={(e) => setGuestName(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-slate/20 rounded-xl focus:border-maroon outline-none dark:bg-slate-800"
                 required={isGuest}
               />
+              <input
+                type="email"
+                placeholder="Email Address (Optional)"
+                value={guestEmail}
+                onChange={(e) => setGuestEmail(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-slate/20 rounded-xl focus:border-maroon outline-none dark:bg-slate-800"
+              />
+              <div className="pt-2 border-t border-slate-200 dark:border-slate-700">
+                <p className="text-[10px] text-slate-400 mb-2 uppercase tracking-wider font-bold">Verify Purchase (Optional):</p>
+                <input
+                  type="text"
+                  placeholder="Order ID (To get Verified Badge)"
+                  value={orderId}
+                  onChange={(e) => setOrderId(e.target.value)}
+                  className="w-full px-4 py-2 border-2 border-slate/20 rounded-xl focus:border-maroon outline-none dark:bg-slate-800"
+                />
+              </div>
             </div>
           )}
 
