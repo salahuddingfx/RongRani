@@ -95,7 +95,7 @@ const createTransporter = () => {
 // Helper to wrap content in a clean, responsive design (Daraz Inspired)
 const emailBaseTemplate = (title, content, preheader = '') => {
   const frontendUrl = process.env.FRONTEND_URL || 'https://rongrani.vercel.app';
-  const logoUrl = `${frontendUrl}/RongRani-Circle.png`; // Updated to correct logo file
+  const logoUrl = `${frontendUrl}/RongRani-Logo.png`; // Updated to correct logo file
   const primaryColor = '#8B2635'; // RongRani Maroon
   const secondaryColor = '#C5A059'; // Gold Accent
 

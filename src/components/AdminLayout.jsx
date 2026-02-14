@@ -53,7 +53,7 @@ const AdminLayout = () => {
               </button>
               <Link to="/admin/dashboard" className="flex items-center gap-2">
                 <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full border-2 border-white p-0 overflow-hidden shadow-lg bg-transparent">
-                  <img src="/RongRani-Circle.png" alt="Logo" className="w-full h-full object-contain" />
+                  <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h1 className="text-lg md:text-2xl font-black tracking-tight">RongRani</h1>
@@ -112,7 +112,7 @@ const AdminLayout = () => {
             <div className="lg:hidden sticky top-0 bg-maroon text-white p-4 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full border-2 border-white p-0 overflow-hidden shadow-sm bg-transparent">
-                  <img src="/RongRani-Circle.png" alt="Logo" className="w-full h-full object-contain" />
+                  <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h2 className="font-bold text-lg">RongRani</h2>

@@ -60,7 +60,7 @@ const Footer = () => {
                   role="img"
                   aria-label="RongRani Logo"
                 >
-                  <img src="/RongRani-Circle.png" alt="Logo" className="w-full h-full object-contain" />
+                  <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
                 </div>
                 <h3 className="text-2xl font-black text-white">
                   Rong<span className="text-pink-400">Rani</span>

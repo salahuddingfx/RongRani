@@ -42,7 +42,7 @@ const generateInvoice = async (order) => {
         doc.rect(0, 0, 595, 6).fill(colors.royalMaroon);
 
         // Header Logo
-        const logoPath = path.join(__dirname, '../../public/RongRani-Circle.png');
+        const logoPath = path.join(__dirname, '../../public/RongRani-Logo.png');
         if (fs.existsSync(logoPath)) {
           doc.image(logoPath, 40, 30, { width: 50 });
         }
@@ -102,7 +102,7 @@ const generateInvoice = async (order) => {
       doc.y = infoY;
 
       // Watermark (Background)
-      const logoPath = path.join(__dirname, '../../public/RongRani-Circle.png');
+      const logoPath = path.join(__dirname, '../../public/RongRani-Logo.png');
       if (fs.existsSync(logoPath)) {
         doc.save();
         doc.opacity(0.015);

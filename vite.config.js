@@ -21,17 +21,17 @@ export default defineConfig({
         orientation: 'portrait',
         icons: [
           {
-            src: '/RongRani-Circle.png',
+            src: '/RongRani-Logo.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: '/RongRani-Circle.png',
+            src: '/RongRani-Logo.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: '/RongRani-Circle.png',
+            src: '/RongRani-Logo.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'

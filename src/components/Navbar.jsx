@@ -279,7 +279,7 @@ const Navbar = () => {
                     role="presentation"
                   >
                     <img
-                      src="/RongRani-Circle.png"
+                      src="/RongRani-Logo.png"
                       alt="RongRani Logo"
                       className="w-full h-full object-contain"
                       width="48"

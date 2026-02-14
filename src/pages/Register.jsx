@@ -74,7 +74,7 @@ const Register = () => {
         <div className="flex justify-center">
           <Link to="/" className="flex flex-col items-center gap-2 group">
             <div className="w-16 h-16 flex items-center justify-center rounded-full border-2 border-maroon p-0 overflow-hidden shadow-xl group-hover:scale-110 transition-all duration-300 bg-transparent">
-              <img src="/RongRani-Circle.png" alt="Logo" className="w-full h-full object-contain" />
+              <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
             </div>
             <span className="text-2xl md:text-3xl font-black text-maroon tracking-tight">
               Rong<span className="text-slate-800">Rani</span>
