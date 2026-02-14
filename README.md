@@ -214,24 +214,24 @@ graph LR
 ### ✨ User Experience
 | **🏠 Home Page** | **🛍️ Shop Collection** |
 |:---:|:---:|
-| ![Home](screenshots/home.png) | ![Shop](screenshots/shop.png) |
+| ![Home](screenshots/Home_Pages.png) | ![Shop](screenshots/Shop_Pages.png) |
 | *Premium Landing & Hero* | *Dynamic Filters & Search* |
 
 | **⚡ Flash Sales** | **🔍 Order Tracking** |
 |:---:|:---:|
-| ![Flash Sale](screenshots/flash-sale.png) | ![Tracking](screenshots/tracking.png) |
+| ![Flash Sale](screenshots/Flash_Sale.png) | ![Tracking](screenshots/Order-Track_Pages.png) |
 | *Time-Limited Excitement* | *Live Status Updates* |
 
 ### 👨‍💼 Management Hub
 | **📊 Dashboard** | **📦 Products** |
 |:---:|:---:|
-| ![Admin](screenshots/admin-dashboard.png) | ![Admin Products](screenshots/admin-products.png) |
+| ![Admin](screenshots/Admin_Pages.png) | ![Admin Products](screenshots/Admin_Products_Pages.png) |
 | *Real-time Analytics* | *Inventory Control* |
 
 ### 📜 Brand Assets
 | **📑 Premium Invoice** | **📲 Mobile PWA** |
 |:---:|:---:|
-| ![Invoice](screenshots/invoice.png) | ![Mobile](screenshots/mobile.png) |
+| ![Invoice](screenshots/Invoice.png) | ![Mobile](screenshots/Mobile_PWA.jpeg) |
 | *Bespoke Manifest Design* | *App-like Experience* |
 
 </div>
