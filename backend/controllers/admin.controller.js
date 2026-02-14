@@ -316,12 +316,17 @@ const updateOrder = async (req, res) => {
       if (order.paymentStatus === 'paid') order.paymentStatus = 'pending';
     }
 
-    const updatedOrder = await order.save();
+    // If Delivered, set deliveredAt
+    if (order.orderStatus === 'delivered' && !order.deliveredAt) {
+      order.deliveredAt = new Date();
+    }
+
+    const updatedOrder = await order.save({ validateBeforeSave: false });
 
     // Emit event for real-time dashboard updates
     emitEvent(req, 'order:updated', updatedOrder);
 
-    // Check for status change
+    // Check for status change to trigger emails
     if (order.orderStatus !== previousStatus) {
       // Send status update email in BACKGROUND
       (async () => {
@@ -343,11 +348,9 @@ const updateOrder = async (req, res) => {
               order.trackingNumber,
               trackingQuery
             );
-            console.log('✅ Status update email sent successfully');
 
             // If Delivered, send Review Request
             if (order.orderStatus === 'delivered') {
-              console.log(`⭐ Sending review request to ${customerEmail}...`);
               await sendReviewRequest(
                 customerEmail,
                 customerName,
@@ -355,7 +358,6 @@ const updateOrder = async (req, res) => {
                 order.items,
                 trackingQuery
               );
-              console.log('✅ Review request email sent successfully');
             }
           }
         } catch (emailError) {
@@ -364,18 +366,6 @@ const updateOrder = async (req, res) => {
       })();
     }
 
-    if (order.orderStatus === 'delivered' && !order.deliveredAt) {
-      order.deliveredAt = new Date();
-    }
-
-    const updatedOrder = await order.save({ validateBeforeSave: false });
-    emitEvent(req, 'order:updated', {
-      _id: updatedOrder._id,
-      previousStatus,
-      orderStatus: updatedOrder.orderStatus,
-      paymentStatus: updatedOrder.paymentStatus,
-      updatedAt: updatedOrder.updatedAt,
-    });
     res.json(updatedOrder);
   } catch (error) {
     console.error('Error updating order:', error);
