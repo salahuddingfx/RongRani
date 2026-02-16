@@ -214,7 +214,7 @@ const Navbar = () => {
                     🚚 {t('free_shipping')}
                   </span>
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">
-                    ✨ Handcrafted with Love
+                    ✨ {t('handcrafted_love_top')}
                   </span>
                   {/* Seamless Loop Duplicate - Required for Infinite Effect */}
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold">
@@ -224,7 +224,7 @@ const Navbar = () => {
                     🚚 {t('free_shipping')}
                   </span>
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">
-                    ✨ Handcrafted with Love
+                    ✨ {t('handcrafted_love_top')}
                   </span>
                 </div>
               </div>
@@ -336,7 +336,7 @@ const Navbar = () => {
                         {isSearching ? (
                           <div className="p-8 text-center">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-maroon mx-auto mb-3"></div>
-                            <p className="text-xs text-slate-400 font-medium">Searching our magic collection...</p>
+                            <p className="text-xs text-slate-400 font-medium">{t('searching_magic')}</p>
                           </div>
                         ) : (
                           <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
@@ -344,7 +344,7 @@ const Navbar = () => {
                             {searchQuery.trim().length < 2 && (
                               <div className="p-4 border-b border-slate-50 dark:border-slate-700/50">
                                 <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] mb-3 flex items-center gap-2">
-                                  <TrendingUp className="w-3 h-3 text-maroon" /> Trending Now
+                                  <TrendingUp className="w-3 h-3 text-maroon" /> {t('trending_now')}
                                 </h5>
                                 <div className="flex flex-wrap gap-2">
                                   {popularSearches.map((term, i) => (
@@ -369,7 +369,7 @@ const Navbar = () => {
                               <div className="p-4 border-b border-slate-50 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-900/10">
                                 <div className="flex justify-between items-center mb-3">
                                   <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] flex items-center gap-2">
-                                    <Clock className="w-3 h-3" /> Recent Searches
+                                    <Clock className="w-3 h-3" /> {t('recent_searches')}
                                   </h5>
                                   <button
                                     onClick={() => {
@@ -378,7 +378,7 @@ const Navbar = () => {
                                     }}
                                     className="text-[10px] font-bold text-maroon underline underline-offset-2"
                                   >
-                                    Clear All
+                                    {t('clear_recent')}
                                   </button>
                                 </div>
                                 <div className="space-y-1">
@@ -427,7 +427,7 @@ const Navbar = () => {
                               {suggestions.length > 0 ? (
                                 <>
                                   <h5 className="px-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
-                                    Products Found
+                                    {t('products_found')}
                                   </h5>
                                   {suggestions.map((product) => (
                                     <Link
@@ -465,8 +465,8 @@ const Navbar = () => {
                                     <div className="w-16 h-16 bg-slate-50 dark:bg-slate-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
                                       <Search className="w-8 h-8 text-slate-300" />
                                     </div>
-                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-1">No matches found</p>
-                                    <p className="text-xs text-slate-500">Try searching for gifts, combos or boxes</p>
+                                    <p className="text-sm font-bold text-slate-800 dark:text-slate-200 mb-1">{t('no_products_found_msg')}</p>
+                                    <p className="text-xs text-slate-500">{t('try_adjust_filters')}</p>
                                   </div>
                                 )
                               )}
@@ -478,7 +478,7 @@ const Navbar = () => {
                                 className="flex items-center justify-center gap-2 p-4 bg-slate-50/50 dark:bg-slate-900/30 text-sm font-black text-maroon dark:text-pink-400 border-t border-slate-50 dark:border-slate-700/50 hover:bg-maroon hover:text-white dark:hover:bg-maroon transition-all"
                                 onClick={() => setShowSuggestions(false)}
                               >
-                                View All {suggestions.length > 5 ? 'Result' : 'Results'} 🚀
+                                {t('view_all_results')}
                               </Link>
                             )}
                           </div>
@@ -658,7 +658,7 @@ const Navbar = () => {
                           className="block p-3 text-center text-sm font-bold text-maroon dark:text-pink-400 border-t border-slate-50 dark:border-slate-700/50"
                           onClick={() => setShowSuggestions(false)}
                         >
-                          View All Result 🚀
+                          {t('view_all_results')}
                         </Link>
                       </div>
                     ) : (
@@ -746,7 +746,7 @@ const Navbar = () => {
               <div className="text-center text-xs text-slate-400 pt-4 space-y-2">
                 <div className="flex justify-center space-x-4">
                   <button onClick={toggleLanguage} className="text-xs font-bold uppercase p-2 border rounded hover:bg-slate-50">
-                    {language === 'en' ? 'Switch to Bangla' : 'Switch to English'}
+                    {language === 'en' ? t('switch_to_bn') : t('switch_to_en')}
                   </button>
                 </div>
                 <p className="flex items-center justify-center"><Phone className="w-3 h-3 mr-1" /> +880 1851-075537</p>

@@ -53,7 +53,7 @@ const Seo = ({ title, description, keywords, path, image, noIndex = false, schem
     ? (Array.isArray(keywords) ? keywords.join(', ') : keywords)
     : DEFAULT_KEYWORDS.join(', ');
   const imageUrl =
-    resolveImageUrl(baseUrl, image) || normalizeUrl(baseUrl, '/RongRani-Logo.png');
+    resolveImageUrl(baseUrl, image) || normalizeUrl(baseUrl, '/RongRani-Circle.png');
 
   const htmlLang = language === 'bn' ? 'bn' : 'en';
   const ogLocale = language === 'bn' ? 'bn_BD' : 'en_BD';

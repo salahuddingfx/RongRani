@@ -22,7 +22,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [hotOffer, setHotOffer] = useState(null);
   const { socket } = useSocket() || {};
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const categoryColorMap = {
     'bg-pink-600': '#DB2777',
@@ -162,7 +162,7 @@ const Home = () => {
             <div className="flex items-center justify-center space-x-2 mb-6 animate-fade-in-up">
               <Sparkles className="h-5 w-5 text-maroon" />
               <span className="text-sm font-bold text-maroon uppercase tracking-wider">
-                {t('language') === 'bn' ? 'প্রিমিয়াম হস্তনির্মিত কালেকশন' : 'Premium Handcrafted Collection'}
+                {t('premium_collection')}
               </span>
             </div>
 
@@ -172,8 +172,8 @@ const Home = () => {
               <span className="text-maroon">
                 <TypingEffect
                   texts={window.innerWidth < 768
-                    ? [t('language') === 'bn' ? 'ভালোবাসা ও রোমান্স ❤️' : 'Love & Romance ❤️']
-                    : (t('language') === 'bn'
+                    ? [language === 'bn' ? 'ভালোবাসা ও রোমান্স ❤️' : 'Love & Romance ❤️']
+                    : (language === 'bn'
                       ? ['ভালোবাসা ও রোমান্স ❤️', 'বিশেষ মুহূর্ত ✨', 'হৃদয়স্পর্শী সারপ্রাইজ 🎁', 'হস্তনির্মিত অনন্য উপহার 🎨', 'প্রিয়জনের স্মৃতির পাতায় 📸', 'সেরা কোয়ালিটি গ্যারান্টি ⭐']
                       : ['Love & Romance ❤️', 'Special Moments ✨', 'Heartfelt Surprises 🎁', 'Unique Handmade Gifts 🎨', 'Memories That Last 📸', 'Premium Quality Guaranteed ⭐']
                     )}
@@ -195,7 +195,7 @@ const Home = () => {
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
               </Link>
               <Link to="/about" className="btn-secondary px-8 py-4 text-lg">
-                {t('language') === 'bn' ? 'আমাদের গল্প' : 'Our Story'}
+                {t('our_story')}
               </Link>
             </div>
 
@@ -205,13 +205,13 @@ const Home = () => {
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
                   20+
                 </div>
-                <div className="text-sm text-charcoal-light font-medium">Products</div>
+                <div className="text-sm text-charcoal-light font-medium">{t('products_count')}</div>
               </div>
               <div className="text-center group cursor-pointer">
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
                   05+
                 </div>
-                <div className="text-sm text-charcoal-light font-medium">Artisans</div>
+                <div className="text-sm text-charcoal-light font-medium">{t('artisans_count')}</div>
               </div>
               <div className="text-center group cursor-pointer">
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
@@ -219,14 +219,14 @@ const Home = () => {
                 </div>
                 <div className="text-sm text-charcoal-light flex items-center justify-center space-x-1 font-medium">
                   <Star className="h-4 w-4 fill-current text-gold" />
-                  <span>Rating</span>
+                  <span>{t('rating')}</span>
                 </div>
               </div>
               <div className="text-center group cursor-pointer">
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
                   100+
                 </div>
-                <div className="text-sm text-charcoal-light font-medium">Customers</div>
+                <div className="text-sm text-charcoal-light font-medium">{t('customers_count')}</div>
               </div>
             </div>
           </div>
@@ -253,7 +253,7 @@ const Home = () => {
               {t('shop_by_category')}
             </h2>
             <p className="text-xs sm:text-base md:text-lg text-charcoal-light max-w-2xl mx-auto px-4">
-              {t('language') === 'bn' ? 'আমাদের বৈচিত্র্যময় হস্তনির্মিত পণ্য দেখুন' : 'Explore our diverse range of handcrafted products'}
+              {t('explore_diverse')}
             </p>
           </div>
 
@@ -287,9 +287,9 @@ const Home = () => {
                       <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                         <Icon className="h-5 w-5 text-white" />
                       </div>
-                      <h3 className="text-sm font-bold text-white truncate">{category.name}</h3>
+                      <h3 className="text-sm font-bold text-white truncate">{t('cat_' + category.name.toLowerCase().replace(/\s+/g, '_'))}</h3>
                       <p className="text-xs text-white/80 mt-1 line-clamp-2">
-                        {category.description?.substring(0, 40) || 'Explore curated gifts'}
+                        {category.description ? (language === 'bn' && category.descriptionBn ? category.descriptionBn : category.description) : t('explore_curated')}
                       </p>
                       <p className="text-[11px] text-white/80 mt-2">
                         {category.productCount ? `${category.productCount} items` : 'Tap to browse'}
@@ -303,8 +303,8 @@ const Home = () => {
                   <div className="bg-white/20 w-10 h-10 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
                     <Shirt className="h-5 w-5 text-white" />
                   </div>
-                  <h3 className="text-sm font-bold text-white">All Products</h3>
-                  <p className="text-xs text-white/80 mt-1">Browse everything</p>
+                  <h3 className="text-sm font-bold text-white">{t('all_products')}</h3>
+                  <p className="text-xs text-white/80 mt-1">{t('browse_everything')}</p>
                 </div>
               </Link>
             </div>
@@ -340,13 +340,13 @@ const Home = () => {
                     <div className="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                       <Icon className="h-6 w-6 text-white" />
                     </div>
-                    <h3 className="text-lg font-bold text-white mb-2">{category.name}</h3>
+                    <h3 className="text-lg font-bold text-white mb-2">{t('cat_' + category.name.toLowerCase().replace(/\s+/g, '_'))}</h3>
                     <p className="text-white/80 text-sm mb-4">
                       {category.description?.substring(0, 60) || 'Explore the collection'}
                     </p>
                     <div className="flex items-center justify-between text-xs text-white/80">
                       <span>{category.productCount ? `${category.productCount} items` : 'Tap to browse'}</span>
-                      <span className="font-semibold">Explore →</span>
+                      <span className="font-semibold">{t('explore_more')}</span>
                     </div>
                   </div>
                 </Link>
@@ -361,8 +361,8 @@ const Home = () => {
                 <div className="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                   <Shirt className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2">{t('language') === 'bn' ? 'সব পণ্য' : 'All Products'}</h3>
-                <p className="text-white/80 text-sm">{t('language') === 'bn' ? 'সম্পূর্ণ ক্যাটালগ দেখুন' : 'Browse the full catalog'}</p>
+                <h3 className="text-lg font-bold text-white mb-2">{t('all_products')}</h3>
+                <p className="text-white/80 text-sm">{t('browse_everything')}</p>
               </div>
             </Link>
           </div>
@@ -412,7 +412,7 @@ const Home = () => {
               {t('featured_products')}
             </h2>
             <p className="text-charcoal-light text-sm sm:text-lg max-w-2xl mx-auto px-4">
-              {t('language') === 'bn' ? 'আমাদের সেরা কারিগরদের হাতে বাছাই করা সংগ্রহ, প্রতিটি পণ্য ভালোবাসা এবং ঐতিহ্য দিয়ে তৈরি' : 'Handpicked treasures from our finest artisans, each piece crafted with love and tradition'}
+              {t('handpicked_treasures')}
             </p>
           </div>
 
@@ -445,7 +445,7 @@ const Home = () => {
 
           <div className="text-center mt-12">
             <Link to="/shop" className="btn-secondary px-8 py-4 text-lg">
-              View All Products
+              {t('view_all_products')}
             </Link>
           </div>
         </div>
@@ -462,34 +462,33 @@ const Home = () => {
             <div className="glass-card p-8 md:p-12 text-center">
               <Award className="h-16 w-16 text-maroon mx-auto mb-6" />
               <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-4">
-                Why Choose RongRani?
+                {t('why_choose_us')}
               </h2>
               <p className="text-charcoal-light text-lg mb-8 max-w-2xl mx-auto">
-                We're more than just an online store. We're a platform that connects you with skilled artisans
-                and preserves traditional craftsmanship for future generations.
+                {t('platform_connects')}
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
                 <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
                   <Users className="h-12 w-12 text-maroon mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-charcoal mb-2">Authentic Artisans</h3>
-                  <p className="text-charcoal-light">Direct from master craftsmen with decades of experience</p>
+                  <h3 className="text-xl font-semibold text-charcoal mb-2">{t('auth_artisans')}</h3>
+                  <p className="text-charcoal-light">{t('auth_artisans_desc')}</p>
                 </div>
                 <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
                   <Award className="h-12 w-12 text-maroon mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-charcoal mb-2">Quality Guarantee</h3>
-                  <p className="text-charcoal-light">Every piece is inspected and comes with our quality promise</p>
+                  <h3 className="text-xl font-semibold text-charcoal mb-2">{t('quality_guarantee')}</h3>
+                  <p className="text-charcoal-light">{t('quality_guarantee_desc')}</p>
                 </div>
                 <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
                   <Sparkles className="h-12 w-12 text-maroon mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-charcoal mb-2">Cultural Heritage</h3>
-                  <p className="text-charcoal-light">Supporting traditional crafts and cultural preservation</p>
+                  <h3 className="text-xl font-semibold text-charcoal mb-2">{t('cultural_heritage')}</h3>
+                  <p className="text-charcoal-light">{t('cultural_heritage_desc')}</p>
                 </div>
               </div>
 
               <div className="flex justify-center mt-6">
                 <Link to="/about" className="btn-primary px-10 py-4 text-lg">
-                  Learn More About Us
+                  {t('learn_more')}
                 </Link>
               </div>
             </div>

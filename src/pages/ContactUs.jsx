@@ -199,13 +199,13 @@ const ContactUs = () => {
                 Stay updated with our latest gift collections and special offers
               </p>
               <div className="flex space-x-4">
-                <a href="https://facebook.com/rongrani" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+                <a href="https://facebook.com/rongraniofficial" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
                   <Facebook className="h-6 w-6" />
                 </a>
-                <a href="https://instagram.com/rongrani" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+                <a href="https://instagram.com/rongraniofficial" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
                   <Instagram className="h-6 w-6" />
                 </a>
-                <a href="https://twitter.com/rongrani" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+                <a href="https://twitter.com/rongraniofficial" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
                   <Twitter className="h-6 w-6" />
                 </a>
               </div>

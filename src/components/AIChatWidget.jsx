@@ -6,7 +6,7 @@ const AIChatWidget = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! 💝 Welcome to RongRani! I can help you find the perfect gift. What occasion are you shopping for?",
+      text: "Hello! 💝 Welcome to RongRani™! I can help you find the perfect gift. What occasion are you shopping for?",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -143,8 +143,8 @@ const AIChatWidget = () => {
               >
                 <div
                   className={`max-w-[85%] rounded-2xl px-3 py-2 sm:px-4 sm:py-3 ${message.sender === 'user'
-                      ? 'bg-maroon text-white'
-                      : 'bg-white text-charcoal shadow-md'
+                    ? 'bg-maroon text-white'
+                    : 'bg-white text-charcoal shadow-md'
                     }`}
                 >
                   <p className="text-xs sm:text-sm whitespace-pre-wrap">{message.text}</p>

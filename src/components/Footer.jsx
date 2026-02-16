@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Clock, Gift, Heart, Package, Shield } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Clock, Package, Shield } from 'lucide-react';
 import DeveloperProfile from './DeveloperProfile';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -8,7 +8,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [showDevProfile, setShowDevProfile] = useState(false);
   const [bdTime, setBdTime] = useState('');
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   useEffect(() => {
     const updateTime = () => {
@@ -47,173 +47,181 @@ const Footer = () => {
 
   return (
     <>
-      <footer className="bg-slate-900 border-t-4 border-maroon mt-20">
+      <footer className="footer-gradient bg-slate-900 border-t-4 border-maroon mt-20 relative overflow-hidden">
+        {/* Subtle Background Pattern */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.1) 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+        </div>
+
         {/* Main Footer Content */}
-        <div className="container mx-auto px-4 py-12 md:py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
+        <div className="container mx-auto px-4 py-16 md:py-20 relative z-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 xl:gap-16">
 
             {/* Brand Section */}
-            <div className="lg:col-span-1">
-              <div className="flex items-center gap-2 mb-6">
+            <div className="space-y-8">
+              <div className="flex items-center gap-3">
                 <div
-                  className="w-14 h-14 flex items-center justify-center rounded-full border-2 border-maroon p-0 overflow-hidden shadow-lg bg-transparent"
+                  className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-transform hover:rotate-3 duration-500 bg-white p-0 relative group"
                   role="img"
-                  aria-label="RongRani Logo"
+                  aria-label="RongRani™ Logo"
                 >
-                  <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
+                  <img src="/RongRani-Circle.png" alt="Logo" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                 </div>
-                <h3 className="text-2xl font-black text-white">
-                  Rong<span className="text-pink-400">Rani</span>
-                </h3>
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter flex items-center">
+                    Rong<span className="text-pink-400">Rani</span>
+                    <span className="text-[10px] bg-pink-400/20 text-pink-300 px-1.5 py-0.5 rounded-md ml-2 border border-pink-400/30 uppercase tracking-widest font-bold">TM</span>
+                  </h3>
+                  <p className="text-slate-500 text-[10px] uppercase tracking-[0.2em] font-bold mt-1">Authentic Surprises</p>
+                </div>
               </div>
-              <p className="text-slate-300 mb-6 leading-relaxed text-sm">
-                {t('language') === 'bn'
-                  ? 'প্রতিটি বিশেষ উপলক্ষের জন্য সুন্দর উপহার, রোমান্টিক কম্বো এবং হৃদয়স্পর্শী সারপ্রাইজের গন্তব্য।'
-                  : 'Your destination for beautiful gifts, romantic combos, and heartfelt surprises for every special occasion.'}
+              <p className="text-slate-400 leading-relaxed text-sm max-w-xs">
+                {t('footer_desc')}
               </p>
 
               {/* Social Links */}
-              <div className="flex space-x-4">
-                <a href="https://facebook.com/rongrani" className="w-10 h-10 bg-white/10 hover:bg-maroon rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Facebook">
-                  <Facebook className="h-5 w-5" />
+              <div className="flex items-center gap-4">
+                <a href="https://facebook.com/rongraniofficial" className="w-11 h-11 bg-white/5 hover:bg-maroon border border-white/10 rounded-xl flex items-center justify-center text-white transition-all shadow-lg hover:shadow-maroon/20 hover:scale-110 group" aria-label="Follow us on Facebook">
+                  <Facebook className="h-5 w-5 transition-transform group-hover:rotate-6" />
                 </a>
-                <a href="https://instagram.com/rongrani" className="w-10 h-10 bg-white/10 hover:bg-pink-600 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Instagram">
-                  <Instagram className="h-5 w-5" />
+                <a href="https://instagram.com/rongraniofficial" className="w-11 h-11 bg-white/5 hover:bg-gradient-to-tr from-yellow-500 to-purple-600 border border-white/10 rounded-xl flex items-center justify-center text-white transition-all shadow-lg hover:shadow-purple-500/20 hover:scale-110 group" aria-label="Follow us on Instagram">
+                  <Instagram className="h-5 w-5 transition-transform group-hover:rotate-6" />
                 </a>
-                <a href="https://twitter.com/rongrani" className="w-10 h-10 bg-white/10 hover:bg-blue-500 rounded-full flex items-center justify-center text-white transition-all hover:scale-110" aria-label="Follow us on Twitter">
-                  <Twitter className="h-5 w-5" />
+                <a href="https://twitter.com/rongraniofficial" className="w-11 h-11 bg-white/5 hover:bg-blue-500 border border-white/10 rounded-xl flex items-center justify-center text-white transition-all shadow-lg hover:shadow-blue-500/20 hover:scale-110 group" aria-label="Follow us on Twitter">
+                  <Twitter className="h-5 w-5 transition-transform group-hover:rotate-6" />
                 </a>
               </div>
             </div>
 
             {/* Quick Links */}
             <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Package className="w-5 h-5 text-pink-400" />
+              <h4 className="text-lg font-black text-white mb-8 relative inline-block">
                 {t('quick_links')}
+                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-pink-400 rounded-full"></span>
               </h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link to="/shop" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('shop')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/about" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('about')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('contact')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/wishlist" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('wishlist')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/reviews" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('customer_reviews')}
-                  </Link>
-                </li>
+              <ul className="space-y-4">
+                {[
+                  { to: '/shop', label: t('shop') },
+                  { to: '/about', label: t('about') },
+                  { to: '/contact', label: t('contact') },
+                  { to: '/wishlist', label: t('wishlist') },
+                  { to: '/reviews', label: t('customer_reviews') }
+                ].map((link, idx) => (
+                  <li key={idx}>
+                    <Link to={link.to} className="text-slate-400 hover:text-pink-400 transition-all flex items-center gap-3 group translate-x-0 hover:translate-x-2">
+                      <div className="w-1.5 h-1.5 bg-pink-400/40 rounded-full group-hover:bg-pink-400 group-hover:scale-150 transition-all"></div>
+                      <span className="font-semibold">{link.label}</span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Customer Care */}
             <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-pink-400" />
+              <h4 className="text-lg font-black text-white mb-8 relative inline-block">
                 {t('customer_care')}
+                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-pink-400 rounded-full"></span>
               </h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link to="/my-orders" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('my_orders')}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/track" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('language') === 'bn' ? 'অর্ডার ট্র্যাক করুন' : 'Track Order'}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/help" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('language') === 'bn' ? 'সাহায্য কেন্দ্র' : 'Help Center'}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/privacy-policy" className="text-slate-300 hover:text-pink-400 transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 bg-pink-400 rounded-full group-hover:w-2 group-hover:h-2 transition-all"></span>
-                    {t('language') === 'bn' ? 'গোপনীয়তা নীতি' : 'Privacy Policy'}
-                  </Link>
-                </li>
+              <ul className="space-y-4">
+                {[
+                  { to: '/my-orders', label: t('my_orders') },
+                  { to: '/track', label: t('track_order') },
+                  { to: '/help', label: t('help_center') },
+                  { to: '/privacy-policy', label: t('privacy_policy') }
+                ].map((link, idx) => (
+                  <li key={idx}>
+                    <Link to={link.to} className="text-slate-400 hover:text-pink-400 transition-all flex items-center gap-3 group translate-x-0 hover:translate-x-2">
+                      <div className="w-1.5 h-1.5 bg-pink-400/40 rounded-full group-hover:bg-pink-400 group-hover:scale-150 transition-all"></div>
+                      <span className="font-semibold">{link.label}</span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Contact Info */}
-            <div>
-              <h4 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-                <Mail className="w-5 h-5 text-pink-400" />
-                {t('language') === 'bn' ? 'যোগাযোগের তথ্য' : 'Contact Info'}
+            <div className="space-y-6">
+              <h4 className="text-lg font-black text-white mb-8 relative inline-block">
+                {t('contact_info_label')}
+                <span className="absolute -bottom-2 left-0 w-12 h-1 bg-pink-400 rounded-full"></span>
               </h4>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3 text-slate-300 hover:text-pink-400 transition-colors group">
-                  <Phone className="h-5 w-5 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm">+880 1851-075537</span>
-                </div>
-                <div className="flex items-start gap-3 text-slate-300 hover:text-pink-400 transition-colors group">
-                  <Mail className="h-5 w-5 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm break-all">info.rongrani@gmail.com</span>
-                </div>
-                <div className="flex items-start gap-3 text-slate-300 hover:text-pink-400 transition-colors group">
-                  <MapPin className="h-5 w-5 mt-0.5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  <span className="text-sm">Cox's Bazar, Bangladesh-4700</span>
+              <div className="space-y-5">
+                <a href="tel:+8801851075537" className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-pink-400/30 hover:bg-white/10 transition-all group">
+                  <div className="w-10 h-10 bg-maroon/20 rounded-xl flex items-center justify-center text-pink-400 group-hover:scale-110 transition-transform">
+                    <Phone className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Call Us</p>
+                    <span className="text-sm text-slate-200 font-bold">+880 1851-075537</span>
+                  </div>
+                </a>
+                <a href="mailto:info.rongrani@gmail.com" className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-pink-400/30 hover:bg-white/10 transition-all group">
+                  <div className="w-10 h-10 bg-maroon/20 rounded-xl flex items-center justify-center text-pink-400 group-hover:scale-110 transition-transform">
+                    <Mail className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Email Us</p>
+                    <span className="text-sm text-slate-200 font-bold break-all">info.rongrani@gmail.com</span>
+                  </div>
+                </a>
+                <div className="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 group">
+                  <div className="w-10 h-10 bg-maroon/20 rounded-xl flex items-center justify-center text-pink-400 group-hover:scale-110 transition-transform">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Location</p>
+                    <span className="text-sm text-slate-200 font-bold">Cox's Bazar, Bangladesh-4700</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Bottom Section */}
-          <div className="border-t border-white/10 mt-12 pt-8">
-            {/* BD Local Time */}
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center space-x-3 bg-maroon/20 backdrop-blur-sm px-6 py-3 rounded-full border border-pink-400/20">
-                <Clock className="h-5 w-5 text-pink-400 animate-pulse" />
+          <div className="mt-20 pt-10 border-t border-white/10">
+            <div className="flex flex-col xl:flex-row justify-between items-center gap-10">
+              {/* BD Local Time Widget */}
+              <div className="flex items-center gap-4 bg-white/[0.03] backdrop-blur-md px-6 py-4 rounded-3xl border border-white/5 shadow-2xl">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-pink-400/20 blur-xl rounded-full scale-150 animate-pulse"></div>
+                  <Clock className="h-7 w-7 text-pink-400 relative z-10" />
+                </div>
                 <div>
-                  <p className="text-white font-semibold text-base">{bdTime}</p>
-                  <p className="text-slate-400 text-xs">Bangladesh Local Time (GMT+6)</p>
+                  <p className="text-white font-black text-lg tracking-tight">{bdTime}</p>
+                  <p className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">{language === 'bn' ? 'বাংলাদেশ সময়' : 'Bangladesh Local Time'} (GMT+6)</p>
                 </div>
               </div>
-            </div>
 
-            {/* Copyright & Developer */}
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-              <p className="text-slate-400">
-                © {currentYear} RongRani. {t('language') === 'bn' ? 'সর্বস্বত্ব সংরক্ষিত।' : 'All rights reserved.'}
-              </p>
-              <div className="text-center md:text-right">
-                <p className="text-slate-400">
-                  {t('language') === 'bn' ? 'ভালোবাসা দিয়ে তৈরি' : 'Developed with'} ❤️ {t('language') === 'bn' ? 'দ্বারা' : 'by'}{' '}
-                  <button
-                    onClick={() => setShowDevProfile(true)}
-                    className="text-pink-400 hover:text-pink-300 transition-all font-bold underline cursor-pointer relative z-[10] hover:opacity-80 active:scale-95 inline-block"
-                  >
-                    Salah Uddin Kader
-                  </button>
-                </p>
-                <p className="text-slate-500 text-xs mt-1">
-                  Full Stack Developer | MERN Stack Expert
-                </p>
+              {/* Copyright & Info */}
+              <div className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
+                <div className="space-y-1">
+                  <p className="text-slate-300 font-bold">
+                    © {currentYear} RongRani™
+                  </p>
+                  <p className="text-slate-500 text-xs tracking-wide uppercase font-semibold">
+                    {t('all_rights_reserved')}
+                  </p>
+                </div>
+
+                <div className="h-10 w-[1px] bg-white/10 hidden md:block"></div>
+
+                <div className="space-y-1">
+                  <p className="text-slate-400 font-medium">
+                    {t('developed_with')} ❤️ {t('by_developer')}{' '}
+                    <button
+                      onClick={() => setShowDevProfile(true)}
+                      className="text-pink-400 hover:text-white transition-all font-black underline decoration-pink-400/30 underline-offset-4 cursor-pointer relative z-[10]"
+                    >
+                      Salah Uddin Kader
+                    </button>
+                  </p>
+                  <div className="flex items-center justify-center md:justify-start gap-3 mt-1">
+                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">Full Stack Developer</span>
+                    <span className="w-1 h-1 bg-white/20 rounded-full"></span>
+                    <span className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">MERN Specialist</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

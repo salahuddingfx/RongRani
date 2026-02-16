@@ -5,11 +5,13 @@ import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useDeliveryCalculation } from '../hooks/useDeliveryCalculation';
 import RecentlyViewed from '../components/RecentlyViewed';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Cart = () => {
   const { cartItems, totalItems, totalPrice, updateQuantity, removeFromCart } = useCart();
   const { isAuthenticated } = useAuth();
   const { delivery, loading: deliveryLoading, fetchDelivery } = useDeliveryCalculation();
+  const { t } = useLanguage();
 
   // Fetch delivery estimate for display (using default Cox's Bazar area)
   useEffect(() => {
@@ -33,17 +35,17 @@ const Cart = () => {
             <ShoppingBag className="h-12 w-12 text-slate" />
           </div>
           <h2 className="text-3xl font-bold text-maroon mb-4">
-            Your Cart is Empty
+            {t('empty_cart')}
           </h2>
           <p className="text-slate text-lg mb-8">
-            Discover beautiful handcrafted treasures and add them to your cart
+            {t('empty_cart_msg')}
           </p>
           <Link
             to="/shop"
             className="btn-primary px-8 py-4 rounded-full font-semibold text-lg inline-flex items-center space-x-2 hover:scale-105 transition-transform"
           >
             <ShoppingBag className="h-5 w-5" />
-            <span>Start Shopping</span>
+            <span>{t('start_shopping')}</span>
           </Link>
         </div>
       </div>
@@ -59,15 +61,15 @@ const Cart = () => {
             <div className="flex items-center justify-center space-x-8 text-sm">
               <div className="flex items-center space-x-2">
                 <span className="text-gold">⭐</span>
-                <span>You're a Lifetime Customer!</span>
+                <span>{t('lifetime_customer')}</span>
               </div>
               <div className="hidden md:flex items-center space-x-2">
                 <span>🚚</span>
-                <span>Free Shipping Above ৳2500</span>
+                <span>{t('free_shipping_calc').replace('{amount}', '2500')}</span>
               </div>
               <div className="hidden md:flex items-center space-x-2">
                 <span>💝</span>
-                <span>Exclusive Member Discounts</span>
+                <span>{t('exclusive_discounts')}</span>
               </div>
             </div>
           </div>
@@ -78,10 +80,10 @@ const Cart = () => {
       <div className="hero-section py-16 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold text-maroon mb-6">
-            Your Shopping Cart
+            {t('your_cart_title')}
           </h1>
           <p className="text-xl text-slate max-w-2xl mx-auto">
-            Review your beautiful selections before checkout
+            {t('review_selections')}
           </p>
         </div>
       </div>
@@ -91,12 +93,12 @@ const Cart = () => {
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-maroon">Cart Items ({totalItems})</h2>
+              <h2 className="text-2xl font-bold text-maroon">{t('items_in_cart').replace('{count}', totalItems)}</h2>
               <Link
                 to="/shop"
                 className="text-slate hover:text-maroon transition-colors underline font-medium"
               >
-                Continue Shopping
+                {t('continue_shopping')}
               </Link>
             </div>
 
@@ -220,15 +222,15 @@ const Cart = () => {
           <div className="space-y-4 lg:space-y-6">
             {/* Order Summary Card */}
             <div className="card p-4 sm:p-6 lg:sticky lg:top-24">
-              <h2 className="text-xl sm:text-2xl font-bold text-maroon mb-4 sm:mb-6">Order Summary</h2>
+              <h2 className="text-xl sm:text-2xl font-bold text-maroon mb-4 sm:mb-6">{t('order_summary')}</h2>
 
               {/* Free Shipping Progress Bar */}
               <div className="mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
                     {totalPrice >= 2500
-                      ? "🎉 You've unlocked FREE Shipping!"
-                      : `৳${(2500 - totalPrice).toLocaleString()} more for FREE shipping`}
+                      ? t('unlocked_free_shipping')
+                      : t('more_for_free_shipping').replace('{amount}', (2500 - totalPrice).toLocaleString())}
                   </span>
                   <Truck className={`w-4 h-4 ${totalPrice >= 2500 ? 'text-green-500' : 'text-slate-400'}`} />
                 </div>

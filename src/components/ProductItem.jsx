@@ -21,7 +21,7 @@ const ProductItem = ({ product }) => {
         addToCart(product);
     };
 
-    const productName = product.name || 'Unnamed Product';
+    const productName = product.name || t('unnamed_product');
     const productPrice = product.price || 0;
     const productImages = product.images || [];
     const firstImage = productImages[0];
@@ -145,8 +145,8 @@ const ProductItem = ({ product }) => {
                                 <div className="w-1 h-1 rounded-full bg-slate-300"></div>
                                 <span className="text-[9px] font-medium text-slate-500">
                                     {product.salesCount > 0
-                                        ? `${product.salesCount >= 1000 ? (product.salesCount / 1000).toFixed(1) + 'k' : product.salesCount}+ purchased`
-                                        : 'Newly Launched'
+                                        ? t('purchased_count').replace('{count}', product.salesCount >= 1000 ? (product.salesCount / 1000).toFixed(1) + 'k' : product.salesCount)
+                                        : t('newly_launched')
                                     }
                                 </span>
                             </div>

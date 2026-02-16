@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
 import ReviewForm from '../components/ReviewForm';
 import ProductItem from '../components/ProductItem';
+import { useLanguage } from '../contexts/LanguageContext';
 
 import Product3DViewer from '../components/Product3DViewer';
 import SocialShare from '../components/SocialShare';
@@ -17,6 +18,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t, language } = useLanguage();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -208,7 +210,7 @@ const ProductDetail = () => {
         />
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-maroon mx-auto mb-4"></div>
-          <p className="text-slate">Loading beautiful product...</p>
+          <p className="text-slate">{t('loading_beautiful')}</p>
         </div>
       </div>
     );
@@ -227,8 +229,8 @@ const ProductDetail = () => {
           <div className="w-24 h-24 bg-slate/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <ShoppingCart className="h-12 w-12 text-slate" />
           </div>
-          <h2 className="text-2xl font-bold text-maroon mb-2">Product Not Found</h2>
-          <p className="text-slate">The product you're looking for doesn't exist.</p>
+          <h2 className="text-2xl font-bold text-maroon mb-2">{t('product_not_found')}</h2>
+          <p className="text-slate">{t('product_not_found_msg')}</p>
         </div>
       </div>
     );
@@ -251,9 +253,9 @@ const ProductDetail = () => {
       <div className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 sticky top-[72px] sm:top-[80px] md:top-[88px] z-40">
         <div className="container mx-auto px-4 py-4">
           <nav className="text-sm flex items-center space-x-2">
-            <Link to="/" className="text-slate hover:text-maroon transition-colors font-medium">Home</Link>
+            <Link to="/" className="text-slate hover:text-maroon transition-colors font-medium">{t('home')}</Link>
             <span className="text-slate/40">/</span>
-            <Link to="/shop" className="text-slate hover:text-maroon transition-colors font-medium">Shop</Link>
+            <Link to="/shop" className="text-slate hover:text-maroon transition-colors font-medium">{t('shop')}</Link>
             {categoryLabel && (
               <>
                 <span className="text-slate/40">/</span>
@@ -261,7 +263,7 @@ const ProductDetail = () => {
                   to={`/shop?category=${categoryParam}`}
                   className="text-slate hover:text-maroon transition-colors capitalize font-medium"
                 >
-                  {categoryLabel}
+                  {t('cat_' + categoryLabel.toLowerCase().replace(/\s+/g, '_'))}
                 </Link>
               </>
             )}
@@ -292,7 +294,7 @@ const ProductDetail = () => {
               {/* Category Badge */}
               <div className="inline-flex items-center space-x-2 bg-maroon/10 text-maroon px-4 py-1.5 rounded-full text-sm font-bold mb-4">
                 <Package className="h-4 w-4" />
-                <span className="capitalize">{product.category}</span>
+                <span className="capitalize">{t('cat_' + product.category.toLowerCase().replace(/\s+/g, '_'))}</span>
               </div>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-maroon mb-5 leading-tight">
@@ -329,7 +331,7 @@ const ProductDetail = () => {
                       {product.rating?.toFixed(1) || '5.0'}
                     </span>
                     <span className="text-slate/60 font-medium">
-                      ({product.reviewCount || 0} reviews)
+                      {t('reviews_count_msg').replace('{count}', product.reviewCount || 0)}
                     </span>
                   </div>
                 </div>
@@ -339,8 +341,8 @@ const ProductDetail = () => {
                   <TrendingUp className="w-4 h-4" />
                   <span className="text-sm font-bold">
                     {product.salesCount > 0
-                      ? `${product.salesCount >= 1000 ? (product.salesCount / 1000).toFixed(1) + 'k' : product.salesCount}+ items sold`
-                      : 'Hot New Arrival'
+                      ? t('items_sold').replace('{count}', product.salesCount >= 1000 ? (product.salesCount / 1000).toFixed(1) + 'k' : product.salesCount)
+                      : t('hot_new_arrival')
                     }
                   </span>
                 </div>
@@ -358,12 +360,12 @@ const ProductDetail = () => {
                         ৳{product.originalPrice}
                       </span>
                       <span className="bg-green-500 text-white px-5 py-2.5 rounded-full text-base font-bold shadow-lg animate-pulse">
-                        Save ৳{product.originalPrice - product.price}
+                        {t('save_amount').replace('{amount}', product.originalPrice - product.price)}
                       </span>
                     </>
                   )}
                 </div>
-                <p className="text-maroon/60 text-sm font-medium mt-2">Inclusive of all taxes</p>
+                <p className="text-maroon/60 text-sm font-medium mt-2">{t('inclusive_taxes')}</p>
               </div>
 
               {/* Description */}
@@ -383,19 +385,19 @@ const ProductDetail = () => {
                     }`}></div>
                   <span className={`font-bold text-base ${product.stock > 0 ? 'text-green-600' : 'text-red-600'
                     }`}>
-                    {product.stock > 0 ? `✅ ${product.stock} in stock` : '❌ Out of stock'}
+                    {product.stock > 0 ? `✅ ${t('in_stock_msg')}` : `❌ ${t('out_of_stock_msg')}`}
                   </span>
                 </div>
                 {product.stock > 0 && product.stock < 10 && (
                   <span className="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-xs font-bold">
-                    ⚠️ Limited Stock
+                    ⚠️ {t('limited_stock_msg')}
                   </span>
                 )}
               </div>
 
               {/* Quantity */}
               <div className="mb-6">
-                <label className="text-slate font-bold text-lg mb-3 block">Select Quantity:</label>
+                <label className="text-slate font-bold text-lg mb-3 block">{t('select_quantity')}</label>
                 <div className="flex items-center space-x-3">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -427,7 +429,7 @@ const ProductDetail = () => {
                   className="w-full bg-maroon text-white py-5 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 group relative overflow-hidden"
                 >
                   <Zap className="h-6 w-6 animate-pulse" />
-                  <span className="relative z-10">Buy Now ⚡</span>
+                  <span className="relative z-10">{t('buy_now_zap')}</span>
                 </button>
                 <a
                   href={`https://wa.me/8801851075537?text=${encodeURIComponent(`Hello RongRani! 👋 I want to order this product:\n\n*Product:* ${product.name}\n*Price:* ৳${product.price}\n*Link:* ${window.location.href}`)}`}
@@ -436,7 +438,7 @@ const ProductDetail = () => {
                   className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:shadow-2xl hover:bg-[#128C7E] transition-all transform hover:scale-[1.02] active:scale-95"
                 >
                   <MessageCircle className="h-6 w-6" />
-                  <span>Order on WhatsApp 💬</span>
+                  <span>{t('order_whatsapp')}</span>
                 </a>
                 <button
                   onClick={handleAddToCart}
@@ -444,7 +446,7 @@ const ProductDetail = () => {
                   className="w-full bg-white border-3 border-maroon text-maroon py-5 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:bg-maroon hover:text-white hover:shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
                 >
                   <ShoppingCart className="h-6 w-6" />
-                  <span>Add to Cart 🛍️</span>
+                  <span>{t('add_cart_msg')}</span>
                 </button>
                 <button
                   onClick={addToWishlist}
@@ -454,14 +456,14 @@ const ProductDetail = () => {
                     }`}
                 >
                   <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current animate-pulse' : ''}`} />
-                  <span>{isWishlisted ? 'Saved to Wishlist ❤️' : 'Add to Wishlist 🤍'}</span>
+                  <span>{isWishlisted ? t('saved_wishlist') : t('add_wishlist_msg')}</span>
                 </button>
 
               </div>
 
               {/* Social Share */}
               <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
-                <span className="font-bold text-slate-700 dark:text-slate-300">Share with friends:</span>
+                <span className="font-bold text-slate-700 dark:text-slate-300">{t('share_friends')}</span>
                 <div className="-mt-4">
                   <SocialShare
                     url={`${baseUrl}/product/${id}`}
@@ -483,7 +485,7 @@ const ProductDetail = () => {
               <div className="bg-maroon/10 p-2 rounded-xl">
                 <Package className="h-6 w-6 text-maroon" />
               </div>
-              <span>Product Description</span>
+              <span>{t('product_description')}</span>
             </h2>
             <p className="text-slate text-lg leading-relaxed">
               {product.description}
@@ -498,25 +500,25 @@ const ProductDetail = () => {
                 <div className="bg-maroon/10 p-2 rounded-xl">
                   <Package className="h-6 w-6 text-maroon" />
                 </div>
-                <span>Product Details</span>
+                <span>{t('product_details')}</span>
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-cream/30 rounded-xl border border-maroon/10 hover:shadow-md transition-shadow">
-                  <span className="text-slate font-semibold text-base">Category:</span>
+                  <span className="text-slate font-semibold text-base">{t('category_label')}</span>
                   <span className="text-maroon font-bold capitalize bg-maroon/10 px-4 py-1.5 rounded-full">{product.category}</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-cream/30 rounded-xl border border-maroon/10 hover:shadow-md transition-shadow">
-                  <span className="text-slate font-semibold text-base">SKU:</span>
+                  <span className="text-slate font-semibold text-base">{t('sku_label')}</span>
                   <span className="text-charcoal font-bold font-mono text-sm break-all">{product.sku || product._id?.substring(0, 8).toUpperCase() || 'N/A'}</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-cream/30 rounded-xl border border-maroon/10 hover:shadow-md transition-shadow">
-                  <span className="text-slate font-semibold text-base">Availability:</span>
+                  <span className="text-slate font-semibold text-base">{t('availability_label')}</span>
                   <span className={`font-bold px-4 py-1.5 rounded-full ${product.stock > 0 ? 'text-green-600 bg-green-100' : 'text-red-600 bg-red-100'}`}>
-                    {product.stock > 0 ? '✅ In Stock' : '❌ Out of Stock'}
+                    {product.stock > 0 ? `✅ ${t('in_stock_msg')}` : `❌ ${t('out_of_stock_msg')}`}
                   </span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-cream/30 rounded-xl border border-maroon/10 hover:shadow-md transition-shadow">
-                  <span className="text-slate font-semibold text-base">Brand:</span>
+                  <span className="text-slate font-semibold text-base">{t('brand_label')}</span>
                   <span className="text-maroon font-black text-lg">RongRani</span>
                 </div>
               </div>
@@ -528,7 +530,7 @@ const ProductDetail = () => {
                 <div className="bg-green-200 p-2 rounded-xl">
                   <Truck className="h-6 w-6 text-green-700" />
                 </div>
-                <span>Delivery Information</span>
+                <span>{t('delivery_info_label')}</span>
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-green-200 hover:shadow-md transition-all">
@@ -536,7 +538,7 @@ const ProductDetail = () => {
                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                       <span className="text-2xl">🏙️</span>
                     </div>
-                    <span className="text-slate font-semibold">Inside Cox's Bazar:</span>
+                    <span className="text-slate font-semibold">{t('inside_cox')}</span>
                   </div>
                   <span className="font-black text-green-700 text-lg">৳{deliverySettings.chittagongFee}</span>
                 </div>
@@ -545,20 +547,20 @@ const ProductDetail = () => {
                     <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                       <span className="text-2xl">🌄</span>
                     </div>
-                    <span className="text-slate font-semibold">Outside Cox's Bazar:</span>
+                    <span className="text-slate font-semibold">{t('outside_cox')}</span>
                   </div>
                   <span className="font-black text-green-700 text-lg">৳{deliverySettings.outsideChittagongFee}</span>
                 </div>
                 <div className="bg-gold rounded-2xl p-4 mt-4 shadow-lg">
                   <p className="text-white font-bold text-center text-sm flex items-center justify-center space-x-2">
                     <span className="text-xl">🚚</span>
-                    <span>Delivered by Steadfast Courier</span>
+                    <span>{t('delivered_by')} Steadfast Courier</span>
                   </p>
                 </div>
                 <div className="flex items-center space-x-2 p-4 bg-blue-50 rounded-xl border border-blue-200">
                   <span className="text-2xl">⚡</span>
                   <p className="text-blue-800 font-semibold text-sm">
-                    Orders processed within 24 hours
+                    {t('orders_processed_msg')}
                   </p>
                 </div>
               </div>
@@ -570,7 +572,7 @@ const ProductDetail = () => {
                 <div className="bg-maroon/20 p-2 rounded-xl">
                   <Gift className="h-6 w-6 text-maroon" />
                 </div>
-                <span>Why Choose This?</span>
+                <span>{t('why_choose_this')}</span>
               </h3>
               <ul className="space-y-4">
                 <li className="flex items-start space-x-3">
@@ -578,8 +580,8 @@ const ProductDetail = () => {
                     <span className="text-white font-bold text-xs">✓</span>
                   </div>
                   <p className="text-slate leading-relaxed text-sm">
-                    <strong className="text-maroon font-bold block mb-1">💖 Handcrafted with Love</strong>
-                    Each piece is carefully made with attention to detail and quality.
+                    <strong className="text-maroon font-bold block mb-1">💖 {t('handcrafted_love')}</strong>
+                    {t('handcrafted_love_desc')}
                   </p>
                 </li>
                 <li className="flex items-start space-x-3">
@@ -587,8 +589,8 @@ const ProductDetail = () => {
                     <span className="text-white font-bold text-xs">✓</span>
                   </div>
                   <p className="text-slate leading-relaxed text-sm">
-                    <strong className="text-maroon font-bold block mb-1">🎁 Perfect Gift Choice</strong>
-                    Thoughtfully designed to bring joy and make special moments memorable.
+                    <strong className="text-maroon font-bold block mb-1">🎁 {t('perfect_gift_choice')}</strong>
+                    {t('perfect_gift_choice_desc')}
                   </p>
                 </li>
                 <li className="flex items-start space-x-3">
@@ -596,8 +598,8 @@ const ProductDetail = () => {
                     <span className="text-white font-bold text-xs">✓</span>
                   </div>
                   <p className="text-slate leading-relaxed text-sm">
-                    <strong className="text-maroon font-bold block mb-1">⭐ Premium Quality</strong>
-                    We use only the finest materials to ensure lasting beauty and durability.
+                    <strong className="text-maroon font-bold block mb-1">⭐ {t('premium_quality')}</strong>
+                    {t('premium_quality_desc_full')}
                   </p>
                 </li>
                 <li className="flex items-start space-x-3">
@@ -605,8 +607,8 @@ const ProductDetail = () => {
                     <span className="text-white font-bold text-xs">✓</span>
                   </div>
                   <p className="text-slate leading-relaxed text-sm">
-                    <strong className="text-maroon font-bold block mb-1">🎀 Beautiful Packaging</strong>
-                    Comes in elegant gift wrapping, ready to present to your loved ones.
+                    <strong className="text-maroon font-bold block mb-1">🎀 {t('beautiful_packaging')}</strong>
+                    {t('beautiful_packaging_desc')}
                   </p>
                 </li>
               </ul>
@@ -644,8 +646,8 @@ const ProductDetail = () => {
           <div className="bg-white p-8 lg:p-10 rounded-3xl shadow-2xl border border-maroon/10">
             <div className="flex items-center justify-between mb-8 pb-6 border-b-2 border-maroon/10">
               <div>
-                <h2 className="text-3xl lg:text-4xl font-black text-maroon">Customer Reviews</h2>
-                <p className="text-slate/60 text-sm mt-2">{reviews.length} verified reviews</p>
+                <h2 className="text-3xl lg:text-4xl font-black text-maroon">{t('customer_reviews')}</h2>
+                <p className="text-slate/60 text-sm mt-2">{reviews.length} {t('customer_reviews')}</p>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-3 bg-gold/10 px-5 py-3 rounded-2xl border border-gold/30">
@@ -657,7 +659,7 @@ const ProductDetail = () => {
                     onClick={() => setShowReviewForm(true)}
                     className="bg-maroon text-white px-6 py-3 rounded-2xl font-bold text-sm hover:bg-maroon-dark hover:shadow-xl hover:scale-105 transition-all active:scale-95"
                   >
-                    Write Review ✨
+                    {t('write_review')}
                   </button>
                 )}
               </div>
@@ -678,7 +680,7 @@ const ProductDetail = () => {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-3">
-                          <div className="font-bold text-maroon text-lg">{review.user?.name || review.guestName || 'Anonymous User'}</div>
+                          <div className="font-bold text-maroon text-lg">{review.user?.name || review.guestName || t('anonymous_user')}</div>
                           {review.isVerifiedPurchase && (
                             <div className="flex items-center gap-1.5 text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-sm">
                               <Shield className="h-3 w-3" />
@@ -728,7 +730,7 @@ const ProductDetail = () => {
                       onClick={() => setShowReviewForm(true)}
                       className="bg-maroon text-white px-8 py-3 rounded-2xl font-bold hover:shadow-xl transition-all"
                     >
-                      Write a Review ✨
+                      {t('write_review')}
                     </button>
                   </div>
                 )}
@@ -749,7 +751,7 @@ const ProductDetail = () => {
                   You May Also Like
                 </h2>
                 <Link to="/shop" className="text-slate-500 hover:text-maroon font-semibold flex items-center gap-1 group transition-colors">
-                  View All <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  {t('view_all')} <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">

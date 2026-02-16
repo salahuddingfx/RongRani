@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
 
 const LanguageContext = createContext();
 
@@ -11,29 +11,43 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider = ({ children }) => {
-  // Get initial language from localStorage or default to 'en'
-  const [language, setLanguage] = useState(() => {
-    const saved = localStorage.getItem('language');
-    return saved || 'en';
-  });
+  // Always default to 'bn' as requested
+  const [language, setLanguage] = useState('bn');
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Save language preference to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('language', language);
-    // Set document direction for RTL languages if needed
-    document.documentElement.lang = language;
-  }, [language]);
+    try {
+      const saved = localStorage.getItem('language');
+      if (saved && (saved === 'en' || saved === 'bn')) {
+        setLanguage(saved);
+      } else {
+        localStorage.setItem('language', 'bn');
+      }
+    } catch (e) {
+      console.error('LocalStorage error:', e);
+    }
+    setIsLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem('language', language);
+      document.documentElement.lang = language;
+    }
+  }, [language, isLoaded]);
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'en' ? 'bn' : 'en');
   };
 
   const changeLanguage = (lang) => {
-    setLanguage(lang);
+    if (lang === 'en' || lang === 'bn') {
+      setLanguage(lang);
+    }
   };
 
   // Comprehensive translation object
-  const translations = {
+  const translations = useMemo(() => ({
     en: {
       // Navigation
       home: 'Home',
@@ -45,13 +59,15 @@ export const LanguageProvider = ({ children }) => {
       search: 'Search',
       search_placeholder: 'Search for gifts...',
       wishlist: 'Wishlist',
-      about: 'About',
+      about: 'About Us',
       dashboard: 'Dashboard',
       my_orders: 'My Orders',
       admin_panel: 'Admin Panel',
       menu: 'Menu',
       back_to_home: 'Back to Home',
       contact: 'Contact',
+      quick_view: 'Quick View',
+      add_to_wishlist: 'Add to Wishlist',
 
       // Top Bar
       free_shipping: 'FREE Shipping on orders over',
@@ -63,14 +79,7 @@ export const LanguageProvider = ({ children }) => {
       bdt: 'BDT',
       english: 'English',
       bengali: 'Bengali',
-
-      // Cart
-      items: 'Items',
-      total: 'Total',
-      checkout: 'Checkout',
-      view_cart: 'View Cart',
-      empty_cart: 'Your cart is empty',
-      add_to_cart: 'Add to Cart',
+      handcrafted_love_top: 'Handcrafted with Love',
 
       // Home Page
       hero_title: 'Shop Handmade Gifts in Bangladesh',
@@ -87,59 +96,34 @@ export const LanguageProvider = ({ children }) => {
       sale: 'Sale',
       hot: 'Hot',
       off: 'OFF',
+      products_count: 'Products',
+      artisans_count: 'Artisans',
+      customers_count: 'Customers',
+      all_products: 'All Products',
+      browse_everything: 'Browse everything',
+      why_choose_us: 'Why Choose RongRani™?',
+      our_story: 'Our Story',
+      view_all_products: 'View All Products',
+      learn_more: 'Learn More',
+      auth_artisans: 'Authentic Artisans',
+      auth_artisans_desc: 'Direct from master craftsmen with decades of experience',
+      quality_guarantee: 'Quality Guarantee',
+      quality_guarantee_desc: 'Every piece is inspected and comes with our quality promise',
+      cultural_heritage: 'Cultural Heritage',
+      cultural_heritage_desc: 'Supporting traditional crafts and cultural preservation',
+      premium_collection: 'Premium Handcrafted Collection',
+      explore_diverse: 'Explore our diverse range of handcrafted products',
+      handpicked_treasures: 'Handpicked treasures from our finest artisans, each piece crafted with love and tradition',
+      platform_connects: 'We\'re more than just an online store. We\'re a platform that connects you with skilled artisans and preserves traditional craftsmanship for future generations.',
 
       // Product
-      quick_view: 'Quick View',
-      add_to_wishlist: 'Add to Wishlist',
       out_of_stock: 'Out of Stock',
       in_stock: 'In Stock',
-
-      // Footer
-      about_us: 'About Us',
-      quick_links: 'Quick Links',
-      customer_care: 'Customer Care',
-      follow_us: 'Follow Us',
-      newsletter_title: 'Subscribe to Newsletter',
-      newsletter_subtitle: 'Get updates on new products and offers',
-      subscribe: 'Subscribe',
-
-      // Common
-      loading: 'Loading...',
-      error: 'Error',
-      success: 'Success',
-      save: 'Save',
-      cancel: 'Cancel',
-      delete: 'Delete',
-      edit: 'Edit',
-      update: 'Update',
-      submit: 'Submit',
-      close: 'Close',
-      confirm: 'Confirm',
-      yes: 'Yes',
-      no: 'No',
-
-      // Product Details
-      product_details: 'Product Details',
-      select_quantity: 'Select Quantity',
-      buy_now: 'Buy Now',
-      delivery_info: 'Delivery Information',
-      free_delivery: 'Free Delivery',
-      delivery_time: '2-3 Days Delivery',
-      return_policy: 'Return Policy',
-      days_return: '7 Days Return',
-      secure_payment: 'Secure Payment',
-      payment_methods: '100% Secure Payment',
-      customer_reviews: 'Customer Reviews',
-      write_review: 'Write a Review',
-      no_reviews: 'No Reviews Yet',
-      be_first_review: 'Be the first to review this product',
-      related_products: 'Related Products',
-      you_may_like: 'You May Also Like',
-      product_description: 'Product Description',
-      specifications: 'Specifications',
-      reviews: 'Reviews',
-      rating: 'Rating',
-      review_count: 'reviews',
+      tap_to_browse: 'Tap to browse',
+      explore_more: 'Explore →',
+      purchased_count: '{count}+ purchased',
+      newly_launched: 'Newly Launched',
+      unnamed_product: 'Unnamed Product',
 
       // Shop Page
       filter_by: 'Filter By',
@@ -151,42 +135,176 @@ export const LanguageProvider = ({ children }) => {
       clear_filter: 'Clear Filter',
       showing_results: 'Showing Results',
       no_products_found: 'No Products Found',
+      filters_label: 'Filters',
+      clear_all: 'Clear All',
+      all_categories: 'All Categories',
+      newest_first: 'Newest First',
+      price_low_high: 'Price: Low to High',
+      price_high_low: 'Price: High to Low',
+      name_a_z: 'Name A-Z',
+      name_z_a: 'Name Z-A',
+      showing_products: 'Showing {count} products',
+      no_products_found_msg: 'No products found',
+      try_adjust_filters: 'Try adjusting your filters or search terms',
+      reset_filters: 'Reset Filters',
+      previous: 'Previous',
+      next: 'Next',
+      loading_products: 'Loading beautiful products...',
 
-      // Cart & Checkout
-      shopping_cart: 'Shopping Cart',
-      cart_summary: 'Cart Summary',
-      subtotal: 'Subtotal',
-      shipping: 'Shipping',
-      tax: 'Tax',
-      discount: 'Discount',
-      grand_total: 'Grand Total',
-      proceed_to_checkout: 'Proceed to Checkout',
+      // Cart
+      items: 'Items',
+      total: 'Total',
+      checkout: 'Checkout',
+      view_cart: 'View Cart',
+      empty_cart: 'Your cart is empty',
+      empty_cart_msg: 'Discover beautiful handcrafted treasures and add them to your cart',
+      start_shopping: 'Start Shopping',
+      lifetime_customer: 'You\'re a Lifetime Customer!',
+      free_shipping_calc: 'Free Shipping Above ৳{amount}',
+      exclusive_discounts: 'Exclusive Member Discounts',
+      your_cart_title: 'Your Shopping Cart',
+      review_selections: 'Review your beautiful selections before checkout',
+      items_in_cart: 'Cart Items ({count})',
       continue_shopping: 'Continue Shopping',
-      remove_from_cart: 'Remove from Cart',
-      update_cart: 'Update Cart',
-      apply_coupon: 'Apply Coupon',
-      coupon_code: 'Coupon Code',
+      order_summary: 'Order Summary',
+      shipping: 'Shipping',
+      free: 'FREE',
+      gift_wrapping: 'Gift Wrapping',
+      unlocked_free_shipping: '🎉 You\'ve unlocked FREE Shipping!',
+      more_for_free_shipping: '৳{amount} more for FREE shipping',
+      secure_checkout_label: 'Secure Checkout',
+      secure_checkout_desc: '100% Secure & Encrypted',
+      on_orders_over: 'On orders over ৳{amount}',
+      ssl_encrypted: 'SSL encrypted payment',
 
-      // Orders
-      order_history: 'Order History',
-      order_details: 'Order Details',
-      order_number: 'Order Number',
-      order_date: 'Order Date',
-      order_status: 'Order Status',
+      // Checkout
+      checkout_title: 'Checkout',
+      shipping_info: 'Shipping Information',
+      full_name: 'Full Name',
+      email_address: 'Email Address',
+      phone_number: 'Phone Number',
+      street_address: 'Street Address',
+      division: 'Division',
+      district: 'District',
+      sub_district: 'Sub-district (Upazila)',
+      union_ward: 'Union / Ward',
+      city_label: 'City',
+      postal_code: 'Postal Code',
+      payment_method: 'Payment Method',
+      gift_message: 'Gift Message',
+      gift_message_placeholder: 'Write a special message for your loved one...',
+      cod_label: 'Cash on Delivery (Advance Delivery Charge)',
+      full_prepayment: 'Full Prepayment (bKash/Nagad)',
+      apply_coupon: 'Apply Coupon Code',
+      coupon_placeholder: 'Enter code (e.g. WELCOME10)',
+      apply: 'Apply',
+      remove: 'Remove',
+      calculating: 'Calculating...',
+      shipping_charge: 'Shipping Charge',
+      discount_label: 'Discount',
+      subtotal: 'Subtotal',
+      place_order: 'Place Order',
+      become_member: '🎁 Become a Lifetime Customer!',
+      exclusive_deals: 'Exclusive Deals',
+      order_tracking: 'Order Tracking',
+      or_continue_guest: 'Or continue as guest below',
+      required_fields: 'Please fill in all required fields',
+      trx_required: 'Please provide transaction ID and sender last 4 digits',
+      cod_advance_msg: 'To secure your order and prevent fake bookings, please pay delivery charge in advance.',
+      pay_to: 'Send Money to:',
+      trx_id_label: 'Transaction ID',
+      sender_last_4: 'Sender Number (Last 4)',
+      optional: '(optional)',
+      address_placeholder: 'House/Flat no, Street name',
+      name_placeholder: 'Enter your full name',
+      phone_placeholder: '+880 1XXX-XXXXXX',
+
+      // Footer
       track_order: 'Track Order',
-      cancel_order: 'Cancel Order',
+      help_center: 'Help Center',
+      privacy_policy: 'Privacy Policy',
+      contact_info_label: 'Contact Info',
+      all_rights_reserved: 'All rights reserved.',
+      developed_with: 'Developed with',
+      by_developer: 'by',
+      footer_desc: 'Your destination for beautiful gifts, romantic combos, and heartfelt surprises for every special occasion.',
+      quick_links: 'Quick Links',
+      customer_care: 'Customer Care',
+      customer_reviews: 'Customer Reviews',
+      bd_local_time: 'Bangladesh Local Time',
 
-      // Auth
-      email: 'Email',
-      password: 'Password',
-      confirm_password: 'Confirm Password',
-      forgot_password: 'Forgot Password?',
-      remember_me: 'Remember Me',
-      sign_in: 'Sign In',
-      sign_up: 'Sign Up',
-      create_account: 'Create Account',
-      already_have_account: 'Already have an account?',
-      dont_have_account: "Don't have an account?",
+      // Navbar extra
+      trending_now: 'Trending Now',
+      recent_searches: 'Recent Searches',
+      suggested_categories: 'Suggested Categories',
+      products_found: 'Products Found',
+      searching_magic: 'Searching our magic collection...',
+      clear_recent: 'Clear All',
+      view_all_results: 'View All Results 🚀',
+      switch_to_bn: 'Switch to Bangla',
+      switch_to_en: 'Switch to English',
+
+      // Product Detail
+      reviews_count_msg: '({count} reviews)',
+      items_sold: '{count}+ items sold',
+      hot_new_arrival: 'Hot New Arrival',
+      inclusive_taxes: 'Inclusive of all taxes',
+      in_stock_msg: 'In stock',
+      out_of_stock_msg: 'Out of stock',
+      limited_stock_msg: 'Limited Stock',
+      buy_now_zap: 'Buy Now ⚡',
+      order_whatsapp: 'Order on WhatsApp 💬',
+      add_cart_msg: 'Add to Cart 🛍️',
+      saved_wishlist: 'Saved to Wishlist ❤️',
+      add_wishlist_msg: 'Add to Wishlist 🤍',
+      share_friends: 'Share with friends:',
+      category_label: 'Category:',
+      sku_label: 'SKU:',
+      availability_label: 'Availability:',
+      brand_label: 'Brand:',
+      delivery_info_label: 'Delivery Information',
+      inside_cox: 'Inside Cox\'s Bazar:',
+      outside_cox: 'Outside Cox\'s Bazar:',
+      delivered_by: 'Delivered by',
+      orders_processed_msg: 'Orders processed within 24 hours',
+      why_choose_this: 'Why Choose This?',
+      handcrafted_love: 'Handcrafted with Love',
+      handcrafted_love_desc: 'Each piece is carefully made with attention to detail and quality.',
+      perfect_gift_choice: 'Perfect Gift Choice',
+      perfect_gift_choice_desc: 'Thoughtfully designed to bring joy and make special moments memorable.',
+      premium_quality: 'Premium Quality',
+      premium_quality_desc_full: 'We use only the finest materials to ensure lasting beauty and durability.',
+      save_amount: 'Save ৳{amount}',
+      product_description: 'Product Description',
+      product_details: 'Product Details',
+      beautiful_packaging: 'Beautiful Packaging',
+      beautiful_packaging_desc: 'Comes in elegant gift wrapping, ready to present to your loved ones.',
+      fast_delivery: 'Fast Delivery',
+      fast_delivery_desc: '2-5 days nationwide',
+      verified_purchase: 'Verified Purchase',
+      anonymous_user: 'Anonymous User',
+      no_reviews_yet: 'No Reviews Yet',
+      be_first_review: 'Be the first to review this beautiful product!',
+      write_review: 'Write a Review ✨',
+      you_may_also_like: 'You May Also Like',
+      select_quantity: 'Select Quantity',
+      product_not_found: 'Product Not Found',
+      product_not_found_msg: 'The product you\'re looking for doesn\'t exist.',
+      loading_beautiful: 'Loading beautiful product...',
+
+      // Categories
+      cat_love_combo: 'Love Combo',
+      cat_anniversary_combo: 'Anniversary Combo',
+      cat_birthday_combo: 'Birthday Combo',
+      cat_valentine_combo: 'Valentine Combo',
+      cat_proposal_combo: 'Proposal Combo',
+      cat_jewellery: 'Jewellery',
+      cat_watches: 'Watches',
+      cat_chocolates: 'Chocolates',
+      cat_gifts: 'Gifts',
+      cat_handmade: 'Handmade',
+      cat_clothing: 'Clothing',
+      cat_gift_boxes: 'Gift Boxes',
     },
     bn: {
       // Navigation
@@ -206,25 +324,20 @@ export const LanguageProvider = ({ children }) => {
       menu: 'মেনু',
       back_to_home: 'হোমে ফিরে যান',
       contact: 'যোগাযোগ',
+      quick_view: 'দ্রুত দেখুন',
+      add_to_wishlist: 'উইশলিস্টে যোগ করুন',
 
       // Top Bar
-      free_shipping: '২০০০ টাকার বেশি অর্ডারে ফ্রি ডেলিভারি!',
+      free_shipping: '২০০০৳ এর বেশি অর্ডারে ফ্রি ডেলিভারি!',
       welcome_offer: 'নির্বাচিত পণ্যে ৫০% পর্যন্ত ছাড়!',
       call_us: 'কল:',
       email_us: 'মেইল:',
       language: 'ভাষা',
-      currency: 'মুদ্রা',
+      currency: 'মুব্রা',
       bdt: 'টাকা',
       english: 'ইংরেজি',
       bengali: 'বাংলা',
-
-      // Cart
-      items: 'আইটেম',
-      total: 'মোট',
-      checkout: 'চেকআউট',
-      view_cart: 'কার্ট দেখুন',
-      empty_cart: 'আপনার কার্ট খালি',
-      add_to_cart: 'কার্টে যোগ করুন',
+      handcrafted_love_top: 'ভালোবাসা দিয়ে তৈরি',
 
       // Home Page
       hero_title: 'বাংলাদেশে হস্তনির্মিত উপহার কিনুন',
@@ -241,59 +354,34 @@ export const LanguageProvider = ({ children }) => {
       sale: 'সেল',
       hot: 'হট',
       off: 'ছাড়',
+      products_count: 'পণ্য',
+      artisans_count: 'কারিগর',
+      customers_count: 'ক্রেতা',
+      all_products: 'সব পণ্য',
+      browse_everything: 'সব দেখুন',
+      why_choose_us: 'কেন রংরানী™ বেছে নেবেন?',
+      our_story: 'আমাদের গল্প',
+      view_all_products: 'সব পণ্য দেখুন',
+      learn_more: 'আরও জানুন',
+      auth_artisans: 'দক্ষ কারিগর',
+      auth_artisans_desc: 'Master দক্ষ কারিগরদের থেকে সরাসরি সরবরাহ',
+      quality_guarantee: 'কোয়ালিটি গ্যারান্টি',
+      quality_guarantee_desc: 'প্রতিটি পণ্য যাচাই করা এবং আমাদের গুনাগত মানের প্রতিশ্রুতি বহন করে',
+      cultural_heritage: 'সাংস্কৃতিক heritage',
+      cultural_heritage_desc: 'ঐতিহ্যবাহী কারুশিল্প এবং সাংস্কৃতিক ঐতিহ্য রক্ষায় সহায়তা',
+      premium_collection: 'প্রিমিয়াম হস্তনির্মিত কালেকশন',
+      explore_diverse: 'আমাদের বৈচিত্র্যময় হস্তনির্মিত পণ্য দেখুন',
+      handpicked_treasures: 'আমাদের সেরা কারিগরদের হাতে বাছাই করা সংগ্রহ, প্রতিটি পণ্য ভালোবাসা এবং ঐতিহ্য দিয়ে তৈরি',
+      platform_connects: 'আমরা কেবল একটি অনলাইন দোকান নই। আমরা এমন একটি মাধ্যম যা আপনাকে দক্ষ কারিগরদের সাথে যুক্ত করে এবং ভবিষ্যৎ প্রজন্মের জন্য ঐতিহ্যবাহী কারুশিল্প রক্ষা করে।',
 
       // Product
-      quick_view: 'দ্রুত দেখুন',
-      add_to_wishlist: 'উইশলিস্টে যোগ করুন',
       out_of_stock: 'স্টকে নেই',
       in_stock: 'স্টকে আছে',
-
-      // Footer
-      about_us: 'আমাদের সম্পর্কে',
-      quick_links: 'দ্রুত লিংক',
-      customer_care: 'কাস্টমার কেয়ার',
-      follow_us: 'আমাদের ফলো করুন',
-      newsletter_title: 'নিউজলেটার সাবস্ক্রাইব করুন',
-      newsletter_subtitle: 'নতুন পণ্য এবং অফার সম্পর্কে আপডেট পান',
-      subscribe: 'সাবস্ক্রাইব',
-
-      // Common
-      loading: 'লোড হচ্ছে...',
-      error: 'ত্রুটি',
-      success: 'সফল',
-      save: 'সংরক্ষণ',
-      cancel: 'বাতিল',
-      delete: 'মুছুন',
-      edit: 'সম্পাদনা',
-      update: 'আপডেট',
-      submit: 'জমা দিন',
-      close: 'বন্ধ করুন',
-      confirm: 'নিশ্চিত করুন',
-      yes: 'হ্যাঁ',
-      no: 'না',
-
-      // Product Details
-      product_details: 'পণ্যের বিবরণ',
-      select_quantity: 'পরিমাণ নির্বাচন করুন',
-      buy_now: 'এখনই কিনুন',
-      delivery_info: 'ডেলিভারি তথ্য',
-      free_delivery: 'ফ্রি ডেলিভারি',
-      delivery_time: '২-৩ দিনে ডেলিভারি',
-      return_policy: 'রিটার্ন পলিসি',
-      days_return: '৭ দিনের রিটার্ন',
-      secure_payment: 'নিরাপদ পেমেন্ট',
-      payment_methods: '১০০% নিরাপদ পেমেন্ট',
-      customer_reviews: 'কাস্টমার রিভিউ',
-      write_review: 'রিভিউ লিখুন',
-      no_reviews: 'এখনো কোনো রিভিউ নেই',
-      be_first_review: 'এই পণ্যের প্রথম রিভিউ লিখুন',
-      related_products: 'সম্পর্কিত পণ্য',
-      you_may_like: 'আপনি এগুলোও পছন্দ করতে পারেন',
-      product_description: 'পণ্যের বিবরণ',
-      specifications: 'বৈশিষ্ট্য',
-      reviews: 'রিভিউ',
-      rating: 'রেটিং',
-      review_count: 'রিভিউ',
+      tap_to_browse: 'দেখতে ক্লিক করুন',
+      explore_more: 'দেখুন →',
+      purchased_count: '{count}+ টি বিক্রি হয়েছে',
+      newly_launched: 'নতুন লঞ্চ করা হয়েছে',
+      unnamed_product: 'নামহীন পণ্য',
 
       // Shop Page
       filter_by: 'ফিল্টার করুন',
@@ -305,61 +393,197 @@ export const LanguageProvider = ({ children }) => {
       clear_filter: 'ফিল্টার মুছুন',
       showing_results: 'ফলাফল দেখানো হচ্ছে',
       no_products_found: 'কোনো পণ্য পাওয়া যায়নি',
+      filters_label: 'ফিল্টার',
+      clear_all: 'সব মুছুন',
+      all_categories: 'সব ক্যাটাগরি',
+      newest_first: 'নতুনগুলো আগে',
+      price_low_high: 'মূল্য: কম থেকে বেশি',
+      price_high_low: 'মূল্য: বেশি থেকে কম',
+      name_a_z: 'নাম: অ-হ',
+      name_z_a: 'নাম: হ-অ',
+      showing_products: '{count} টি পণ্য দেখানো হচ্ছে',
+      no_products_found_msg: 'কোনো পণ্য পাওয়া যায়নি',
+      try_adjust_filters: 'দয়া করে ফিল্টার বা সার্চ পরিবর্তন করে দেখুন',
+      reset_filters: 'রিসেট ফিল্টার',
+      previous: 'আগের',
+      next: 'পরের',
+      loading_products: 'সেরা পণ্যগুলো লোড হচ্ছে...',
 
-      // Cart & Checkout
-      shopping_cart: 'শপিং কার্ট',
-      cart_summary: 'কার্ট সারাংশ',
-      subtotal: 'সাবটোটাল',
-      shipping: 'শিপিং',
-      tax: 'ট্যাক্স',
-      discount: 'ছাড়',
-      grand_total: 'সর্বমোট',
-      proceed_to_checkout: 'চেকআউটে যান',
+      // Cart
+      items: 'আইটেম',
+      total: 'মোট',
+      checkout: 'চেকআউট',
+      view_cart: 'কার্ট দেখুন',
+      empty_cart: 'আপনার কার্ট খালি',
+      empty_cart_msg: 'চমৎকার সব হস্তনির্মিত পণ্যগুলো দেখুন এবং আপনার কার্টে যোগ করুন',
+      start_shopping: 'কেনাকাটা শুরু করুন',
+      lifetime_customer: 'আপনি আমাদের স্পেশাল কাস্টমার!',
+      free_shipping_calc: '৳{amount} এর বেশি অর্ডারে ফ্রি শিপিং',
+      exclusive_discounts: 'এক্সক্লুসিভ মেম্বার ডিসকাউন্ট',
+      your_cart_title: 'আপনার শপিং কার্ট',
+      review_selections: 'চেকআউটের আগে আপনার পছন্দগুলো দেখে নিন',
+      items_in_cart: 'কার্টের পণ্যসমূহ ({count})',
       continue_shopping: 'কেনাকাটা চালিয়ে যান',
-      remove_from_cart: 'কার্ট থেকে সরান',
-      update_cart: 'কার্ট আপডেট করুন',
-      apply_coupon: 'কুপন প্রয়োগ করুন',
-      coupon_code: 'কুপন কোড',
+      order_summary: 'অর্ডার সারসংক্ষেপ',
+      shipping: 'শিপিং',
+      free: 'ফ্রি',
+      gift_wrapping: 'গিফট র‍্যাপিং',
+      unlocked_free_shipping: '🎉 আপনি ফ্রি শিপিং আনলক করেছেন!',
+      more_for_free_shipping: 'ফ্রি শিপিংয়ের জন্য আরও ৳{amount} যোগ করুন',
+      secure_checkout_label: 'নিরাপদ চেকআউট',
+      secure_checkout_desc: '১০০% নিরাপদ ও এনক্রিপ্টেড',
+      on_orders_over: '৳{amount} এর বেশি অর্ডারে',
+      ssl_encrypted: 'SSL এনক্রিপ্টেড পেমেন্ট',
 
-      // Orders
-      order_history: 'অর্ডার ইতিহাস',
-      order_details: 'অর্ডার বিবরণ',
-      order_number: 'অর্ডার নম্বর',
-      order_date: 'অর্ডার তারিখ',
-      order_status: 'অর্ডার স্ট্যাটাস',
+      // Checkout
+      checkout_title: 'চেকআউট',
+      shipping_info: 'শিপিং তথ্য',
+      full_name: 'পূর্ণ নাম',
+      email_address: 'ইমেইল ঠিকানা',
+      phone_number: 'ফোন নম্বর',
+      street_address: 'ঠিকানা',
+      division: 'বিভাগ',
+      district: 'জেলা',
+      sub_district: 'উপজেলা',
+      union_ward: 'ইউনিয়ন / ওয়ার্ড',
+      city_label: 'শহর',
+      postal_code: 'পোস্টাল কোড',
+      payment_method: 'পেমেন্ট পদ্ধতি',
+      gift_message: 'গিফট মেসেজ',
+      gift_message_placeholder: 'আপনার প্রিয়জনের জন্য একটি বিশেষ বার্তা লিখুন...',
+      cod_label: 'ক্যাশ অন ডেলিভারি (অগ্রিম ডেলিভারি চার্জ)',
+      full_prepayment: 'সম্পূর্ণ অগ্রিম পেমেন্ট (বিকাশ/নগদ)',
+      apply_coupon: 'কুপন কোড ব্যবহার করুন',
+      coupon_placeholder: 'কোড লিখুন (যেমন: WELCOME10)',
+      apply: 'প্রয়োগ করুন',
+      remove: 'মুছুন',
+      calculating: 'হিসাব করা হচ্ছে...',
+      shipping_charge: 'শিপিং চার্জ',
+      discount_label: 'ডিসকাউন্ট',
+      subtotal: 'উপমোট',
+      place_order: 'অর্ডার করুন',
+      become_member: '🎁 আমাদের লাইফটাইম কাস্টমার হন!',
+      exclusive_deals: 'এক্সক্লুসিভ ডিল',
+      order_tracking: 'অর্ডার ট্র্যাকিং',
+      or_continue_guest: 'অথবা গেস্ট হিসেবে চালিয়ে যান',
+      required_fields: 'সব প্রয়োজনীয় তথ্য পূরণ করুন',
+      trx_required: 'অনুগ্রহ করে ট্রানজেকশন আইডি এবং প্রেরক নম্বর দিন',
+      cod_advance_msg: 'আপনার অর্ডার নিশ্চিত করতে এবং ভুয়া বুকিং প্রতিরোধ করতে, দয়া করে আগে ডেলিভারি চার্জ প্রদান করুন।',
+      pay_to: 'টাকা পাঠান এই নম্বরে:',
+      trx_id_label: 'ট্রানজেকশন আইডি',
+      sender_last_4: 'প্রেরক নম্বর (শেষ ৪ ডিজিট)',
+      optional: '(ঐচ্ছিক)',
+      address_placeholder: 'বাড়ি/ফ্ল্যাট নম্বর, রাস্তার নাম',
+      name_placeholder: 'আপনার পূর্ণ নাম লিখুন',
+      phone_placeholder: '০১৮৫১-০৭৫৫৩৭',
+
+      // Footer
       track_order: 'অর্ডার ট্র্যাক করুন',
-      cancel_order: 'অর্ডার বাতিল করুন',
+      help_center: 'সাহায্য কেন্দ্র',
+      privacy_policy: 'গোপনীয়তা নীতি',
+      contact_info_label: 'যোগাযোগের তথ্য',
+      all_rights_reserved: 'সর্বস্বত্ব সংরক্ষিত।',
+      developed_with: 'ভালোবাসা দিয়ে তৈরি',
+      by_developer: 'দ্বারা',
+      footer_desc: 'প্রতিটি বিশেষ উপলক্ষ্যের জন্য সুন্দর উপহার, রোমান্টিক কম্বো এবং হৃদয়স্পর্শী সারপ্রাইজের গন্তব্য।',
+      quick_links: 'দ্রুত লিংক',
+      customer_care: 'কাস্টমার কেয়ার',
+      customer_reviews: 'কাস্টমার রিভিউ',
+      bd_local_time: 'বাংলাদেশ সময়',
 
-      // Auth
-      email: 'ইমেইল',
-      password: 'পাসওয়ার্ড',
-      confirm_password: 'পাসওয়ার্ড নিশ্চিত করুন',
-      forgot_password: 'পাসওয়ার্ড ভুলে গেছেন?',
-      remember_me: 'আমাকে মনে রাখুন',
-      sign_in: 'সাইন ইন',
-      sign_up: 'সাইন আপ',
-      create_account: 'অ্যাকাউন্ট তৈরি করুন',
-      already_have_account: 'ইতিমধ্যে একটি অ্যাকাউন্ট আছে?',
-      dont_have_account: 'অ্যাকাউন্ট নেই?',
+      // Navbar extra
+      trending_now: 'ট্রেন্ডিং এখন',
+      recent_searches: 'সাম্প্রতিক সার্চ',
+      suggested_categories: 'প্রস্তাবিত ক্যাটাগরি',
+      products_found: 'পণ্য পাওয়া গেছে',
+      searching_magic: 'আমাদের কালেকশন খোঁজা হচ্ছে...',
+      clear_recent: 'সব মুছুন',
+      view_all_results: 'সব ফলাফল দেখুন 🚀',
+      switch_to_bn: 'বাংলা করুন',
+      switch_to_en: 'ইংরেজি করুন',
+
+      // Product Detail
+      reviews_count_msg: '({count} রিভিউ)',
+      items_sold: '{count}+ টি পণ্য বিক্রি হয়েছে',
+      hot_new_arrival: 'নতুন কালেকশন',
+      inclusive_taxes: 'সব ট্যাক্স অন্তর্ভুক্ত',
+      in_stock_msg: 'স্টকে আছে',
+      out_of_stock_msg: 'স্টকে নেই',
+      limited_stock_msg: 'সীমিত স্টক',
+      buy_now_zap: 'এখনই কিনুন ⚡',
+      order_whatsapp: 'হোয়াটসঅ্যাপে অর্ডার করুন 💬',
+      add_cart_msg: 'কার্টে যোগ করুন 🛍️',
+      saved_wishlist: 'উইশলিস্টে সেভ করা হয়েছে ❤️',
+      add_wishlist_msg: 'উইশলিস্টে যোগ করুন 🤍',
+      share_friends: 'বন্ধুদের সাথে শেয়ার করুন:',
+      category_label: 'ক্যাটাগরি:',
+      sku_label: 'এসকেইউ:',
+      availability_label: 'উপলব্ধতা:',
+      brand_label: 'ব্র্যান্ড:',
+      delivery_info_label: 'ডেলিভারি তথ্য',
+      inside_cox: 'কক্সবাজারের ভেতরে:',
+      outside_cox: 'কক্সবাজারের বাইরে:',
+      delivered_by: 'ডেলিভারি পার্টনার',
+      orders_processed_msg: '২৪ ঘণ্টার মধ্যে অর্ডার প্রসেস করা হয়',
+      why_choose_this: 'কেন এটি বেছে নেবেন?',
+      handcrafted_love: 'ভালোবাসা দিয়ে তৈরি',
+      handcrafted_love_desc: 'প্রতিটি পণ্য নিখুঁতভাবে এবং সেরা গুণমান নিশ্চিত করে তৈরি করা হয়েছে।',
+      perfect_gift_choice: 'সেরা উপহারের পছন্দ',
+      perfect_gift_choice_desc: 'বিশেষ মুহূর্তগুলোকে স্মরণীয় করে রাখার জন্য চমৎকার ডিজাইন।',
+      premium_quality: 'প্রিমিয়াম কোয়ালিটি',
+      premium_quality_desc_full: 'স্থায়ী সৌন্দর্য এবং স্থায়িত্ব নিশ্চিত করতে আমরা সেরা উপকরণ ব্যবহার করি।',
+      save_amount: 'সাশ্রয় ৳{amount}',
+      product_description: 'পণ্যের বিবরণ',
+      product_details: 'পণ্যের তথ্য',
+      beautiful_packaging: 'চমৎকার প্যাকেজিং',
+      beautiful_packaging_desc: 'আকর্ষণীয় গিফট র‍্যাপিংয়ে আপনার প্রিয়জনের কাছে পৌঁছাবে।',
+      fast_delivery: 'দ্রুত ডেলিভারি',
+      fast_delivery_desc: '২-৫ দিনের মধ্যে সারা বাংলাদেশে',
+      verified_purchase: 'ভেরিফাইড পারচেজ',
+      anonymous_user: 'বেনামী ব্যবহারকারী',
+      no_reviews_yet: 'এখনো কোনো রিভিউ নেই',
+      be_first_review: 'এই চমৎকার পণ্যটির প্রথম রিভিউ দিন!',
+      write_review: 'রিভিউ লিখুন ✨',
+      you_may_also_like: 'আপনার পছন্দ হতে পারে',
+      select_quantity: 'পরিমাণ নির্বাচন করুন',
+      product_not_found: 'পণ্য পাওয়া যায়নি',
+      product_not_found_msg: 'আপনি যে পণ্যটি খুঁজছেন তা বর্তমানে নেই।',
+      loading_beautiful: 'চমৎকার পণ্যটি লোড হচ্ছে...',
+
+      // Categories
+      cat_love_combo: 'লাভ কম্বো',
+      cat_anniversary_combo: 'অ্যানিভারসারি কম্বো',
+      cat_birthday_combo: 'বার্থডে গিফট',
+      cat_valentine_combo: 'ভ্যালেন্টাইন কম্বো',
+      cat_proposal_combo: 'প্রপোজাল কম্বো',
+      cat_jewellery: 'জুয়েলারি',
+      cat_watches: 'ঘড়ি',
+      cat_chocolates: 'চকলেট',
+      cat_gifts: 'উপহার',
+      cat_handmade: 'হস্তশিল্প',
+      cat_clothing: 'পোশাক',
+      cat_gift_boxes: 'গিফট বক্স',
     }
-  };
+  }), []);
 
   // Translation function
   const t = (key) => {
     return translations[language]?.[key] || key;
   };
 
-  const value = {
+  const value = useMemo(() => ({
     language,
     setLanguage: changeLanguage,
     toggleLanguage,
     t,
     translations: translations[language]
-  };
+  }), [language, t, translations]);
 
   return (
     <LanguageContext.Provider value={value}>
-      {children}
+      <div className="transition-all duration-500 ease-in-out">
+        {children}
+      </div>
     </LanguageContext.Provider>
   );
 };

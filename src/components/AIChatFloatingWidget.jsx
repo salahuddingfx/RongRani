@@ -6,7 +6,7 @@ const AIChatFloatingWidget = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! 💝 Welcome to RongRani! I'm your AI assistant. What can I help you with today?",
+      text: "Hello! 💝 Welcome to RongRani™! I'm your AI assistant. What can I help you with today?",
       sender: 'bot',
       timestamp: new Date()
     }

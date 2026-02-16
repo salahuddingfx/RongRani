@@ -8,7 +8,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const Orders = () => {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -127,7 +127,7 @@ const Orders = () => {
                 {t('track_order')}
               </h1>
               <p className="text-slate-600">
-                {t('language') === 'bn'
+                {language === 'bn'
                   ? 'আপনার অর্ডার নম্বর এবং ইমেইল দিয়ে অর্ডার ট্র্যাক করুন'
                   : 'Track your order using order number and email'}
               </p>
@@ -143,7 +143,7 @@ const Orders = () => {
                   type="text"
                   value={guestOrderNumber}
                   onChange={(e) => setGuestOrderNumber(e.target.value)}
-                  placeholder={t('language') === 'bn' ? 'অর্ডার নম্বর লিখুন' : 'Enter order number'}
+                  placeholder={language === 'bn' ? 'অর্ডার নম্বর লিখুন' : 'Enter order number'}
                   className="input-field w-full"
                   required
                 />
@@ -157,7 +157,7 @@ const Orders = () => {
                   type="email"
                   value={guestEmail}
                   onChange={(e) => setGuestEmail(e.target.value)}
-                  placeholder={t('language') === 'bn' ? 'ইমেইল লিখুন' : 'Enter email address'}
+                  placeholder={language === 'bn' ? 'ইমেইল লিখুন' : 'Enter email address'}
                   className="input-field w-full"
                   required
                 />
@@ -185,7 +185,7 @@ const Orders = () => {
             {/* Login Prompt */}
             <div className="mt-8 pt-8 border-t border-slate-200">
               <p className="text-center text-slate-600 mb-4">
-                {t('language') === 'bn'
+                {language === 'bn'
                   ? 'আপনার একাউন্ট আছে?'
                   : 'Have an account?'}
               </p>
@@ -224,7 +224,7 @@ const Orders = () => {
             {t('my_orders')}
           </h1>
           <p className="text-slate-600">
-            {t('language') === 'bn'
+            {language === 'bn'
               ? 'আপনার সুন্দর উপহার অর্ডারগুলি ট্র্যাক এবং পরিচালনা করুন'
               : 'Track and manage your beautiful gift orders'}
           </p>
@@ -236,7 +236,7 @@ const Orders = () => {
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
             <input
               type="text"
-              placeholder={t('language') === 'bn' ? 'অর্ডার আইডি দিয়ে খুঁজুন...' : 'Search by order ID...'}
+              placeholder={language === 'bn' ? 'অর্ডার আইডি দিয়ে খুঁজুন...' : 'Search by order ID...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="input-field pl-12 w-full"
@@ -249,15 +249,15 @@ const Orders = () => {
           <div className="card rounded-3xl text-center py-16 reveal-up">
             <Package className="h-20 w-20 text-slate-400 mx-auto mb-4 opacity-50" />
             <h3 className="text-2xl font-bold text-charcoal mb-2">
-              {t('language') === 'bn' ? 'কোনো অর্ডার পাওয়া যায়নি' : 'No Orders Found'}
+              {language === 'bn' ? 'কোনো অর্ডার পাওয়া যায়নি' : 'No Orders Found'}
             </h3>
             <p className="text-slate-600 mb-8">
-              {t('language') === 'bn'
+              {language === 'bn'
                 ? 'কেনাকাটা শুরু করুন এবং আপনার প্রথম অর্ডার তৈরি করুন!'
                 : 'Start shopping and create your first order!'}
             </p>
             <Link to="/shop" className="btn-primary">
-              {t('language') === 'bn' ? 'পণ্য ব্রাউজ করুন' : 'Browse Products'}
+              {language === 'bn' ? 'পণ্য ব্রাউজ করুন' : 'Browse Products'}
             </Link>
           </div>
         ) : (
@@ -295,7 +295,7 @@ const Orders = () => {
                               {item.product?.name}
                             </p>
                             <p className="text-xs md:text-sm text-slate-600">
-                              {t('language') === 'bn' ? 'পরিমাণ' : 'Qty'}: {item.quantity} × ৳{item.price}
+                              {language === 'bn' ? 'পরিমাণ' : 'Qty'}: {item.quantity} × ৳{item.price}
                             </p>
                           </div>
                         </div>
@@ -306,14 +306,14 @@ const Orders = () => {
                     <div className="flex flex-col sm:flex-row flex-wrap gap-2 md:gap-4 text-xs md:text-sm text-slate-600">
                       <div>
                         <span className="font-semibold">
-                          {t('language') === 'bn' ? 'অর্ডার করা হয়েছে:' : 'Ordered:'}
+                          {language === 'bn' ? 'অর্ডার করা হয়েছে:' : 'Ordered:'}
                         </span>{' '}
                         {new Date(order.createdAt).toLocaleDateString()}
                       </div>
                       {order.estimatedDelivery && (
                         <div>
                           <span className="font-semibold">
-                            {t('language') === 'bn' ? 'ডেলিভারি:' : 'Delivery:'}
+                            {language === 'bn' ? 'ডেলিভারি:' : 'Delivery:'}
                           </span>{' '}
                           {new Date(order.estimatedDelivery).toLocaleDateString()}
                         </div>
@@ -325,7 +325,7 @@ const Orders = () => {
                   <div className="flex flex-col sm:items-end gap-3 md:gap-4 w-full sm:w-auto lg:border-l-2 lg:border-slate-200 lg:pl-8">
                     <div className="text-left sm:text-right">
                       <p className="text-xs md:text-sm text-slate-600 mb-1">
-                        {t('language') === 'bn' ? 'মোট পরিমাণ' : 'Total Amount'}
+                        {language === 'bn' ? 'মোট পরিমাণ' : 'Total Amount'}
                       </p>
                       <p className="text-2xl md:text-3xl font-black text-maroon">
                         ৳{order.totalAmount?.toLocaleString()}
@@ -338,7 +338,7 @@ const Orders = () => {
                         className="btn-primary flex items-center justify-center gap-2 py-2 md:py-3 text-sm md:text-base"
                       >
                         <Eye className="h-4 md:h-5 w-4 md:w-5" />
-                        <span>{t('language') === 'bn' ? 'ট্র্যাক করুন' : 'Track'}</span>
+                        <span>{language === 'bn' ? 'ট্র্যাক করুন' : 'Track'}</span>
                       </Link>
 
                       <button
@@ -346,7 +346,7 @@ const Orders = () => {
                         className="bg-green-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-2 text-sm md:text-base"
                       >
                         <Download className="h-4 md:h-5 w-4 md:w-5" />
-                        <span>{t('language') === 'bn' ? 'ইনভয়েস' : 'Invoice'}</span>
+                        <span>{language === 'bn' ? 'ইনভয়েস' : 'Invoice'}</span>
                       </button>
                     </div>
                   </div>

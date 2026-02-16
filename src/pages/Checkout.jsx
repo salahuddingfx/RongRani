@@ -6,12 +6,14 @@ import { useDeliveryCalculation } from '../hooks/useDeliveryCalculation';
 import { CreditCard, Truck, MapPin, User } from 'lucide-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Checkout = () => {
   const { cartItems, totalPrice, clearCart } = useCart();
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { delivery, loading: deliveryLoading, fetchDelivery } = useDeliveryCalculation();
+  const { t, language } = useLanguage();
   const { state } = useLocation();
   const giftWrapping = state?.giftWrapping || false;
   const giftWrappingFee = 50;
@@ -289,7 +291,7 @@ const Checkout = () => {
     <div className="min-h-screen bg-cream py-12">
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold text-maroon mb-2 text-center">
-          Checkout
+          {t('checkout_title')}
         </h1>
 
         {!isAuthenticated && (
@@ -299,8 +301,8 @@ const Checkout = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-4">
                 <div className="text-center">
                   <div className="text-2xl mb-1">💝</div>
-                  <p className="font-semibold">Exclusive Deals</p>
-                  <p className="text-cream-light text-xs">Member-only discounts</p>
+                  <p className="font-semibold">{t('exclusive_deals')}</p>
+                  <p className="text-cream-light text-xs">{t('exclusive_discounts')}</p>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl mb-1">🚚</div>
@@ -342,7 +344,7 @@ const Checkout = () => {
             <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-lg p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center">
                 <Truck className="h-5 w-5 mr-2" />
-                Order Summary
+                {t('order_summary')}
               </h2>
 
               <div className="space-y-3">
@@ -450,7 +452,7 @@ const Checkout = () => {
           <div className="bg-white rounded-3xl shadow-xl border border-maroon/10 p-6 lg:p-8 hover:shadow-2xl transition-all duration-300">
             <h2 className="text-2xl font-bold text-maroon mb-6 flex items-center">
               <MapPin className="h-6 w-6 mr-2" />
-              Shipping Information
+              {t('shipping_info')}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -458,7 +460,7 @@ const Checkout = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    Full Name <span className="text-red-500">*</span>
+                    {t('full_name')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -467,13 +469,13 @@ const Checkout = () => {
                     onChange={handleChange}
                     required
                     className="input-field"
-                    placeholder="Enter your full name"
+                    placeholder={t('name_placeholder')}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    Email Address
+                    {t('email_address')}
                   </label>
                   <input
                     type="email"
@@ -489,7 +491,7 @@ const Checkout = () => {
               {/* Phone Number */}
               <div>
                 <label className="block text-sm font-semibold text-slate mb-2">
-                  Phone Number <span className="text-red-500">*</span>
+                  {t('phone_number')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="tel"
@@ -498,14 +500,14 @@ const Checkout = () => {
                   onChange={handleChange}
                   required
                   className="input-field"
-                  placeholder="+880 1XXX-XXXXXX"
+                  placeholder={t('phone_placeholder')}
                 />
               </div>
 
               {/* Address */}
               <div>
                 <label className="block text-sm font-semibold text-slate mb-2">
-                  Street Address <span className="text-red-500">*</span>
+                  {t('street_address')} <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   name="address"
@@ -514,7 +516,7 @@ const Checkout = () => {
                   required
                   rows={2}
                   className="input-field"
-                  placeholder="House/Flat no, Street name"
+                  placeholder={t('address_placeholder')}
                 />
               </div>
 
@@ -522,7 +524,7 @@ const Checkout = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    Division (optional)
+                    {t('division')} {t('optional')}
                   </label>
                   <input
                     type="text"
@@ -536,7 +538,7 @@ const Checkout = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    District (optional)
+                    {t('district')} {t('optional')}
                   </label>
                   <input
                     type="text"
@@ -553,7 +555,7 @@ const Checkout = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    Sub-district (Upazila) <span className="text-red-500">*</span>
+                    {t('sub_district')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -568,7 +570,7 @@ const Checkout = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    Union / Ward <span className="text-red-500">*</span>
+                    {t('union_ward')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -586,7 +588,7 @@ const Checkout = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    City <span className="text-red-500">*</span>
+                    {t('city_label')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -601,7 +603,7 @@ const Checkout = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    Postal Code (optional)
+                    {t('postal_code')} {t('optional')}
                   </label>
                   <input
                     type="text"
@@ -618,13 +620,13 @@ const Checkout = () => {
               <div className="bg-cream-light p-6 rounded-lg">
                 <h3 className="text-lg font-bold text-maroon mb-4 flex items-center">
                   <CreditCard className="h-5 w-5 mr-2" />
-                  Payment Method
+                  {t('payment_method')}
                 </h3>
 
                 {/* Gift Message Block */}
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    Gift Message (optional)
+                    {t('gift_message')} {t('optional')}
                   </label>
                   <textarea
                     name="giftMessage"
@@ -633,7 +635,7 @@ const Checkout = () => {
                     rows={3}
                     maxLength={500}
                     className="input-field bg-white"
-                    placeholder="Write a special message for your loved one..."
+                    placeholder={t('gift_message_placeholder')}
                   />
                   <p className="text-[10px] text-slate-400 mt-1">Maximum 500 characters</p>
                 </div>
@@ -648,7 +650,7 @@ const Checkout = () => {
                       onChange={handleChange}
                       className="text-maroon focus:ring-maroon h-4 w-4"
                     />
-                    <span className="ml-3 font-semibold text-charcoal">💵 Cash on Delivery (Advance Delivery Charge)</span>
+                    <span className="ml-3 font-semibold text-charcoal">💵 {t('cod_label')}</span>
                   </label>
 
                   <label className="flex items-center p-3 border-2 border-maroon rounded-lg cursor-pointer hover:bg-maroon/5 transition-colors shadow-sm">
@@ -661,7 +663,7 @@ const Checkout = () => {
                       className="text-maroon focus:ring-maroon h-4 w-4"
                     />
                     <div className="ml-3">
-                      <span className="font-bold text-maroon block text-sm">💰 Full Prepayment (bKash/Nagad)</span>
+                      <span className="font-bold text-maroon block text-sm">💰 {t('full_prepayment')}</span>
                       <span className="text-[10px] text-slate-500 font-medium">Pay 100% upfront to skip delivery charge queues</span>
                     </div>
                   </label>

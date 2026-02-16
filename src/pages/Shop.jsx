@@ -5,8 +5,10 @@ import ProductItem from '../components/ProductItem';
 import { Search, Filter, X } from 'lucide-react';
 import Seo from '../components/Seo';
 import { useSocket } from '../contexts/socketContextBase';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Shop = () => {
+  const { t, language } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -460,25 +462,25 @@ const Shop = () => {
       <section className="min-h-[40vh] sm:min-h-[50vh] flex items-center justify-center px-4 bg-cream dark:bg-gray-900">
         <div className="container mx-auto text-center">
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-maroon mb-4 sm:mb-6">
-            Shop Handmade Gifts in Bangladesh
+            {t('shop_hero_title')}
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-slate dark:text-gray-300 max-w-2xl mx-auto mb-6 sm:mb-8">
-            Explore curated surprise boxes, jewelry, chocolates, and decor made by skilled artisans.
+            {t('shop_hero_subtitle')}
           </p>
 
           {/* Quick Stats */}
           <div className="flex flex-wrap justify-center gap-6 sm:gap-8 mb-6 sm:mb-8">
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-maroon dark:text-maroon-light">{totalProducts || 500}+</div>
-              <div className="text-slate dark:text-gray-300 text-xs sm:text-sm">Products</div>
+              <div className="text-slate dark:text-gray-300 text-xs sm:text-sm">{t('products_count')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-maroon dark:text-maroon-light">50+</div>
-              <div className="text-slate dark:text-gray-300 text-xs sm:text-sm">Artisans</div>
+              <div className="text-slate dark:text-gray-300 text-xs sm:text-sm">{t('artisans_count')}</div>
             </div>
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-bold text-maroon dark:text-maroon-light">4.8★</div>
-              <div className="text-slate dark:text-gray-300 text-xs sm:text-sm">Rating</div>
+              <div className="text-slate dark:text-gray-300 text-xs sm:text-sm">{t('rating')}</div>
             </div>
           </div>
         </div>
@@ -489,8 +491,8 @@ const Shop = () => {
         {/* Header with Search and Filter Toggle */}
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-6 mb-6 sm:mb-8">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-maroon mb-2">Shop Collection</h2>
-            <p className="text-slate text-sm sm:text-base">Find the perfect gift for your loved ones</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-maroon mb-2">{t('shop_collection')}</h2>
+            <p className="text-slate text-sm sm:text-base">{t('shop_collection_subtitle')}</p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
@@ -498,7 +500,7 @@ const Shop = () => {
             <div className="relative flex-1 min-w-0">
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={t('search_placeholder')}
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
                 className="input-field pl-12 pr-4 py-3 rounded-full w-full sm:w-72 md:w-80 shadow-lg"
@@ -513,7 +515,7 @@ const Shop = () => {
               aria-expanded={showFilters}
             >
               <Filter className="h-5 w-5" />
-              <span>{showFilters ? 'Hide Filters' : 'Show Filters'}</span>
+              <span>{showFilters ? t('hide_filters') : t('show_filters')}</span>
             </button>
           </div>
         </div>
@@ -524,13 +526,13 @@ const Shop = () => {
           >
             <div className="card p-4 sm:p-6 lg:sticky lg:top-24">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-maroon">Filters</h3>
+                <h3 className="text-xl font-bold text-maroon">{t('filters_label')}</h3>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={clearFilters}
                     className="text-sm text-slate hover:text-maroon transition-colors underline"
                   >
-                    Clear All
+                    {t('clear_all')}
                   </button>
                   <button
                     type="button"
@@ -545,16 +547,16 @@ const Shop = () => {
 
               {/* Category Filter */}
               <div className="mb-5">
-                <label className="block text-sm font-semibold text-slate mb-3">Category</label>
+                <label className="block text-sm font-semibold text-slate mb-3">{t('category_label').replace(':', '')}</label>
                 <select
                   value={filters.category}
                   onChange={(e) => handleFilterChange('category', e.target.value)}
                   className="input-field"
                 >
-                  <option value="">All Categories</option>
+                  <option value="">{t('all_categories')}</option>
                   {categories && categories.map((category) => (
                     <option key={category._id || category.name || category} value={typeof category === 'string' ? category : category.name}>
-                      {typeof category === 'string' ? category : category.name}
+                      {t('cat_' + (typeof category === 'string' ? category : category.name).toLowerCase().replace(/\s+/g, '_'))}
                       {typeof category === 'object' && category.productCount ? ` (${category.productCount})` : ''}
                     </option>
                   ))}
@@ -563,18 +565,18 @@ const Shop = () => {
 
               {/* Price Range */}
               <div className="mb-5">
-                <label className="block text-sm font-semibold text-slate mb-3">Price Range (৳)</label>
+                <label className="block text-sm font-semibold text-slate mb-3">{t('price_range')} (৳)</label>
                 <div className="flex space-x-3">
                   <input
                     type="number"
-                    placeholder="Min"
+                    placeholder={t('min_price')}
                     value={filters.minPrice}
                     onChange={(e) => handleFilterChange('minPrice', e.target.value)}
                     className="input-field flex-1"
                   />
                   <input
                     type="number"
-                    placeholder="Max"
+                    placeholder={t('max_price')}
                     value={filters.maxPrice}
                     onChange={(e) => handleFilterChange('maxPrice', e.target.value)}
                     className="input-field flex-1"
@@ -584,17 +586,17 @@ const Shop = () => {
 
               {/* Sort */}
               <div className="mb-6">
-                <label className="block text-sm font-semibold text-slate mb-3">Sort By</label>
+                <label className="block text-sm font-semibold text-slate mb-3">{t('sort_by')}</label>
                 <select
                   value={filters.sort}
                   onChange={(e) => handleFilterChange('sort', e.target.value)}
                   className="input-field"
                 >
-                  <option value="createdAt">Newest First</option>
-                  <option value="price">Price: Low to High</option>
-                  <option value="-price">Price: High to Low</option>
-                  <option value="name">Name A-Z</option>
-                  <option value="-name">Name Z-A</option>
+                  <option value="createdAt">{t('newest_first')}</option>
+                  <option value="price">{t('price_low_high')}</option>
+                  <option value="-price">{t('price_high_low')}</option>
+                  <option value="name">{t('name_a_z')}</option>
+                  <option value="-name">{t('name_z_a')}</option>
                 </select>
               </div>
 
@@ -602,7 +604,7 @@ const Shop = () => {
                 onClick={clearFilters}
                 className="w-full btn-secondary py-3 rounded-full font-medium"
               >
-                Reset Filters
+                {t('reset_filters')}
               </button>
             </div>
           </div>
@@ -613,14 +615,14 @@ const Shop = () => {
               <div className="flex justify-center items-center py-20">
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-maroon mx-auto mb-4"></div>
-                  <p className="text-slate">Loading beautiful products...</p>
+                  <p className="text-slate">{t('loading_products')}</p>
                 </div>
               </div>
             ) : products && products.length > 0 ? (
               <>
                 <div className="flex items-center justify-between mb-6">
                   <p className="text-slate">
-                    Showing <span className="font-semibold text-maroon">{products.length}</span> products
+                    {t('showing_products').replace('{count}', products.length)}
                   </p>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
@@ -643,7 +645,7 @@ const Shop = () => {
                       disabled={currentPage === 1}
                       className="px-4 py-2 rounded-lg border-2 border-maroon/20 hover:bg-maroon hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Previous
+                      {t('previous')}
                     </button>
 
                     {totalPages && [...Array(totalPages)].map((_, i) => {
@@ -680,7 +682,7 @@ const Shop = () => {
                       disabled={currentPage === totalPages}
                       className="px-4 py-2 rounded-lg border-2 border-maroon/20 hover:bg-maroon hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Next
+                      {t('next')}
                     </button>
                   </div>
                 )}
@@ -690,13 +692,13 @@ const Shop = () => {
                 <div className="w-24 h-24 bg-slate/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Search className="h-12 w-12 text-slate" />
                 </div>
-                <h3 className="text-2xl font-bold text-maroon mb-2">No products found</h3>
-                <p className="text-slate mb-6">Try adjusting your filters or search terms</p>
+                <h3 className="text-2xl font-bold text-maroon mb-2">{t('no_products_found_msg')}</h3>
+                <p className="text-slate mb-6">{t('try_adjust_filters')}</p>
                 <button
                   onClick={clearFilters}
                   className="btn-primary px-8 py-3 rounded-full font-medium"
                 >
-                  Clear Filters
+                  {t('clear_all')}
                 </button>
               </div>
             )}
