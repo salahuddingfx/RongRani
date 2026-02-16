@@ -45,7 +45,7 @@ const resolveImageUrl = (baseUrl, image) => {
 const Seo = ({ title, description, keywords, path, image, noIndex = false, schema }) => {
   const { language } = useLanguage();
 
-  const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'http://localhost:5173').replace(/\/+$/, '');
+  const baseUrl = (import.meta?.env?.VITE_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:5173')).replace(/\/+$/, '');
   const canonical = normalizeUrl(baseUrl, path || '/');
   const metaTitle = title || DEFAULT_TITLE;
   const metaDescription = description || DEFAULT_DESCRIPTION;

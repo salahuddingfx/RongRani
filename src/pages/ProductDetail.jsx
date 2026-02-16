@@ -461,9 +461,14 @@ const ProductDetail = () => {
 
               {/* Social Share */}
               <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
-                <span className="font-bold text-slate-700">Share with friends:</span>
+                <span className="font-bold text-slate-700 dark:text-slate-300">Share with friends:</span>
                 <div className="-mt-4">
-                  <SocialShare title={`Check out ${product.name} on RongRani!`} />
+                  <SocialShare
+                    url={`${baseUrl}/product/${id}`}
+                    title={`Check out ${product.name} on RongRani™!`}
+                    description={pageDescription}
+                    image={pageImage}
+                  />
                 </div>
               </div>
             </div>
