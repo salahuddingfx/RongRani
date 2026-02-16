@@ -34,7 +34,7 @@ const ProductDetail = () => {
   });
   const [relatedProducts, setRelatedProducts] = useState([]);
   const { addToCart } = useCart();
-  const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'http://localhost:5173').replace(/\/+$/, '');
+  const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'https://rongrani.vercel.app').replace(/\/+$/, '');
 
   const buildDescription = (text) => {
     if (!text) {
