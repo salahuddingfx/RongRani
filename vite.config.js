@@ -97,6 +97,10 @@ export default defineConfig({
     reportCompressedSize: false
   },
   server: {
+    hmr: {
+      clientPort: 5173,
+      host: 'localhost',
+    },
     proxy: {
       '/api': {
         target: process.env.VITE_API_BASE_URL || 'http://localhost:5000',
@@ -109,5 +113,8 @@ export default defineConfig({
         secure: false,
       },
     },
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'lucide-react', 'axios'],
   },
 })

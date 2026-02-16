@@ -296,6 +296,33 @@ const updateOrder = async (req, res) => {
     order.trackingNumber = req.body.trackingNumber || order.trackingNumber;
     order.notes = req.body.notes || order.notes;
 
+    // Support editing pricing
+    if (req.body.subtotal !== undefined) order.subtotal = req.body.subtotal;
+    if (req.body.shipping !== undefined) order.shipping = req.body.shipping;
+    if (req.body.discount !== undefined) order.discount = req.body.discount;
+    if (req.body.total !== undefined) order.total = req.body.total;
+
+    // Support editing shipping paid status
+    if (req.body.isShippingPaid !== undefined) {
+      if (!order.delivery) order.delivery = {};
+      order.delivery.isShippingPaid = req.body.isShippingPaid;
+    }
+
+    // Support editing customer info and shipping address
+    if (req.body.shippingAddress) {
+      order.shippingAddress = {
+        ...order.shippingAddress,
+        ...req.body.shippingAddress,
+      };
+    }
+
+    if (req.body.guestInfo) {
+      order.guestInfo = {
+        ...order.guestInfo,
+        ...req.body.guestInfo,
+      };
+    }
+
     // Handle Revenue Tracking Logic (isPaid/paidAt)
     if (order.paymentStatus === 'paid' && previousPaymentStatus !== 'paid') {
       order.isPaid = true;

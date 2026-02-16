@@ -3,8 +3,8 @@ const User = require('../models/User');
 
 const auth = async (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
+    const token = req.header('Authorization')?.replace('Bearer ', '') || req.query.token;
+
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
@@ -32,8 +32,8 @@ const auth = async (req, res, next) => {
 
 const optionalAuth = async (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    
+    const token = req.header('Authorization')?.replace('Bearer ', '') || req.query.token;
+
     if (!token) {
       // No token provided, but that's okay - continue as guest
       req.user = null;
@@ -66,7 +66,7 @@ const authorize = (roles) => {
       allowedRoles: roles,
       isAuthorized: req.user && roles.includes(req.user.role)
     });
-    
+
     if (!req.user) {
       console.log('❌ Auth failed: No user');
       return res.status(401).json({ message: 'Not authenticated' });

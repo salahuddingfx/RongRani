@@ -275,7 +275,7 @@ const Navbar = () => {
                 <Link to="/" className="flex items-center gap-1.5 md:gap-2 group shrink-0" aria-label="RongRani Home">
                   {/* Gift Icon with creative rotation */}
                   <div
-                    className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center rounded-lg md:rounded-xl border border-maroon/20 dark:border-white/10 p-1 bg-white dark:bg-slate-800 backdrop-blur-sm shadow-sm transition-all duration-300 ease-out"
+                    className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center rounded-full border border-maroon/20 dark:border-white/10 p-1 bg-white dark:bg-slate-800 backdrop-blur-sm shadow-sm transition-all duration-300 ease-out"
                     role="presentation"
                   >
                     <img
@@ -284,6 +284,8 @@ const Navbar = () => {
                       className="w-full h-full object-contain"
                       width="48"
                       height="48"
+                      fetchpriority="high"
+                      loading="eager"
                     />
                   </div>
                   {/* Text Logo */}

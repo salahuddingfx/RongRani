@@ -165,6 +165,10 @@ const orderSchema = new mongoose.Schema({
       type: Number,
       default: 2500,
     },
+    isShippingPaid: {
+      type: Boolean,
+      default: false,
+    },
   },
   discount: {
     type: Number,

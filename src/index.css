@@ -265,7 +265,7 @@
   .section-spacing {
     @apply py-20 lg:py-32;
     content-visibility: auto;
-    contain-intrinsic-size: 1px 500px;
+    contain-intrinsic-size: 1px 1200px;
   }
 
   .input-field {
@@ -509,8 +509,15 @@
   }
 
   @keyframes wiggle {
-    0%, 100% { transform: rotate(-3deg); }
-    50% { transform: rotate(3deg); }
+
+    0%,
+    100% {
+      transform: rotate(-3deg);
+    }
+
+    50% {
+      transform: rotate(3deg);
+    }
   }
 
   .animate-wiggle {

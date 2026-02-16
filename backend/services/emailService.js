@@ -113,10 +113,11 @@ const emailBaseTemplate = (title, content, preheader = '') => {
         img { border: 0; -ms-interpolation-mode: bicubic; }
         .wrapper { width: 100%; table-layout: fixed; background-color: #f3f4f6; padding-bottom: 40px; }
         .main-table { background-color: #ffffff; margin: 0 auto; width: 100%; max-width: 600px; border-spacing: 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333333; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .header { padding: 25px 0; text-align: center; border-bottom: 3px solid ${primaryColor}; background-color: #ffffff; }
-        .logo { width: 120px; height: auto; display: block; margin: 0 auto; }
-        .content { padding: 30px 25px; background-color: #ffffff; }
-        .footer { padding: 30px 20px; text-align: center; background-color: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; }
+        .header { padding: 40px 0; text-align: center; border-bottom: 3px solid ${primaryColor}; background-color: #ffffff; }
+        .logo-container { width: 100px; height: 100px; margin: 0 auto; padding: 5px; background: #ffffff; border-radius: 50%; border: 2px solid ${secondaryColor}; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: inline-block; overflow: hidden; }
+        .logo { width: 100%; height: 100%; object-fit: contain; }
+        .content { padding: 40px 30px; background-color: #ffffff; }
+        .footer { padding: 35px 20px; text-align: center; background-color: #fcfcfc; border-top: 1px solid #eeeeee; font-size: 13px; color: #666666; }
         .btn { display: inline-block; padding: 14px 30px; background-color: ${primaryColor}; color: #ffffff !important; text-decoration: none; border-radius: 4px; font-weight: bold; text-align: center; font-size: 16px; margin: 25px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: auto; min-width: 200px; }
         .btn:hover { background-color: #701e2a; opacity: 0.9; }
         .social-icon { margin: 0 8px; display: inline-block; vertical-align: middle; }
@@ -147,7 +148,11 @@ const emailBaseTemplate = (title, content, preheader = '') => {
             <tr>
               <td class="header">
                  <a href="${frontendUrl}" target="_blank" style="text-decoration: none;">
-                   <img src="${logoUrl}" alt="RongRani" style="width: 80px; height: auto; display: block; margin: 0 auto;">
+                   <div class="logo-container">
+                     <img src="${logoUrl}" alt="RongRani" class="logo">
+                   </div>
+                   <div style="margin-top: 10px; color: ${primaryColor}; font-size: 28px; font-weight: 900; letter-spacing: -1px;">Rong<span style="color: #333333;">Rani</span></div>
+                   <div style="color: ${secondaryColor}; font-size: 10px; letter-spacing: 2px; font-weight: bold; margin-top: 5px; text-transform: uppercase;">Elegance in Every Hue</div>
                  </a>
               </td>
             </tr>
@@ -259,6 +264,12 @@ const emailTemplates = {
       <center style="margin-top: 35px;">
         <a href="${process.env.FRONTEND_URL}/track/${order.orderId}${trackingQuery}" class="btn">Track Your Order</a>
       </center>
+
+      <div style="margin-top: 40px; padding: 25px; background-color: #fff9f0; border-radius: 12px; border: 1px dashed ${secondaryColor}; text-align: center;">
+        <h3 style="color: ${primaryColor}; margin-top: 0; font-size: 18px;">A Small Surprise For You!</h3>
+        <p style="color: #6b7280; font-size: 14px; margin-bottom: 15px;">Use this code on your next order to get <b>5% OFF</b> as a thank you for shopping with us!</p>
+        <div style="display: inline-block; background-color: #ffffff; padding: 10px 25px; border: 2px solid ${primaryColor}; border-radius: 6px; font-family: monospace; font-size: 20px; font-weight: bold; color: ${primaryColor};">RaniLove5</div>
+      </div>
     `;
 
     return emailBaseTemplate(`Order Confirmation - #${order.orderId}`, content, `Thanks for your order #${order.orderId}! Here are the details.`);
@@ -328,7 +339,7 @@ const emailTemplates = {
       <div style="background-color: #fff1f2; border: 1px solid #fecdd3; border-radius: 8px; padding: 30px; margin-bottom: 30px; text-align: center;">
         <h3 style="color: #be123c; margin-top: 0;">A Special Gift for You</h3>
         <p style="color: #881337; margin-bottom: 20px;">Use the code below to get 10% off your first order!</p>
-        <div style="display: inline-block; background-color: #ffffff; padding: 15px 30px; border: 2px dashed #db2777; border-radius: 4px; font-family: monospace; font-size: 24px; font-weight: bold; color: #be123c;">WELCOME10</div>
+        <div style="display: inline-block; background-color: #ffffff; padding: 15px 30px; border: 2px dashed #db2777; border-radius: 4px; font-family: monospace; font-size: 24px; font-weight: bold; color: #be123c;">Rong10</div>
       </div>
 
       <p style="text-align: center; color: #4b5563; line-height: 1.6;">

@@ -44,7 +44,14 @@ const generateInvoice = async (order) => {
         // Header Logo
         const logoPath = path.join(__dirname, '../../public/RongRani-Logo.png');
         if (fs.existsSync(logoPath)) {
+          // Circular Logo Clipping
+          doc.save();
+          doc.circle(65, 55, 25).clip();
           doc.image(logoPath, 40, 30, { width: 50 });
+          doc.restore();
+
+          // Optional: Add a subtle gold border around the circle
+          doc.circle(65, 55, 25).lineWidth(1).stroke(colors.bespokeGold);
         }
 
         // Brand Name
@@ -134,6 +141,15 @@ const generateInvoice = async (order) => {
       drawField('Status:', (order.paymentStatus || 'Pending').toUpperCase(), infoY + 36);
       drawField('Courier:', 'Standard', infoY + 48);
 
+      // PAID STAMP (if applicable)
+      if (order.paymentStatus === 'paid' || order.isPaid) {
+        doc.save();
+        doc.rotate(-15, { origin: [500, 180] });
+        doc.rect(460, 160, 80, 25).fill('#10B981');
+        doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(12).text('PAID', 460, 167, { width: 80, align: 'center' });
+        doc.restore();
+      }
+
       // --- Itemization Table ---
       let tableY = 265;
       drawTableHeader(tableY);
@@ -186,7 +202,13 @@ const generateInvoice = async (order) => {
       };
 
       drawSum('Subtotal:', `Tk ${order.subtotal.toLocaleString()}`);
-      drawSum('Shipping:', `Tk ${(order.shipping || 0).toLocaleString()}`);
+
+      const isShipPaid = order.delivery?.isShippingPaid;
+      drawSum(
+        isShipPaid ? 'Shipping (Paid):' : 'Shipping:',
+        isShipPaid ? 'Tk 0 (Paid)' : `Tk ${(order.shipping || 0).toLocaleString()}`
+      );
+
       if (order.discount > 0) drawSum('Discount:', `- Tk ${order.discount.toLocaleString()}`);
 
       doc.moveTo(370, currentY).lineTo(555, currentY).strokeColor(colors.royalMaroon).lineWidth(1).stroke();

@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React from 'react';
+
+const { createContext, useContext, useState, useEffect } = React;
 
 const ThemeContext = createContext();
 
@@ -13,9 +15,14 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }) => {
   const [isDark, setIsDark] = useState(() => {
-    // Load theme from localStorage
-    const savedTheme = localStorage.getItem('theme');
-    return savedTheme === 'dark';
+    try {
+      // Load theme from localStorage
+      const savedTheme = localStorage.getItem('theme');
+      return savedTheme === 'dark';
+    } catch (e) {
+      console.warn('LocalStorage not available:', e);
+      return false;
+    }
   });
 
   useEffect(() => {

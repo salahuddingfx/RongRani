@@ -13,9 +13,14 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(() => {
-    // Load cart from localStorage on mount
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      // Load cart from localStorage on mount
+      const savedCart = localStorage.getItem('cart');
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (e) {
+      console.warn('LocalStorage not available for cart:', e);
+      return [];
+    }
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
 

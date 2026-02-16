@@ -222,6 +222,24 @@ const Cart = () => {
             <div className="card p-4 sm:p-6 lg:sticky lg:top-24">
               <h2 className="text-xl sm:text-2xl font-bold text-maroon mb-4 sm:mb-6">Order Summary</h2>
 
+              {/* Free Shipping Progress Bar */}
+              <div className="mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+                    {totalPrice >= 2500
+                      ? "🎉 You've unlocked FREE Shipping!"
+                      : `৳${(2500 - totalPrice).toLocaleString()} more for FREE shipping`}
+                  </span>
+                  <Truck className={`w-4 h-4 ${totalPrice >= 2500 ? 'text-green-500' : 'text-slate-400'}`} />
+                </div>
+                <div className="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full transition-all duration-1000 ease-out rounded-full ${totalPrice >= 2500 ? 'bg-green-500' : 'bg-maroon'}`}
+                    style={{ width: `${Math.min((totalPrice / 2500) * 100, 100)}%` }}
+                  ></div>
+                </div>
+              </div>
+
               <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                 <div className="flex justify-between items-center text-sm sm:text-base">
                   <span className="text-slate">Items ({totalItems})</span>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Star, ShoppingCart, Heart, Minus, Plus, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Zap, Gift, TrendingUp, Package } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Minus, Plus, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Zap, Gift, TrendingUp, Package, MessageCircle } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { addToRecentlyViewed } from '../utils/productUtils';
@@ -429,6 +429,15 @@ const ProductDetail = () => {
                   <Zap className="h-6 w-6 animate-pulse" />
                   <span className="relative z-10">Buy Now ⚡</span>
                 </button>
+                <a
+                  href={`https://wa.me/8801851075537?text=${encodeURIComponent(`Hello RongRani! 👋 I want to order this product:\n\n*Product:* ${product.name}\n*Price:* ৳${product.price}\n*Link:* ${window.location.href}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:shadow-2xl hover:bg-[#128C7E] transition-all transform hover:scale-[1.02] active:scale-95"
+                >
+                  <MessageCircle className="h-6 w-6" />
+                  <span>Order on WhatsApp 💬</span>
+                </a>
                 <button
                   onClick={handleAddToCart}
                   disabled={product.stock === 0}
