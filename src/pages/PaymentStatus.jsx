@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import confetti from 'canvas-confetti';
+import ThankYouCard from '../components/ThankYouCard';
 
 const PaymentStatus = () => {
     const { status, orderId } = useParams();
@@ -69,6 +70,16 @@ const PaymentStatus = () => {
                                         <span className="font-mono font-bold text-slate-700 dark:text-slate-200">#{orderId.slice(-8).toUpperCase()}</span>
                                     </div>
                                 )}
+                            </div>
+
+                            {/* Special Gift Card */}
+                            <div className="mt-8 transform scale-90 sm:scale-100 origin-top">
+                                <ThankYouCard
+                                    customerName="Valued Guest"
+                                    discountAmount="10% OFF"
+                                    couponCode="RONGRANI-LOVE"
+                                    expiryDate="Next Purchase"
+                                />
                             </div>
                         </div>
                     )}
