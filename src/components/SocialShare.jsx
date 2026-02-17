@@ -2,7 +2,7 @@ import React from 'react';
 import { Facebook, Link as LinkIcon, Twitter, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const SocialShare = ({ url, title, image, description }) => {
+const SocialShare = ({ url, title, image, description, price }) => {
     const shareUrl = url || window.location.href;
     const shareTitle = title || document.title;
     const shareImage = image || '';
@@ -16,8 +16,8 @@ const SocialShare = ({ url, title, image, description }) => {
                 shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
                 break;
             case 'whatsapp':
-                // For WhatsApp, we include the title and link for a better preview
-                const whatsappMsg = `${shareTitle}\n\nCheck this out: ${shareUrl}`;
+                // Enhanced WhatsApp message with price and better formatting
+                const whatsappMsg = `*${shareTitle}*${price ? `\n💰 *Price:* ৳${price}` : ''}\n\n${shareDescription ? `_${shareDescription.substring(0, 100)}..._\n\n` : ''}🛒 *Shop Now:* ${shareUrl}`;
                 shareLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappMsg)}`;
                 break;
             case 'twitter':
@@ -31,7 +31,9 @@ const SocialShare = ({ url, title, image, description }) => {
                 }
                 break;
             case 'pinterest':
-                shareLink = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(shareImage)}&description=${encodeURIComponent(shareTitle)}`;
+                // Ensure image is absolute for Pinterest
+                const pinterestImage = shareImage.startsWith('http') ? shareImage : `${window.location.origin}${shareImage.startsWith('/') ? '' : '/'}${shareImage}`;
+                shareLink = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(pinterestImage)}&description=${encodeURIComponent(shareTitle)}`;
                 break;
             case 'copy':
                 try {

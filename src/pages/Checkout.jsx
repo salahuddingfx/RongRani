@@ -276,7 +276,7 @@ const Checkout = () => {
           to="/shop"
           className="bg-maroon text-white px-8 py-3 rounded-lg hover:bg-maroon/80 transition-colors inline-block"
         >
-          Continue Shopping
+          {t('continue_shopping')}
         </Link>
       </div>
     );
@@ -297,7 +297,7 @@ const Checkout = () => {
         {!isAuthenticated && (
           <div className="max-w-2xl mx-auto mb-8">
             <div className="bg-maroon text-white rounded-2xl p-6 shadow-xl">
-              <h3 className="text-xl font-bold mb-3 text-center">🎁 Become a Lifetime Customer!</h3>
+              <h3 className="text-xl font-bold mb-3 text-center">{t('become_member')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mb-4">
                 <div className="text-center">
                   <div className="text-2xl mb-1">💝</div>
@@ -306,13 +306,13 @@ const Checkout = () => {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl mb-1">🚚</div>
-                  <p className="font-semibold">Free Shipping</p>
-                  <p className="text-cream-light text-xs">On orders above ৳2500</p>
+                  <p className="font-semibold">{t('fast_delivery_title')}</p>
+                  <p className="text-cream-light text-xs">{t('on_orders_over').replace('{amount}', '2500')}</p>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl mb-1">📦</div>
-                  <p className="font-semibold">Order Tracking</p>
-                  <p className="text-cream-light text-xs">Track all your orders</p>
+                  <p className="font-semibold">{t('order_tracking')}</p>
+                  <p className="text-cream-light text-xs">{t('track_all_your_orders') || 'Track all your orders'}</p>
                 </div>
               </div>
               <div className="flex gap-3 justify-center">
@@ -321,18 +321,18 @@ const Checkout = () => {
                   state={{ from: '/checkout' }}
                   className="bg-white text-maroon px-6 py-2 rounded-full font-bold hover:bg-cream-light transition-colors"
                 >
-                  Login
+                  {t('login')}
                 </Link>
                 <Link
                   to="/register"
                   state={{ from: '/checkout' }}
                   className="bg-gold text-charcoal px-6 py-2 rounded-full font-bold hover:bg-gold/80 transition-colors"
                 >
-                  Register
+                  {t('register')}
                 </Link>
               </div>
               <p className="text-center text-xs text-cream-light mt-3">
-                Or continue as guest below
+                {t('or_continue_guest')}
               </p>
             </div>
           </div>
@@ -359,7 +359,7 @@ const Checkout = () => {
                       <div>
                         <p className="font-medium">{item.name}</p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
-                          Quantity: {item.quantity}
+                          {t('qty_label')}: {item.quantity}
                         </p>
                       </div>
                     </div>
@@ -372,12 +372,12 @@ const Checkout = () => {
 
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span>Subtotal</span>
+                  <span>{t('subtotal')}</span>
                   <span>৳{totalPrice}</span>
                 </div>
                 <div className="space-y-3 bg-white/50 dark:bg-gray-700/50 p-4 rounded-xl border border-maroon/10">
                   <label className="block text-sm font-bold text-maroon dark:text-pink-600">
-                    Apply Coupon Code
+                    {t('apply_coupon')}
                   </label>
                   <div className="flex gap-2">
                     <input
@@ -397,7 +397,7 @@ const Checkout = () => {
                         : 'bg-maroon hover:bg-maroon/90 text-white disabled:opacity-50'
                         }`}
                     >
-                      {couponLoading ? '...' : couponInfo ? 'Remove' : 'Apply'}
+                      {couponLoading ? '...' : couponInfo ? t('remove') : t('apply')}
                     </button>
                   </div>
                   {couponInfo && (
@@ -410,21 +410,21 @@ const Checkout = () => {
                   )}
                 </div>
                 <div className="flex justify-between py-1">
-                  <span className="text-slate-600 font-medium">Shipping Charge</span>
+                  <span className="text-slate-600 font-medium">{t('shipping_charge')}</span>
                   <span className={`font-bold ${shipping === 0 && !deliveryLoading ? 'text-green-600' : ''}`}>
                     {deliveryLoading ? (
                       <span className="flex items-center gap-2">
                         <div className="w-3 h-3 border-2 border-maroon border-t-transparent rounded-full animate-spin" />
-                        Calculating...
+                        {t('calculating')}
                       </span>
                     ) : (!formData.district || !formData.city) ? (
-                      <span className="text-xs text-slate-400 font-normal italic">Enter address to calculate</span>
-                    ) : shipping === 0 ? 'FREE' : `৳${shipping}`}
+                      <span className="text-xs text-slate-400 font-normal italic">{t('enter_address_calculate') || 'Enter address to calculate'}</span>
+                    ) : shipping === 0 ? t('free') : `৳${shipping}`}
                   </span>
                 </div>
                 {giftWrapping && (
                   <div className="flex justify-between text-amber-600">
-                    <span className="flex items-center gap-1">🎁 Gift Wrapping</span>
+                    <span className="flex items-center gap-1">🎁 {t('gift_wrapping')}</span>
                     <span>৳{giftWrappingFee}</span>
                   </div>
                 )}
@@ -435,13 +435,13 @@ const Checkout = () => {
                 )}
                 {discount > 0 && (
                   <div className="flex justify-between text-green-700 font-semibold">
-                    <span>Discount</span>
+                    <span>{t('discount_label')}</span>
                     <span>-৳{discount.toFixed(0)}</span>
                   </div>
                 )}
                 <hr className="border-white/30 dark:border-gray-600/30" />
                 <div className="flex justify-between text-lg font-semibold">
-                  <span>Total</span>
+                  <span>{t('total')}</span>
                   <span>৳{total.toFixed(2)}</span>
                 </div>
               </div>
@@ -678,7 +678,7 @@ const Checkout = () => {
                           </svg>
                         </div>
                         <div className="ml-3">
-                          <h3 className="text-sm font-bold text-amber-800">Advance Delivery Charge Required</h3>
+                          <h3 className="text-sm font-bold text-amber-800">{t('advance_delivery_charge_title')}</h3>
                           <div className="mt-2 text-sm text-amber-700">
                             <p>To secure your order and prevent fake bookings, please pay <strong>৳{shipping}</strong> (Delivery Charge) in advance.</p>
                             <div className="mt-3 mb-2 font-mono bg-white p-2 rounded border border-amber-200 inline-block select-all">
@@ -700,7 +700,7 @@ const Checkout = () => {
                           <CreditCard className="h-5 w-5 text-maroon" />
                         </div>
                         <div className="ml-3">
-                          <h3 className="text-sm font-bold text-maroon">Full Prepayment Required</h3>
+                          <h3 className="text-sm font-bold text-maroon">{t('full_prepayment_title')}</h3>
                           <div className="mt-2 text-sm text-maroon/80">
                             <p>Please pay the full amount <strong>৳{total.toFixed(2)}</strong> to confirm your order.</p>
                             <div className="mt-3 mb-2 font-mono bg-white p-2 rounded border border-maroon/20 inline-block select-all text-maroon">
@@ -750,7 +750,7 @@ const Checkout = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-[10px] font-black text-slate-600 mb-1 uppercase tracking-tight">Transaction ID <span className="text-red-500">*</span></label>
+                            <label className="block text-[10px] font-black text-slate-600 mb-1 uppercase tracking-tight">{t('transaction_id')} <span className="text-red-500">*</span></label>
                             <input
                               type="text"
                               name="transactionId"
@@ -762,7 +762,7 @@ const Checkout = () => {
                             />
                           </div>
                           <div>
-                            <label className="block text-[10px] font-black text-slate-600 mb-1 uppercase tracking-tight">Sender Number (Last 4) <span className="text-red-500">*</span></label>
+                            <label className="block text-[10px] font-black text-slate-600 mb-1 uppercase tracking-tight">{t('sender_number_last_4')} <span className="text-red-500">*</span></label>
                             <input
                               type="text"
                               name="senderLastDigits"

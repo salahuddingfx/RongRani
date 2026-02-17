@@ -432,7 +432,7 @@ const ProductDetail = () => {
                   <span className="relative z-10">{t('buy_now_zap')}</span>
                 </button>
                 <a
-                  href={`https://wa.me/8801851075537?text=${encodeURIComponent(`Hello RongRani! 👋 I want to order this product:\n\n*Product:* ${product.name}\n*Price:* ৳${product.price}\n*Link:* ${window.location.href}`)}`}
+                  href={`https://wa.me/8801851075537?text=${encodeURIComponent(`Hello RongRani! 💎 I want to order this premium product:\n\n🛍️ *Product:* ${product.name}\n💰 *Price:* ৳${product.price}\n🔗 *Link:* ${window.location.href}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:shadow-2xl hover:bg-[#128C7E] transition-all transform hover:scale-[1.02] active:scale-95"
@@ -467,9 +467,10 @@ const ProductDetail = () => {
                 <div className="-mt-4">
                   <SocialShare
                     url={`${baseUrl}/product/${id}`}
-                    title={`Check out ${product.name} on RongRani™!`}
+                    title={product.name}
                     description={pageDescription}
-                    image={pageImage}
+                    image={pageImage.startsWith('http') ? pageImage : `${baseUrl}${pageImage.startsWith('/') ? '' : '/'}${pageImage}`}
+                    price={product.price}
                   />
                 </div>
               </div>
@@ -621,22 +622,22 @@ const ProductDetail = () => {
               <div className="bg-blue-500 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:rotate-12 transition-transform">
                 <Truck className="h-8 w-8 text-white" />
               </div>
-              <h4 className="font-black text-blue-700 mb-2 text-base">Fast Delivery</h4>
-              <p className="text-sm text-slate/70 font-medium">2-5 days nationwide</p>
+              <h4 className="font-black text-blue-700 mb-2 text-base">{t('fast_delivery_title')}</h4>
+              <p className="text-sm text-slate/70 font-medium">{t('fast_delivery_desc')}</p>
             </div>
             <div className="bg-green-50 p-6 rounded-2xl text-center shadow-lg hover:shadow-2xl hover:scale-105 transition-all border border-green-200 group">
               <div className="bg-green-500 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:rotate-12 transition-transform">
                 <Shield className="h-8 w-8 text-white" />
               </div>
-              <h4 className="font-black text-green-700 mb-2 text-base">Quality Guaranteed</h4>
-              <p className="text-sm text-slate/70 font-medium">100% authentic products</p>
+              <h4 className="font-black text-green-700 mb-2 text-base">{t('quality_guaranteed_title')}</h4>
+              <p className="text-sm text-slate/70 font-medium">{t('authentic_products_desc')}</p>
             </div>
             <div className="bg-amber-50 p-6 rounded-2xl text-center shadow-lg hover:shadow-2xl hover:scale-105 transition-all border border-amber-200 group">
               <div className="bg-amber-500 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:rotate-12 transition-transform">
                 <RotateCcw className="h-8 w-8 text-white" />
               </div>
-              <h4 className="font-black text-amber-700 mb-2 text-base">Easy Returns</h4>
-              <p className="text-sm text-slate/70 font-medium">7-day return policy</p>
+              <h4 className="font-black text-amber-700 mb-2 text-base">{t('easy_returns_title')}</h4>
+              <p className="text-sm text-slate/70 font-medium">{t('return_policy_desc')}</p>
             </div>
           </div>
         </div>
@@ -684,7 +685,7 @@ const ProductDetail = () => {
                           {review.isVerifiedPurchase && (
                             <div className="flex items-center gap-1.5 text-[10px] bg-green-100 text-green-700 px-3 py-1 rounded-full font-black uppercase tracking-widest shadow-sm">
                               <Shield className="h-3 w-3" />
-                              Verified Purchase
+                              {t('verified_purchase')}
                             </div>
                           )}
                         </div>
@@ -714,14 +715,14 @@ const ProductDetail = () => {
                 <div className="w-24 h-24 bg-gold/20 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <Star className="h-12 w-12 text-gold" />
                 </div>
-                <h3 className="text-2xl font-black text-maroon mb-3">No Reviews Yet</h3>
-                <p className="text-slate/70 text-lg mb-6">Be the first to review this beautiful product!</p>
+                <h3 className="text-2xl font-black text-maroon mb-3">{t('no_reviews_yet_title')}</h3>
+                <p className="text-slate/70 text-lg mb-6">{t('be_first_review')}</p>
                 {canReview ? (
                   <button
                     onClick={() => setShowReviewForm(true)}
                     className="bg-maroon text-white px-8 py-3 rounded-2xl font-bold hover:shadow-xl hover:scale-105 transition-all active:scale-95"
                   >
-                    Write a Review ✨
+                    {t('write_review')}
                   </button>
                 ) : (
                   <div className="text-center">
@@ -748,7 +749,7 @@ const ProductDetail = () => {
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-3xl font-black text-maroon flex items-center gap-2">
                   <TrendingUp className="w-8 h-8" />
-                  You May Also Like
+                  {t('you_may_also_like_title')}
                 </h2>
                 <Link to="/shop" className="text-slate-500 hover:text-maroon font-semibold flex items-center gap-1 group transition-colors">
                   {t('view_all')} <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

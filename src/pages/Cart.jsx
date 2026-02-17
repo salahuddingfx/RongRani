@@ -244,14 +244,14 @@ const Cart = () => {
 
               <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                 <div className="flex justify-between items-center text-sm sm:text-base">
-                  <span className="text-slate">Items ({totalItems})</span>
+                  <span className="text-slate">{t('items_label')} ({totalItems})</span>
                   <span className="font-semibold text-maroon">৳{totalPrice.toLocaleString()}</span>
                 </div>
 
                 <div className="flex justify-between items-center text-sm sm:text-base">
-                  <span className="text-slate">Shipping</span>
+                  <span className="text-slate">{t('shipping')}</span>
                   <span className={`font-semibold ${shipping === 0 ? 'text-green-600' : 'text-maroon'}`}>
-                    {shipping === 0 ? 'FREE' : `৳${shipping}`}
+                    {shipping === 0 ? t('free') : `৳${shipping}`}
                   </span>
                 </div>
 
@@ -274,7 +274,7 @@ const Cart = () => {
                     </div>
                     <label htmlFor="giftWrapping" className="flex items-center gap-1.5 cursor-pointer select-none text-slate">
                       <span className="text-amber-500">🎁</span>
-                      <span>Gift Wrapping</span>
+                      <span>{t('gift_wrapping')}</span>
                     </label>
                   </div>
                   <span className="font-semibold text-maroon">৳{giftWrappingFee}</span>
@@ -283,7 +283,7 @@ const Cart = () => {
                 <hr className="border-slate/20" />
 
                 <div className="flex justify-between items-center text-lg sm:text-xl font-bold">
-                  <span className="text-maroon">Total</span>
+                  <span className="text-maroon">{t('total')}</span>
                   <span className="text-maroon">৳{finalTotal.toLocaleString()}</span>
                 </div>
               </div>
@@ -293,7 +293,7 @@ const Cart = () => {
                 state={{ giftWrapping }}
                 className="btn-primary w-full py-3 sm:py-4 px-4 rounded-full font-semibold text-sm sm:text-lg flex items-center justify-center gap-2 hover:scale-105 transition-transform mb-3 sm:mb-4"
               >
-                <span>Checkout</span>
+                <span>{t('checkout')}</span>
                 <ArrowRight className="h-4 sm:h-5 w-4 sm:w-5" />
               </Link>
 
@@ -302,7 +302,7 @@ const Cart = () => {
                 className="btn-secondary w-full py-2 sm:py-3 px-4 rounded-full font-medium text-sm sm:text-base flex items-center justify-center gap-2"
               >
                 <ShoppingBag className="h-4 w-4" />
-                <span>Continue Shopping</span>
+                <span>{t('continue_shopping')}</span>
               </Link>
             </div>
 
@@ -311,16 +311,16 @@ const Cart = () => {
               <div className="card p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
                 <Truck className="h-6 sm:h-8 w-6 sm:w-8 text-maroon flex-shrink-0" />
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-maroon text-sm sm:text-base">Free Shipping</h4>
-                  <p className="text-xs sm:text-sm text-slate">On orders over ৳2500</p>
+                  <h4 className="font-semibold text-maroon text-sm sm:text-base">{t('fast_delivery_title')}</h4>
+                  <p className="text-xs sm:text-sm text-slate">{t('on_orders_over').replace('{amount}', '2500')}</p>
                 </div>
               </div>
 
               <div className="card p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
                 <Shield className="h-6 sm:h-8 w-6 sm:w-8 text-maroon flex-shrink-0" />
                 <div className="min-w-0">
-                  <h4 className="font-semibold text-maroon text-sm sm:text-base">Secure Checkout</h4>
-                  <p className="text-xs sm:text-sm text-slate">SSL encrypted payment</p>
+                  <h4 className="font-semibold text-maroon text-sm sm:text-base">{t('secure_checkout_label')}</h4>
+                  <p className="text-xs sm:text-sm text-slate">{t('ssl_encrypted')}</p>
                 </div>
               </div>
             </div>

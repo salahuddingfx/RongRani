@@ -152,7 +152,7 @@ const Footer = () => {
                     <Phone className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Call Us</p>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">{t('call_us')}</p>
                     <span className="text-sm text-slate-200 font-bold">+880 1851-075537</span>
                   </div>
                 </a>
@@ -161,7 +161,7 @@ const Footer = () => {
                     <Mail className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Email Us</p>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">{t('email_us')}</p>
                     <span className="text-sm text-slate-200 font-bold break-all">info.rongrani@gmail.com</span>
                   </div>
                 </a>
@@ -170,7 +170,7 @@ const Footer = () => {
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">Location</p>
+                    <p className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-0.5">{t('location_label') || 'Location'}</p>
                     <span className="text-sm text-slate-200 font-bold">Cox's Bazar, Bangladesh-4700</span>
                   </div>
                 </div>
@@ -189,7 +189,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <p className="text-white font-black text-lg tracking-tight">{bdTime}</p>
-                  <p className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">{language === 'bn' ? 'বাংলাদেশ সময়' : 'Bangladesh Local Time'} (GMT+6)</p>
+                  <p className="text-slate-500 text-[10px] uppercase font-bold tracking-widest">{t('bd_local_time') || 'Bangladesh Local Time'} (GMT+6)</p>
                 </div>
               </div>
 

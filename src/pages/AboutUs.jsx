@@ -1,39 +1,41 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Heart, Users, Award, Sparkles, ShoppingBag, Package, CheckCircle, Star, TrendingUp, Globe } from 'lucide-react';
 import Seo from '../components/Seo';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const AboutUs = () => {
+  const { t } = useLanguage();
   const stats = [
-    { icon: ShoppingBag, value: '50+', label: 'Products Sold', bg: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' },
-    { icon: Users, value: '100+', label: 'Happy Customers', bg: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' },
-    { icon: Award, value: '05+', label: 'Skilled Artisans', bg: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)' },
-    { icon: Star, value: '4.8', label: 'Average Rating', bg: 'linear-gradient(135deg, #FFD700 0%, #F59E0B 100%)' },
+    { icon: ShoppingBag, value: '50+', label: t('products_sold'), bg: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)' },
+    { icon: Users, value: '100+', label: t('happy_customers'), bg: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)' },
+    { icon: Award, value: '05+', label: t('skilled_artisans'), bg: 'linear-gradient(135deg, #A855F7 0%, #7C3AED 100%)' },
+    { icon: Star, value: '4.8', label: t('avg_rating'), bg: 'linear-gradient(135deg, #FFD700 0%, #F59E0B 100%)' },
   ];
 
   const values = [
     {
       icon: Heart,
-      title: 'Passion for Crafts',
-      description: 'Every product is crafted with love and dedication by skilled artisans who take pride in their work.',
+      title: t('passion_for_crafts'),
+      description: t('passion_desc'),
       bg: '#EC4899',
     },
     {
       icon: Award,
-      title: 'Premium Quality',
-      description: 'We ensure the highest quality standards in every product, using only authentic materials and traditional techniques.',
+      title: t('premium_quality'),
+      description: t('quality_desc'),
       bg: '#F59E0B',
     },
     {
       icon: CheckCircle,
-      title: 'Customer Satisfaction',
-      description: 'Your happiness is our success. We go the extra mile to ensure every customer has an exceptional experience.',
+      title: t('cust_satisfaction'),
+      description: t('cust_satisfaction_desc'),
       bg: '#22C55E',
     },
     {
       icon: Globe,
-      title: 'Cultural Heritage',
-      description: 'Preserving and promoting Bangladeshi craftsmanship and cultural heritage through authentic handmade products.',
+      title: t('cultural_heritage'),
+      description: t('cultural_heritage_desc'),
       bg: '#3B82F6',
     },
   ];
@@ -41,19 +43,19 @@ const AboutUs = () => {
   const team = [
     {
       name: 'Salah Uddin Kader',
-      role: 'Founder & CEO',
+      role: t('founder_ceo'),
       image: 'https://ui-avatars.com/api/?name=Salah+Uddin+Kader&background=8B1538&color=fff&size=200',
       description: 'Visionary leader passionate about promoting Bangladeshi crafts globally.',
     },
     {
       name: 'Artisan Team',
-      role: 'Master Craftspeople',
+      role: t('master_craftspeople'),
       image: 'https://ui-avatars.com/api/?name=Artisan+Team&background=C9A86A&color=fff&size=200',
       description: 'Skilled artisans keeping traditional Bangladeshi crafts alive through their expertise.',
     },
     {
       name: 'Customer Support',
-      role: 'Support Team',
+      role: t('support_team_label'),
       image: 'https://ui-avatars.com/api/?name=Support+Team&background=2F3645&color=fff&size=200',
       description: 'Dedicated team ensuring every customer has a delightful shopping experience.',
     },
@@ -76,17 +78,16 @@ const AboutUs = () => {
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-6 py-2 rounded-full mb-6">
               <Sparkles className="h-5 w-5 text-gold" />
-              <span className="font-semibold">Est. 2026</span>
+              <span className="font-semibold">{t('est_2026')}</span>
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-white">
-              Welcome to RongRani
+              {t('about_hero_title')}
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-white/90 font-medium leading-relaxed">
-              Your destination for beautiful, handcrafted gifts and lifestyle products
+              {t('about_hero_subtitle')}
             </p>
             <p className="text-lg text-white/80 max-w-3xl mx-auto mb-8">
-              We are passionate about bringing the finest Bangladeshi craftsmanship to your doorstep. 
-              Every product tells a story of tradition, skill, and love.
+              {t('about_hero_desc')}
             </p>
             <Link
               to="/shop"
@@ -133,38 +134,31 @@ const AboutUs = () => {
             <div className="text-center mb-12">
               <div className="inline-flex items-center space-x-2 bg-maroon/10 text-maroon px-6 py-2 rounded-full mb-4">
                 <Heart className="h-5 w-5" />
-                <span className="font-bold">Our Story</span>
+                <span className="font-bold">{t('our_story_title')}</span>
               </div>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-maroon mb-6">
-                Crafting Memories, One Gift at a Time
+                {t('crafting_memories')}
               </h2>
             </div>
 
             <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12 border border-maroon/10">
               <div className="prose prose-lg max-w-none">
                 <p className="text-lg text-charcoal-light leading-relaxed mb-6">
-                  <strong className="text-maroon">RongRani</strong> was born from a simple yet powerful vision: 
-                  to celebrate and preserve the rich heritage of Bangladeshi craftsmanship while making it accessible to everyone.
+                  {t('about_story_p1')}
                 </p>
                 <p className="text-lg text-charcoal-light leading-relaxed mb-6">
-                  We started our journey in 2026 with a dream to create a platform where skilled artisans could showcase 
-                  their talents and customers could find authentic, handcrafted gifts for their loved ones. Every product 
-                  in our collection is carefully curated and crafted with passion, ensuring that you receive nothing but the best.
+                  {t('about_story_p2')}
                 </p>
                 <p className="text-lg text-charcoal-light leading-relaxed mb-6">
-                  From traditional <strong className="text-maroon">jewellery</strong> to <strong className="text-maroon">home decor</strong>, 
-                  from <strong className="text-maroon">anniversary gifts</strong> to <strong className="text-maroon">Valentine's Day specials</strong> 
-                  – we offer a diverse range of products that speak the language of love and celebration.
+                  {t('about_story_p3')}
                 </p>
                 <div className="bg-gold/10 border-l-4 border-gold p-6 rounded-r-2xl my-8">
                   <p className="text-lg text-charcoal font-semibold italic">
-                    "Our mission is not just to sell products, but to help you create lasting memories and express your 
-                    emotions through thoughtful, handcrafted gifts that carry the essence of Bangladeshi culture."
+                    "{t('mission_quote')}"
                   </p>
                 </div>
                 <p className="text-lg text-charcoal-light leading-relaxed">
-                  Today, we're proud to serve thousands of happy customers across Bangladesh, and we continue to grow our 
-                  collection with new designs and products every season. Thank you for being part of our journey!
+                  {t('about_story_p4')}
                 </p>
               </div>
             </div>
@@ -178,13 +172,13 @@ const AboutUs = () => {
           <div className="text-center mb-12">
             <div className="inline-flex items-center space-x-2 bg-maroon/10 text-maroon px-6 py-2 rounded-full mb-4">
               <Award className="h-5 w-5" />
-              <span className="font-bold">Our Values</span>
+              <span className="font-bold">{t('our_values_title')}</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-maroon mb-4">
-              What We Stand For
+              {t('what_we_stand_for')}
             </h2>
             <p className="text-lg text-charcoal-light max-w-2xl mx-auto">
-              These core values guide everything we do at RongRani
+              {t('values_guide')}
             </p>
           </div>
 
@@ -214,13 +208,13 @@ const AboutUs = () => {
           <div className="text-center mb-12">
             <div className="inline-flex items-center space-x-2 bg-maroon/10 text-maroon px-6 py-2 rounded-full mb-4">
               <Users className="h-5 w-5" />
-              <span className="font-bold">Our Team</span>
+              <span className="font-bold">{t('our_team')}</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-maroon mb-4">
-              Meet the People Behind RongRani
+              {t('meet_team')}
             </h2>
             <p className="text-lg text-charcoal-light max-w-2xl mx-auto">
-              Passionate individuals dedicated to bringing you the best
+              {t('team_subtitle')}
             </p>
           </div>
 
@@ -256,10 +250,10 @@ const AboutUs = () => {
           <div className="max-w-3xl mx-auto text-center text-white">
             <Package className="h-16 w-16 mx-auto mb-6 text-gold" />
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-6">
-              Ready to Find the Perfect Gift?
+              {t('ready_perfect_gift')}
             </h2>
             <p className="text-xl mb-8 text-white/90">
-              Browse our extensive collection of handcrafted products and make someone's day special!
+              {t('browse_cta_desc')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -267,14 +261,14 @@ const AboutUs = () => {
                 className="inline-flex items-center justify-center space-x-2 bg-gold hover:bg-amber-500 text-charcoal px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
               >
                 <ShoppingBag className="h-6 w-6" />
-                <span>Shop Now</span>
+                <span>{t('shop_now_btn')}</span>
               </Link>
               <Link
                 to="/contact"
                 className="inline-flex items-center justify-center space-x-2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 border-2 border-white/30"
               >
                 <Heart className="h-6 w-6" />
-                <span>Contact Us</span>
+                <span>{t('contact')}</span>
               </Link>
             </div>
           </div>
