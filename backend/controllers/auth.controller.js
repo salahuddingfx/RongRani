@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { sendEmail } = require('../services/emailService');
 
@@ -189,7 +188,7 @@ const forgotPassword = async (req, res) => {
     user.resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 hour
     await user.save();
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL} /reset-password/${resetToken} `;
 
     await sendEmail(email, 'Password Reset', 'passwordReset', {
       name: user.name,
@@ -252,7 +251,7 @@ const refreshToken = async (req, res) => {
     const newToken = generateToken(decoded.id);
 
     res.json({ token: newToken });
-  } catch (error) {
+  } catch (_) {
     res.status(401).json({ message: 'Invalid token' });
   }
 };
@@ -274,7 +273,7 @@ const verifyEmail = async (req, res) => {
     await user.save();
 
     res.json({ message: 'Email verified successfully' });
-  } catch (error) {
+  } catch (_) {
     res.status(400).json({ message: 'Invalid token' });
   }
 };

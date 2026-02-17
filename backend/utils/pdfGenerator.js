@@ -155,7 +155,7 @@ const generateInvoice = async (order) => {
       drawTableHeader(tableY);
       let currentY = tableY + 30;
 
-      order.items.forEach((item, i) => {
+      order.items.forEach((item) => {
         const productData = item.product || {};
         const textWidth = 260;
         const mainTextHeight = doc.heightOfString(item.name, { width: textWidth, font: 'Helvetica-Bold', size: 9 });

@@ -1,5 +1,9 @@
 const nodemailer = require('nodemailer');
 
+// 🎨 BRAND COLORS
+const primaryColor = '#8B2635'; // RongRani Maroon
+const secondaryColor = '#C5A059'; // Gold Accent
+
 // 🏁 INITIALIZATION LOGS
 const hasBrevoKey = !!process.env.BREVO_API_KEY;
 const smtpHost = process.env.SMTP_HOST || process.env.BREVO_SMTP_HOST;
@@ -96,8 +100,6 @@ const createTransporter = () => {
 const emailBaseTemplate = (title, content, preheader = '') => {
   const frontendUrl = process.env.FRONTEND_URL || 'https://rongrani.vercel.app';
   const logoUrl = `${frontendUrl}/RongRani-Logo.png`; // Updated to correct logo file
-  const primaryColor = '#8B2635'; // RongRani Maroon
-  const secondaryColor = '#C5A059'; // Gold Accent
 
   return `
     <!DOCTYPE html>
@@ -474,7 +476,7 @@ const emailTemplates = {
   },
 
   // 7. Newsletter Welcome Email
-  newsletterWelcome: (data) => {
+  newsletterWelcome: () => {
     const content = `
       <div style="text-align: center; margin-bottom: 30px;">
         <h2 style="color: #111827; margin-top: 10px; font-size: 24px;">You're on the list!</h2>
@@ -668,7 +670,7 @@ const sendEmail = async (to, subject, template, data, attachments = []) => {
     // Verify connection configuration
     try {
       await transporter.verify();
-    } catch (verifyError) {
+    } catch {
       console.error('⚠️ SMTP Verify failed, attempting to send anyway...');
     }
 

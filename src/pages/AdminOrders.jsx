@@ -115,7 +115,7 @@ const AdminOrders = () => {
       toast.success(`Order status updated to ${newStatus}`);
       // Sync with server to be safe
       fetchOrders();
-    } catch (error) {
+    } catch (_) {
       // Revert if failed
       setOrders(previousOrders);
       toast.error('Failed to update order status');
@@ -230,7 +230,7 @@ const AdminOrders = () => {
       toast.success('Orders updated successfully', { id: loadingToast });
       setSelectedOrders([]);
       fetchOrders();
-    } catch (error) {
+    } catch (_) {
       toast.error('Bulk update failed', { id: loadingToast });
     }
   };

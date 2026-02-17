@@ -51,7 +51,7 @@ const optionalAuth = async (req, res, next) => {
 
     req.user = user;
     next();
-  } catch (error) {
+  } catch {
     // Invalid token, but continue as guest
     req.user = null;
     next();

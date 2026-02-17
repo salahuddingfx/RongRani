@@ -10,7 +10,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 const Cart = () => {
   const { cartItems, totalItems, totalPrice, updateQuantity, removeFromCart } = useCart();
   const { isAuthenticated } = useAuth();
-  const { delivery, loading: deliveryLoading, fetchDelivery } = useDeliveryCalculation();
+  const { delivery, fetchDelivery } = useDeliveryCalculation();
   const { t } = useLanguage();
 
   // Fetch delivery estimate for display (using default Cox's Bazar area)

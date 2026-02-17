@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Heart, Users, Award, Sparkles, ShoppingBag, Package, CheckCircle, Star, TrendingUp, Globe } from 'lucide-react';
 import Seo from '../components/Seo';
 import { useLanguage } from '../contexts/LanguageContext';

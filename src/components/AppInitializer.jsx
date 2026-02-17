@@ -20,7 +20,7 @@ const AppInitializer = ({ children }) => {
       }, 200);
     } else {
       // Complete progress when loading finishes
-      setProgress(100);
+      setTimeout(() => setProgress(100), 0);
       if (interval) clearInterval(interval);
 
       // Delay completion to allow 100% animation to show

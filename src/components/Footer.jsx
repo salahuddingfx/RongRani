@@ -8,7 +8,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [showDevProfile, setShowDevProfile] = useState(false);
   const [bdTime, setBdTime] = useState('');
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   useEffect(() => {
     const updateTime = () => {

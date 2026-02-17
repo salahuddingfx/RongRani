@@ -27,9 +27,6 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.error('MongoDB connection error:', err));
 
 const server = http.createServer(app);
-const socketOrigins = [
-  process.env.FRONTEND_URL || 'https://rongrani.vercel.app',
-].filter(Boolean);
 
 const io = new Server(server, {
   cors: {

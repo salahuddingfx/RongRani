@@ -15,11 +15,12 @@ const SocialShare = ({ url, title, image, description, price }) => {
             case 'facebook':
                 shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
                 break;
-            case 'whatsapp':
+            case 'whatsapp': {
                 // Enhanced WhatsApp message with price and better formatting
                 const whatsappMsg = `*${shareTitle}*${price ? `\n💰 *Price:* ৳${price}` : ''}\n\n${shareDescription ? `_${shareDescription.substring(0, 100)}..._\n\n` : ''}🛒 *Shop Now:* ${shareUrl}`;
                 shareLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappMsg)}`;
                 break;
+            }
             case 'twitter':
                 shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTitle)}&url=${encodeURIComponent(shareUrl)}`;
                 break;
@@ -30,11 +31,12 @@ const SocialShare = ({ url, title, image, description, price }) => {
                     shareLink = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(shareUrl)}&app_id=123456789&redirect_uri=${encodeURIComponent(shareUrl)}`;
                 }
                 break;
-            case 'pinterest':
+            case 'pinterest': {
                 // Ensure image is absolute for Pinterest
                 const pinterestImage = shareImage.startsWith('http') ? shareImage : `${window.location.origin}${shareImage.startsWith('/') ? '' : '/'}${shareImage}`;
                 shareLink = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(pinterestImage)}&description=${encodeURIComponent(shareTitle)}`;
                 break;
+            }
             case 'copy':
                 try {
                     navigator.clipboard.writeText(shareUrl).then(() => {
@@ -43,7 +45,7 @@ const SocialShare = ({ url, title, image, description, price }) => {
                             style: { borderRadius: '10px', background: '#333', color: '#fff' }
                         });
                     });
-                } catch (err) {
+                } catch (_) {
                     const input = document.createElement('input');
                     input.value = shareUrl;
                     document.body.appendChild(input);

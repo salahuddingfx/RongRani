@@ -377,9 +377,6 @@ const getProductReviews = async (req, res) => {
 // @access  Private/Public
 const canReviewProduct = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { guestEmail, orderId } = req.query;
-
     // Allow everyone to see the review form now to enable guest reviews
     res.json({ canReview: true });
   } catch (error) {

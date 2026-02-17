@@ -14,7 +14,7 @@ const loginSchema = Joi.object({
 
 const updateProfileSchema = Joi.object({
   name: Joi.string().min(2).max(50),
-  phone: Joi.string().pattern(/^[\+]?[1-9][\d]{0,15}$/),
+  phone: Joi.string().pattern(/^\+?[1-9]\d{0,15}$/),
   address: Joi.object({
     street: Joi.string(),
     city: Joi.string(),

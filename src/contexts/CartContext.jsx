@@ -41,10 +41,6 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   }, [cartItems]);
 
-  useEffect(() => {
-    // Save to localStorage whenever cart changes
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
 
   const addToCart = (product, quantity = 1) => {
     setCartItems(prevItems => {
@@ -124,7 +120,6 @@ export const CartProvider = ({ children }) => {
     totalPrice,
     addToCart,
     removeFromCart,
-    updateQuantity,
     updateQuantity,
     clearCart,
     isCartOpen,

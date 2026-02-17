@@ -25,7 +25,7 @@ export default defineConfig([
     rules: {
       'no-unused-vars': [
         'error',
-        { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^_' },
+        { varsIgnorePattern: '^[A-Z_]', argsIgnorePattern: '^[A-Z_]', caughtErrorsIgnorePattern: '^_' },
       ],
     },
   },
@@ -37,6 +37,17 @@ export default defineConfig([
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'commonjs',
+      },
+    },
+  },
+  {
+    files: ['vite.config.js', 'postcss.config.js', 'tailwind.config.js'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
       },
     },
   },

@@ -64,7 +64,7 @@ const OrderTracking = () => {
   const fetchOrder = async (id, email, phone) => {
     try {
       setError('');
-      const token = localStorage.getItem('token'); // Optional for public tracking
+      // const token = localStorage.getItem('token'); // Optional for public tracking
       const response = await axios.get(`/api/orders/track/${id}`, {
         params: {
           email: email || undefined,

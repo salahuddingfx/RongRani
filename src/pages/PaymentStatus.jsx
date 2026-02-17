@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import { CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import confetti from 'canvas-confetti';
@@ -7,7 +7,6 @@ import confetti from 'canvas-confetti';
 const PaymentStatus = () => {
     const { status, orderId } = useParams();
     const { clearCart } = useCart();
-    const location = useLocation();
 
     useEffect(() => {
         if (status === 'success') {

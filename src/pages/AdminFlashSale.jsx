@@ -140,7 +140,7 @@ const AdminFlashSale = () => {
             });
             toast.success('Flash Sale Deleted');
             fetchFlashSales();
-        } catch (error) {
+        } catch (_) {
             toast.error('Failed to delete');
         }
     };
@@ -155,7 +155,7 @@ const AdminFlashSale = () => {
             });
             toast.success(`Campaign ${!sale.isActive ? 'Activated' : 'Deactivated'}`);
             fetchFlashSales();
-        } catch (error) {
+        } catch (_) {
             toast.error('Failed to update status');
         }
     };

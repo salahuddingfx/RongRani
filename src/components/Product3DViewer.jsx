@@ -26,9 +26,31 @@ const Product3DViewer = ({ images = [], productName = '', discount = null, compa
     // Hide hint after first interaction
     useEffect(() => {
         if (isDragging || rotation !== 0 || zoom !== 1) {
-            setShowHint(false);
+            const timeout = setTimeout(() => setShowHint(false), 0);
+            return () => clearTimeout(timeout);
         }
     }, [isDragging, rotation, zoom]);
+
+    const handlePrev = () => {
+        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+        setRotation(0);
+        setZoom(1);
+    };
+
+    const handleNext = () => {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+        setRotation(0);
+        setZoom(1);
+    };
+
+    // Zoom handlers
+    const handleZoomIn = () => {
+        setZoom((prev) => Math.min(prev + 0.25, 3));
+    };
+
+    const handleZoomOut = () => {
+        setZoom((prev) => Math.max(prev - 0.25, 1));
+    };
 
     // Keyboard shortcuts
     useEffect(() => {
@@ -42,19 +64,7 @@ const Product3DViewer = ({ images = [], productName = '', discount = null, compa
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [currentIndex, isFullscreen, zoom]);
-
-    const handlePrev = () => {
-        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-        setRotation(0);
-        setZoom(1);
-    };
-
-    const handleNext = () => {
-        setCurrentIndex((prev) => (prev + 1) % images.length);
-        setRotation(0);
-        setZoom(1);
-    };
+    }, [isFullscreen, zoom]);
 
     // Mouse drag handlers
     const handleMouseDown = (e) => {
@@ -105,14 +115,6 @@ const Product3DViewer = ({ images = [], productName = '', discount = null, compa
         setIsDragging(false);
     };
 
-    // Zoom handlers
-    const handleZoomIn = () => {
-        setZoom((prev) => Math.min(prev + 0.25, 3));
-    };
-
-    const handleZoomOut = () => {
-        setZoom((prev) => Math.max(prev - 0.25, 1));
-    };
 
     const resetView = () => {
         setZoom(1);

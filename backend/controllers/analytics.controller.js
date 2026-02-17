@@ -152,7 +152,6 @@ exports.getDashboardAnalytics = async (req, res) => {
         // Summary stats
         const totalUsers = await User.countDocuments();
         const totalProducts = await Product.countDocuments({ isActive: true });
-        const totalOrders = await Order.countDocuments();
         const lowStockProducts = await Product.countDocuments({ stock: { $lt: 5 }, isActive: true });
 
         res.json({

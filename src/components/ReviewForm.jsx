@@ -11,7 +11,7 @@ const ReviewForm = ({
   initialGuestEmail = '',
   initialOrderId = ''
 }) => {
-  const { t, language } = useLanguage();
+  const { language } = useLanguage();
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
   const token = localStorage.getItem('token');
 
@@ -24,7 +24,7 @@ const ReviewForm = ({
   const [guestName, setGuestName] = useState('');
   const [guestEmail, setGuestEmail] = useState(initialGuestEmail);
   const [orderId, setOrderId] = useState(initialOrderId);
-  const [isGuest, setIsGuest] = useState(!user);
+  const [isGuest] = useState(!user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

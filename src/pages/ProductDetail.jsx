@@ -3,7 +3,6 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Star, ShoppingCart, Heart, Minus, Plus, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Zap, Gift, TrendingUp, Package, MessageCircle } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
-import { useAuth } from '../contexts/AuthContext';
 import { addToRecentlyViewed } from '../utils/productUtils';
 import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
@@ -17,18 +16,16 @@ import SocialShare from '../components/SocialShare';
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [canReview, setCanReview] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
-  const [deliverySettings, setDeliverySettings] = useState({
+  const [deliverySettings] = useState({
     chittagongFee: 70,
     outsideChittagongFee: 150,
   });
@@ -192,13 +189,6 @@ const ProductDetail = () => {
     }
     : null;
 
-  const nextImage = () => {
-    setSelectedImage((prev) => (prev + 1) % (product?.images?.length || 1));
-  };
-
-  const prevImage = () => {
-    setSelectedImage((prev) => (prev - 1 + (product?.images?.length || 1)) % (product?.images?.length || 1));
-  };
 
   if (loading) {
     return (

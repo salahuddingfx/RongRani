@@ -8,7 +8,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const Orders = () => {
   const { user } = useAuth();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);

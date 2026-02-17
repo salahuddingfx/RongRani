@@ -66,7 +66,7 @@ exports.createFlashSale = async (req, res) => {
             flashSale
         });
     } catch (error) {
-        console.error('🔥 Flash Sale Create Error:', error);
+        console.error('ðŸ”¥ Flash Sale Create Error:', error);
         res.status(500).json({
             success: false,
             message: error.message || 'Failed to create flash sale'
@@ -117,7 +117,7 @@ exports.deleteFlashSale = async (req, res) => {
             success: true,
             message: 'Flash sale deleted'
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({
             success: false,
             message: 'Server Error'
@@ -137,7 +137,7 @@ exports.getAllFlashSales = async (req, res) => {
             count: flashSales.length,
             flashSales
         });
-    } catch (error) {
+    } catch {
         res.status(500).json({
             success: false,
             message: 'Server Error'

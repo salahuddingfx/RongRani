@@ -12,11 +12,11 @@ const AIChatFloatingWidget = () => {
     }
   ]);
   const [inputMessage, setInputMessage] = useState('');
-  const [deliverySettings, setDeliverySettings] = useState({
+  const deliverySettings = {
     chittagongFee: 70,
     outsideChittagongFee: 150,
     freeShippingThreshold: 2500,
-  });
+  };
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {

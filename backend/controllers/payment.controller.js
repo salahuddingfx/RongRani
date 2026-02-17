@@ -251,7 +251,7 @@ exports.sslSuccess = async (req, res) => {
             return res.redirect(`${process.env.FRONTEND_URL}/payment/success?orderId=${order._id}`);
         }
         res.redirect(`${process.env.FRONTEND_URL}/payment/failed`);
-    } catch (error) {
+    } catch (_) {
         res.redirect(`${process.env.FRONTEND_URL}/payment/error`);
     }
 };

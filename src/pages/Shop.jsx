@@ -8,7 +8,7 @@ import { useSocket } from '../contexts/socketContextBase';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const Shop = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);

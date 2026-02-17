@@ -7,6 +7,9 @@ import TopNavBar from './TopNavBar';
 import AIChatFloatingWidget from './AIChatFloatingWidget';
 import Seo from './Seo';
 import ScrollRevealManager from './ScrollRevealManager';
+import RecentlyViewed from './RecentlyViewed';
+import CartDrawer from './CartDrawer';
+import CustomCursor from './CustomCursor';
 
 const AppLayout = () => {
   const location = useLocation();
@@ -35,13 +38,20 @@ const AppLayout = () => {
     <div className="min-h-screen bg-white dark:bg-slate-900 text-charcoal dark:text-white">
       <Seo path={location.pathname} />
       <ScrollRevealManager />
+      <CustomCursor />
+
       <div className="fixed top-0 left-0 right-0 z-[100] overflow-visible">
         <TopNavBar />
         <Navbar />
       </div>
+
       <main className="flex-1 pb-20 lg:pb-0 pt-28 sm:pt-32 md:pt-36 page-content-fade-in transition-all duration-500">
         <Outlet />
       </main>
+
+      <RecentlyViewed />
+      <CartDrawer />
+
       <Footer />
 
       {/* AI Chat Widget - Delayed Load for Performance */}

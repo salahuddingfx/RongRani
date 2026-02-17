@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, useEffect, useMemo } from '
 
 const LanguageContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (!context) {
@@ -12,29 +13,18 @@ export const useLanguage = () => {
 
 export const LanguageProvider = ({ children }) => {
   // Always default to 'bn' as requested
-  const [language, setLanguage] = useState('bn');
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
+  const [language, setLanguage] = useState(() => {
     try {
       const saved = localStorage.getItem('language');
-      if (saved && (saved === 'en' || saved === 'bn')) {
-        setLanguage(saved);
-      } else {
-        localStorage.setItem('language', 'bn');
-      }
-    } catch (e) {
-      console.error('LocalStorage error:', e);
+      return (saved === 'en' || saved === 'bn') ? saved : 'bn';
+    } catch (_) {
+      return 'bn';
     }
-    setIsLoaded(true);
-  }, []);
-
+  });
   useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem('language', language);
-      document.documentElement.lang = language;
-    }
-  }, [language, isLoaded]);
+    localStorage.setItem('language', language);
+    document.documentElement.lang = language;
+  }, [language]);
 
   const toggleLanguage = () => {
     setLanguage(prev => prev === 'en' ? 'bn' : 'en');
@@ -70,10 +60,8 @@ export const LanguageProvider = ({ children }) => {
       add_to_wishlist: 'Add to Wishlist',
 
       // Top Bar
-      free_shipping: 'FREE Shipping on orders over',
+      free_shipping: 'FREE Shipping on orders over 2500',
       welcome_offer: 'Up to 50% OFF on selected items!',
-      call_us: 'Call:',
-      email_us: 'Mail:',
       language: 'Language',
       currency: 'Currency',
       bdt: 'BDT',
@@ -241,7 +229,6 @@ export const LanguageProvider = ({ children }) => {
       quick_links: 'Quick Links',
       customer_care: 'Customer Care',
       customer_reviews: 'Customer Reviews',
-      bd_local_time: 'Bangladesh Local Time',
 
       // Navbar extra
       trending_now: 'Trending Now',
@@ -301,7 +288,6 @@ export const LanguageProvider = ({ children }) => {
       product_not_found: 'Product Not Found',
       product_not_found_msg: 'The product you\'re looking for doesn\'t exist.',
       loading_beautiful: 'Loading beautiful product...',
-      verified_purchase: 'Verified Purchase',
       no_reviews_yet_title: 'No Reviews Yet',
       you_may_also_like_title: 'You May Also Like',
       fast_delivery_title: 'Fast Delivery',
@@ -364,7 +350,6 @@ export const LanguageProvider = ({ children }) => {
       email_us: 'Email Us',
       visit_us: 'Visit Us',
       send_message: 'Send a Message',
-      full_name: 'Full Name',
       your_name_placeholder: 'Your full name',
       your_email_placeholder: 'your@email.com',
       message_placeholder: 'Tell us about your gift requirements...',
@@ -403,7 +388,6 @@ export const LanguageProvider = ({ children }) => {
       values_guide: 'These core values guide everything we do at RongRani',
       passion_for_crafts: 'Passion for Crafts',
       passion_desc: 'Every product is crafted with love and dedication by skilled artisans who take pride in their work.',
-      premium_quality: 'Premium Quality',
       quality_desc: 'We ensure the highest quality standards in every product, using only authentic materials and traditional techniques.',
       cust_satisfaction: 'Customer Satisfaction',
       cust_satisfaction_desc: 'Your happiness is our success. We go the extra mile to ensure every customer has an exceptional experience.',
@@ -452,10 +436,8 @@ export const LanguageProvider = ({ children }) => {
       add_to_wishlist: 'উইশলিস্টে যোগ করুন',
 
       // Top Bar
-      free_shipping: '২০০০৳ এর বেশি অর্ডারে ফ্রি ডেলিভারি!',
+      free_shipping: '২৫০০৳ এর বেশি অর্ডারে ফ্রি ডেলিভারি!',
       welcome_offer: 'নির্বাচিত পণ্যে ৫০% পর্যন্ত ছাড়!',
-      call_us: 'কল:',
-      email_us: 'মেইল:',
       language: 'ভাষা',
       currency: 'মুব্রা',
       bdt: 'টাকা',
@@ -623,7 +605,6 @@ export const LanguageProvider = ({ children }) => {
       quick_links: 'দ্রুত লিংক',
       customer_care: 'কাস্টমার কেয়ার',
       customer_reviews: 'কাস্টমার রিভিউ',
-      bd_local_time: 'বাংলাদেশ সময়',
 
       // Navbar extra
       trending_now: 'ট্রেন্ডিং এখন',
@@ -683,7 +664,6 @@ export const LanguageProvider = ({ children }) => {
       product_not_found: 'পণ্য পাওয়া যায়নি',
       product_not_found_msg: 'আপনি যে পণ্যটি খুঁজছেন তা বর্তমানে নেই।',
       loading_beautiful: 'চমৎকার পণ্যটি লোড হচ্ছে...',
-      verified_purchase: 'ভেরিফাইড পারচেজ',
       no_reviews_yet_title: 'এখনো কোনো রিভিউ নেই',
       you_may_also_like_title: 'আপনার পছন্দ হতে পারে',
       fast_delivery_title: 'দ্রুত ডেলিভারি',
@@ -746,7 +726,6 @@ export const LanguageProvider = ({ children }) => {
       email_us: 'ইমেইল করুন',
       visit_us: 'সরাসরি আসুন',
       send_message: 'মেসেজ পাঠান',
-      full_name: 'পুরো নাম',
       your_name_placeholder: 'আপনার পুরো নাম',
       your_email_placeholder: 'আপনার ইমেইল',
       message_placeholder: 'আপনার উপহারের প্রয়োজনীয়তা সম্পর্কে বলুন...',
@@ -785,7 +764,6 @@ export const LanguageProvider = ({ children }) => {
       values_guide: 'এই মূল মূল্যবোধগুলো রঙরানী-তে আমাদের সমস্ত কাজের পথপ্রদর্শক',
       passion_for_crafts: 'কারুশিল্পের প্রতি আবেগ',
       passion_desc: 'প্রতিটি পণ্য ভালোবাসার সাথে এবং দক্ষ কারিগরদের দ্বারা উৎসর্গ করা হয়েছে যারা তাদের কাজের জন্য গর্ববোধ করে।',
-      premium_quality: 'প্রিমিয়াম কোয়ালিটি',
       quality_desc: 'আমরা প্রতিটি পণ্যে সর্বোচ্চ মানের মান নিশ্চিত করি, শুধুমাত্র খাঁটি উপকরণ এবং ঐতিহ্যবাহী কৌশল ব্যবহার করে।',
       cust_satisfaction: 'গ্রাহক সন্তুষ্টি',
       cust_satisfaction_desc: 'আপনার সুখই আমাদের সাফল্য। প্রতিটি গ্রাহক যাতে একটি অসাধারণ অভিজ্ঞতা পান তা নিশ্চিত করতে আমরা অতিরিক্ত যত্ন নেই।',

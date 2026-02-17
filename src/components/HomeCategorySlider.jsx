@@ -17,7 +17,7 @@ const HomeCategorySlider = ({ category }) => {
         try {
             const response = await axios.get(`/api/products?category=${encodeURIComponent(category.name)}&limit=10`);
             setProducts(response.data.products);
-        } catch (error) {
+        } catch (_) {
             // console.error(`Error fetching products for category ${category.name}:`, error); // Removed console.error
         } finally {
             setLoading(false);

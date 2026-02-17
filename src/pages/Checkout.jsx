@@ -13,7 +13,7 @@ const Checkout = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { delivery, loading: deliveryLoading, fetchDelivery } = useDeliveryCalculation();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { state } = useLocation();
   const giftWrapping = state?.giftWrapping || false;
   const giftWrappingFee = 50;

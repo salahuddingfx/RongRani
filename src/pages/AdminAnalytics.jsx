@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import {
     TrendingUp, Users, ShoppingCart, Package, DollarSign,
@@ -38,16 +38,7 @@ const AdminAnalytics = () => {
     const [loading, setLoading] = useState(true);
     const [period, setPeriod] = useState('7days');
 
-    useEffect(() => {
-        fetchAnalytics();
-        fetchRealtimeStats();
-
-        // Refresh real-time stats every 30 seconds
-        const interval = setInterval(fetchRealtimeStats, 30000);
-        return () => clearInterval(interval);
-    }, [period]);
-
-    const fetchAnalytics = async () => {
+    const fetchAnalytics = useCallback(async () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get(`/api/analytics/dashboard?period=${period}`, {
@@ -59,9 +50,9 @@ const AdminAnalytics = () => {
             console.error('Error fetching analytics:', error);
             setLoading(false);
         }
-    };
+    }, [period]);
 
-    const fetchRealtimeStats = async () => {
+    const fetchRealtimeStats = useCallback(async () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.get('/api/analytics/realtime', {
@@ -71,7 +62,22 @@ const AdminAnalytics = () => {
         } catch (error) {
             console.error('Error fetching realtime stats:', error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        // Use setTimeout to avoid synchronous setState warning
+        const timeout = setTimeout(() => {
+            fetchAnalytics();
+            fetchRealtimeStats();
+        }, 0);
+
+        // Refresh real-time stats every 30 seconds
+        const interval = setInterval(fetchRealtimeStats, 30000);
+        return () => {
+            clearTimeout(timeout);
+            clearInterval(interval);
+        };
+    }, [fetchAnalytics, fetchRealtimeStats]);
 
     if (loading) {
         return (

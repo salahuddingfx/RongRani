@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const FlashSale = () => {
-    const { t, language } = useLanguage();
+    const { language } = useLanguage();
     const [flashSale, setFlashSale] = useState(null);
     const [loading, setLoading] = useState(true);
     const [timeLeft, setTimeLeft] = useState({

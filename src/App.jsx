@@ -15,11 +15,6 @@ import PublicRoute from './components/PublicRoute';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
-import RecentlyViewed from './components/RecentlyViewed';
-import CartDrawer from './components/CartDrawer';
-import ScrollRevealManager from './components/ScrollRevealManager';
-import CustomCursor from './components/CustomCursor';
-
 
 // Loading Component
 const PageLoading = () => (
@@ -105,12 +100,8 @@ function App() {
                           },
                         }}
                       />
-                      <ScrollRevealManager />
                       <ScrollToTop />
 
-                      <RecentlyViewed />
-                      <CartDrawer />
-                      <CustomCursor />
                       <Suspense fallback={<PageLoading />}>
                         <Routes>
                           {/* Public Routes */}
@@ -168,7 +159,6 @@ function App() {
                             <Route path="about" element={<AboutUs />} />
                             <Route path="terms" element={<TermsConditions />} />
                             <Route path="privacy-policy" element={<PrivacyPolicy />} />
-                            <Route path="track/:orderId" element={<OrderTracking />} />
                             <Route path="track/:orderId" element={<OrderTracking />} />
                             <Route path="track" element={<OrderTracking />} />
                             <Route path="payment/:status/:orderId" element={<PaymentStatus />} />

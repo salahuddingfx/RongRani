@@ -11,13 +11,10 @@ const detectFraud = async (orderData, ipAddress) => {
     const {
         guestInfo,
         shippingAddress,
-        items,
-        total,
-        user
+        total
     } = orderData;
 
     const phone = shippingAddress?.phone || guestInfo?.phone || '';
-    const email = shippingAddress?.email || guestInfo?.email || '';
     const name = shippingAddress?.name || guestInfo?.name || '';
 
     // 1. Phone Number Validation (Bangladesh)

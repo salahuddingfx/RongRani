@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Facebook, Instagram, Twitter } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const ContactUs = () => {
   const { t } = useLanguage();
