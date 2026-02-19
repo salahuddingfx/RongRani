@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Plus, Trash2, Edit, Search, Package, Globe, Tag, Settings, X, Upload, Loader2 } from 'lucide-react';
+import { Plus, Trash2, Edit, Search, Package, Globe, Tag, Settings, X, Upload, Loader2, Image as ImageIcon } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useSocket } from '../contexts/socketContextBase';
@@ -543,21 +543,35 @@ const AdminProducts = () => {
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2 flex justify-between items-center text-maroon">
                     <div className="flex items-center gap-2">
-                      <Upload className="h-4 w-4" />
+                      <ImageIcon className="h-4 w-4" />
                       <span>Product Images (URLs or Upload)</span>
                     </div>
                     <span className={`text-xs px-3 py-1 rounded-full font-bold transition-all shadow-sm ${getImageCount() > 0 ? 'bg-maroon text-white' : 'bg-slate-100 text-slate-500'}`}>
                       {getImageCount()} Image{getImageCount() !== 1 ? 's' : ''} Added
                     </span>
                   </label>
-                  <textarea
-                    required
-                    value={formData.images}
-                    onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                    className="input-field w-full font-mono text-xs focus:h-40 transition-all duration-300"
-                    rows="4"
-                    placeholder={`https://example.com/image1.jpg\nhttps://example.com/image2.jpg`}
-                  />
+
+                  <div className="relative group">
+                    <textarea
+                      required
+                      value={formData.images}
+                      onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                      className="input-field w-full font-mono text-xs focus:h-40 transition-all duration-300 pr-10"
+                      rows="4"
+                      placeholder={`https://example.com/image1.jpg\nhttps://example.com/image2.jpg`}
+                    />
+                    {formData.images && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, images: '' })}
+                        className="absolute top-2 right-2 p-1.5 bg-slate-100 text-slate-400 hover:bg-red-50 hover:text-red-500 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                        title="Clear all URLs"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    )}
+                  </div>
+
                   <div className="mt-3 flex flex-wrap gap-2 items-center">
                     <input
                       type="file"
@@ -570,20 +584,67 @@ const AdminProducts = () => {
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isUploading}
-                      className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-bold transition-all disabled:opacity-50"
+                      className="flex items-center gap-2 px-4 py-2 bg-maroon text-white hover:bg-maroon/90 rounded-xl text-sm font-bold transition-all disabled:opacity-50 shadow-md active:scale-95"
                     >
-                      {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                      {isUploading ? 'Uploading...' : 'Direct Upload'}
+                      {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                      {isUploading ? 'Direct Upload' : 'Upload From Device'}
                     </button>
                     <div className="flex-1 flex justify-between items-center min-w-0">
                       <p className="text-[10px] text-slate-400 font-medium truncate">
-                        📌 Paste URLs OR use **Direct Upload**
+                        📌 Paste URLs OR use **Upload** to store on Cloudinary
                       </p>
-                      <span className="text-[10px] text-maroon font-bold whitespace-nowrap ml-2">
-                        First image = Main 🖼️
-                      </span>
                     </div>
                   </div>
+
+                  {/* LIVE IMAGE PREVIEW GALLERY */}
+                  {getImageCount() > 0 && (
+                    <div className="mt-5 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <ImageIcon className="h-3 w-3" />
+                        Live Preview (Click ✖ to remove)
+                      </p>
+                      <div className="flex flex-wrap gap-3">
+                        {formData.images.split(/[,\n]/).filter(u => u.trim()).map((url, idx) => {
+                          // Process for preview (handle GDrive etc)
+                          let displayUrl = url.trim();
+                          if (displayUrl.includes('drive.google.com')) {
+                            const fileIdMatch = displayUrl.match(/\/file\/d\/([^\/]+)/) || displayUrl.match(/id=([^\&]+)/);
+                            if (fileIdMatch && fileIdMatch[1]) {
+                              displayUrl = `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
+                            }
+                          }
+
+                          return (
+                            <div key={idx} className="relative group h-20 w-20 flex-shrink-0 animate-in fade-in zoom-in duration-300">
+                              <img
+                                src={displayUrl}
+                                alt={`Preview ${idx + 1}`}
+                                className={`h-full w-full object-cover rounded-xl border-2 transition-all ${idx === 0 ? 'border-maroon ring-2 ring-maroon/20' : 'border-white'} shadow-sm group-hover:shadow-md`}
+                                onError={(e) => {
+                                  e.target.src = 'https://via.placeholder.com/150?text=Invalid';
+                                  e.target.className += ' grayscale';
+                                }}
+                              />
+                              {idx === 0 && (
+                                <span className="absolute -top-2 -left-2 bg-maroon text-[8px] text-white font-black px-1.5 py-0.5 rounded-full shadow-lg">MAIN</span>
+                              )}
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const urls = formData.images.split(/[,\n]/).map(u => u.trim()).filter(Boolean);
+                                  urls.splice(idx, 1);
+                                  setFormData({ ...formData, images: urls.join('\n') });
+                                }}
+                                className="absolute -top-2 -right-2 bg-white text-red-500 p-1 rounded-full shadow-lg border border-red-100 opacity-0 group-hover:opacity-100 transition-all hover:scale-110 active:scale-95"
+                              >
+                                <X className="h-3 w-3" />
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
