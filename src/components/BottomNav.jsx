@@ -1,10 +1,20 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, ShoppingBag, Heart, User, LayoutGrid, ShoppingCart, MessageCircle } from 'lucide-react';
-// ... (keep existing imports)
+import { useAuth } from '../contexts/AuthContext';
+import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
 
 const BottomNav = () => {
-  // ... (keep existing hooks)
+  const location = useLocation();
+  const { user } = useAuth();
+  const { totalItems } = useCart();
+  const { wishlist } = useWishlist();
+
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
 
   const phoneNumber = '8801851075537';
   const defaultMessage = 'Hello! I need help with RongRani services.';
@@ -14,8 +24,6 @@ const BottomNav = () => {
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(whatsappURL, '_blank');
   };
-
-  // ... (keep isActive function)
 
   const navItems = [
     { to: '/', icon: Home, label: 'Home' },
@@ -46,8 +54,8 @@ const BottomNav = () => {
           {navItems.map((item, index) => {
             const active = item.isAction ? false : (item.isActive ? item.isActive() : isActive(item.to));
             const commonClasses = `relative flex items-center justify-center transition-all duration-500 ease-out ${active
-                ? `-mt-12 w-14 h-14 ${item.activeColorClass || 'bg-maroon text-white shadow-maroon/30'} shadow-lg rounded-full border-4 border-slate-50 dark:border-slate-950 transform scale-110`
-                : `w-10 h-10 ${item.colorClass || 'text-slate-400 hover:text-maroon dark:hover:text-pink-300'} rounded-full active:bg-slate-100 dark:active:bg-slate-800`
+              ? `-mt-12 w-14 h-14 ${item.activeColorClass || 'bg-maroon text-white shadow-maroon/30'} shadow-lg rounded-full border-4 border-slate-50 dark:border-slate-950 transform scale-110`
+              : `w-10 h-10 ${item.colorClass || 'text-slate-400 hover:text-maroon dark:hover:text-pink-300'} rounded-full active:bg-slate-100 dark:active:bg-slate-800`
               }`;
 
             return (
@@ -62,8 +70,8 @@ const BottomNav = () => {
 
                     {item.badge > 0 && (
                       <span className={`absolute font-bold flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900 transition-all ${active
-                          ? '-top-1 -right-1 bg-yellow-400 text-maroon text-[10px] w-5 h-5'
-                          : 'top-1 right-1 w-2.5 h-2.5 bg-maroon dark:bg-pink-500'
+                        ? '-top-1 -right-1 bg-yellow-400 text-maroon text-[10px] w-5 h-5'
+                        : 'top-1 right-1 w-2.5 h-2.5 bg-maroon dark:bg-pink-500'
                         }`}>
                         {active && item.badge}
                       </span>

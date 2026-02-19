@@ -144,12 +144,10 @@ const Home = () => {
               {t('hero_title')}<br />
               <span className="text-maroon">
                 <TypingEffect
-                  texts={window.innerWidth < 768
-                    ? [language === 'bn' ? 'ভালোবাসা ও রোমান্স ❤️' : 'Love & Romance ❤️']
-                    : (language === 'bn'
-                      ? ['ভালোবাসা ও রোমান্স ❤️', 'বিশেষ মুহূর্ত ✨', 'হৃদয়স্পর্শী সারপ্রাইজ 🎁', 'হস্তনির্মিত অনন্য উপহার 🎨', 'প্রিয়জনের স্মৃতির পাতায় 📸', 'সেরা কোয়ালিটি গ্যারান্টি ⭐']
-                      : ['Love & Romance ❤️', 'Special Moments ✨', 'Heartfelt Surprises 🎁', 'Unique Handmade Gifts 🎨', 'Memories That Last 📸', 'Premium Quality Guaranteed ⭐']
-                    )}
+                  texts={language === 'bn'
+                    ? ['ভালোবাসা ও রোমান্স ❤️', 'বিশেষ মুহূর্ত ✨', 'হৃদয়স্পর্শী সারপ্রাইজ 🎁', 'হস্তনির্মিত অনন্য উপহার 🎨', 'প্রিয়জনের স্মৃতির পাতায় 📸', 'সেরা কোয়ালিটি গ্যারান্টি ⭐']
+                    : ['Love & Romance ❤️', 'Special Moments ✨', 'Heartfelt Surprises 🎁', 'Unique Handmade Gifts 🎨', 'Memories That Last 📸', 'Premium Quality Guaranteed ⭐']
+                  }
                   speed={window.innerWidth < 768 ? 150 : 80}
                   deleteSpeed={50}
                   pauseTime={3000}
