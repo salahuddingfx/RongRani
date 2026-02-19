@@ -24,8 +24,13 @@
     @apply bg-white text-charcoal transition-colors duration-300;
     background-color: #ffffff;
     /* Explicit override for line 504 */
-    cursor: none;
-    /* Hide default for custom cursor */
+  }
+
+  /* Only hide default cursor on desktop where custom cursor is shown */
+  @media (min-width: 768px) {
+    body {
+      cursor: none;
+    }
   }
 
   /* Keep cursor for mobile/touch if needed, though custom cursor is hidden there anyway */

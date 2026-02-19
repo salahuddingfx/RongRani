@@ -15,6 +15,7 @@ import PublicRoute from './components/PublicRoute';
 import PrivateRoute from './components/PrivateRoute';
 import AdminRoute from './components/AdminRoute';
 import ScrollToTop from './components/ScrollToTop';
+import CustomCursor from './components/CustomCursor';
 
 // Loading Component
 const PageLoading = () => (
@@ -101,6 +102,7 @@ function App() {
                         }}
                       />
                       <ScrollToTop />
+                      <CustomCursor />
 
                       <Suspense fallback={<PageLoading />}>
                         <Routes>

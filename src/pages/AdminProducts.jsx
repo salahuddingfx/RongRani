@@ -28,7 +28,8 @@ const AdminProducts = () => {
 
   const getImageCount = () => {
     if (!formData.images) return 0;
-    return formData.images.split(',').filter(url => url.trim().length > 0).length;
+    // Split by comma OR newline, then filter out empty entries
+    return formData.images.split(/[,\n]/).filter(url => url.trim().length > 0).length;
   };
 
   const getDiscountPercentage = () => {
@@ -157,11 +158,12 @@ const AdminProducts = () => {
       }
       const productData = {
         ...formData,
-        images: formData.images.split(',').map(img => img.trim()),
+        // Split by comma OR newline, trim, and filter out empties
+        images: formData.images.split(/[,\n]/).map(img => img.trim()).filter(Boolean),
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        price: parseFloat(formData.price),
-        originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : parseFloat(formData.price),
-        stock: parseInt(formData.stock)
+        price: parseFloat(formData.price) || 0,
+        originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : parseFloat(formData.price) || 0,
+        stock: parseInt(formData.stock) || 0
       };
 
       if (editingProduct) {
@@ -261,16 +263,19 @@ const AdminProducts = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="mb-6">
-        <div className="relative">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate" />
+      <div className="mb-8 flex flex-col md:flex-row gap-4 items-end">
+        <div className="relative flex-1 group">
+          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate group-focus-within:text-maroon transition-colors" />
           <input
             type="text"
             placeholder="Search products by name or category..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="input-field pl-12 w-full md:w-96"
+            className="input-field pl-12 w-full transition-all focus:ring-4 focus:ring-maroon/10"
           />
+        </div>
+        <div className="text-sm text-slate-500 font-medium px-2 py-1 bg-slate-100 rounded-lg">
+          Showing {filteredProducts.length} of {products.length} products
         </div>
       </div>
 
@@ -368,205 +373,212 @@ const AdminProducts = () => {
 
       {/* Add Product Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="card w-full max-w-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
-            <div className="flex justify-between items-center mb-6 sticky top-0 bg-white z-10 py-2 border-b border-slate-100">
-              <h2 className="text-2xl font-bold text-maroon">
-                {editingProduct ? 'Edit Product' : 'Add New Product'}
-              </h2>
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md flex items-center justify-center z-[100] p-4 animate-scale-in">
+          <div className="bg-white rounded-[2.5rem] w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl border border-white/20 flex flex-col">
+            <div className="flex justify-between items-center bg-maroon p-6 md:p-8 shrink-0">
+              <div className="flex items-center space-x-3 text-white">
+                <div className="bg-white/20 p-2 rounded-xl">
+                  <Plus className="h-6 w-6" />
+                </div>
+                <h2 className="text-2xl font-black">
+                  {editingProduct ? 'Edit Product' : 'Add New Product'}
+                </h2>
+              </div>
               <button
                 onClick={() => {
                   setShowAddModal(false);
                   setEditingProduct(null);
                 }}
-                className="text-slate hover:text-maroon"
+                className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-all hover:rotate-90"
               >
-                ✕
+                <X className="h-6 w-6" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">Product Name</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="input-field w-full"
-                  placeholder="Handmade Pottery Vase"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">Description</label>
-                <textarea
-                  required
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="input-field w-full"
-                  rows="3"
-                  placeholder="Beautiful handcrafted pottery..."
-                />
-              </div>
-
-              {/* Price & Stock Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-8 overflow-y-auto custom-scrollbar flex-1">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate mb-2">Original Price (Main)</label>
+                  <label className="block text-sm font-semibold text-slate mb-2">Product Name</label>
                   <input
-                    type="number"
-                    value={formData.originalPrice}
-                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                    className="input-field w-full"
-                    placeholder="e.g. 2000"
-                  />
-                  <p className="text-[10px] text-slate-400 mt-1">Leave blank if same as selling price</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-slate mb-2 flex justify-between">
-                    <span>Selling Price</span>
-                    {getDiscountPercentage() > 0 && (
-                      <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-                        -{getDiscountPercentage()}% OFF
-                      </span>
-                    )}
-                  </label>
-                  <input
-                    type="number"
+                    type="text"
                     required
-                    value={formData.price}
-                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="input-field w-full bg-green-50/50 border-green-200 focus:border-green-500 focus:ring-green-500"
-                    placeholder="e.g. 1500"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="input-field w-full"
+                    placeholder="Handmade Pottery Vase"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate mb-2">Stock Inventory</label>
-                  <input
-                    type="number"
+                  <label className="block text-sm font-semibold text-slate mb-2">Description</label>
+                  <textarea
                     required
-                    value={formData.stock}
-                    onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     className="input-field w-full"
-                    placeholder="e.g. 50"
+                    rows="3"
+                    placeholder="Beautiful handcrafted pottery..."
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2">Category</label>
-                <select
-                  required
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="input-field w-full"
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat._id} value={cat.name}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-slate mb-2 flex justify-between items-center">
-                  <span>Product Images (URLs)</span>
-                  <span className={`text-xs px-2 py-1 rounded-full font-bold transition-colors ${getImageCount() > 0 ? 'bg-maroon/10 text-maroon' : 'bg-slate-100 text-slate-500'}`}>
-                    {getImageCount()} Image{getImageCount() !== 1 ? 's' : ''} Added
-                  </span>
-                </label>
-                <textarea
-                  required
-                  value={formData.images}
-                  onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                  className="input-field w-full font-mono text-xs"
-                  rows="4"
-                  placeholder={`https://example.com/image1.jpg\nhttps://example.com/image2.jpg\nhttps://example.com/image3.jpg`}
-                />
-                <div className="flex justify-between items-start mt-1">
-                  <p className="text-xs text-slate-500">
-                    📌 Enter multiple image URLs separated by commas or new lines.
-                  </p>
-                  <p className="text-xs text-maroon font-medium">
-                    First image = Main Display
-                  </p>
-                </div>
-              </div>
-
-              <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 mt-6">
-                <h3 className="text-lg font-bold text-maroon mb-4 flex items-center space-x-2 border-b border-slate-200 pb-2">
-                  <div className="bg-maroon/10 p-1.5 rounded-lg">
-                    <Settings className="h-5 w-5 text-maroon" />
-                  </div>
-                  <span>SEO & Search Optimization 🚀</span>
-                </h3>
-
-                <div className="space-y-5">
+                {/* Price & Stock Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
-                      <Tag className="h-4 w-4 mr-2 text-maroon" />
-                      Search Tags (Keywords)
-                      <span className="text-xs font-normal text-slate-500 ml-auto bg-white px-2 py-1 rounded border border-slate-200">
-                        Separated by commas
-                      </span>
+                    <label className="block text-sm font-semibold text-slate mb-2">Original Price (Main)</label>
+                    <input
+                      type="number"
+                      value={formData.originalPrice}
+                      onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                      className="input-field w-full"
+                      placeholder="e.g. 2000"
+                    />
+                    <p className="text-[10px] text-slate-400 mt-1">Leave blank if same as selling price</p>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate mb-2 flex justify-between">
+                      <span>Selling Price</span>
+                      {getDiscountPercentage() > 0 && (
+                        <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+                          -{getDiscountPercentage()}% OFF
+                        </span>
+                      )}
                     </label>
                     <input
-                      type="text"
-                      value={formData.tags}
-                      onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
-                      className="input-field w-full"
-                      placeholder="e.g. gift, handmade, birthday, surprise box, anniversary"
+                      type="number"
+                      required
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      className="input-field w-full bg-green-50/50 border-green-200 focus:border-green-500 focus:ring-green-500"
+                      placeholder="e.g. 1500"
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate mb-2">Stock Inventory</label>
+                    <input
+                      type="number"
+                      required
+                      value={formData.stock}
+                      onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
+                      className="input-field w-full"
+                      placeholder="e.g. 50"
+                    />
+                  </div>
+                </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">Category</label>
+                  <select
+                    required
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="input-field w-full"
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map((cat) => (
+                      <option key={cat._id} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2 flex justify-between items-center">
+                    <span>Product Images (URLs)</span>
+                    <span className={`text-xs px-2 py-1 rounded-full font-bold transition-colors ${getImageCount() > 0 ? 'bg-maroon/10 text-maroon' : 'bg-slate-100 text-slate-500'}`}>
+                      {getImageCount()} Image{getImageCount() !== 1 ? 's' : ''} Added
+                    </span>
+                  </label>
+                  <textarea
+                    required
+                    value={formData.images}
+                    onChange={(e) => setFormData({ ...formData, images: e.target.value })}
+                    className="input-field w-full font-mono text-xs"
+                    rows="4"
+                    placeholder={`https://example.com/image1.jpg\nhttps://example.com/image2.jpg\nhttps://example.com/image3.jpg`}
+                  />
+                  <div className="flex justify-between items-start mt-1">
+                    <p className="text-xs text-slate-500">
+                      📌 Enter multiple image URLs separated by commas or new lines.
+                    </p>
+                    <p className="text-xs text-maroon font-medium">
+                      First image = Main Display
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 mt-6">
+                  <h3 className="text-lg font-bold text-maroon mb-4 flex items-center space-x-2 border-b border-slate-200 pb-2">
+                    <div className="bg-maroon/10 p-1.5 rounded-lg">
+                      <Settings className="h-5 w-5 text-maroon" />
+                    </div>
+                    <span>SEO & Search Optimization 🚀</span>
+                  </h3>
+
+                  <div className="space-y-5">
                     <div>
                       <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
-                        <Globe className="h-4 w-4 mr-2 text-maroon" />
-                        Meta Title
+                        <Tag className="h-4 w-4 mr-2 text-maroon" />
+                        Search Tags (Keywords)
+                        <span className="text-xs font-normal text-slate-500 ml-auto bg-white px-2 py-1 rounded border border-slate-200">
+                          Separated by commas
+                        </span>
                       </label>
                       <input
                         type="text"
-                        value={formData.seoTitle}
-                        onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })}
+                        value={formData.tags}
+                        onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                         className="input-field w-full"
-                        placeholder={formData.name || "Product Name"}
+                        placeholder="e.g. gift, handmade, birthday, surprise box, anniversary"
                       />
                     </div>
-                    <div>
-                      <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
-                        <Search className="h-4 w-4 mr-2 text-maroon" />
-                        Meta Description
-                      </label>
-                      <textarea
-                        value={formData.seoDescription}
-                        onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
-                        className="input-field w-full"
-                        rows="2"
-                        placeholder="Short summary for Google search results..."
-                      />
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div>
+                        <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
+                          <Globe className="h-4 w-4 mr-2 text-maroon" />
+                          Meta Title
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.seoTitle}
+                          onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })}
+                          className="input-field w-full"
+                          placeholder={formData.name || "Product Name"}
+                        />
+                      </div>
+                      <div>
+                        <label className="flex items-center text-sm font-bold text-slate-700 mb-2">
+                          <Search className="h-4 w-4 mr-2 text-maroon" />
+                          Meta Description
+                        </label>
+                        <textarea
+                          value={formData.seoDescription}
+                          onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
+                          className="input-field w-full"
+                          rows="2"
+                          placeholder="Short summary for Google search results..."
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex space-x-4 pt-4">
-                <button type="submit" className="btn-primary flex-1">
-                  {editingProduct ? 'Save Changes' : 'Add Product'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAddModal(false);
-                    setEditingProduct(null);
-                  }}
-                  className="btn-secondary flex-1"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+                <div className="flex gap-4 pt-4 sticky bottom-0 bg-white py-4 border-t border-slate-100">
+                  <button type="submit" className="btn-primary flex-1 py-4 text-lg">
+                    {editingProduct ? 'Update Product' : 'Create Product'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowAddModal(false);
+                      setEditingProduct(null);
+                    }}
+                    className="btn-secondary flex-1 py-4 text-lg"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
