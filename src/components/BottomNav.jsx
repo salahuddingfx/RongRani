@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ShoppingBag, Heart, Package, User, Crown, MessageCircle } from 'lucide-react';
+import { Home, ShoppingBag, Heart, User, LayoutGrid, ShoppingCart } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useWishlist } from '../contexts/WishlistContext';
@@ -11,88 +11,57 @@ const BottomNav = () => {
   const { totalItems } = useCart();
   const { wishlist } = useWishlist();
 
-  const phoneNumber = '8801851075537';
-  const defaultMessage = 'Hello! I need help with RongRani services.';
-
   const isActive = (path) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
+    if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
 
-  const handleWhatsApp = (e) => {
-    e.preventDefault();
-    const encodedMessage = encodeURIComponent(defaultMessage);
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    window.open(whatsappURL, '_blank');
-  };
-
   const navItems = [
-    { path: '/', icon: Home, label: 'Home' },
-    { path: '/shop', icon: ShoppingBag, label: 'Shop' },
-    { path: '/cart', icon: ShoppingBag, label: 'Cart', badge: totalItems },
-    { path: '/wishlist', icon: Heart, label: 'Wishlist', auth: true, badge: wishlist.length },
-    user?.role === 'admin'
-      ? { path: '/admin', icon: Crown, label: 'Admin', auth: true }
-      : { path: '/dashboard', icon: User, label: user ? 'Account' : 'Login', dest: user ? '/dashboard' : '/login' }
+    { to: '/', icon: Home, label: 'Home' },
+    { to: '/shop', icon: LayoutGrid, label: 'Shop' },
+    { to: '/cart', icon: ShoppingCart, label: 'Cart', badge: totalItems },
+    { to: '/wishlist', icon: Heart, label: 'Wishlist', badge: wishlist.length },
+    {
+      to: user ? (user.role === 'admin' ? '/admin' : '/dashboard') : '/login',
+      icon: User,
+      label: 'Account',
+      isActive: () => isActive('/dashboard') || isActive('/login') || isActive('/admin')
+    }
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-100 dark:bg-slate-900 dark:border-slate-800 shadow-2xl">
-      <div className={`grid h-16 ${user ? 'grid-cols-6' : 'grid-cols-5'}`}>
-        {navItems.map((item, index) => {
-          const path = item.dest || item.path;
-          const active = isActive(item.path);
-          const Icon = item.icon;
+    <div className="lg:hidden fixed bottom-6 left-4 right-4 z-50">
+      <nav className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-white/20 dark:border-slate-800 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] px-2 py-2">
+        <ul className="flex items-center justify-between relative">
+          {navItems.map((item, index) => {
+            const active = item.isActive ? item.isActive() : isActive(item.to);
 
-          if (item.auth && !user) return null;
+            return (
+              <li key={index} className="flex-1 flex justify-center">
+                <Link
+                  to={item.to}
+                  className={`relative flex items-center justify-center transition-all duration-500 ease-out ${active
+                    ? '-mt-12 w-14 h-14 bg-maroon text-white shadow-lg shadow-maroon/30 rounded-full border-4 border-slate-50 dark:border-slate-950 transform scale-110'
+                    : 'w-10 h-10 text-slate-400 hover:text-maroon dark:hover:text-pink-300 rounded-full active:bg-slate-100 dark:active:bg-slate-800'
+                    }`}
+                >
+                  <item.icon className={`transition-all duration-300 ${active ? 'w-6 h-6' : 'w-6 h-6'}`} strokeWidth={active ? 2.5 : 2} />
 
-          return (
-            <Link
-              key={index}
-              to={path}
-              aria-label={item.label}
-              className={`flex flex-col items-center justify-center space-y-1 transition-all duration-300 relative ${active
-                ? 'text-maroon'
-                : 'text-slate-600 dark:text-slate-400 hover:text-maroon'
-                }`}
-            >
-              {/* Active Indicator */}
-              {active && (
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-12 h-1 bg-maroon rounded-b-full"></div>
-              )}
-
-              {/* Icon with Badge */}
-              <div className="relative">
-                <Icon className={`h-6 w-6 transition-transform duration-300 ${active ? 'scale-110' : ''}`} />
-                {item.badge > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-maroon text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold animate-pulse">
-                    {item.badge}
-                  </span>
-                )}
-              </div>
-
-              {/* Label */}
-              <span className={`text-xs font-semibold ${active ? 'scale-105' : ''}`}>
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
-
-        {/* WhatsApp Button in Bottom Nav (Mobile Only) */}
-        <button
-          onClick={handleWhatsApp}
-          className="flex flex-col items-center justify-center space-y-1 transition-all duration-300 relative text-green-500 hover:text-green-600"
-          title="WhatsApp Support"
-          aria-label="Contact support on WhatsApp"
-        >
-          <MessageCircle className="h-6 w-6 transition-transform duration-300 hover:scale-110" />
-          <span className="text-xs font-semibold">Help</span>
-        </button>
-      </div>
-    </nav>
+                  {item.badge > 0 && (
+                    <span className={`absolute font-bold flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900 transition-all ${active
+                      ? '-top-1 -right-1 bg-yellow-400 text-maroon text-[10px] w-5 h-5'
+                      : 'top-1 right-1 w-2.5 h-2.5 bg-maroon dark:bg-pink-500'
+                      }`}>
+                      {active && item.badge}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </div>
   );
 };
 
