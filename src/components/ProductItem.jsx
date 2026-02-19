@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom';
 import { Heart, ShoppingBag, Star, Eye } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useWishlist } from '../contexts/WishlistContext';
 import QuickViewModal from './QuickViewModal';
 
 const ProductItem = ({ product }) => {
     const { addToCart } = useCart();
     const { t } = useLanguage();
+    const { toggleWishlist, isInWishlist } = useWishlist();
     const [showQuickView, setShowQuickView] = useState(false);
     const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -19,6 +21,11 @@ const ProductItem = ({ product }) => {
     const handleAddToCart = (e) => {
         e.preventDefault();
         addToCart(product);
+    };
+
+    const handleWishlist = (e) => {
+        e.preventDefault();
+        toggleWishlist(product);
     };
 
     const productName = product.name || t('unnamed_product');
@@ -33,6 +40,7 @@ const ProductItem = ({ product }) => {
         '/api/placeholder/300/300';
     const productStock = product.stock || 0;
     const productRating = product.rating || 0;
+    const isWishlisted = isInWishlist(product._id);
     const hasDiscount = product.originalPrice && product.originalPrice > productPrice;
     const discountPercent = hasDiscount
         ? Math.round(((product.originalPrice - productPrice) / product.originalPrice) * 100)
@@ -60,6 +68,15 @@ const ProductItem = ({ product }) => {
                         />
                     </Link>
 
+                    {/* Stock status badge */}
+                    {productStock === 0 && (
+                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-20 pointer-events-none">
+                            <span className="bg-red-600 text-white text-[10px] sm:text-xs font-black px-3 py-1 rounded-full uppercase tracking-tighter shadow-xl">
+                                {t('out_of_stock')}
+                            </span>
+                        </div>
+                    )}
+
                     {/* Discount Badge - Minimalist */}
                     {hasDiscount && (
                         <div className="absolute top-2 left-2 bg-maroon text-white text-[10px] font-bold px-2 py-0.5 rounded shadow-sm z-10">
@@ -80,10 +97,12 @@ const ProductItem = ({ product }) => {
                             <Eye className="w-3.5 h-3.5" />
                         </button>
                         <button
-                            className="p-1.5 bg-white/90 backdrop-blur-sm rounded-full text-slate-600 hover:text-pink-600 shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 delayed-100 active:scale-90 hidden sm:flex items-center justify-center"
+                            className={`p-1.5 backdrop-blur-sm rounded-full shadow-sm sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform sm:translate-x-2 sm:group-hover:translate-x-0 delayed-100 active:scale-90 flex items-center justify-center ${isWishlisted ? 'bg-maroon text-white' : 'bg-white/90 text-slate-600 hover:text-pink-600'
+                                }`}
+                            onClick={handleWishlist}
                             aria-label={t('add_to_wishlist')}
                         >
-                            <Heart className="w-3.5 h-3.5" />
+                            <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-current' : ''}`} />
                         </button>
                     </div>
                 </div>

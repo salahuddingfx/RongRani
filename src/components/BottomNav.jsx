@@ -3,11 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, ShoppingBag, Heart, Package, User, Crown, MessageCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
+import { useWishlist } from '../contexts/WishlistContext';
 
 const BottomNav = () => {
   const location = useLocation();
   const { user } = useAuth();
   const { totalItems } = useCart();
+  const { wishlist } = useWishlist();
 
   const phoneNumber = '8801851075537';
   const defaultMessage = 'Hello! I need help with RongRani services.';
@@ -30,7 +32,7 @@ const BottomNav = () => {
     { path: '/', icon: Home, label: 'Home' },
     { path: '/shop', icon: ShoppingBag, label: 'Shop' },
     { path: '/cart', icon: ShoppingBag, label: 'Cart', badge: totalItems },
-    { path: '/wishlist', icon: Heart, label: 'Wishlist', auth: true },
+    { path: '/wishlist', icon: Heart, label: 'Wishlist', auth: true, badge: wishlist.length },
     user?.role === 'admin'
       ? { path: '/admin', icon: Crown, label: 'Admin', auth: true }
       : { path: '/dashboard', icon: User, label: user ? 'Account' : 'Login', dest: user ? '/dashboard' : '/login' }

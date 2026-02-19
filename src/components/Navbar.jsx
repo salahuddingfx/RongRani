@@ -6,6 +6,7 @@ import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { useWishlist } from '../contexts/WishlistContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,6 +24,7 @@ const Navbar = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const { totalItems, openCart } = useCart();
+  const { wishlist } = useWishlist();
   const { user, logout } = useAuth();
   const { t, language, toggleLanguage } = useLanguage();
   const { isDark, toggleTheme } = useTheme();
@@ -155,11 +157,7 @@ const Navbar = () => {
     : ['Search for gifts...', 'Love Combo...', 'Birthday Gifts...', 'Handmade Items...', 'Surprise Boxes...'];
 
   useEffect(() => {
-    // Disable typing effect on mobile to save main thread and battery
-    if (window.innerWidth < 768) {
-      setPlaceholder(placeholders[0]);
-      return;
-    }
+    // Typing effect enabled for all screens
 
     let currentText = placeholders[placeholderIndex];
     let charIndex = 0;
@@ -537,6 +535,19 @@ const Navbar = () => {
                         {totalItems > 0 && (
                           <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-bounce-short">
                             {totalItems}
+                          </span>
+                        )}
+                      </Link>
+
+                      {/* Wishlist Icon */}
+                      <Link
+                        to="/wishlist"
+                        className="relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group"
+                      >
+                        <Heart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon transition-colors" />
+                        {wishlist.length > 0 && (
+                          <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-pulse">
+                            {wishlist.length}
                           </span>
                         )}
                       </Link>
