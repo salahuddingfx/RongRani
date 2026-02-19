@@ -54,6 +54,34 @@ const uploadToCloudinary = (file, folder = 'rongrani') => {
   });
 };
 
+const uploadStreamToCloudinary = (buffer, folder = 'rongrani') => {
+  return new Promise((resolve, reject) => {
+    if (!isCloudinaryConfigured) {
+      resolve({
+        url: 'https://via.placeholder.com/400x400?text=Image+Upload+Disabled',
+        publicId: 'placeholder-' + Date.now(),
+        isPlaceholder: true
+      });
+      return;
+    }
+
+    const stream = cloudinary.uploader.upload_stream(
+      { folder, resource_type: 'auto' },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve({
+            url: result.secure_url,
+            publicId: result.public_id,
+          });
+        }
+      }
+    );
+    stream.end(buffer);
+  });
+};
+
 const deleteFromCloudinary = (publicId) => {
   return new Promise((resolve, reject) => {
     // Skip if Cloudinary not configured or placeholder
@@ -75,6 +103,7 @@ const deleteFromCloudinary = (publicId) => {
 module.exports = {
   cloudinary,
   uploadToCloudinary,
+  uploadStreamToCloudinary,
   deleteFromCloudinary,
   isCloudinaryConfigured,
 };

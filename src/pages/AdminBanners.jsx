@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Image, Plus, Edit, Trash2, Eye, EyeOff, Upload, X, Sparkles } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Image as ImageIcon, Plus, Edit, Trash2, Eye, EyeOff, Upload, X, Sparkles, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -16,6 +16,44 @@ const AdminBanners = () => {
     isActive: true,
     order: 0
   });
+
+  const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setIsUploading(true);
+    const loadingToast = toast.loading('Uploading banner image...');
+
+    try {
+      const uploadFormData = new FormData();
+      uploadFormData.append('image', file);
+
+      const token = localStorage.getItem('token');
+      const response = await axios.post('/api/products/upload', uploadFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      setFormData(prev => ({ ...prev, image: response.data.url }));
+      toast.success('Banner image uploaded! ✨', { id: loadingToast });
+    } catch (error) {
+      console.error('Upload Error:', error);
+      toast.error(error.response?.data?.message || 'Failed to upload image', { id: loadingToast });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   useEffect(() => {
     fetchBanners();
@@ -144,7 +182,7 @@ const AdminBanners = () => {
               <p className="text-white/80 text-sm font-semibold mb-1">Total Banners</p>
               <h3 className="text-4xl font-black">{banners.length}</h3>
             </div>
-            <Image className="h-12 w-12 opacity-30" />
+            <ImageIcon className="h-12 w-12 opacity-30" />
           </div>
         </div>
         <div className="bg-green-600 text-white p-6 rounded-2xl shadow-lg">
@@ -180,7 +218,7 @@ const AdminBanners = () => {
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <Image className="h-16 w-16 text-slate/30" />
+                  <ImageIcon className="h-16 w-16 text-slate/30" />
                 </div>
               )}
               <div className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold ${banner.isActive
@@ -236,7 +274,7 @@ const AdminBanners = () => {
 
       {banners.length === 0 && (
         <div className="text-center py-16 bg-white rounded-2xl shadow-xl border-2 border-dashed border-maroon/20">
-          <Image className="h-24 w-24 text-slate/30 mx-auto mb-4" />
+          <ImageIcon className="h-24 w-24 text-slate/30 mx-auto mb-4" />
           <h3 className="text-2xl font-bold text-maroon mb-2">No Banners Yet</h3>
           <p className="text-slate mb-8 max-w-md mx-auto">Create your first banner to display on the homepage, or import our premium templates to get started quickly.</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -360,9 +398,25 @@ const AdminBanners = () => {
                         const randomId = Math.floor(Math.random() * 1000);
                         setFormData({ ...formData, image: `https://picsum.photos/seed/${randomId}/1200/600` });
                       }}
-                      className="bg-teal-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-teal-700 transition-colors"
+                      className="bg-slate-100 text-slate-700 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-slate-200 transition-colors"
                     >
-                      Use Random
+                      Random URL
+                    </button>
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      accept="image/*"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                      className="bg-maroon text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-maroon/90 transition-colors disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {isUploading ? <Loader2 className="h-3 w-3 animate-spin" /> : <Upload className="h-3 w-3" />}
+                      {isUploading ? 'Uploading...' : 'Direct Upload'}
                     </button>
                   </div>
 

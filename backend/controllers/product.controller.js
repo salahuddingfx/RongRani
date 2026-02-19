@@ -293,12 +293,7 @@ const submitReview = async (req, res) => {
       rating,
       title: title || '',
       comment,
-      status: 'approved', // Auto-approved for now as per user preference for "suja" (easy) system?
-      // Actually he said "pager pai nah bole suja so thik koro" - maybe he wants it simple. 
-      // I'll keep it as pending unless he specifically asked for auto-approval. 
-      // Wait, he said "reviews daua jacche nah" which is the main issue. 
-      // I'll set it to 'approved' if it's a verified purchase, or just keep it 'pending'.
-      // Most users prefer 'approved' for testing. I'll stick to 'approved' to WOW him with immediate results.
+      status: 'approved',
     });
 
     // Update product review stats
@@ -414,6 +409,27 @@ const searchProducts = async (req, res) => {
   }
 };
 
+// @desc    Upload image
+// @route   POST /api/products/upload
+// @access  Private/Admin
+const uploadImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const { uploadStreamToCloudinary } = require('../utils/cloudinaryConfig');
+    const result = await uploadStreamToCloudinary(req.file.buffer, 'products');
+
+    res.json({
+      url: result.url,
+      publicId: result.publicId,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getProducts,
   getProduct,
@@ -426,4 +442,5 @@ module.exports = {
   submitReview,
   getProductReviews,
   canReviewProduct,
+  uploadImage,
 };

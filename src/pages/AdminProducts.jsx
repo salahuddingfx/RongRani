@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Trash2, Edit, Search, Package, Globe, Tag, Settings, X } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Plus, Trash2, Edit, Search, Package, Globe, Tag, Settings, X, Upload, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useSocket } from '../contexts/socketContextBase';
@@ -37,6 +37,50 @@ const AdminProducts = () => {
     const selling = parseFloat(formData.price);
     if (!original || !selling || original <= selling) return 0;
     return Math.round(((original - selling) / original) * 100);
+  };
+
+  const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size should be less than 5MB');
+      return;
+    }
+
+    setIsUploading(true);
+    const loadingToast = toast.loading('Uploading image to Cloudinary...');
+
+    try {
+      const uploadFormData = new FormData();
+      uploadFormData.append('image', file);
+
+      const token = localStorage.getItem('token');
+      const response = await axios.post('/api/products/upload', uploadFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const newUrl = response.data.url;
+      setFormData(prev => ({
+        ...prev,
+        images: prev.images ? `${prev.images}\n${newUrl}` : newUrl
+      }));
+
+      toast.success('Image uploaded successfully! ✨', { id: loadingToast });
+    } catch (error) {
+      console.error('Upload Error:', error);
+      toast.error(error.response?.data?.message || 'Failed to upload image', { id: loadingToast });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   const fetchProducts = useCallback(async () => {
@@ -481,9 +525,12 @@ const AdminProducts = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate mb-2 flex justify-between items-center">
-                    <span>Product Images (URLs)</span>
-                    <span className={`text-xs px-2 py-1 rounded-full font-bold transition-colors ${getImageCount() > 0 ? 'bg-maroon/10 text-maroon' : 'bg-slate-100 text-slate-500'}`}>
+                  <label className="block text-sm font-semibold text-slate mb-2 flex justify-between items-center text-maroon">
+                    <div className="flex items-center gap-2">
+                      <Upload className="h-4 w-4" />
+                      <span>Product Images (URLs or Upload)</span>
+                    </div>
+                    <span className={`text-xs px-3 py-1 rounded-full font-bold transition-all shadow-sm ${getImageCount() > 0 ? 'bg-maroon text-white' : 'bg-slate-100 text-slate-500'}`}>
                       {getImageCount()} Image{getImageCount() !== 1 ? 's' : ''} Added
                     </span>
                   </label>
@@ -491,21 +538,39 @@ const AdminProducts = () => {
                     required
                     value={formData.images}
                     onChange={(e) => setFormData({ ...formData, images: e.target.value })}
-                    className="input-field w-full font-mono text-xs"
+                    className="input-field w-full font-mono text-xs focus:h-40 transition-all duration-300"
                     rows="4"
-                    placeholder={`https://example.com/image1.jpg\nhttps://example.com/image2.jpg\nhttps://example.com/image3.jpg`}
+                    placeholder={`https://example.com/image1.jpg\nhttps://example.com/image2.jpg`}
                   />
-                  <div className="flex justify-between items-start mt-1">
-                    <p className="text-xs text-slate-500">
-                      📌 Enter multiple image URLs separated by commas or new lines.
-                    </p>
-                    <p className="text-xs text-maroon font-medium">
-                      First image = Main Display
-                    </p>
+                  <div className="mt-3 flex flex-wrap gap-2 items-center">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      accept="image/*"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                      className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-sm font-bold transition-all disabled:opacity-50"
+                    >
+                      {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                      {isUploading ? 'Uploading...' : 'Direct Upload'}
+                    </button>
+                    <div className="flex-1 flex justify-between items-center min-w-0">
+                      <p className="text-[10px] text-slate-400 font-medium truncate">
+                        📌 Paste URLs OR use **Direct Upload**
+                      </p>
+                      <span className="text-[10px] text-maroon font-bold whitespace-nowrap ml-2">
+                        First image = Main 🖼️
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                <div className="bg-slate-50 p-6 rounded-xl border border-slate-200 mt-6">
+                <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
                   <h3 className="text-lg font-bold text-maroon mb-4 flex items-center space-x-2 border-b border-slate-200 pb-2">
                     <div className="bg-maroon/10 p-1.5 rounded-lg">
                       <Settings className="h-5 w-5 text-maroon" />
@@ -527,7 +592,7 @@ const AdminProducts = () => {
                         value={formData.tags}
                         onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
                         className="input-field w-full"
-                        placeholder="e.g. gift, handmade, birthday, surprise box, anniversary"
+                        placeholder="e.g. gift, handmade, birthday"
                       />
                     </div>
 
@@ -562,7 +627,7 @@ const AdminProducts = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-4 pt-4 sticky bottom-0 bg-white py-4 border-t border-slate-100">
+                <div className="flex gap-4 pt-4 sticky bottom-0 bg-white py-4 border-t border-slate-100 mt-6">
                   <button type="submit" className="btn-primary flex-1 py-4 text-lg">
                     {editingProduct ? 'Update Product' : 'Create Product'}
                   </button>
@@ -580,9 +645,9 @@ const AdminProducts = () => {
               </form>
             </div>
           </div>
-        </div>
+        </div >
       )}
-    </div>
+    </div >
   );
 };
 
