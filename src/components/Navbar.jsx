@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingCart, User, Search, Menu, X, Heart, Package, LogOut, Crown, LayoutDashboard, Moon, Sun, Phone, Mail, ChevronDown, Home, Globe, TrendingUp, Clock } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, X, Heart, Package, LogOut, Crown, LayoutDashboard, Moon, Sun, Phone, Mail, ChevronDown, Home, Globe, TrendingUp, Clock, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -441,8 +441,8 @@ const Navbar = () => {
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="lg:hidden">
-                  <button onClick={() => setIsOpen(!isOpen)} className="p-2 -ml-2 text-slate-800 dark:text-white rounded-full active:scale-90">
-                    {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                  <button onClick={() => setIsOpen(!isOpen)} className="p-2 -ml-2 text-slate-800 dark:text-white rounded-full active:scale-90 transition-transform">
+                    {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                   </button>
                 </div>
                 <Link to="/" className="flex items-center gap-2 group shrink-0">
@@ -466,13 +466,30 @@ const Navbar = () => {
                   <>
                     <div className="hidden lg:flex items-center space-x-6 mr-2">
                       {menuItems.map((item) => (
-                        <Link key={item.to} to={item.to} className={`text-sm font-bold uppercase tracking-wide px-4 py-2 rounded-full transition-all duration-300 relative group overflow-hidden ${location.pathname === item.to ? 'text-maroon dark:text-pink-400 bg-maroon/5 dark:bg-pink-400/10' : 'text-slate-600 dark:text-slate-400 hover:text-maroon dark:hover:text-pink-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                        <Link key={item.to} to={item.to} className={`text-sm font-bold uppercase tracking-wide px-4 py-2 rounded-full transition-all duration-300 relative group ${location.pathname === item.to ? 'bg-maroon text-white' : 'text-slate-600 dark:text-slate-400 hover:text-maroon dark:hover:text-pink-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
                           <span className="relative z-10">{t(item.label)}</span>
-                          {location.pathname === item.to && <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-maroon dark:bg-pink-400 rounded-full mb-1"></span>}
                         </Link>
                       ))}
                     </div>
+
+                    {/* Navigation Buttons (Back & Home) - Visible on ALL screens when not on home */}
+                    {location.pathname !== '/' && (
+                      <div className="flex items-center gap-1 border-r border-slate-200 dark:border-slate-700 pr-2 mr-1">
+                        <button onClick={() => window.history.back()} className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" title="Go Back">
+                          <ArrowLeft className="w-5 h-5" />
+                        </button>
+                        <Link to="/" className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" title="Home">
+                          <Home className="w-5 h-5" />
+                        </Link>
+                      </div>
+                    )}
+
                     <div className="flex items-center gap-1 md:gap-2">
+                      {/* Mobile Search Toggle (Optional enhancement) */}
+                      <Link to="/shop" className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                        <Search className="w-5 h-5" />
+                      </Link>
+
                       <button onClick={toggleTheme} className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300">
                         {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                       </button>
