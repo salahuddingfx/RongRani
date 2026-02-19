@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, Trash2, Edit, Search, Package, Globe, Tag, Settings } from 'lucide-react';
+import { Plus, Trash2, Edit, Search, Package, Globe, Tag, Settings, X } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useSocket } from '../contexts/socketContextBase';
