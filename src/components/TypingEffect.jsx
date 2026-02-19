@@ -38,4 +38,4 @@ const TypingEffect = ({ texts, speed = 100, deleteSpeed = 50, pauseTime = 2000, 
   );
 };
 
-export default TypingEffect;
+export default React.memo(TypingEffect);

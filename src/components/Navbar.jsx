@@ -515,7 +515,18 @@ const Navbar = () => {
 
         {isOpen && !isSimplifiedPage && (
           <div className="lg:hidden fixed inset-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl animate-in fade-in duration-300">
-            <div className="flex flex-col h-full pt-24 px-6 overflow-y-auto">
+            <div className="flex flex-col h-full pt-6 px-6 overflow-y-auto">
+              {/* Close Button Header */}
+              <div className="flex justify-end mb-6">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-3 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-600 dark:text-slate-300 hover:bg-maroon hover:text-white transition-all shadow-sm active:scale-95"
+                  aria-label="Close menu"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
               <div className="space-y-4 mb-8">
                 {menuItems.map((item) => (
                   <Link key={item.to} to={item.to} className={`block text-2xl font-black transition-colors ${location.pathname === item.to ? 'text-maroon dark:text-white' : 'text-slate-400 hover:text-maroon'}`} onClick={() => setIsOpen(false)}>

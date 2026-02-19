@@ -163,6 +163,7 @@ const BannerSlider = () => {
                   className="w-full h-full object-cover opacity-20"
                   decoding="async"
                   loading={index === 0 ? "eager" : "lazy"}
+                  {...(index === 0 ? { fetchPriority: "high" } : {})}
                   width="1200"
                   height="600"
                 />
@@ -202,6 +203,7 @@ const BannerSlider = () => {
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                         decoding="async"
                         loading={index === 0 ? "eager" : "lazy"}
+                        {...(index === 0 ? { fetchPriority: "high" } : {})}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-white/50 text-4xl font-bold">

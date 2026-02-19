@@ -24,24 +24,6 @@ const Home = () => {
   const { socket } = useSocket() || {};
   const { t, language } = useLanguage();
 
-  const categoryColorMap = {
-    'bg-pink-600': '#DB2777',
-    'bg-maroon': '#BE123C',
-    'bg-amber-500': '#F59E0B',
-    'bg-amber-800': '#92400E',
-    'bg-red-500': '#EF4444',
-    'bg-yellow-500': '#EAB308',
-    'bg-slate-700': '#334155',
-    'bg-emerald-500': '#10B981',
-    'bg-purple-600': '#9333EA',
-    'bg-indigo-600': '#4F46E5',
-    'bg-teal-600': '#0D9488',
-    'bg-rose-600': '#E11D48',
-  };
-
-  const getCategoryStyle = (color) => {
-    return { backgroundColor: categoryColorMap[color] || '#BE123C' };
-  };
 
   useEffect(() => {
     fetchFeaturedProducts();
@@ -86,14 +68,10 @@ const Home = () => {
     } catch (error) {
       console.error('Error fetching categories:', error);
       // Fallback categories if API fails
-      setCategories([
-        { name: 'Love Combo', slug: 'love-combo', icon: 'Heart', color: 'bg-pink-600' },
-        { name: 'Anniversary', slug: 'anniversary-combo', icon: 'Sparkles', color: 'bg-maroon' },
-        { name: 'Birthday', slug: 'birthday-combo', icon: 'ShoppingBag', color: 'bg-amber-500' },
-        { name: 'Valentine', slug: 'valentine-combo', icon: 'Heart', color: 'bg-red-500' },
-      ]);
+      setCategories(FALLBACK_CATEGORIES);
     }
   };
+
 
   const fetchFeaturedProducts = async () => {
     try {
@@ -104,13 +82,8 @@ const Home = () => {
     } catch (error) {
       console.error('Error fetching products:', error);
       // Fallback data...
-      setFeaturedProducts([
-        // keep some fallback items but fewer for mobile
-        { _id: '1', name: 'Bamboo Basket Set', price: 1800, images: [{ url: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format,compress&q=60&w=300' }], category: 'home', rating: 4.2 },
-        { _id: '2', name: 'Clay Pottery Set', price: 3200, images: [{ url: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format,compress&q=60&w=300' }], category: 'home', rating: 4.5 },
-        { _id: '3', name: 'Handwoven Silk Scarf', price: 2500, images: [{ url: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?auto=format,compress&q=60&w=300' }], category: 'clothing', rating: 4.8 },
-        { _id: '4', name: 'Handcrafted Gift Box', price: 1500, images: [{ url: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format,compress&q=60&w=300' }], category: 'gifts', rating: 4.7 }
-      ]);
+
+      setFeaturedProducts(FALLBACK_PRODUCTS.slice(0, isMobile ? 6 : 8));
     } finally {
       setLoading(false);
     }
@@ -499,5 +472,42 @@ const Home = () => {
     </div>
   );
 };
+
+const categoryColorMap = {
+  'bg-pink-600': '#DB2777',
+  'bg-maroon': '#BE123C',
+  'bg-amber-500': '#F59E0B',
+  'bg-amber-800': '#92400E',
+  'bg-red-500': '#EF4444',
+  'bg-yellow-500': '#EAB308',
+  'bg-slate-700': '#334155',
+  'bg-emerald-500': '#10B981',
+  'bg-purple-600': '#9333EA',
+  'bg-indigo-600': '#4F46E5',
+  'bg-teal-600': '#0D9488',
+  'bg-rose-600': '#E11D48',
+};
+
+const getCategoryStyle = (color) => {
+  return { backgroundColor: categoryColorMap[color] || '#BE123C' };
+};
+
+const FALLBACK_CATEGORIES = [
+  { name: 'Love Combo', slug: 'love-combo', icon: 'Heart', color: 'bg-pink-600' },
+  { name: 'Anniversary', slug: 'anniversary-combo', icon: 'Sparkles', color: 'bg-maroon' },
+  { name: 'Birthday', slug: 'birthday-combo', icon: 'ShoppingBag', color: 'bg-amber-500' },
+  { name: 'Valentine', slug: 'valentine-combo', icon: 'Heart', color: 'bg-red-500' },
+];
+
+const FALLBACK_PRODUCTS = [
+  { _id: '1', name: 'Bamboo Basket Set', price: 1800, images: [{ url: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?auto=format,compress&q=60&w=300' }], category: 'home', rating: 4.2 },
+  { _id: '2', name: 'Clay Pottery Set', price: 3200, images: [{ url: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format,compress&q=60&w=300' }], category: 'home', rating: 4.5 },
+  { _id: '3', name: 'Handwoven Silk Scarf', price: 2500, images: [{ url: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?auto=format,compress&q=60&w=300' }], category: 'clothing', rating: 4.8 },
+  { _id: '4', name: 'Handcrafted Gift Box', price: 1500, images: [{ url: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format,compress&q=60&w=300' }], category: 'gifts', rating: 4.7 },
+  { _id: '5', name: 'Wooden Jewelry Box', price: 1200, images: [{ url: 'https://images.unsplash.com/photo-1512413314640-5391a29d5b4d?auto=format,compress&q=60&w=300' }], category: 'gifts', rating: 4.6 },
+  { _id: '6', name: 'Terracotta Vase', price: 950, images: [{ url: 'https://images.unsplash.com/photo-1581264692636-357e1ad4fb05?auto=format,compress&q=60&w=300' }], category: 'home', rating: 4.3 },
+  { _id: '7', name: 'Embroidered Cushion', price: 850, images: [{ url: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e6?auto=format,compress&q=60&w=300' }], category: 'home', rating: 4.4 },
+  { _id: '8', name: 'Brass Oil Lamp', price: 2200, images: [{ url: 'https://images.unsplash.com/photo-1510072021570-52e25f8b9cb9?auto=format,compress&q=60&w=300' }], category: 'decor', rating: 4.9 },
+];
 
 export default Home;

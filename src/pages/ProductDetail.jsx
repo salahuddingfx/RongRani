@@ -421,146 +421,148 @@ const ProductDetail = () => {
                 </button>
               </div>
 
-              {/* Premium Information Layout (Restored Original Style) */}
-              <div className="mt-20 space-y-8">
-                {/* 1. Product Description Box (Full Width) */}
-                <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 md:p-10 border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none">
-                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-maroon/10 flex items-center justify-center text-maroon">
-                      <Package className="w-6 h-6" />
-                    </div>
-                    {t('product_description') || 'Product Description'}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
-                    {product.description}
-                  </p>
-                </div>
-
-                {/* 2. Info Grid (3 Columns) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {/* Card 1: Product Specifications */}
-                  <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none">
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-maroon/10 flex items-center justify-center text-maroon">
-                        <Package className="w-5 h-5" />
-                      </div>
-                      {t('product_details')}
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
-                        <span className="text-slate-500 font-bold text-sm">{t('category') || 'Category'}:</span>
-                        <span className="bg-maroon/10 text-maroon px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">{categoryLabel || 'General'}</span>
-                      </div>
-                      <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
-                        <span className="text-slate-500 font-bold text-sm">{t('sku_label')}:</span>
-                        <span className="text-slate-900 dark:text-white font-black">{product.sku || product._id.slice(-6).toUpperCase()}</span>
-                      </div>
-                      <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
-                        <span className="text-slate-500 font-bold text-sm">{t('availability') || 'Availability'}:</span>
-                        <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${product.stock > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
-                          {product.stock > 0 ? t('in_stock') : t('out_of_stock')}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
-                        <span className="text-slate-500 font-bold text-sm">{t('brand') || 'Brand'}:</span>
-                        <span className="text-maroon font-black uppercase tracking-tight">RongRani</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card 2: Delivery Info */}
-                  <div className="bg-green-50/30 dark:bg-emerald-950/20 rounded-[2rem] p-8 border border-green-100 dark:border-emerald-900 shadow-xl shadow-green-100/50 dark:shadow-none">
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-600">
-                        <Truck className="w-5 h-5" />
-                      </div>
-                      {t('delivery_info')}
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center p-5 bg-white dark:bg-slate-900 rounded-2xl border border-green-100 dark:border-emerald-800">
-                        <div className="flex items-center gap-3">
-                          <Building2 className="w-5 h-5 text-green-600" />
-                          <span className="text-slate-700 dark:text-slate-300 font-bold text-sm">Inside Cox's Bazar:</span>
-                        </div>
-                        <span className="text-green-600 font-black text-lg">৳{deliverySettings.chittagongFee}</span>
-                      </div>
-                      <div className="flex justify-between items-center p-5 bg-white dark:bg-slate-900 rounded-2xl border border-green-100 dark:border-emerald-800">
-                        <div className="flex items-center gap-3">
-                          <Mountain className="w-5 h-5 text-green-600" />
-                          <span className="text-slate-700 dark:text-slate-300 font-bold text-sm">Outside Cox's Bazar:</span>
-                        </div>
-                        <span className="text-green-600 font-black text-lg">৳{deliverySettings.outsideChittagongFee}</span>
-                      </div>
-                      <div className="bg-amber-400 p-4 rounded-2xl flex items-center justify-center gap-3 border shadow-lg border-white/20">
-                        <Truck className="w-5 h-5 text-slate-800" />
-                        <span className="text-slate-800 font-black text-xs uppercase tracking-wider">Delivered by Steadfast Courier</span>
-                      </div>
-                      <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex items-center justify-center gap-2">
-                        <Zap className="w-4 h-4 text-blue-500 animate-pulse" />
-                        <span className="text-blue-600 dark:text-blue-400 font-medium text-xs">Orders processed within 24 hours</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card 3: Why Choose This? */}
-                  <div className="bg-pink-50/30 dark:bg-pink-950/20 rounded-[2rem] p-8 border border-pink-100 dark:border-pink-900 shadow-xl shadow-pink-100/50 dark:shadow-none">
-                    <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-600">
-                        <Gift className="w-5 h-5" />
-                      </div>
-                      {t('why_choose_this')}
-                    </h3>
-                    <div className="space-y-6">
-                      {[
-                        { title: t('handcrafted_love'), desc: t('handcrafted_love_desc'), color: 'text-maroon' },
-                        { title: t('perfect_gift_choice'), desc: t('perfect_gift_choice_desc'), color: 'text-blue-500' },
-                        { title: t('premium_quality'), desc: t('premium_quality_desc'), color: 'text-amber-500' },
-                        { title: t('beautiful_packaging'), desc: t('beautiful_packaging_desc'), color: 'text-purple-500' }
-                      ].map((item, i) => (
-                        <div key={i} className="flex gap-4">
-                          <div className="w-6 h-6 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 mt-1">
-                            <CheckCircle className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-0.5">
-                              {item.title}
-                            </h4>
-                            <p className="text-[11px] text-slate-500 leading-snug">{item.desc}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. Bottom Trust Bar */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-                  <div className="bg-blue-50/50 dark:bg-blue-900/10 p-8 rounded-[2rem] border border-blue-100 dark:border-blue-900 group hover:scale-[1.02] transition-transform">
-                    <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-blue-500/30">
-                      <Truck className="w-8 h-8" />
-                    </div>
-                    <h4 className="text-xl font-black text-blue-900 dark:text-blue-400 text-center mb-1">{t('fast_delivery_title')}</h4>
-                    <p className="text-blue-600/60 dark:text-blue-300/40 text-sm font-bold text-center">{t('fast_delivery_desc')}</p>
-                  </div>
-                  <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-8 rounded-[2rem] border border-emerald-100 dark:border-emerald-900 group hover:scale-[1.02] transition-transform">
-                    <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-emerald-500/30">
-                      <Shield className="w-8 h-8" />
-                    </div>
-                    <h4 className="text-xl font-black text-emerald-900 dark:text-emerald-400 text-center mb-1">{t('quality_guaranteed_title')}</h4>
-                    <p className="text-emerald-600/60 dark:text-emerald-300/40 text-sm font-bold text-center">{t('authentic_products_desc')}</p>
-                  </div>
-                  <div className="bg-amber-50/50 dark:bg-amber-900/10 p-8 rounded-[2rem] border border-amber-100 dark:border-amber-900 group hover:scale-[1.02] transition-transform">
-                    <div className="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-amber-500/30">
-                      <RotateCcw className="w-8 h-8" />
-                    </div>
-                    <h4 className="text-xl font-black text-amber-900 dark:text-amber-400 text-center mb-1">{t('easy_returns_title')}</h4>
-                    <p className="text-amber-600/60 dark:text-amber-300/40 text-sm font-bold text-center">{t('return_policy_desc')}</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
+
+        {/* Premium Information Layout (Restored Full Width Style) */}
+        <div className="mt-20 space-y-8">
+          {/* 1. Product Description Box (Full Width) */}
+          <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 md:p-10 border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none">
+            <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-maroon/10 flex items-center justify-center text-maroon">
+                <Package className="w-6 h-6" />
+              </div>
+              {t('product_description') || 'Product Description'}
+            </h3>
+            <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-lg">
+              {product.description}
+            </p>
+          </div>
+
+          {/* 2. Info Grid (3 Columns) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Card 1: Product Specifications */}
+            <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-maroon/10 flex items-center justify-center text-maroon">
+                  <Package className="w-5 h-5" />
+                </div>
+                {t('product_details')}
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
+                  <span className="text-slate-500 font-bold text-sm">{t('category') || 'Category'}:</span>
+                  <span className="bg-maroon/10 text-maroon px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">{categoryLabel || 'General'}</span>
+                </div>
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
+                  <span className="text-slate-500 font-bold text-sm">{t('sku_label')}:</span>
+                  <span className="text-slate-900 dark:text-white font-black">{product.sku || product._id.slice(-6).toUpperCase()}</span>
+                </div>
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
+                  <span className="text-slate-500 font-bold text-sm">{t('availability') || 'Availability'}:</span>
+                  <span className={`px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest ${product.stock > 0 ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}`}>
+                    {product.stock > 0 ? t('in_stock') : t('out_of_stock')}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
+                  <span className="text-slate-500 font-bold text-sm">{t('brand') || 'Brand'}:</span>
+                  <span className="text-maroon font-black uppercase tracking-tight">RongRani</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: Delivery Info */}
+            <div className="bg-green-50/30 dark:bg-emerald-950/20 rounded-[2rem] p-8 border border-green-100 dark:border-emerald-900 shadow-xl shadow-green-100/50 dark:shadow-none">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-600">
+                  <Truck className="w-5 h-5" />
+                </div>
+                {t('delivery_info')}
+              </h3>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-5 bg-white dark:bg-slate-900 rounded-2xl border border-green-100 dark:border-emerald-800">
+                  <div className="flex items-center gap-3">
+                    <Building2 className="w-5 h-5 text-green-600" />
+                    <span className="text-slate-700 dark:text-slate-300 font-bold text-sm">Inside Cox's Bazar:</span>
+                  </div>
+                  <span className="text-green-600 font-black text-lg">৳{deliverySettings.chittagongFee}</span>
+                </div>
+                <div className="flex justify-between items-center p-5 bg-white dark:bg-slate-900 rounded-2xl border border-green-100 dark:border-emerald-800">
+                  <div className="flex items-center gap-3">
+                    <Mountain className="w-5 h-5 text-green-600" />
+                    <span className="text-slate-700 dark:text-slate-300 font-bold text-sm">Outside Cox's Bazar:</span>
+                  </div>
+                  <span className="text-green-600 font-black text-lg">৳{deliverySettings.outsideChittagongFee}</span>
+                </div>
+                <div className="bg-amber-400 p-4 rounded-2xl flex items-center justify-center gap-3 border shadow-lg border-white/20">
+                  <Truck className="w-5 h-5 text-slate-800" />
+                  <span className="text-slate-800 font-black text-xs uppercase tracking-wider">Delivered by Steadfast Courier</span>
+                </div>
+                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex items-center justify-center gap-2">
+                  <Zap className="w-4 h-4 text-blue-500 animate-pulse" />
+                  <span className="text-blue-600 dark:text-blue-400 font-medium text-xs">Orders processed within 24 hours</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: Why Choose This? */}
+            <div className="bg-pink-50/30 dark:bg-pink-950/20 rounded-[2rem] p-8 border border-pink-100 dark:border-pink-900 shadow-xl shadow-pink-100/50 dark:shadow-none">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-600">
+                  <Gift className="w-5 h-5" />
+                </div>
+                {t('why_choose_this')}
+              </h3>
+              <div className="space-y-6">
+                {[
+                  { title: t('handcrafted_love'), desc: t('handcrafted_love_desc'), color: 'text-maroon' },
+                  { title: t('perfect_gift_choice'), desc: t('perfect_gift_choice_desc'), color: 'text-blue-500' },
+                  { title: t('premium_quality'), desc: t('premium_quality_desc'), color: 'text-amber-500' },
+                  { title: t('beautiful_packaging'), desc: t('beautiful_packaging_desc'), color: 'text-purple-500' }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4">
+                    <div className="w-6 h-6 rounded-full bg-pink-500 text-white flex items-center justify-center flex-shrink-0 mt-1">
+                      <CheckCircle className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-0.5">
+                        {item.title}
+                      </h4>
+                      <p className="text-[11px] text-slate-500 leading-snug">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Bottom Trust Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+            <div className="bg-blue-50/50 dark:bg-blue-900/10 p-8 rounded-[2rem] border border-blue-100 dark:border-blue-900 group hover:scale-[1.02] transition-transform">
+              <div className="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-blue-500/30">
+                <Truck className="w-8 h-8" />
+              </div>
+              <h4 className="text-xl font-black text-blue-900 dark:text-blue-400 text-center mb-1">{t('fast_delivery_title')}</h4>
+              <p className="text-blue-600/60 dark:text-blue-300/40 text-sm font-bold text-center">{t('fast_delivery_desc')}</p>
+            </div>
+            <div className="bg-emerald-50/50 dark:bg-emerald-900/10 p-8 rounded-[2rem] border border-emerald-100 dark:border-emerald-900 group hover:scale-[1.02] transition-transform">
+              <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-emerald-500/30">
+                <Shield className="w-8 h-8" />
+              </div>
+              <h4 className="text-xl font-black text-emerald-900 dark:text-emerald-400 text-center mb-1">{t('quality_guaranteed_title')}</h4>
+              <p className="text-emerald-600/60 dark:text-emerald-300/40 text-sm font-bold text-center">{t('authentic_products_desc')}</p>
+            </div>
+            <div className="bg-amber-50/50 dark:bg-amber-900/10 p-8 rounded-[2rem] border border-amber-100 dark:border-amber-900 group hover:scale-[1.02] transition-transform">
+              <div className="w-16 h-16 bg-amber-500 rounded-2xl flex items-center justify-center text-white mx-auto mb-6 shadow-xl shadow-amber-500/30">
+                <RotateCcw className="w-8 h-8" />
+              </div>
+              <h4 className="text-xl font-black text-amber-900 dark:text-amber-400 text-center mb-1">{t('easy_returns_title')}</h4>
+              <p className="text-amber-600/60 dark:text-amber-300/40 text-sm font-bold text-center">{t('return_policy_desc')}</p>
+            </div>
+          </div>
+        </div>
+
 
         {/* Product Sharing */}
         <div className="mt-12 p-8 bg-cream/30 rounded-[3rem] border border-maroon/5">

@@ -54,263 +54,9 @@ const Shop = () => {
     } catch (error) {
       console.error('Error fetching products:', error);
       // RongRani Gift Products - Fallback data with client-side filtering
-      let fallbackProducts = [
-        // Jewellery
-        {
-          _id: '1',
-          name: 'Gold Plated Party Necklace',
-          description: 'Elegant gold plated necklace perfect for parties and gifts',
-          price: 2500,
-          originalPrice: 3200,
-          images: [{ url: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400' }],
-          stock: 15,
-          category: 'Jewellery',
-          rating: 4.8,
-          reviewCount: 125
-        },
-        {
-          _id: '2',
-          name: 'Designer Bangles Set',
-          description: 'Beautiful set of 4 designer bangles with stone work',
-          price: 1800,
-          originalPrice: 2200,
-          images: [{ url: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400' }],
-          stock: 20,
-          category: 'Jewellery',
-          rating: 4.7,
-          reviewCount: 89
-        },
-        {
-          _id: '3',
-          name: 'Couple Rings Set',
-          description: 'Matching couple rings with engraving option',
-          price: 3500,
-          originalPrice: 4200,
-          images: [{ url: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400' }],
-          stock: 12,
-          category: 'Jewellery',
-          rating: 4.9,
-          reviewCount: 156
-        },
-        {
-          _id: '4',
-          name: 'Jhumka Earrings',
-          description: 'Traditional jhumka earrings with pearl detailing',
-          price: 1200,
-          originalPrice: 1500,
-          images: [{ url: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400' }],
-          stock: 25,
-          category: 'Jewellery',
-          rating: 4.6,
-          reviewCount: 78
-        },
-        // Watches
-        {
-          _id: '5',
-          name: 'Ladies Elegant Watch',
-          description: 'Stylish ladies watch with leather strap',
-          price: 4500,
-          originalPrice: 5500,
-          images: [{ url: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400' }],
-          stock: 10,
-          category: 'Watches',
-          rating: 4.8,
-          reviewCount: 92
-        },
-        {
-          _id: '6',
-          name: 'Couple Watch Set',
-          description: 'Matching his & her watch set - perfect gift',
-          price: 7500,
-          originalPrice: 9000,
-          images: [{ url: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400' }],
-          stock: 8,
-          category: 'Watches',
-          rating: 4.9,
-          reviewCount: 145
-        },
-        // Chocolates
-        {
-          _id: '7',
-          name: 'Premium Chocolate Gift Box',
-          description: 'Assorted Dairy Milk, KitKat & Silk chocolates',
-          price: 1500,
-          originalPrice: 1800,
-          images: [{ url: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=400' }],
-          stock: 30,
-          category: 'Chocolates',
-          rating: 4.7,
-          reviewCount: 203
-        },
-        {
-          _id: '8',
-          name: 'Heart Shape Chocolate Box',
-          description: 'romantic heart-shaped chocolate gift box',
-          price: 2200,
-          originalPrice: 2500,
-          images: [{ url: 'https://images.unsplash.com/photo-1548848774-1f1db32f8e20?w=400' }],
-          stock: 18,
-          category: 'Chocolates',
-          rating: 4.9,
-          reviewCount: 178
-        },
-        // Teddy & Gifts
-        {
-          _id: '9',
-          name: 'Large Teddy Bear',
-          description: 'Cute and cuddly teddy bear - 2 feet tall',
-          price: 1800,
-          originalPrice: 2200,
-          images: [{ url: 'https://images.unsplash.com/photo-1560012057-71269d46f5f8?w=400' }],
-          stock: 15,
-          category: 'Gifts',
-          rating: 4.8,
-          reviewCount: 167
-        },
-        {
-          _id: '10',
-          name: 'Artificial Rose Bouquet',
-          description: 'Beautiful artificial rose bouquet (12 roses)',
-          price: 800,
-          originalPrice: 1000,
-          images: [{ url: 'https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=400' }],
-          stock: 40,
-          category: 'Gifts',
-          rating: 4.5,
-          reviewCount: 95
-        },
-        // Love Combo
-        {
-          _id: '11',
-          name: 'Love Combo - RongRani Special',
-          description: 'Handwritten love letter + chocolate + flower combo',
-          price: 2500,
-          originalPrice: 3000,
-          images: [{ url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400' }],
-          stock: 12,
-          category: 'Love Combo',
-          rating: 5.0,
-          reviewCount: 234
-        },
-        {
-          _id: '12',
-          name: 'Ring + Teddy + Chocolate Combo',
-          description: 'Perfect romantic surprise combo pack',
-          price: 4500,
-          originalPrice: 5500,
-          images: [{ url: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400' }],
-          stock: 8,
-          category: 'Love Combo',
-          rating: 4.9,
-          reviewCount: 189
-        },
-        // Birthday Combo
-        {
-          _id: '13',
-          name: 'Birthday Gift Box',
-          description: 'Complete birthday surprise with treats & gifts',
-          price: 3500,
-          originalPrice: 4200,
-          images: [{ url: 'https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=400' }],
-          stock: 10,
-          category: 'Birthday Combo',
-          rating: 4.8,
-          reviewCount: 145
-        },
-        // Anniversary Combo
-        {
-          _id: '14',
-          name: 'Anniversary Surprise Box',
-          description: 'Necklace + bangles + love note combo',
-          price: 5500,
-          originalPrice: 6800,
-          images: [{ url: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400' }],
-          stock: 6,
-          category: 'Anniversary Combo',
-          rating: 5.0,
-          reviewCount: 198
-        },
-        // Sharee
-        {
-          _id: '15',
-          name: 'Premium Gift Sharee',
-          description: 'Beautiful gift-wrapped sharee with jewellery',
-          price: 6500,
-          originalPrice: 8000,
-          images: [{ url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400' }],
-          stock: 5,
-          category: 'Clothing',
-          rating: 4.9,
-          reviewCount: 87
-        },
-        // Handmade Gifts
-        {
-          _id: '16',
-          name: 'Handwritten Love Letter',
-          description: 'Personalized handwritten love letter in Bengali/English',
-          price: 500,
-          originalPrice: 500,
-          images: [{ url: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400' }],
-          stock: 50,
-          category: 'Handmade',
-          rating: 4.9,
-          reviewCount: 312
-        },
-        {
-          _id: '17',
-          name: 'Memory Scrap Book',
-          description: 'Custom photo memory scrapbook with decorations',
-          price: 1500,
-          originalPrice: 1800,
-          images: [{ url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400' }],
-          stock: 15,
-          category: 'Handmade',
-          rating: 4.8,
-          reviewCount: 134
-        },
-        // Valentine Combo
-        {
-          _id: '18',
-          name: 'Valentine Special Combo',
-          description: 'Ring + roses + chocolate + love letter combo',
-          price: 6500,
-          originalPrice: 7800,
-          images: [{ url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400' }],
-          stock: 10,
-          category: 'Valentine Combo',
-          rating: 5.0,
-          reviewCount: 245
-        },
-        // Proposal Combo
-        {
-          _id: '19',
-          name: 'Proposal Gift Box',
-          description: 'Complete proposal setup with ring & romantic items',
-          price: 8500,
-          originalPrice: 10000,
-          images: [{ url: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400' }],
-          stock: 5,
-          category: 'Proposal Combo',
-          rating: 5.0,
-          reviewCount: 167
-        },
-        // Gift Boxes
-        {
-          _id: '20',
-          name: 'Premium Luxury Gift Box',
-          description: 'Customizable luxury gift box with your choice of items',
-          price: 9500,
-          originalPrice: 12000,
-          images: [{ url: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400' }],
-          stock: 8,
-          category: 'Gift Boxes',
-          rating: 4.9,
-          reviewCount: 178
-        }
-      ];
 
       // Apply client-side filtering to fallback products
-      let filteredProducts = fallbackProducts;
+      let filteredProducts = FALLBACK_PRODUCTS;
 
       // Filter by search query
       if (filters.search) {
@@ -708,5 +454,260 @@ const Shop = () => {
     </div>
   );
 };
+
+const FALLBACK_PRODUCTS = [
+  // Jewellery
+  {
+    _id: '1',
+    name: 'Gold Plated Party Necklace',
+    description: 'Elegant gold plated necklace perfect for parties and gifts',
+    price: 2500,
+    originalPrice: 3200,
+    images: [{ url: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400' }],
+    stock: 15,
+    category: 'Jewellery',
+    rating: 4.8,
+    reviewCount: 125
+  },
+  {
+    _id: '2',
+    name: 'Designer Bangles Set',
+    description: 'Beautiful set of 4 designer bangles with stone work',
+    price: 1800,
+    originalPrice: 2200,
+    images: [{ url: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400' }],
+    stock: 20,
+    category: 'Jewellery',
+    rating: 4.7,
+    reviewCount: 89
+  },
+  {
+    _id: '3',
+    name: 'Couple Rings Set',
+    description: 'Matching couple rings with engraving option',
+    price: 3500,
+    originalPrice: 4200,
+    images: [{ url: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400' }],
+    stock: 12,
+    category: 'Jewellery',
+    rating: 4.9,
+    reviewCount: 156
+  },
+  {
+    _id: '4',
+    name: 'Jhumka Earrings',
+    description: 'Traditional jhumka earrings with pearl detailing',
+    price: 1200,
+    originalPrice: 1500,
+    images: [{ url: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400' }],
+    stock: 25,
+    category: 'Jewellery',
+    rating: 4.6,
+    reviewCount: 78
+  },
+  // Watches
+  {
+    _id: '5',
+    name: 'Ladies Elegant Watch',
+    description: 'Stylish ladies watch with leather strap',
+    price: 4500,
+    originalPrice: 5500,
+    images: [{ url: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400' }],
+    stock: 10,
+    category: 'Watches',
+    rating: 4.8,
+    reviewCount: 92
+  },
+  {
+    _id: '6',
+    name: 'Couple Watch Set',
+    description: 'Matching his & her watch set - perfect gift',
+    price: 7500,
+    originalPrice: 9000,
+    images: [{ url: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400' }],
+    stock: 8,
+    category: 'Watches',
+    rating: 4.9,
+    reviewCount: 145
+  },
+  // Chocolates
+  {
+    _id: '7',
+    name: 'Premium Chocolate Gift Box',
+    description: 'Assorted Dairy Milk, KitKat & Silk chocolates',
+    price: 1500,
+    originalPrice: 1800,
+    images: [{ url: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=400' }],
+    stock: 30,
+    category: 'Chocolates',
+    rating: 4.7,
+    reviewCount: 203
+  },
+  {
+    _id: '8',
+    name: 'Heart Shape Chocolate Box',
+    description: 'romantic heart-shaped chocolate gift box',
+    price: 2200,
+    originalPrice: 2500,
+    images: [{ url: 'https://images.unsplash.com/photo-1548848774-1f1db32f8e20?w=400' }],
+    stock: 18,
+    category: 'Chocolates',
+    rating: 4.9,
+    reviewCount: 178
+  },
+  // Teddy & Gifts
+  {
+    _id: '9',
+    name: 'Large Teddy Bear',
+    description: 'Cute and cuddly teddy bear - 2 feet tall',
+    price: 1800,
+    originalPrice: 2200,
+    images: [{ url: 'https://images.unsplash.com/photo-1560012057-71269d46f5f8?w=400' }],
+    stock: 15,
+    category: 'Gifts',
+    rating: 4.8,
+    reviewCount: 167
+  },
+  {
+    _id: '10',
+    name: 'Artificial Rose Bouquet',
+    description: 'Beautiful artificial rose bouquet (12 roses)',
+    price: 800,
+    originalPrice: 1000,
+    images: [{ url: 'https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=400' }],
+    stock: 40,
+    category: 'Gifts',
+    rating: 4.5,
+    reviewCount: 95
+  },
+  // Love Combo
+  {
+    _id: '11',
+    name: 'Love Combo - RongRani Special',
+    description: 'Handwritten love letter + chocolate + flower combo',
+    price: 2500,
+    originalPrice: 3000,
+    images: [{ url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400' }],
+    stock: 12,
+    category: 'Love Combo',
+    rating: 5.0,
+    reviewCount: 234
+  },
+  {
+    _id: '12',
+    name: 'Ring + Teddy + Chocolate Combo',
+    description: 'Perfect romantic surprise combo pack',
+    price: 4500,
+    originalPrice: 5500,
+    images: [{ url: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400' }],
+    stock: 8,
+    category: 'Love Combo',
+    rating: 4.9,
+    reviewCount: 189
+  },
+  // Birthday Combo
+  {
+    _id: '13',
+    name: 'Birthday Gift Box',
+    description: 'Complete birthday surprise with treats & gifts',
+    price: 3500,
+    originalPrice: 4200,
+    images: [{ url: 'https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=400' }],
+    stock: 10,
+    category: 'Birthday Combo',
+    rating: 4.8,
+    reviewCount: 145
+  },
+  // Anniversary Combo
+  {
+    _id: '14',
+    name: 'Anniversary Surprise Box',
+    description: 'Necklace + bangles + love note combo',
+    price: 5500,
+    originalPrice: 6800,
+    images: [{ url: 'https://images.unsplash.com/photo-1464207687429-7505649dae38?w=400' }],
+    stock: 6,
+    category: 'Anniversary Combo',
+    rating: 5.0,
+    reviewCount: 198
+  },
+  // Sharee
+  {
+    _id: '15',
+    name: 'Premium Gift Sharee',
+    description: 'Beautiful gift-wrapped sharee with jewellery',
+    price: 6500,
+    originalPrice: 8000,
+    images: [{ url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400' }],
+    stock: 5,
+    category: 'Clothing',
+    rating: 4.9,
+    reviewCount: 87
+  },
+  // Handmade Gifts
+  {
+    _id: '16',
+    name: 'Handwritten Love Letter',
+    description: 'Personalized handwritten love letter in Bengali/English',
+    price: 500,
+    originalPrice: 500,
+    images: [{ url: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400' }],
+    stock: 50,
+    category: 'Handmade',
+    rating: 4.9,
+    reviewCount: 312
+  },
+  {
+    _id: '17',
+    name: 'Memory Scrap Book',
+    description: 'Custom photo memory scrapbook with decorations',
+    price: 1500,
+    originalPrice: 1800,
+    images: [{ url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400' }],
+    stock: 15,
+    category: 'Handmade',
+    rating: 4.8,
+    reviewCount: 134
+  },
+  // Valentine Combo
+  {
+    _id: '18',
+    name: 'Valentine Special Combo',
+    description: 'Ring + roses + chocolate + love letter combo',
+    price: 6500,
+    originalPrice: 7800,
+    images: [{ url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400' }],
+    stock: 10,
+    category: 'Valentine Combo',
+    rating: 5.0,
+    reviewCount: 245
+  },
+  // Proposal Combo
+  {
+    _id: '19',
+    name: 'Proposal Gift Box',
+    description: 'Complete proposal setup with ring & romantic items',
+    price: 8500,
+    originalPrice: 10000,
+    images: [{ url: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400' }],
+    stock: 5,
+    category: 'Proposal Combo',
+    rating: 5.0,
+    reviewCount: 167
+  },
+  // Gift Boxes
+  {
+    _id: '20',
+    name: 'Premium Luxury Gift Box',
+    description: 'Customizable luxury gift box with your choice of items',
+    price: 9500,
+    originalPrice: 12000,
+    images: [{ url: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400' }],
+    stock: 8,
+    category: 'Gift Boxes',
+    rating: 4.9,
+    reviewCount: 178
+  }
+];
 
 export default Shop;

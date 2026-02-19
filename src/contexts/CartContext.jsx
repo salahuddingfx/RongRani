@@ -114,7 +114,8 @@ export const CartProvider = ({ children }) => {
     localStorage.removeItem('cart');
   };
 
-  const value = {
+  /* Optimization: Memoize the context value to prevent unnecessary re-renders */
+  const value = useMemo(() => ({
     cartItems,
     totalItems,
     totalPrice,
@@ -125,7 +126,7 @@ export const CartProvider = ({ children }) => {
     isCartOpen,
     openCart,
     closeCart
-  };
+  }), [cartItems, totalItems, totalPrice, isCartOpen]);
 
   return (
     <CartContext.Provider value={value}>

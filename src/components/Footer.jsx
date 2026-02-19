@@ -55,10 +55,10 @@ const Footer = () => {
 
         {/* Main Footer Content */}
         <div className="container mx-auto px-4 py-16 md:py-20 relative z-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 xl:gap-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 sm:gap-x-8 gap-y-12 lg:gap-8 xl:gap-16">
 
             {/* Brand Section */}
-            <div className="space-y-8">
+            <div className="col-span-2 lg:col-span-1 space-y-6 sm:space-y-8">
               <div className="flex items-center gap-3">
                 <div
                   className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-transform hover:rotate-3 duration-500 bg-white p-0 relative group"
@@ -141,7 +141,7 @@ const Footer = () => {
             </div>
 
             {/* Contact Info */}
-            <div className="space-y-6">
+            <div className="col-span-2 lg:col-span-1 space-y-6">
               <h4 className="text-lg font-black text-white mb-8 relative inline-block">
                 {t('contact_info_label')}
                 <span className="absolute -bottom-2 left-0 w-12 h-1 bg-pink-400 rounded-full"></span>

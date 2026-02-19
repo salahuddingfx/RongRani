@@ -24,10 +24,14 @@
     @apply bg-white text-charcoal transition-colors duration-300;
     background-color: #ffffff;
     /* Explicit override for line 504 */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Only hide default cursor on desktop where custom cursor is shown */
-  @media (min-width: 768px) {
+  /* Only hide default cursor on desktop where custom cursor is shown AND device has a mouse */
+  @media (min-width: 1024px) and (hover: hover) {
     body {
       cursor: none;
     }
