@@ -140,20 +140,20 @@ const ProductDetail = () => {
     }
   }, [product]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     addToCart(product, quantity);
     toast.success(`${product.name} added to cart!`);
-  };
+  }, [addToCart, product, quantity]);
 
-  const handleBuyNow = () => {
+  const handleBuyNow = useCallback(() => {
     addToCart(product, quantity);
     toast.success('Redirecting to checkout...');
     navigate('/checkout');
-  };
+  }, [addToCart, product, quantity, navigate]);
 
-  const handleAddToWishlist = () => {
+  const handleAddToWishlist = useCallback(() => {
     toggleWishlist(product);
-  };
+  }, [toggleWishlist, product]);
 
   const getImageUrl = (image) => {
     if (!image) return '';
@@ -170,7 +170,7 @@ const ProductDetail = () => {
   const pageImage = product
     ? getImageUrl(product.images?.[0]) || getImageUrl(product.image)
     : '';
-  const productSchema = product
+  const productSchema = useMemo(() => product
     ? {
       '@context': 'https://schema.org',
       '@type': 'Product',
@@ -187,7 +187,7 @@ const ProductDetail = () => {
         url: `${baseUrl}${pagePath}`,
       },
     }
-    : null;
+    : null, [product, pageDescription, pageImage, baseUrl, pagePath]);
 
 
   if (loading) {
@@ -417,20 +417,106 @@ const ProductDetail = () => {
 
               {/* Delivery Info */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-maroon transition-colors">
+                <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 group hover:border-maroon transition-colors">
                   <Truck className="h-8 w-8 text-maroon mb-3 group-hover:scale-110 transition-transform" />
-                  <h4 className="font-bold text-slate-900 mb-1">{t('delivery_info')}</h4>
-                  <div className="text-xs text-slate space-y-1">
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">{t('delivery_info')}</h4>
+                  <div className="text-xs text-slate-500 space-y-1">
                     <p>Chittagong: ৳{deliverySettings.chittagongFee}</p>
                     <p>Outside: ৳{deliverySettings.outsideChittagongFee}</p>
                   </div>
                 </div>
-                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 group hover:border-maroon transition-colors">
+                <div className="p-4 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 group hover:border-maroon transition-colors">
                   <Shield className="h-8 w-8 text-maroon mb-3 group-hover:scale-110 transition-transform" />
-                  <h4 className="font-bold text-slate-900 mb-1">{t('secure_payment')}</h4>
-                  <p className="text-xs text-slate">{t('trusted_handcrafted')}</p>
+                  <h4 className="font-bold text-slate-900 dark:text-white mb-1">{t('secure_payment')}</h4>
+                  <p className="text-xs text-slate-500">{t('trusted_handcrafted')}</p>
                 </div>
               </div>
+
+              {/* Value Propositions / Why Choose This? */}
+              <div className="mt-12 pt-12 border-t border-slate-100 dark:border-slate-800">
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                  <Gift className="w-6 h-6 text-maroon" />
+                  {t('why_choose_this')}
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="flex gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-700 group">
+                    <div className="w-12 h-12 rounded-xl bg-maroon/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <Shield className="w-6 h-6 text-maroon" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 dark:text-white mb-1">{t('handcrafted_love')}</h4>
+                      <p className="text-xs text-slate-500 leading-relaxed">{t('handcrafted_love_desc')}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-700 group">
+                    <div className="w-12 h-12 rounded-xl bg-maroon/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <Zap className="w-6 h-6 text-maroon" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 dark:text-white mb-1">{t('perfect_gift_choice')}</h4>
+                      <p className="text-xs text-slate-500 leading-relaxed">{t('perfect_gift_choice_desc')}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-700 group">
+                    <div className="w-12 h-12 rounded-xl bg-maroon/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <Star className="w-6 h-6 text-maroon" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 dark:text-white mb-1">{t('premium_quality')}</h4>
+                      <p className="text-xs text-slate-500 leading-relaxed">{t('premium_quality_desc_full')}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 p-4 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border border-transparent hover:border-slate-100 dark:hover:border-slate-700 group">
+                    <div className="w-12 h-12 rounded-xl bg-maroon/5 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                      <TrendingUp className="w-6 h-6 text-maroon" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-slate-900 dark:text-white mb-1">{t('beautiful_packaging')}</h4>
+                      <p className="text-xs text-slate-500 leading-relaxed">{t('beautiful_packaging_desc')}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Specifications Section */}
+              {((product.attributes && product.attributes.length > 0) || product.weight || product.dimensions) && (
+                <div className="mt-12 pt-12 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-2xl font-black text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+                    <Package className="w-6 h-6 text-maroon" />
+                    {t('product_details')}
+                  </h3>
+                  <div className="bg-slate-50 dark:bg-slate-800/50 rounded-[2.5rem] p-8 border border-slate-100 dark:border-slate-700">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+                      {product.weight && (
+                        <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-slate-700">
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">{t('weight_label') || 'Weight'}</span>
+                          <span className="text-slate-900 dark:text-white font-black">{product.weight} kg</span>
+                        </div>
+                      )}
+                      {product.dimensions && (product.dimensions.length || product.dimensions.width || product.dimensions.height) && (
+                        <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-slate-700">
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">{t('dimensions_label') || 'Dimensions'}</span>
+                          <span className="text-slate-900 dark:text-white font-black">
+                            {product.dimensions.length || 0} x {product.dimensions.width || 0} x {product.dimensions.height || 0} cm
+                          </span>
+                        </div>
+                      )}
+                      {product.sku && (
+                        <div className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-slate-700">
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">{t('sku_label')}</span>
+                          <span className="text-slate-900 dark:text-white font-black">{product.sku}</span>
+                        </div>
+                      )}
+                      {product.attributes && product.attributes.map((attr, idx) => (
+                        <div key={idx} className="flex justify-between items-center pb-4 border-b border-slate-200 dark:border-slate-700">
+                          <span className="text-slate-500 font-bold uppercase tracking-widest text-[10px]">{attr.name}</span>
+                          <span className="text-slate-900 dark:text-white font-black">{attr.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
