@@ -147,6 +147,7 @@ const createProduct = async (req, res) => {
     const productData = {
       ...req.body,
       images: normalizedImages,
+      image: normalizedImages.length > 0 ? normalizedImages[0] : undefined,
       createdBy: req.user._id,
       stock: stock || 0,
       isActive: req.body.isActive !== undefined ? req.body.isActive : true,
@@ -196,7 +197,10 @@ const updateProduct = async (req, res) => {
 
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      updateData,
+      {
+        ...updateData,
+        image: updateData.images && updateData.images.length > 0 ? updateData.images[0] : undefined
+      },
       { new: true, runValidators: true }
     );
 
