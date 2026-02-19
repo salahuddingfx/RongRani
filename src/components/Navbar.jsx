@@ -400,9 +400,22 @@ const Navbar = () => {
             <div className="container mx-auto flex justify-between items-center overflow-hidden">
               <div className="flex-1 overflow-hidden mr-4">
                 <div className="animate-marquee whitespace-nowrap inline-block">
+                  {/* Set 1 */}
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold">🎁 {t('welcome_offer')}</span>
                   <span className="inline-flex items-center mr-8 md:mr-12 text-gold font-bold">🚚 {t('free_shipping')}</span>
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">✨ {t('handcrafted_love_top')}</span>
+
+                  {/* Set 2 */}
+                  <span className="inline-flex items-center mr-8 md:mr-12 font-bold">🎁 {t('welcome_offer')}</span>
+                  <span className="inline-flex items-center mr-8 md:mr-12 text-gold font-bold">🚚 {t('free_shipping')}</span>
+                  <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">✨ {t('handcrafted_love_top')}</span>
+
+                  {/* Set 3 (Duplicate for wider screens) */}
+                  <span className="inline-flex items-center mr-8 md:mr-12 font-bold">🎁 {t('welcome_offer')}</span>
+                  <span className="inline-flex items-center mr-8 md:mr-12 text-gold font-bold">🚚 {t('free_shipping')}</span>
+                  <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">✨ {t('handcrafted_love_top')}</span>
+
+                  {/* Set 4 (Duplicate for wider screens) */}
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold">🎁 {t('welcome_offer')}</span>
                   <span className="inline-flex items-center mr-8 md:mr-12 text-gold font-bold">🚚 {t('free_shipping')}</span>
                   <span className="inline-flex items-center mr-8 md:mr-12 font-bold text-pink-100">✨ {t('handcrafted_love_top')}</span>
