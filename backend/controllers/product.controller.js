@@ -44,8 +44,32 @@ const getProducts = async (req, res) => {
       .limit(pageSize)
       .skip(pageSize * (page - 1));
 
+    // Normalize products for frontend compatibility
+    const normalizedProducts = products.map(product => {
+      const p = product.toObject();
+
+      // Ensure images is an array of objects
+      if (Array.isArray(p.images)) {
+        p.images = p.images.map(img => {
+          if (typeof img === 'string') return { url: img };
+          return img;
+        }).filter(img => img && img.url);
+      } else {
+        p.images = [];
+      }
+
+      // Ensure singular image is an object
+      if (p.images.length > 0) {
+        p.image = p.images[0];
+      } else if (typeof p.image === 'string') {
+        p.image = { url: p.image };
+      }
+
+      return p;
+    });
+
     res.json({
-      products,
+      products: normalizedProducts,
       page,
       pages: Math.ceil(count / pageSize),
       total: count,
@@ -61,12 +85,35 @@ const getProducts = async (req, res) => {
 const getProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-
-    if (!product || !product.isActive) {
+    if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
+    // Only admins can see inactive products (optional, but for now lets keep the previous logic or simplified)
+    // If you want public to only see active:
+    if (!product.isActive) {
+      return res.status(404).json({ message: 'Product is currently unavailable' });
+    }
 
-    res.json(product);
+    const p = product.toObject();
+
+    // Normalize images
+    if (Array.isArray(p.images)) {
+      p.images = p.images.map(img => {
+        if (typeof img === 'string') return { url: img };
+        return img;
+      }).filter(img => img && img.url);
+    } else {
+      p.images = [];
+    }
+
+    // Normalize singular image
+    if (p.images.length > 0) {
+      p.image = p.images[0];
+    } else if (typeof p.image === 'string') {
+      p.image = { url: p.image };
+    }
+
+    res.json(p);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

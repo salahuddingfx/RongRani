@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { Plus, Edit, Trash2, X, Package, Eye, EyeOff, Search, Star } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Package, Eye, EyeOff, Search, Star, Upload, Loader2, Image as ImageIcon } from 'lucide-react';
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -15,10 +15,14 @@ const AdminCategories = () => {
     description: '',
     icon: 'Package',
     color: 'bg-maroon',
+    image: '',
     order: 0,
     isActive: true,
     showOnHome: false,
   });
+  const [imageMetadata, setImageMetadata] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = React.useRef(null);
 
   const iconOptions = ['Heart', 'Sparkles', 'ShoppingBag', 'Gift', 'Star', 'Clock', 'Package', 'Shirt', 'Flower', 'Pencil'];
   const colorOptions = [
@@ -61,19 +65,73 @@ const AdminCategories = () => {
     });
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Image size should be less than 2MB');
+      return;
+    }
+
+    setIsUploading(true);
+    const loadingToast = toast.loading('Uploading category image...');
+
+    try {
+      const uploadFormData = new FormData();
+      uploadFormData.append('image', file);
+
+      const token = localStorage.getItem('token');
+      const response = await axios.post('/api/products/upload', uploadFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      const { url, publicId } = response.data;
+      setImageMetadata({ url, publicId });
+      setFormData(prev => ({ ...prev, image: url }));
+      toast.success('Category image uploaded! ✨', { id: loadingToast });
+    } catch (error) {
+      console.error('Upload Error:', error);
+      toast.error(error.response?.data?.message || 'Failed to upload image', { id: loadingToast });
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+
+      const processImageUrl = (url) => {
+        if (!url || typeof url !== 'string') return url;
+        let trimmed = url.trim();
+        if (trimmed.includes('drive.google.com')) {
+          const fileIdMatch = trimmed.match(/\/file\/d\/([^\/]+)/) || trimmed.match(/id=([^\&]+)/);
+          if (fileIdMatch && fileIdMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
+          }
+        }
+        return trimmed;
+      };
+
+      const finalUrl = processImageUrl(formData.image);
+      const finalImage = imageMetadata && imageMetadata.url === formData.image
+        ? { url: imageMetadata.url, publicId: imageMetadata.publicId }
+        : { url: finalUrl };
+
+      const categoryData = { ...formData, image: finalImage };
+
       if (editingCategory) {
-        await axios.put(`/api/categories/${editingCategory._id}`, formData, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await axios.put(`/api/categories/${editingCategory._id}`, categoryData, config);
         toast.success('Category updated successfully');
       } else {
-        await axios.post('/api/categories', formData, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        await axios.post('/api/categories', categoryData, config);
         toast.success('Category created successfully');
       }
       fetchCategories();
@@ -134,10 +192,18 @@ const AdminCategories = () => {
       description: category.description || '',
       icon: category.icon || 'Package',
       color: category.color || 'bg-maroon',
+      image: category.image || '',
       order: category.order || 0,
       isActive: category.isActive,
       showOnHome: category.showOnHome || false,
     });
+
+    if (category.image && typeof category.image === 'object') {
+      setImageMetadata({ url: category.image.url, publicId: category.image.publicId });
+    } else {
+      setImageMetadata(null);
+    }
+
     setShowModal(true);
   };
 
@@ -148,10 +214,12 @@ const AdminCategories = () => {
       description: '',
       icon: 'Package',
       color: 'bg-maroon',
+      image: '',
       order: 0,
       isActive: true,
       showOnHome: false,
     });
+    setImageMetadata(null);
     setEditingCategory(null);
     setShowModal(false);
   };
@@ -422,6 +490,61 @@ const AdminCategories = () => {
                     />
                     <span className="text-sm font-bold text-white">Show as Slider on Home</span>
                   </label>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-bold text-white mb-2">Category Cover Image</label>
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      name="image"
+                      value={typeof formData.image === 'string' ? formData.image : formData.image?.url || ''}
+                      onChange={handleInputChange}
+                      className="flex-1 px-4 py-3 bg-slate-700 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-maroon"
+                      placeholder="https://example.com/category-image.jpg"
+                    />
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      accept="image/*"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                      className="bg-maroon text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-maroon/90 transition-colors disabled:opacity-50 flex items-center gap-2"
+                    >
+                      {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                      {isUploading ? 'Uploading...' : 'Direct Upload'}
+                    </button>
+                  </div>
+
+                  {formData.image && (
+                    <div className="relative h-40 w-full rounded-2xl overflow-hidden border-2 border-slate-600 bg-slate-900 group">
+                      <img
+                        src={(typeof formData.image === 'string' ? formData.image : formData.image?.url || '').includes('drive.google.com')
+                          ? (typeof formData.image === 'string' ? formData.image : formData.image?.url || '').replace(/\/file\/d\/([^\/]+)\/view.*/, 'https://drive.google.com/uc?export=view&id=$1')
+                          : (typeof formData.image === 'string' ? formData.image : formData.image?.url || '')
+                        }
+                        alt="Category Preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.src = 'https://via.placeholder.com/400x200?text=Invalid+Image'; }}
+                      />
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          type="button"
+                          onClick={() => { setFormData({ ...formData, image: '' }); setImageMetadata(null); }}
+                          className="bg-red-500/80 p-2 rounded-full text-white hover:bg-red-600"
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

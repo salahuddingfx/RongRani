@@ -792,9 +792,22 @@ export const LanguageProvider = ({ children }) => {
     }
   }), []);
 
-  // Translation function
+  // Translation function with automatic fallback for categories
   const t = (key) => {
-    return translations[language]?.[key] || key;
+    const translated = translations[language]?.[key];
+    if (translated) return translated;
+
+    // Fallback for missing category translations
+    if (key && key.startsWith('cat_')) {
+      const raw = key.replace('cat_', '').replace(/_/g, ' ');
+      // Handle double cat_ prefix if it exists
+      const clean = raw.replace(/^cat /i, '').trim();
+      if (clean) {
+        return clean.charAt(0).toUpperCase() + clean.slice(1);
+      }
+    }
+
+    return key;
   };
 
   const value = useMemo(() => ({

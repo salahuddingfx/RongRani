@@ -36,8 +36,18 @@ exports.getAllCategories = async (req, res) => {
           'items.product': { $in: productIds }
         });
 
+        const c = category.toObject();
+
+        // Normalize image
+        if (typeof c.image === 'string') {
+          c.image = { url: c.image };
+        } else if (c.image && !c.image.url && typeof category.image === 'string') {
+          // Handle cases where Mongoose might have returned empty object for string data
+          c.image = { url: category.image };
+        }
+
         return {
-          ...category.toObject(),
+          ...c,
           productCount,
           orderCount
         };
@@ -75,9 +85,16 @@ exports.getCategory = async (req, res) => {
       });
     }
 
+    const c = category.toObject();
+    if (typeof c.image === 'string') {
+      c.image = { url: c.image };
+    } else if (c.image && !c.image.url && typeof category.image === 'string') {
+      c.image = { url: category.image };
+    }
+
     res.status(200).json({
       success: true,
-      category,
+      category: c,
     });
   } catch (error) {
     res.status(500).json({
@@ -91,7 +108,14 @@ exports.getCategory = async (req, res) => {
 // Create category (Admin only)
 exports.createCategory = async (req, res) => {
   try {
-    const category = await Category.create(req.body);
+    const categoryData = { ...req.body };
+    if (req.body.image) {
+      categoryData.image = typeof req.body.image === 'string'
+        ? { url: req.body.image.trim() }
+        : req.body.image;
+    }
+
+    const category = await Category.create(categoryData);
 
     // Calculate initial product count
     const productCount = await Product.countDocuments({
@@ -132,9 +156,16 @@ exports.updateCategory = async (req, res) => {
       });
     }
 
+    const categoryData = { ...req.body };
+    if (req.body.image) {
+      categoryData.image = typeof req.body.image === 'string'
+        ? { url: req.body.image.trim() }
+        : req.body.image;
+    }
+
     const category = await Category.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      categoryData,
       { new: true, runValidators: true }
     );
 

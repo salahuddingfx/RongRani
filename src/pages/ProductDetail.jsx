@@ -268,7 +268,10 @@ const ProductDetail = () => {
           {/* Product 3D Viewer */}
           <div className="animate-fade-in-up lg:sticky lg:top-32 lg:self-start lg:col-span-5 xl:col-span-6">
             <Product3DViewer
-              images={product.images?.map(img => getImageUrl(img)) || [getImageUrl(product.image)]}
+              images={(product.images && product.images.length > 0)
+                ? product.images.map(img => getImageUrl(img))
+                : [getImageUrl(product.image || product.images?.[0])].filter(Boolean)
+              }
               productName={product.name}
               discount={product.originalPrice && product.originalPrice > product.price
                 ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -496,7 +499,9 @@ const ProductDetail = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-cream/30 rounded-xl border border-maroon/10 hover:shadow-md transition-shadow">
                   <span className="text-slate font-semibold text-base">{t('category_label')}</span>
-                  <span className="text-maroon font-bold capitalize bg-maroon/10 px-4 py-1.5 rounded-full">{product.category}</span>
+                  <span className="text-maroon font-bold capitalize bg-maroon/10 px-4 py-1.5 rounded-full">
+                    {t('cat_' + (product.category || '').toLowerCase().replace(/\s+/g, '_'))}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-cream/30 rounded-xl border border-maroon/10 hover:shadow-md transition-shadow">
                   <span className="text-slate font-semibold text-base">{t('sku_label')}</span>

@@ -84,9 +84,22 @@ const AdminBanners = () => {
       const token = localStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
+      const processImageUrl = (url) => {
+        if (!url) return '';
+        let trimmed = url.trim();
+        if (trimmed.includes('drive.google.com')) {
+          const fileIdMatch = trimmed.match(/\/file\/d\/([^\/]+)/) || trimmed.match(/id=([^\&]+)/);
+          if (fileIdMatch && fileIdMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
+          }
+        }
+        return trimmed;
+      };
+
+      const finalUrl = processImageUrl(formData.image);
       const finalImage = imageMetadata && imageMetadata.url === formData.image
         ? { url: imageMetadata.url, publicId: imageMetadata.publicId }
-        : { url: formData.image };
+        : { url: finalUrl };
 
       const bannerData = { ...formData, image: finalImage };
 
@@ -438,17 +451,26 @@ const AdminBanners = () => {
 
                   {/* Image Preview */}
                   {formData.image && (
-                    <div className="relative h-40 w-full rounded-2xl overflow-hidden border-2 border-maroon/10 bg-cream">
+                    <div className="relative h-40 w-full rounded-2xl overflow-hidden border-2 border-maroon/10 bg-cream group">
                       <img
-                        src={formData.image}
+                        src={formData.image.includes('drive.google.com')
+                          ? formData.image.replace(/\/file\/d\/([^\/]+)\/view.*/, 'https://drive.google.com/uc?export=view&id=$1')
+                          : formData.image
+                        }
                         alt="Preview"
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           e.target.src = 'https://via.placeholder.com/800x400?text=Invalid+Image+URL';
                         }}
                       />
-                      <div className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                        <span className="text-white font-bold text-sm bg-black/40 px-3 py-1 rounded-full backdrop-blur-sm">Image Preview</span>
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          type="button"
+                          onClick={() => { setFormData({ ...formData, image: '' }); setImageMetadata(null); }}
+                          className="bg-red-500 p-2 rounded-full text-white hover:bg-red-600 transition-all hover:scale-110"
+                        >
+                          <X className="h-6 w-6" />
+                        </button>
                       </div>
                     </div>
                   )}
