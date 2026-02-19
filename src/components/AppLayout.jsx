@@ -3,7 +3,6 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import BottomNav from './BottomNav';
-import TopNavBar from './TopNavBar';
 import AIChatFloatingWidget from './AIChatFloatingWidget';
 import Seo from './Seo';
 import ScrollRevealManager from './ScrollRevealManager';
@@ -37,10 +36,8 @@ const AppLayout = () => {
     <div className="min-h-screen bg-white dark:bg-slate-900 text-charcoal dark:text-white">
       <Seo path={location.pathname} />
       <ScrollRevealManager />
-      <ScrollRevealManager />
 
       <div className="fixed top-0 left-0 right-0 z-[100] overflow-visible">
-        <TopNavBar />
         <Navbar />
       </div>
 

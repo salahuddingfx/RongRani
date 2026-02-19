@@ -39,9 +39,9 @@ const Home = () => {
     'bg-rose-600': '#E11D48',
   };
 
-  const getCategoryStyle = React.useCallback((color) => {
+  const getCategoryStyle = (color) => {
     return { backgroundColor: categoryColorMap[color] || '#BE123C' };
-  }, []);
+  };
 
   useEffect(() => {
     fetchFeaturedProducts();

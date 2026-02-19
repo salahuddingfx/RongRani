@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Star, ShoppingCart, Heart, Minus, Plus, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Zap, Gift, TrendingUp, Package, MessageCircle } from 'lucide-react';
@@ -11,7 +11,6 @@ import ProductItem from '../components/ProductItem';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useWishlist } from '../contexts/WishlistContext';
 
-import Product3DViewer from '../components/Product3DViewer';
 import SocialShare from '../components/SocialShare';
 
 const ProductDetail = () => {
@@ -28,10 +27,10 @@ const ProductDetail = () => {
   const [reviews, setReviews] = useState([]);
   const [canReview, setCanReview] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
-  const [deliverySettings] = useState({
+  const deliverySettings = useMemo(() => ({
     chittagongFee: 70,
     outsideChittagongFee: 150,
-  });
+  }), []);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [activeImage, setActiveImage] = useState(0);
 
@@ -162,14 +161,21 @@ const ProductDetail = () => {
   };
 
   const pagePath = `/product/${id}`;
-  const pageTitle = product?.seoTitle || (product ? `${product.name} | RongRani` : 'Product Details | RongRani');
-  const pageDescription = product?.seoDescription || (product?.description
-    ? buildDescription(product.description)
-    : 'View product details, pricing, and delivery options from RongRani.');
-  const pageKeywords = product?.tags || [];
-  const pageImage = product
-    ? getImageUrl(product.images?.[0]) || getImageUrl(product.image)
-    : '';
+  const { pageTitle, pageDescription, pageKeywords, pageImage } = useMemo(() => {
+    if (!product) return {};
+
+    const image = getImageUrl(product.images?.[0]) || getImageUrl(product.image);
+    const desc = product.seoDescription || (product.description
+      ? buildDescription(product.description)
+      : 'View product details, pricing, and delivery options from RongRani.');
+
+    return {
+      pageTitle: product.seoTitle || `${product.name} | RongRani`,
+      pageDescription: desc,
+      pageKeywords: product.tags || [],
+      pageImage: image
+    };
+  }, [product]);
   const productSchema = useMemo(() => product
     ? {
       '@context': 'https://schema.org',

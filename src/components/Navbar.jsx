@@ -24,6 +24,27 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
   const [placeholder, setPlaceholder] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
 
+  // Click Outside for Search Box
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest('.search-container')) {
+        setShowSuggestions(false);
+      }
+    };
+    if (showSuggestions) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSuggestions]);
+
+  // Save to recent searches helper
+  const saveToRecent = useCallback((query) => {
+    if (!query) return;
+    const updatedRecent = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+    setRecentSearches(updatedRecent);
+    localStorage.setItem('recentSearches', JSON.stringify(updatedRecent));
+  }, [recentSearches]);
+
   const placeholders = useMemo(() => language === 'bn'
     ? ['উপহার খুজুন...', 'ভালোবাসার কম্বো...', 'বার্থডে গিফট...', 'হস্তনির্মিত পণ্য...', 'সারপ্রাইজ বক্স...']
     : ['Search for gifts...', 'Love Combo...', 'Birthday Gifts...', 'Handmade Items...', 'Surprise Boxes...'], [language]);
@@ -98,9 +119,7 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
     e.preventDefault();
     const query = searchQuery.trim();
     if (query) {
-      const updatedRecent = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
-      setRecentSearches(updatedRecent);
-      localStorage.setItem('recentSearches', JSON.stringify(updatedRecent));
+      saveToRecent(query);
       navigate(`/shop?search=${encodeURIComponent(query)}`);
       setSearchQuery('');
       setShowSuggestions(false);
@@ -169,7 +188,7 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
                       <button
                         key={i}
                         onClick={() => {
-                          setSearchQuery(term);
+                          saveToRecent(term);
                           navigate(`/shop?search=${encodeURIComponent(term)}`);
                           setShowSuggestions(false);
                           if (setIsOpen) setIsOpen(false);
@@ -205,7 +224,7 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
                       <button
                         key={i}
                         onClick={() => {
-                          setSearchQuery(term);
+                          saveToRecent(term);
                           navigate(`/shop?search=${encodeURIComponent(term)}`);
                           setShowSuggestions(false);
                           if (setIsOpen) setIsOpen(false);
@@ -358,6 +377,7 @@ const Navbar = () => {
     { to: '/shop', label: 'shop' },
     { to: '/wishlist', label: 'wishlist' },
     { to: '/about', label: 'about' },
+    { to: '/contact', label: 'contact' },
   ];
 
   const userMenuItems = [
@@ -502,6 +522,21 @@ const Navbar = () => {
                     {t(item.label)}
                   </Link>
                 ))}
+                {user && (
+                  <div className="pt-4 space-y-4">
+                    <div className="h-px bg-slate-100 dark:bg-slate-800 w-12" />
+                    {userMenuItems.map((item) => (
+                      <Link key={item.to} to={item.to} className="flex items-center gap-3 text-xl font-bold text-slate-500 hover:text-maroon transition-colors" onClick={() => setIsOpen(false)}>
+                        <item.icon className="w-5 h-5" /> {t(item.label)}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                {!user && (
+                  <Link to="/login" className="block text-2xl font-black text-maroon mt-4" onClick={() => setIsOpen(false)}>
+                    {t('login')}
+                  </Link>
+                )}
               </div>
               <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-6">
                 <div className="flex items-center gap-6">
