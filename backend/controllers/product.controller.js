@@ -89,8 +89,17 @@ const createProduct = async (req, res) => {
       });
     }
 
+    // Normalize images (handle strings or objects)
+    const normalizedImages = (req.body.images || []).map(img => {
+      if (typeof img === 'string') {
+        return { url: img.trim() };
+      }
+      return img;
+    }).filter(img => img.url);
+
     const productData = {
       ...req.body,
+      images: normalizedImages,
       createdBy: req.user._id,
       stock: stock || 0,
       isActive: req.body.isActive !== undefined ? req.body.isActive : true,
@@ -128,9 +137,19 @@ const updateProduct = async (req, res) => {
     }
 
     const previousStock = product.stock;
+
+    // Normalize images if they are being updated
+    let updateData = { ...req.body };
+    if (req.body.images) {
+      updateData.images = req.body.images.map(img => {
+        if (typeof img === 'string') return { url: img.trim() };
+        return img;
+      }).filter(img => img.url);
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
 

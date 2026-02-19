@@ -16,8 +16,8 @@ const bannerSchema = new mongoose.Schema({
     maxlength: [500, 'Description cannot exceed 500 characters'],
   },
   image: {
-    type: String,
-    required: [true, 'Image URL is required'],
+    url: { type: String, required: true },
+    publicId: { type: String },
   },
   link: {
     type: String,

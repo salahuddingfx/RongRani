@@ -16,6 +16,7 @@ const AdminBanners = () => {
     isActive: true,
     order: 0
   });
+  const [imageMetadata, setImageMetadata] = useState(null);
 
   const fileInputRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -44,7 +45,9 @@ const AdminBanners = () => {
         }
       });
 
-      setFormData(prev => ({ ...prev, image: response.data.url }));
+      const { url, publicId } = response.data;
+      setImageMetadata({ url, publicId });
+      setFormData(prev => ({ ...prev, image: url }));
       toast.success('Banner image uploaded! ✨', { id: loadingToast });
     } catch (error) {
       console.error('Upload Error:', error);
@@ -81,11 +84,17 @@ const AdminBanners = () => {
       const token = localStorage.getItem('token');
       const config = { headers: { Authorization: `Bearer ${token}` } };
 
+      const finalImage = imageMetadata && imageMetadata.url === formData.image
+        ? { url: imageMetadata.url, publicId: imageMetadata.publicId }
+        : { url: formData.image };
+
+      const bannerData = { ...formData, image: finalImage };
+
       if (editingBanner) {
-        await axios.put(`/api/admin/banners/${editingBanner._id}`, formData, config);
+        await axios.put(`/api/admin/banners/${editingBanner._id}`, bannerData, config);
         toast.success('Banner updated successfully');
       } else {
-        await axios.post('/api/admin/banners', formData, config);
+        await axios.post('/api/admin/banners', bannerData, config);
         toast.success('Banner created successfully');
       }
 
@@ -108,6 +117,13 @@ const AdminBanners = () => {
       isActive: banner.isActive,
       order: banner.order || 0
     });
+
+    if (banner.image && typeof banner.image === 'object') {
+      setImageMetadata({ url: banner.image.url, publicId: banner.image.publicId });
+    } else {
+      setImageMetadata(null);
+    }
+
     setShowModal(true);
   };
 
@@ -212,7 +228,7 @@ const AdminBanners = () => {
             <div className="relative h-48 bg-cream">
               {banner.image ? (
                 <img
-                  src={banner.image}
+                  src={typeof banner.image === 'string' ? banner.image : banner.image.url}
                   alt={banner.title}
                   className="w-full h-full object-cover"
                 />

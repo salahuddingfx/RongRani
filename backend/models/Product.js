@@ -36,16 +36,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     trim: true,
   }],
-  images: {
-    type: [String],
-    default: [],
-    validate: {
-      validator: function (v) {
-        return v.length >= 1;
-      },
-      message: 'At least one image is required'
-    }
-  },
+  images: [{
+    url: { type: String, required: true },
+    publicId: { type: String },
+  }],
   stock: {
     type: Number,
     required: [true, 'Stock is required'],

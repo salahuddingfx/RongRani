@@ -26,6 +26,9 @@ const AdminProducts = () => {
     seoDescription: ''
   });
 
+  // Track metadata (publicId) for uploaded images
+  const [imageMetadata, setImageMetadata] = useState([]);
+
   const getImageCount = () => {
     if (!formData.images) return 0;
     // Split by comma OR newline, then filter out empty entries
@@ -67,10 +70,16 @@ const AdminProducts = () => {
         }
       });
 
-      const newUrl = response.data.url;
+      const { url, publicId } = response.data;
+
+      // Store metadata for this URL
+      if (publicId) {
+        setImageMetadata(prev => [...prev, { url, publicId }]);
+      }
+
       setFormData(prev => ({
         ...prev,
-        images: prev.images ? `${prev.images}\n${newUrl}` : newUrl
+        images: prev.images ? `${prev.images}\n${url}` : url
       }));
 
       toast.success('Image uploaded successfully! ✨', { id: loadingToast });
@@ -213,13 +222,20 @@ const AdminProducts = () => {
         return trimmed;
       };
 
+      const imagesArray = formData.images
+        .split(/[,\n]/)
+        .map(img => processImageUrl(img))
+        .filter(Boolean);
+
+      // Merge metadata with URLs
+      const finalImages = imagesArray.map(url => {
+        const meta = imageMetadata.find(m => m.url === url);
+        return meta ? { url: meta.url, publicId: meta.publicId } : { url };
+      });
+
       const productData = {
         ...formData,
-        // Split by comma OR newline, process URLs, and filter out empties
-        images: formData.images
-          .split(/[,\n]/)
-          .map(img => processImageUrl(img))
-          .filter(Boolean),
+        images: finalImages,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         price: parseFloat(formData.price) || 0,
         originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : parseFloat(formData.price) || 0,
@@ -277,6 +293,13 @@ const AdminProducts = () => {
       seoTitle: product.seoTitle || '',
       seoDescription: product.seoDescription || ''
     });
+
+    // Initialize metadata for existing images
+    const existingMeta = (product.images || [])
+      .filter(img => typeof img === 'object' && img.publicId)
+      .map(img => ({ url: img.url, publicId: img.publicId }));
+    setImageMetadata(existingMeta);
+
     setShowAddModal(true);
   };
 

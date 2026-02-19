@@ -759,8 +759,13 @@ const deleteCoupon = async (req, res) => {
 // @access  Private/Admin
 const createBanner = async (req, res) => {
   try {
+    const imageData = typeof req.body.image === 'string'
+      ? { url: req.body.image.trim() }
+      : req.body.image;
+
     const banner = await Banner.create({
       ...req.body,
+      image: imageData,
       createdBy: req.user._id,
     });
     emitEvent(req, 'banner:created', banner);
@@ -787,7 +792,14 @@ const getBanners = async (req, res) => {
 // @access  Private/Admin
 const updateBanner = async (req, res) => {
   try {
-    const banner = await Banner.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    let updateData = { ...req.body };
+    if (req.body.image) {
+      updateData.image = typeof req.body.image === 'string'
+        ? { url: req.body.image.trim() }
+        : req.body.image;
+    }
+
+    const banner = await Banner.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!banner) {
       return res.status(404).json({ message: 'Banner not found' });
     }
@@ -803,10 +815,18 @@ const updateBanner = async (req, res) => {
 // @access  Private/Admin
 const deleteBanner = async (req, res) => {
   try {
-    const banner = await Banner.findByIdAndDelete(req.params.id);
+    const banner = await Banner.findById(req.params.id);
     if (!banner) {
       return res.status(404).json({ message: 'Banner not found' });
     }
+
+    // Delete image from cloudinary if it exists
+    if (banner.image && banner.image.publicId) {
+      const cloudinary = require('../utils/cloudinaryConfig').cloudinary;
+      await cloudinary.uploader.destroy(banner.image.publicId).catch(err => console.error('Cloudinary delete failed:', err));
+    }
+
+    await Banner.findByIdAndDelete(req.params.id);
     emitEvent(req, 'banner:deleted', { _id: req.params.id });
     res.json({ message: 'Banner deleted' });
   } catch (error) {
