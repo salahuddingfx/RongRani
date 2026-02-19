@@ -87,7 +87,8 @@ export default defineConfig({
             if (id.includes('axios') || id.includes('react-helmet-async') || id.includes('i18next')) {
               return 'utils';
             }
-            return 'vendor'; // Fallback for other node_modules
+            // Group other small deps
+            return 'vendor';
           }
         }
       }
