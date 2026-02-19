@@ -447,7 +447,7 @@ const Navbar = () => {
                 </div>
                 <Link to="/" className="flex items-center gap-2 group shrink-0">
                   <div className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-xl overflow-hidden shadow-sm group-hover:scale-105 transition-all">
-                    <img src="/RongRani-Circle.png" alt="RongRani Logo" className="w-full h-full object-cover" width="56" height="56" fetchpriority="high" />
+                    <img src="/RongRani-Logo.png" alt="RongRani Logo" className="w-full h-full object-contain" width="56" height="56" fetchpriority="high" />
                   </div>
                   <div className="flex flex-col leading-none">
                     <span className="text-xl md:text-3xl font-black text-maroon dark:text-white tracking-tighter">Rong<span className="text-slate-800 dark:text-slate-200">Rani</span></span>
@@ -476,42 +476,48 @@ const Navbar = () => {
                       <button onClick={toggleTheme} className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300">
                         {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                       </button>
-                      <Link to="/cart" onClick={(e) => { e.preventDefault(); openCart(); }} className="relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
+
+                      {/* Desktop Only Icons (Mobile has BottomNav) */}
+                      <Link to="/cart" onClick={(e) => { e.preventDefault(); openCart(); }} className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
                         <ShoppingCart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon" />
                         {totalItems > 0 && <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-bounce-short">{totalItems}</span>}
                       </Link>
-                      <Link to="/wishlist" className="relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
+                      <Link to="/wishlist" className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
                         <Heart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon" />
                         {wishlist.length > 0 && <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-pulse">{wishlist.length}</span>}
                       </Link>
-                      {user ? (
-                        <div className="relative ml-1 user-menu-container">
-                          <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 group">
-                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-maroon/10 dark:bg-maroon/20 flex items-center justify-center border-2 border-white dark:border-slate-800 shadow-sm group-hover:border-maroon transition-all">
-                              <User className="w-4 h-4 md:w-5 md:h-5 text-maroon" />
-                            </div>
-                            <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-300 ${showUserMenu ? 'rotate-180' : ''}`} />
-                          </button>
-                          {showUserMenu && (
-                            <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-3 z-[100] animate-in fade-in slide-in-from-top-2">
-                              <div className="px-4 pb-3 mb-3 border-b border-slate-100 dark:border-slate-700">
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t('welcome')}</p>
-                                <p className="text-sm font-black text-slate-800 dark:text-white truncate">{user.name}</p>
+
+                      <div className="hidden md:block">
+                        {user ? (
+                          <div className="relative ml-1 user-menu-container">
+                            <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 group">
+                              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-maroon/10 dark:bg-maroon/20 flex items-center justify-center border-2 border-white dark:border-slate-800 shadow-sm group-hover:border-maroon transition-all">
+                                <User className="w-4 h-4 md:w-5 md:h-5 text-maroon" />
                               </div>
-                              {userMenuItems.map((item) => (
-                                <Link key={item.to} to={item.to} className="flex items-center gap-3 px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-maroon transition-colors" onClick={() => setShowUserMenu(false)}>
-                                  <item.icon className="w-4 h-4" /> {t(item.label)}
-                                </Link>
-                              ))}
-                              <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors mt-2 border-t border-slate-100 dark:border-slate-700 pt-3">
-                                <LogOut className="w-4 h-4" /> {t('logout')}
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <Link to="/login" className="ml-2 px-6 py-2.5 bg-maroon text-white text-xs font-bold rounded-full hover:bg-maroon-dark shadow-lg shadow-maroon/20 hover:shadow-maroon/30 transition-all active:scale-95">{t('login')}</Link>
-                      )}
+                              <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-300 ${showUserMenu ? 'rotate-180' : ''}`} />
+                            </button>
+                            {/* ...User Menu Dropdown... */}
+                            {showUserMenu && (
+                              <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-3 z-[100] animate-in fade-in slide-in-from-top-2">
+                                <div className="px-4 pb-3 mb-3 border-b border-slate-100 dark:border-slate-700">
+                                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t('welcome')}</p>
+                                  <p className="text-sm font-black text-slate-800 dark:text-white truncate">{user.name}</p>
+                                </div>
+                                {userMenuItems.map((item) => (
+                                  <Link key={item.to} to={item.to} className="flex items-center gap-3 px-4 py-2 text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-maroon transition-colors" onClick={() => setShowUserMenu(false)}>
+                                    <item.icon className="w-4 h-4" /> {t(item.label)}
+                                  </Link>
+                                ))}
+                                <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors mt-2 border-t border-slate-100 dark:border-slate-700 pt-3">
+                                  <LogOut className="w-4 h-4" /> {t('logout')}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          <Link to="/login" className="ml-2 px-6 py-2.5 bg-maroon text-white text-xs font-bold rounded-full hover:bg-maroon-dark shadow-lg shadow-maroon/20 hover:shadow-maroon/30 transition-all active:scale-95">{t('login')}</Link>
+                        )}
+                      </div>
                     </div>
                   </>
                 )}
