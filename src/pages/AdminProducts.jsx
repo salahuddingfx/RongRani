@@ -200,10 +200,26 @@ const AdminProducts = () => {
         toast.error('At least one image URL is required');
         return;
       }
+      // Helper to convert Google Drive links to direct links
+      const processImageUrl = (url) => {
+        let trimmed = url.trim();
+        // Handle GDrive file links
+        if (trimmed.includes('drive.google.com')) {
+          const fileIdMatch = trimmed.match(/\/file\/d\/([^\/]+)/) || trimmed.match(/id=([^\&]+)/);
+          if (fileIdMatch && fileIdMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${fileIdMatch[1]}`;
+          }
+        }
+        return trimmed;
+      };
+
       const productData = {
         ...formData,
-        // Split by comma OR newline, trim, and filter out empties
-        images: formData.images.split(/[,\n]/).map(img => img.trim()).filter(Boolean),
+        // Split by comma OR newline, process URLs, and filter out empties
+        images: formData.images
+          .split(/[,\n]/)
+          .map(img => processImageUrl(img))
+          .filter(Boolean),
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         price: parseFloat(formData.price) || 0,
         originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : parseFloat(formData.price) || 0,
