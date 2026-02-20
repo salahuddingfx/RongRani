@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import ProductItem from './ProductItem';
 import { ProductCardSkeleton } from './Skeletons';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useSocket } from '../contexts/socketContextBase';
 
 const HomeCategorySlider = ({ category }) => {
     const [products, setProducts] = useState([]);
@@ -12,6 +13,8 @@ const HomeCategorySlider = ({ category }) => {
     const scrollRef = useRef(null);
     const { t } = useLanguage();
     const [showArrows, setShowArrows] = useState(false);
+
+    const { socket } = useSocket() || {};
 
     const fetchCategoryProducts = async () => {
         try {
@@ -32,7 +35,6 @@ const HomeCategorySlider = ({ category }) => {
 
     // Real-time Updates
     useEffect(() => {
-        const socket = window.socket; // Assuming socket is attached to window or use context
         if (!socket) return;
 
         const handleUpdate = () => fetchCategoryProducts();
@@ -46,29 +48,7 @@ const HomeCategorySlider = ({ category }) => {
             socket.off('product:updated', handleUpdate);
             socket.off('product:deleted', handleUpdate);
         };
-    }, []);
-
-    // Auto-scroll logic
-    useEffect(() => {
-        if (products.length <= 4 || showArrows) return;
-
-        const interval = setInterval(() => {
-            if (scrollRef.current) {
-                const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-                const maxScroll = scrollWidth - clientWidth;
-
-                if (scrollLeft >= maxScroll - 10) {
-                    scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    // Scroll by one card width
-                    const cardWidth = 300;
-                    scrollRef.current.scrollBy({ left: cardWidth, behavior: 'smooth' });
-                }
-            }
-        }, 4000); // 4 seconds for better visibility
-
-        return () => clearInterval(interval);
-    }, [products, showArrows]);
+    }, [socket]);
 
     const scroll = (direction) => {
         if (scrollRef.current) {

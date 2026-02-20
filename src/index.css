@@ -658,6 +658,27 @@
   transition-delay: 0.7s;
 }
 
+/* Mobile Performance: Disable heavy animations */
+@media (max-width: 768px) {
+
+  .animate-fade-in-up,
+  .animate-slide-in-left,
+  .animate-slide-in-right,
+  .animate-scale-in,
+  .animate-slide-up,
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-up,
+  .reveal-down {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    will-change: auto !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .reveal,
