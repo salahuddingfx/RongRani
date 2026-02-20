@@ -10,25 +10,21 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'RongRani - Handmade Gifts & Surprise Boxes',
-        short_name: 'RongRani',
-        description: 'RongRani is a Bangladeshi online gift shop for handmade gifts, surprise boxes, jewelry, flowers, and decor.',
+        name: 'RongRani™',
+        short_name: 'RongRani™',
+        description: "RongRani™: Bangladesh's favorite online shop for handmade gifts, surprise boxes, jewelry, flowers, and bespoke gifts.",
         theme_color: '#7b1230',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
         scope: '/',
-        orientation: 'portrait',
+        orientation: 'portrait-primary',
         icons: [
           {
             src: '/RongRani-Logo.png',
             sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: '/RongRani-Logo.png',
-            sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           },
           {
             src: '/RongRani-Logo.png',
@@ -36,8 +32,32 @@ export default defineConfig({
             type: 'image/png',
             purpose: 'any maskable'
           }
+        ],
+        shortcuts: [
+          {
+            name: "Shop Now",
+            short_name: "Shop",
+            description: "Browse handmade products",
+            url: "/shop",
+            icons: [{ src: "/RongRani-Logo.png", sizes: "192x192" }]
+          },
+          {
+            name: "My Orders",
+            short_name: "Orders",
+            description: "Track your orders",
+            url: "/profile/orders",
+            icons: [{ src: "/RongRani-Logo.png", sizes: "192x192" }]
+          },
+          {
+            name: "Wishlist",
+            short_name: "Wishlist",
+            description: "View saved items",
+            url: "/wishlist",
+            icons: [{ src: "/RongRani-Logo.png", sizes: "192x192" }]
+          }
         ]
       },
+      manifestFilename: 'manifest.json',
       workbox: {
         maximumFileSizeToCacheInBytes: 3000000,
         runtimeCaching: [

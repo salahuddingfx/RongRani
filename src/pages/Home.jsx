@@ -10,10 +10,10 @@ import { ProductCardSkeleton } from '../components/Skeletons';
 import { useSocket } from '../contexts/socketContextBase';
 import { useLanguage } from '../contexts/LanguageContext';
 
-import BannerSlider from '../components/BannerSlider';
+const BannerSlider = lazy(() => import('../components/BannerSlider'));
 const Newsletter = lazy(() => import('../components/Newsletter'));
 const FlashSale = lazy(() => import('../components/FlashSale'));
-import HomeCategorySlider from '../components/HomeCategorySlider';
+const HomeCategorySlider = lazy(() => import('../components/HomeCategorySlider'));
 import ProductCard from '../components/ProductItem';
 
 const Home = () => {
@@ -366,9 +366,13 @@ const Home = () => {
                   displayCategories = categories.filter(c => c.isActive).slice(0, 3);
                 }
 
-                return displayCategories.map((category, index) => (
-                  <HomeCategorySlider key={category._id || index} category={category} />
-                ));
+                return (
+                  <Suspense fallback={<div className="h-64 animate-pulse bg-gray-100 dark:bg-slate-800 rounded-xl my-4" />}>
+                    {displayCategories.map((category, index) => (
+                      <HomeCategorySlider key={category._id || index} category={category} />
+                    ))}
+                  </Suspense>
+                );
               })()}
             </>
           )}

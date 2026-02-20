@@ -44,17 +44,20 @@ const BannerSlider = () => {
   const [loading, setLoading] = useState(true);
   const { socket } = useSocket() || {};
 
+  // Helper to optimize Unsplash URLs
+  const getOptimizedUrl = (url, width) => {
+    if (!url) return '';
+    if (!url.includes('unsplash.com')) return url;
+    const baseUrl = url.split('?')[0];
+    return `${baseUrl}?auto=format,compress&q=60&w=${width}`;
+  };
+
   // Fetch banners from API
   const fetchBanners = useCallback(async () => {
     try {
       const response = await axios.get('/api/admin/banners');
       const fetchedBanners = response.data.map((banner) => {
-        let imageUrl = typeof banner.image === 'object' ? banner.image.url : (banner.image || 'https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=1200');
-
-        // Clean Unsplash URL for responsive loading
-        if (imageUrl.includes('unsplash.com')) {
-          imageUrl = imageUrl.split('?')[0];
-        }
+        let imageUrl = typeof banner.image === 'object' ? banner.image.url : (banner.image || '');
 
         return {
           id: banner._id,
@@ -151,13 +154,11 @@ const BannerSlider = () => {
             {banner.image && (
               <div className="absolute inset-0 z-0">
                 <img
-                  src={banner.image.includes('unsplash.com')
-                    ? `${banner.image}?auto=format,compress&q=60&w=1200`
-                    : banner.image}
-                  srcSet={banner.image.includes('unsplash.com')
-                    ? `${banner.image}?auto=format,compress&q=60&w=600 600w, 
-                       ${banner.image}?auto=format,compress&q=60&w=1200 1200w`
-                    : undefined}
+                  src={getOptimizedUrl(banner.image, 1200)}
+                  srcSet={`
+                    ${getOptimizedUrl(banner.image, 600)} 600w, 
+                    ${getOptimizedUrl(banner.image, 1200)} 1200w
+                  `}
                   sizes="(max-width: 640px) 100vw, 100vw"
                   alt=""
                   className="w-full h-full object-cover opacity-20"
@@ -196,7 +197,7 @@ const BannerSlider = () => {
                   <div className="relative w-full h-96 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden border border-white/20">
                     {banner.image ? (
                       <img
-                        src={banner.image}
+                        src={getOptimizedUrl(banner.image, 800)}
                         alt={banner.title}
                         width="800"
                         height="400"
