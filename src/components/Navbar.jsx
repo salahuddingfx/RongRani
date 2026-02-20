@@ -174,13 +174,13 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
           {isSearching ? (
             <div className="p-8 text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-maroon mx-auto mb-3"></div>
-              <p className="text-xs text-slate-400 font-medium">{t('searching_magic')}</p>
+              <p className="text-xs text-slate-500 font-medium">{t('searching_magic')}</p>
             </div>
           ) : (
             <div className="max-h-[500px] overflow-y-auto custom-scrollbar">
               {searchQuery.trim().length < 2 && (
                 <div className="p-4 border-b border-slate-50 dark:border-slate-700/50">
-                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] mb-3 flex items-center gap-2">
+                  <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.1em] mb-3 flex items-center gap-2">
                     <TrendingUp className="w-3 h-3 text-maroon" /> {t('trending_now')}
                   </h5>
                   <div className="flex flex-wrap gap-2">
@@ -205,7 +205,7 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
               {searchQuery.trim().length < 2 && recentSearches.length > 0 && (
                 <div className="p-4 border-b border-slate-50 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-900/10">
                   <div className="flex justify-between items-center mb-3">
-                    <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] flex items-center gap-2">
+                    <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.1em] flex items-center gap-2">
                       <Clock className="w-3 h-3" /> {t('recent_searches')}
                     </h5>
                     <button
@@ -241,7 +241,7 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
 
               {suggestedCategories.length > 0 && searchQuery.trim().length >= 2 && (
                 <div className="p-4 border-b border-slate-50 dark:border-slate-700/50 bg-maroon/[0.02] dark:bg-pink-400/[0.02]">
-                  <h5 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] mb-3">
+                  <h5 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.1em] mb-3">
                     Suggested Categories
                   </h5>
                   <div className="flex flex-wrap gap-2">
@@ -266,7 +266,7 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
               <div className="p-2">
                 {suggestions.length > 0 ? (
                   <>
-                    <h5 className="px-3 py-2 text-[10px] font-black text-slate-400 uppercase tracking-[0.1em]">
+                    <h5 className="px-3 py-2 text-[10px] font-black text-slate-500 uppercase tracking-[0.1em]">
                       {t('products_found')}
                     </h5>
                     {suggestions.map((product) => (
@@ -294,7 +294,7 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
                           <div className="flex items-center gap-2 mt-1">
                             <span className="text-sm font-black text-maroon dark:text-pink-400">৳{product.price}</span>
                             <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600"></span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{product.category}</span>
+                            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">{product.category}</span>
                           </div>
                         </div>
                       </Link>
@@ -517,13 +517,13 @@ const Navbar = () => {
                               <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-maroon/10 dark:bg-maroon/20 flex items-center justify-center border-2 border-white dark:border-slate-800 shadow-sm group-hover:border-maroon transition-all">
                                 <User className="w-4 h-4 md:w-5 md:h-5 text-maroon" />
                               </div>
-                              <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-300 ${showUserMenu ? 'rotate-180' : ''}`} />
+                              <ChevronDown className={`w-3 h-3 text-slate-500 transition-transform duration-300 ${showUserMenu ? 'rotate-180' : ''}`} />
                             </button>
                             {/* ...User Menu Dropdown... */}
                             {showUserMenu && (
                               <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-700 py-3 z-[100] animate-in fade-in slide-in-from-top-2">
                                 <div className="px-4 pb-3 mb-3 border-b border-slate-100 dark:border-slate-700">
-                                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{t('welcome')}</p>
+                                  <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">{t('welcome')}</p>
                                   <p className="text-sm font-black text-slate-800 dark:text-white truncate">{user.name}</p>
                                 </div>
                                 {userMenuItems.map((item) => (
@@ -597,7 +597,7 @@ const Navbar = () => {
 
                   {/* Main Navigation */}
                   <div className="space-y-1">
-                    <p className="px-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{t('menu')}</p>
+                    <p className="px-2 text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">{t('menu')}</p>
                     {menuItems.map((item) => (
                       <Link
                         key={item.to}
@@ -612,7 +612,7 @@ const Navbar = () => {
 
                   {/* Account / Login */}
                   <div className="space-y-1">
-                    <p className="px-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{t('account')}</p>
+                    <p className="px-2 text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">{t('account')}</p>
                     {user ? (
                       <div className="space-y-1">
                         {userMenuItems.map((item) => (
@@ -630,7 +630,7 @@ const Navbar = () => {
 
                   {/* Settings */}
                   <div className="space-y-3 pt-2">
-                    <p className="px-2 text-xs font-bold text-slate-400 uppercase tracking-widest">{t('preferences')}</p>
+                    <p className="px-2 text-xs font-bold text-slate-500 uppercase tracking-widest">{t('preferences')}</p>
 
                     <div className="grid grid-cols-2 gap-3">
                       {/* Language */}
@@ -643,7 +643,7 @@ const Navbar = () => {
 
                       {/* Theme */}
                       <button onClick={toggleTheme} className="flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-100 dark:border-slate-800">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${isDark ? 'bg-slate-700 text-yellow-400' : 'bg-white text-slate-400 ring-1 ring-slate-200'}`}>
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${isDark ? 'bg-slate-700 text-yellow-400' : 'bg-white text-slate-500 ring-1 ring-slate-200'}`}>
                           {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
                         </div>
                         <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
@@ -654,7 +654,7 @@ const Navbar = () => {
 
                 {/* Footer */}
                 <div className="p-5 text-center border-t border-slate-100 dark:border-slate-800">
-                  <p className="text-[10px] text-slate-400 font-medium">© 2026 RongRani. v1.0</p>
+                  <p className="text-[10px] text-slate-500 font-medium">© 2026 RongRani. v1.0</p>
                 </div>
               </div>
             </div>

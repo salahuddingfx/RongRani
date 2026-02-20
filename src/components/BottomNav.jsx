@@ -65,7 +65,7 @@ const BottomNav = () => {
                     <item.icon className="w-6 h-6 transition-all duration-300" strokeWidth={2} />
                   </button>
                 ) : (
-                  <Link to={item.to} className={commonClasses}>
+                  <Link to={item.to} className={commonClasses} aria-label={item.label}>
                     <item.icon className={`transition-all duration-300 ${active ? 'w-6 h-6' : 'w-6 h-6'}`} strokeWidth={active ? 2.5 : 2} />
 
                     {item.badge > 0 && (
