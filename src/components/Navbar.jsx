@@ -441,7 +441,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="lg:hidden">
-                  <button onClick={() => setIsOpen(!isOpen)} className="p-2 -ml-2 text-slate-800 dark:text-white rounded-full active:scale-90 transition-transform">
+                  <button onClick={() => setIsOpen(!isOpen)} className="p-2 -ml-2 text-slate-800 dark:text-white rounded-full active:scale-90 transition-transform" aria-label={isOpen ? "Close menu" : "Open menu"}>
                     {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                   </button>
                 </div>
@@ -489,23 +489,23 @@ const Navbar = () => {
                 <div className="flex items-center gap-1 md:gap-2">
                   {/* Mobile Search Toggle (Optional enhancement) */}
                   {!isSimplifiedPage && (
-                    <Link to="/shop" className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                    <Link to="/shop" className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" aria-label="Search">
                       <Search className="w-5 h-5" />
                     </Link>
                   )}
 
-                  <button onClick={toggleTheme} className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300">
+                  <button onClick={toggleTheme} className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300" aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}>
                     {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
                   </button>
 
                   {/* Desktop Only Icons (Mobile has BottomNav) */}
                   {!isSimplifiedPage && (
                     <>
-                      <Link to="/cart" onClick={(e) => { e.preventDefault(); openCart(); }} className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
+                      <Link to="/cart" onClick={(e) => { e.preventDefault(); openCart(); }} className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group" aria-label="Cart">
                         <ShoppingCart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon" />
                         {totalItems > 0 && <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-bounce-short">{totalItems}</span>}
                       </Link>
-                      <Link to="/wishlist" className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
+                      <Link to="/wishlist" className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group" aria-label="Wishlist">
                         <Heart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon" />
                         {wishlist.length > 0 && <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-pulse">{wishlist.length}</span>}
                       </Link>
@@ -513,7 +513,7 @@ const Navbar = () => {
                       <div className="hidden md:block">
                         {user ? (
                           <div className="relative ml-1 user-menu-container">
-                            <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 group">
+                            <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 group" aria-label="User menu">
                               <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-maroon/10 dark:bg-maroon/20 flex items-center justify-center border-2 border-white dark:border-slate-800 shadow-sm group-hover:border-maroon transition-all">
                                 <User className="w-4 h-4 md:w-5 md:h-5 text-maroon" />
                               </div>

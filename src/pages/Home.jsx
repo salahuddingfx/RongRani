@@ -140,9 +140,9 @@ const Home = () => {
             </div>
 
             {/* Main Heading with Typing Effect */}
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-charcoal mb-4 tracking-tight leading-tight animate-fade-in-up stagger-1">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-black text-charcoal mb-4 tracking-tight leading-tight animate-fade-in-up stagger-1">
               {t('hero_title')}<br />
-              <span className="text-maroon">
+              <span className="text-maroon inline-block min-h-[1.5em]">
                 <TypingEffect
                   texts={language === 'bn'
                     ? ['ভালোবাসা ও রোমান্স ❤️', 'বিশেষ মুহূর্ত ✨', 'হৃদয়স্পর্শী সারপ্রাইজ 🎁', 'হস্তনির্মিত অনন্য উপহার 🎨', 'প্রিয়জনের স্মৃতির পাতায় 📸', 'সেরা কোয়ালিটি গ্যারান্টি ⭐']
