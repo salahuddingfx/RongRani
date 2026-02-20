@@ -27,11 +27,11 @@ const ContactUs = () => {
         toast.success(t('message_sent_success'));
         setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
       } else {
-        toast.error('Failed to send message.');
+        toast.error(t('message_send_failed'));
       }
     } catch (error) {
       console.error('Contact Form Error:', error);
-      toast.error(error.response?.data?.message || 'Something went wrong. Please try again.');
+      toast.error(error.response?.data?.message || t('generic_error'));
     } finally {
       setIsSending(false);
     }
@@ -180,7 +180,7 @@ const ContactUs = () => {
                 {isSending ? (
                   <>
                     <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>Sending...</span>
+                    <span>{t('sending_msg')}</span>
                   </>
                 ) : (
                   <>

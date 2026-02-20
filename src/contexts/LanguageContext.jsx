@@ -58,6 +58,12 @@ export const LanguageProvider = ({ children }) => {
       contact: 'Contact',
       quick_view: 'Quick View',
       add_to_wishlist: 'Add to Wishlist',
+      welcome_back: 'Welcome back',
+      account: 'Account',
+      preferences: 'Preferences',
+      sending_msg: 'Sending...',
+      message_send_failed: 'Failed to send message.',
+      generic_error: 'Something went wrong. Please try again.',
 
       // Top Bar
       free_shipping: 'FREE Shipping on orders over 2500',
@@ -453,6 +459,12 @@ export const LanguageProvider = ({ children }) => {
       contact: 'যোগাযোগ',
       quick_view: 'দ্রুত দেখুন',
       add_to_wishlist: 'উইশলিস্টে যোগ করুন',
+      welcome_back: 'স্বাগতম',
+      account: 'অ্যাকাউন্ট',
+      preferences: 'পছন্দসমূহ',
+      sending_msg: 'পাঠানো হচ্ছে...',
+      message_send_failed: 'বার্তা পাঠাতে ব্যর্থ হয়েছে',
+      generic_error: 'কিছু সমস্যা হয়েছে। আবার চেষ্টা করুন।',
 
       // Top Bar
       free_shipping: '২৫০০৳ এর বেশি অর্ডারে ফ্রি ডেলিভারি!',
