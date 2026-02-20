@@ -1,6 +1,4 @@
-import React from 'react';
-
-const { createContext, useContext, useState, useEffect } = React;
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
@@ -16,7 +14,6 @@ export const useTheme = () => {
 export const ThemeProvider = ({ children }) => {
   const [isDark, setIsDark] = useState(() => {
     try {
-      // Load theme from localStorage
       const savedTheme = localStorage.getItem('theme');
       return savedTheme === 'dark';
     } catch (e) {
@@ -26,7 +23,6 @@ export const ThemeProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    // Apply theme to document on mount and when theme changes
     if (isDark) {
       document.documentElement.classList.add('dark');
     } else {
