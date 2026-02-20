@@ -474,11 +474,9 @@ const Navbar = () => {
                   </>
                 )}
 
-                {/* Navigation Buttons (Back & Home) */}
-                {/* Regular Pages: Visible on Mobile only (lg:hidden) */}
-                {/* Simplified Pages: Visible on ALL screens */}
-                {location.pathname !== '/' && (
-                  <div className={`flex items-center gap-1 border-r border-slate-200 dark:border-slate-700 pr-2 mr-1 ${!isSimplifiedPage ? 'lg:hidden' : ''}`}>
+                {/* Navigation Buttons (Back & Home) - Only on Simplified Pages (Login, Signup, etc.) */}
+                {isSimplifiedPage && (
+                  <div className="flex items-center gap-1 border-r border-slate-200 dark:border-slate-700 pr-2 mr-1">
                     <button onClick={() => window.history.back()} className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" title="Go Back">
                       <ArrowLeft className="w-5 h-5" />
                     </button>
@@ -557,52 +555,106 @@ const Navbar = () => {
           </div>
         </nav>
 
+        {/* Mobile Menu Drawer */}
         {isOpen && !isSimplifiedPage && (
-          <div className="lg:hidden fixed inset-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl animate-in fade-in duration-300">
-            <div className="flex flex-col h-full pt-6 px-6 overflow-y-auto">
-              {/* Close Button Header */}
-              <div className="flex justify-end mb-6">
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-3 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-600 dark:text-slate-300 hover:bg-maroon hover:text-white transition-all shadow-sm active:scale-95"
-                  aria-label="Close menu"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
+          <div className="lg:hidden relative z-[100]">
+            {/* Backdrop */}
+            <div
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+              onClick={() => setIsOpen(false)}
+            />
 
-              <div className="space-y-4 mb-8">
-                {menuItems.map((item) => (
-                  <Link key={item.to} to={item.to} className={`block text-2xl font-black transition-colors ${location.pathname === item.to ? 'text-maroon dark:text-white' : 'text-slate-400 hover:text-maroon'}`} onClick={() => setIsOpen(false)}>
-                    {t(item.label)}
-                  </Link>
-                ))}
-                {user && (
-                  <div className="pt-4 space-y-4">
-                    <div className="h-px bg-slate-100 dark:bg-slate-800 w-12" />
-                    {userMenuItems.map((item) => (
-                      <Link key={item.to} to={item.to} className="flex items-center gap-3 text-xl font-bold text-slate-500 hover:text-maroon transition-colors" onClick={() => setIsOpen(false)}>
-                        <item.icon className="w-5 h-5" /> {t(item.label)}
+            {/* Drawer */}
+            <div className="fixed inset-y-0 left-0 w-[85%] max-w-xs bg-white dark:bg-slate-900 shadow-2xl transform transition-transform duration-300 animate-slide-in-left flex flex-col h-full border-r border-slate-100 dark:border-slate-800">
+              <div className="flex flex-col h-full overflow-y-auto no-scrollbar">
+                {/* Header with Logo */}
+                <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between sticky top-0 bg-white/95 dark:bg-slate-900/95 backdrop-blur z-10">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg overflow-hidden">
+                      <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <span className="text-lg font-black text-maroon dark:text-white tracking-tighter">Rong<span className="text-slate-800 dark:text-slate-200">Rani</span></span>
+                  </div>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="p-2 bg-slate-50 dark:bg-slate-800 rounded-full text-slate-500 hover:text-maroon transition-colors hover:bg-red-50"
+                    aria-label="Close menu"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 p-5 space-y-8">
+
+                  {/* Greeting / User Status */}
+                  {user && (
+                    <div className="bg-gradient-to-br from-maroon/5 to-pink-500/5 rounded-2xl p-4 border border-maroon/10">
+                      <p className="text-xs font-bold text-slate-500 mb-1">{t('welcome_back')},</p>
+                      <p className="text-xl font-black text-maroon dark:text-white truncate">{user.name || 'User'}</p>
+                    </div>
+                  )}
+
+                  {/* Main Navigation */}
+                  <div className="space-y-1">
+                    <p className="px-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{t('menu')}</p>
+                    {menuItems.map((item) => (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        className={`block px-3 py-2.5 rounded-xl font-bold transition-all ${location.pathname === item.to ? 'bg-maroon text-white shadow-lg shadow-maroon/20' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-maroon'}`}
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {t(item.label)}
                       </Link>
                     ))}
                   </div>
-                )}
-                {!user && (
-                  <Link to="/login" className="block text-2xl font-black text-maroon mt-4" onClick={() => setIsOpen(false)}>
-                    {t('login')}
-                  </Link>
-                )}
-              </div>
-              <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-6">
-                <div className="flex items-center gap-6">
-                  <div className="h-10 w-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-maroon font-bold ring-2 ring-maroon/10">BN</div>
-                  <button onClick={toggleLanguage} className="text-slate-600 dark:text-slate-300 font-bold text-lg">{language === 'en' ? 'বাংলা সংস্করণ' : 'English Version'}</button>
-                </div>
-                <div className="flex items-center gap-6">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center shadow-lg transition-all ${isDark ? 'bg-slate-800 text-yellow-400' : 'bg-white text-slate-600'}`}>
-                    {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+
+                  {/* Account / Login */}
+                  <div className="space-y-1">
+                    <p className="px-2 text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{t('account')}</p>
+                    {user ? (
+                      <div className="space-y-1">
+                        {userMenuItems.map((item) => (
+                          <Link key={item.to} to={item.to} className="flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-maroon transition-colors" onClick={() => setIsOpen(false)}>
+                            <item.icon className="w-4.5 h-4.5 opacity-70" /> {t(item.label)}
+                          </Link>
+                        ))}
+                      </div>
+                    ) : (
+                      <Link to="/login" className="flex items-center justify-center gap-2 w-full py-3 bg-maroon text-white font-bold rounded-xl shadow-lg shadow-maroon/20 hover:shadow-maroon/40 active:scale-95 transition-all" onClick={() => setIsOpen(false)}>
+                        <span>{t('login')}</span>
+                      </Link>
+                    )}
                   </div>
-                  <button onClick={toggleTheme} className="text-slate-600 dark:text-slate-300 font-bold text-lg">{isDark ? 'Light Theme' : 'Dark Theme'}</button>
+
+                  {/* Settings */}
+                  <div className="space-y-3 pt-2">
+                    <p className="px-2 text-xs font-bold text-slate-400 uppercase tracking-widest">{t('preferences')}</p>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      {/* Language */}
+                      <button onClick={toggleLanguage} className="flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-100 dark:border-slate-800">
+                        <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-700 flex items-center justify-center text-xs font-bold ring-1 ring-slate-200 dark:ring-slate-600 mb-2">
+                          {language === 'en' ? 'BN' : 'EN'}
+                        </div>
+                        <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{language === 'en' ? 'Bangla' : 'English'}</span>
+                      </button>
+
+                      {/* Theme */}
+                      <button onClick={toggleTheme} className="flex flex-col items-center justify-center p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors border border-slate-100 dark:border-slate-800">
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center mb-2 ${isDark ? 'bg-slate-700 text-yellow-400' : 'bg-white text-slate-400 ring-1 ring-slate-200'}`}>
+                          {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                        </div>
+                        <span className="text-xs font-bold text-slate-600 dark:text-slate-300">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer */}
+                <div className="p-5 text-center border-t border-slate-100 dark:border-slate-800">
+                  <p className="text-[10px] text-slate-400 font-medium">© 2026 RongRani. v1.0</p>
                 </div>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Facebook, Instagram, Twitter, Loader2 } from 'lucide-react';
+import axios from 'axios';
 import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -14,10 +15,26 @@ const ContactUs = () => {
     message: ''
   });
 
-  const handleSubmit = (e) => {
+  const [isSending, setIsSending] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success(t('message_sent_success'));
-    setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+    setIsSending(true);
+
+    try {
+      const response = await axios.post('/api/contact', formData);
+      if (response.data.success) {
+        toast.success(t('message_sent_success'));
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+      } else {
+        toast.error('Failed to send message.');
+      }
+    } catch (error) {
+      console.error('Contact Form Error:', error);
+      toast.error(error.response?.data?.message || 'Something went wrong. Please try again.');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -155,9 +172,22 @@ const ContactUs = () => {
                 />
               </div>
 
-              <button type="submit" className="btn-primary w-full flex items-center justify-center space-x-2">
-                <Send className="h-5 w-5" />
-                <span>{t('send_message')}</span>
+              <button
+                type="submit"
+                disabled={isSending}
+                className="btn-primary w-full flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isSending ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Sending...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-5 w-5" />
+                    <span>{t('send_message')}</span>
+                  </>
+                )}
               </button>
             </form>
           </div>

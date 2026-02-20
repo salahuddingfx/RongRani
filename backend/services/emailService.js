@@ -617,6 +617,37 @@ const emailTemplates = {
 
     return emailBaseTemplate('Thanks for your feedback!', content, 'Here is a discount code for your next order.');
   },
+
+  // 12. Contact Form Submission (Admin Notification)
+  contactForm: (data) => {
+    const content = `
+      <div style="border-left: 3px solid #8B2635; padding-left: 25px; margin-bottom: 40px;">
+        <h2 class="h-premium" style="font-size: 24px; margin: 0; color: #8B2635;">New Contact Message</h2>
+        <p style="margin-top: 8px; color: #475569; font-weight: 400; font-size: 15px;">A visitor has reached out via the contact form.</p>
+      </div>
+      
+      <div style="background-color: #fafafa; border-radius: 20px; padding: 35px; border: 1px solid #f1f5f9;">
+        <div style="color: #94a3b8; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; margin-bottom: 20px;">Sender Details</div>
+        <div style="color: #0f172a; line-height: 2; font-size: 15px;">
+          <div style="font-weight: 600; font-size: 18px; font-family: 'Playfair Display', serif;">${data.name}</div>
+          <div>📧 <a href="mailto:${data.email}" style="color: #8B2635; text-decoration: none;">${data.email}</a></div>
+          <div>📞 ${data.phone || 'N/A'}</div>
+          <div style="margin-top: 15px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+            <div style="font-weight: 700; color: #0f172a; margin-bottom: 5px;">Subject: ${data.subject}</div>
+            <div style="background: #ffffff; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; color: #475569; font-style: italic;">
+              "${data.message.replace(/\n/g, '<br>')}"
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <center style="margin-top: 40px;">
+        <a href="mailto:${data.email}?subject=Re: ${encodeURIComponent(data.subject)}" class="btn" style="background: #0f172a;">Reply to Visitor</a>
+      </center>
+    `;
+
+    return emailBaseTemplate(`New Message: ${data.subject}`, content, `Message from ${data.name}`);
+  },
 };
 
 // Send email function
@@ -766,10 +797,21 @@ const sendLowStockAlert = (product) => {
   );
 };
 
+const sendContactMessage = (data) => {
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER || 'info.rongrani@gmail.com';
+  return sendEmail(
+    adminEmail,
+    `New Message: ${data.subject}`,
+    'contactForm',
+    data
+  );
+};
+
 module.exports = {
   sendEmail,
   sendOrderConfirmation,
   sendOrderStatusUpdate,
   sendReviewRequest,
-  sendLowStockAlert
+  sendLowStockAlert,
+  sendContactMessage
 };
