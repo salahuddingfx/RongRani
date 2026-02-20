@@ -471,30 +471,38 @@ const Navbar = () => {
                         </Link>
                       ))}
                     </div>
+                  </>
+                )}
 
-                    {/* Navigation Buttons (Back & Home) - Visible on ALL screens when not on home */}
-                    {location.pathname !== '/' && (
-                      <div className="flex items-center gap-1 border-r border-slate-200 dark:border-slate-700 pr-2 mr-1">
-                        <button onClick={() => window.history.back()} className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" title="Go Back">
-                          <ArrowLeft className="w-5 h-5" />
-                        </button>
-                        <Link to="/" className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" title="Home">
-                          <Home className="w-5 h-5" />
-                        </Link>
-                      </div>
-                    )}
+                {/* Navigation Buttons (Back & Home) */}
+                {/* Regular Pages: Visible on Mobile only (lg:hidden) */}
+                {/* Simplified Pages: Visible on ALL screens */}
+                {location.pathname !== '/' && (
+                  <div className={`flex items-center gap-1 border-r border-slate-200 dark:border-slate-700 pr-2 mr-1 ${!isSimplifiedPage ? 'lg:hidden' : ''}`}>
+                    <button onClick={() => window.history.back()} className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" title="Go Back">
+                      <ArrowLeft className="w-5 h-5" />
+                    </button>
+                    <Link to="/" className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors" title="Home">
+                      <Home className="w-5 h-5" />
+                    </Link>
+                  </div>
+                )}
 
-                    <div className="flex items-center gap-1 md:gap-2">
-                      {/* Mobile Search Toggle (Optional enhancement) */}
-                      <Link to="/shop" className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-                        <Search className="w-5 h-5" />
-                      </Link>
+                <div className="flex items-center gap-1 md:gap-2">
+                  {/* Mobile Search Toggle (Optional enhancement) */}
+                  {!isSimplifiedPage && (
+                    <Link to="/shop" className="md:hidden p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                      <Search className="w-5 h-5" />
+                    </Link>
+                  )}
 
-                      <button onClick={toggleTheme} className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300">
-                        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                      </button>
+                  <button onClick={toggleTheme} className="p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-600 dark:text-slate-300">
+                    {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                  </button>
 
-                      {/* Desktop Only Icons (Mobile has BottomNav) */}
+                  {/* Desktop Only Icons (Mobile has BottomNav) */}
+                  {!isSimplifiedPage && (
+                    <>
                       <Link to="/cart" onClick={(e) => { e.preventDefault(); openCart(); }} className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group">
                         <ShoppingCart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon" />
                         {totalItems > 0 && <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-bounce-short">{totalItems}</span>}
@@ -535,9 +543,9 @@ const Navbar = () => {
                           <Link to="/login" className="ml-2 px-6 py-2.5 bg-maroon text-white text-xs font-bold rounded-full hover:bg-maroon-dark shadow-lg shadow-maroon/20 hover:shadow-maroon/30 transition-all active:scale-95">{t('login')}</Link>
                         )}
                       </div>
-                    </div>
-                  </>
-                )}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 

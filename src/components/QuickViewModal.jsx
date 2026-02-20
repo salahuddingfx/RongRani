@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { X, Eye, ArrowRight, ShoppingCart, Star } from 'lucide-react';
+import { X, Eye, ArrowRight, ShoppingCart, Star, Package } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import toast from 'react-hot-toast';
-import Product3DViewer from './Product3DViewer';
+
 
 const QuickViewModal = ({ product, onClose }) => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState(0);
 
   useEffect(() => {
     // Prevent body scroll when modal is open
@@ -62,13 +63,49 @@ const QuickViewModal = ({ product, onClose }) => {
         {/* Content */}
         <div className="p-6 grid md:grid-cols-2 gap-8">
           {/* Image Section */}
-          <div className="h-full">
-            <Product3DViewer
-              images={product.images}
-              productName={product.name}
-              discount={discount > 0 ? discount : null}
-              compact={true}
-            />
+          <div className="h-full space-y-4">
+            <div className="relative group aspect-square rounded-[2rem] overflow-hidden bg-slate-50 border-2 border-maroon/5 shadow-lg">
+              {product.images && product.images.length > 0 ? (
+                <img
+                  src={product.images[activeImage]?.url || product.images[activeImage] || ''}
+                  alt={product.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-slate-300">
+                  <Package className="h-16 w-16 opacity-50" />
+                </div>
+              )}
+
+              {/* Discount Tag */}
+              {discount > 0 && (
+                <div className="absolute top-4 left-4 bg-maroon text-white font-bold px-4 py-1 rounded-full shadow-lg text-sm">
+                  {discount}% OFF
+                </div>
+              )}
+            </div>
+
+            {/* Thumbnail Navigation */}
+            {product.images && product.images.length > 1 && (
+              <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                {product.images.map((img, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setActiveImage(index)}
+                    className={`relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 transition-all duration-300 border-2 ${activeImage === index
+                      ? 'border-maroon scale-105 opacity-100'
+                      : 'border-transparent opacity-60 hover:opacity-100'
+                      }`}
+                  >
+                    <img
+                      src={img.url || img || ''}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Details Section */}
