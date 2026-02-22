@@ -165,7 +165,7 @@ const Wishlist = () => {
         <div className="mt-12 bg-cream/30 dark:bg-slate-800/50 p-8 rounded-[3rem] border border-maroon/5 dark:border-slate-700 text-center animate-fade-in">
           <p className="text-5xl font-black text-maroon mb-2">{wishlist.length}</p>
           <p className="text-slate-500 font-bold uppercase tracking-widest text-sm">
-            {t('items_in_wishlist') || 'Items in your wishlist'}
+            {wishlist.length === 1 ? t('item_in_wishlist') || 'Item in your wishlist' : t('items_in_wishlist') || 'Items in your wishlist'}
           </p>
         </div>
       </div>
