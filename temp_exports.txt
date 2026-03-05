@@ -1,0 +1,6 @@
+  searchProducts,
+  submitReview,
+  getProductReviews,
+  canReviewProduct,
+  uploadImage,
+};
