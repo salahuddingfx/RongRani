@@ -410,6 +410,11 @@ const ProductDetail = () => {
                 <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight mb-4 tracking-tighter">
                   {product.name}
                 </h1>
+                {product.sku && (
+                  <p className="text-xs font-semibold text-slate-500 mb-2">
+                    SKU: <span className="text-slate-700">{product.sku}</span>
+                  </p>
+                )}
                 <p className="text-slate text-lg leading-relaxed mb-8 border-l-4 border-maroon/20 pl-6 italic">
                   {product.description}
                 </p>

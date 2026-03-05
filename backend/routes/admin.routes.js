@@ -3,6 +3,7 @@ const {
 	getDashboardStats,
 	getReportsSummary,
 	getAllUsers,
+	updateUser,
 	updateUserRole,
 	deleteUser,
 	getAllOrders,
@@ -45,6 +46,7 @@ router.get('/reports/summary', getReportsSummary);
 
 // User management
 router.get('/users', getAllUsers);
+router.put('/users/:id', updateUser);
 router.put('/users/:id/role', updateUserRole);
 router.delete('/users/:id', deleteUser);
 

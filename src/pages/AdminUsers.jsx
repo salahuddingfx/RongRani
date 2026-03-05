@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Users, Search, UserPlus, Shield, Mail, Phone, MapPin, Calendar, Edit, Trash2, Crown, User as UserIcon } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { useSocket } from '../contexts/socketContextBase';
 
 const AdminUsers = () => {
   const [users, setUsers] = useState([]);
@@ -17,10 +18,26 @@ const AdminUsers = () => {
     role: 'customer'
   });
   const [savingUser, setSavingUser] = useState(false);
+  const { socket } = useSocket() || {};
 
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+    const handleRefresh = () => fetchUsers();
+
+    socket.on('user:updated', handleRefresh);
+    socket.on('user:role-updated', handleRefresh);
+    socket.on('user:deleted', handleRefresh);
+
+    return () => {
+      socket.off('user:updated', handleRefresh);
+      socket.off('user:role-updated', handleRefresh);
+      socket.off('user:deleted', handleRefresh);
+    };
+  }, [socket]);
 
   const fetchUsers = async () => {
     try {

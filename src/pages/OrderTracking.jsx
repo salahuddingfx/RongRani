@@ -427,6 +427,11 @@ const OrderTracking = () => {
                       <Link to={`/product/${item.product?.slug || item.product?._id || item.product}`} className="font-bold text-gray-800 hover:text-maroon transition-colors line-clamp-1 block">
                         {item.product?.name || item.name}
                       </Link>
+                      {(item.product?.sku || item.sku) && (
+                        <p className="text-xs text-slate-400 mt-0.5">
+                          SKU: <span className="font-semibold text-slate-600">{item.product?.sku || item.sku}</span>
+                        </p>
+                      )}
                       <p className="text-slate-400 text-sm mt-1">Qty: <span className="text-gray-800 font-semibold">{item.quantity}</span></p>
                     </div>
                     <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-1">

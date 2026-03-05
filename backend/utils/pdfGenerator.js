@@ -45,6 +45,7 @@ const generateInvoice = async (order) => {
 
   return new Promise((resolve, reject) => {
     try {
+      const displayOrderId = (order.orderId || '').toString().trim() || order._id.toString().slice(-7).toUpperCase();
       const doc = new PDFDocument({ size: 'A4', margin: 40 });
       const buffers = [];
 
@@ -94,7 +95,7 @@ const generateInvoice = async (order) => {
           doc.fillColor('#FFFFFF').font('Helvetica-Bold').fontSize(18).text('INVOICE', 400, 38, { align: 'center', width: 155 });
           doc.fontSize(7).font('Helvetica').fillColor('#FFFFFF').text('OFFICIAL MANIFEST', 400, 58, { align: 'center', width: 155, characterSpacing: 1 });
 
-          doc.fillColor(colors.slate).fontSize(8).text(`ID: #${order.orderId || order._id.toString().substring(0, 8).toUpperCase()}`, 290, 85, { align: 'right', width: 200 });
+          doc.fillColor(colors.slate).fontSize(8).text(`ID: #${displayOrderId}`, 290, 85, { align: 'right', width: 200 });
 
           if (qrBuffer) {
             doc.image(qrBuffer, 505, 85, { width: 50 });
@@ -102,7 +103,7 @@ const generateInvoice = async (order) => {
           }
         } else {
           // Smaller identifier on subsequent pages
-          doc.fillColor(colors.slate).fontSize(8).text(`Invoice #${order.orderId || order._id.toString().substring(0, 8).toUpperCase()} - Page ${pageNum}`, 400, 40, { align: 'right', width: 155 });
+          doc.fillColor(colors.slate).fontSize(8).text(`Invoice #${displayOrderId} - Page ${pageNum}`, 400, 40, { align: 'right', width: 155 });
         }
 
         // Navigation Line
@@ -186,9 +187,12 @@ const generateInvoice = async (order) => {
         const productData = item.product || {};
         const textWidth = 230;
         const imageBuffer = imageBuffers[index];
-        const mainTextHeight = doc.heightOfString(item.name, { width: textWidth, font: 'Helvetica-Bold', size: 9 });
+        const displayName = item.name || productData.name || 'Item';
+        const displaySku = productData.sku || item.sku;
+        const mainTextHeight = doc.heightOfString(displayName, { width: textWidth, font: 'Helvetica-Bold', size: 9 });
+        const skuTextHeight = displaySku ? doc.heightOfString(`SKU: ${displaySku}`, { width: textWidth, font: 'Helvetica', size: 7 }) : 0;
         const descTextHeight = productData.description ? doc.heightOfString(productData.description, { width: textWidth, font: 'Helvetica', size: 7 }) : 0;
-        const rowHeight = Math.max(36, mainTextHeight + descTextHeight + 8);
+        const rowHeight = Math.max(36, mainTextHeight + skuTextHeight + descTextHeight + 10);
 
         if (currentY + rowHeight > 740) {
           drawFooter();
@@ -211,9 +215,15 @@ const generateInvoice = async (order) => {
           }
         }
 
-        doc.fillColor(colors.midnight).font('Helvetica-Bold').fontSize(9).text(item.name, 85, currentY + 4, { width: textWidth });
+        let textCursorY = currentY + 4;
+        doc.fillColor(colors.midnight).font('Helvetica-Bold').fontSize(9).text(displayName, 85, textCursorY, { width: textWidth });
+        textCursorY += mainTextHeight + 1;
+        if (displaySku) {
+          doc.fillColor(colors.slate).font('Helvetica').fontSize(7).text(`SKU: ${displaySku}`, 85, textCursorY, { width: textWidth });
+          textCursorY += skuTextHeight + 1;
+        }
         if (productData.description) {
-          doc.fillColor(colors.slate).font('Helvetica').fontSize(7).text(productData.description, 85, currentY + 4 + mainTextHeight + 1, { width: textWidth });
+          doc.fillColor(colors.slate).font('Helvetica').fontSize(7).text(productData.description, 85, textCursorY, { width: textWidth });
         }
         doc.fillColor(colors.midnight).font('Helvetica').fontSize(9);
         doc.text(item.quantity, 320, currentY + (rowHeight / 2 - 4.5), { width: 40, align: 'center' });

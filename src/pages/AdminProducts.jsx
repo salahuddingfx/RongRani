@@ -15,6 +15,7 @@ const AdminProducts = () => {
   const { socket } = useSocket() || {};
   const [formData, setFormData] = useState({
     name: '',
+    sku: '',
     description: '',
     price: '',
     originalPrice: '',
@@ -235,6 +236,7 @@ const AdminProducts = () => {
 
       const productData = {
         ...formData,
+        sku: formData.sku?.trim() || undefined,
         images: finalImages,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         price: parseFloat(formData.price) || 0,
@@ -258,6 +260,7 @@ const AdminProducts = () => {
       setEditingProduct(null);
       setFormData({
         name: '',
+        sku: '',
         description: '',
         price: '',
         originalPrice: '',
@@ -283,6 +286,7 @@ const AdminProducts = () => {
     setEditingProduct(product);
     setFormData({
       name: product.name || '',
+      sku: product.sku || '',
       description: product.description || '',
       price: product.price || '',
       originalPrice: product.originalPrice || product.price || '',
@@ -326,6 +330,7 @@ const AdminProducts = () => {
             setEditingProduct(null);
             setFormData({
               name: '',
+              sku: '',
               description: '',
               price: '',
               originalPrice: '',
@@ -389,6 +394,7 @@ const AdminProducts = () => {
                   <td className="px-6 py-4 font-semibold text-charcoal">
                     <div className="flex flex-col">
                       <span>{product.name}</span>
+                      <span className="text-[10px] text-slate-500">SKU: {product.sku || '—'}</span>
                       <div className="flex items-center gap-1 mt-1">
                         {product.tags && product.tags.length > 0 && (
                           <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100" title={`Tags: ${product.tags.join(', ')}`}>
@@ -489,6 +495,17 @@ const AdminProducts = () => {
                     className="input-field w-full"
                     placeholder="Handmade Pottery Vase"
                   />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate mb-2">SKU</label>
+                  <input
+                    type="text"
+                    value={formData.sku}
+                    onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                    className="input-field w-full"
+                    placeholder="RR-HPV-001"
+                  />
+                  <p className="text-[10px] text-slate-400 mt-1">Optional but recommended for inventory tracking</p>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">Description</label>

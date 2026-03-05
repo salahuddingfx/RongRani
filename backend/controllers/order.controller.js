@@ -211,6 +211,7 @@ const createOrder = async (req, res) => {
       orderItems.push({
         product: product._id,
         name: product.name,
+        sku: product.sku,
         price: product.price,
         quantity: item.quantity,
         image: imageUrl,
@@ -328,7 +329,17 @@ const createOrder = async (req, res) => {
     }
     // -----------------------
 
-    const orderId = `RR-${Date.now().toString().slice(-6)}${Math.floor(1000 + Math.random() * 9000)}`;
+    const generateOrderId = async () => {
+      let candidate = '';
+      let exists = true;
+      while (exists) {
+        candidate = Math.floor(1000000 + Math.random() * 9000000).toString();
+        exists = await Order.findOne({ orderId: candidate }).select('_id').lean();
+      }
+      return candidate;
+    };
+
+    const orderId = await generateOrderId();
 
     const order = await Order.create({
       user: userId,
@@ -550,7 +561,7 @@ const getOrderForTracking = async (req, res) => {
 
     const order = await Order.findOne(query)
       .populate('user', 'name email phone')
-      .populate('items.product', 'name images price');
+      .populate('items.product', 'name images price sku');
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
@@ -783,7 +794,7 @@ const generateOrderInvoice = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('user', 'name email address phone')
-      .populate('items.product', 'name price description');
+      .populate('items.product', 'name price description sku');
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
