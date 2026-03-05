@@ -13,6 +13,7 @@ const HomeCategorySlider = ({ category }) => {
     const scrollRef = useRef(null);
     const { t } = useLanguage();
     const [showArrows, setShowArrows] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
 
     const { socket } = useSocket() || {};
 
@@ -32,6 +33,26 @@ const HomeCategorySlider = ({ category }) => {
             fetchCategoryProducts();
         }
     }, [category]);
+
+    useEffect(() => {
+        if (products.length === 0 || isPaused) return undefined;
+
+        const timer = setInterval(() => {
+            if (!scrollRef.current) return;
+            const container = scrollRef.current;
+            const maxScrollLeft = container.scrollWidth - container.clientWidth;
+            const nextLeft = container.scrollLeft + container.clientWidth / 1.5;
+
+            if (nextLeft >= maxScrollLeft - 10) {
+                container.scrollTo({ left: 0, behavior: 'smooth' });
+                return;
+            }
+
+            container.scrollBy({ left: container.clientWidth / 1.5, behavior: 'smooth' });
+        }, 3000);
+
+        return () => clearInterval(timer);
+    }, [products.length, isPaused]);
 
     // Real-time Updates
     useEffect(() => {
@@ -77,8 +98,16 @@ const HomeCategorySlider = ({ category }) => {
     return (
         <div
             className="mb-16 relative group"
-            onMouseEnter={() => setShowArrows(true)}
-            onMouseLeave={() => setShowArrows(false)}
+            onMouseEnter={() => {
+                setShowArrows(true);
+                setIsPaused(true);
+            }}
+            onMouseLeave={() => {
+                setShowArrows(false);
+                setIsPaused(false);
+            }}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
         >
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 px-4 gap-4">
                 <div>
@@ -121,8 +150,24 @@ const HomeCategorySlider = ({ category }) => {
             </div>
 
             <div className="relative overflow-visible">
-                {/* Mobile arrows removed from sides for cleaner look, but we can keep them subtle if needed. 
-                    Actually, for mobile, touch scroll is enough. I'll remove the absolute buttons. */}
+                <div className="md:hidden absolute inset-y-0 left-2 flex items-center z-10">
+                    <button
+                        onClick={() => scroll('left')}
+                        className="w-9 h-9 bg-white/90 border border-maroon/20 rounded-full flex items-center justify-center shadow-md text-maroon"
+                        aria-label="Previous"
+                    >
+                        <ChevronLeft className="w-4 h-4" />
+                    </button>
+                </div>
+                <div className="md:hidden absolute inset-y-0 right-2 flex items-center z-10">
+                    <button
+                        onClick={() => scroll('right')}
+                        className="w-9 h-9 bg-white/90 border border-maroon/20 rounded-full flex items-center justify-center shadow-md text-maroon"
+                        aria-label="Next"
+                    >
+                        <ChevronRight className="w-4 h-4" />
+                    </button>
+                </div>
 
                 {/* Products Scroll Container */}
                 <div

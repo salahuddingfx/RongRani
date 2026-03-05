@@ -7,6 +7,7 @@ const AdminFlashSale = () => {
     const [flashSales, setFlashSales] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [editingSaleId, setEditingSaleId] = useState(null);
 
     // Form State
     const [showForm, setShowForm] = useState(false);
@@ -23,6 +24,20 @@ const AdminFlashSale = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [discountPrice, setDiscountPrice] = useState('');
     const [totalQuantity, setTotalQuantity] = useState('');
+
+    const getImageUrl = (value) => {
+        if (!value) return '';
+        if (typeof value === 'string') return value;
+        if (typeof value === 'object' && value.url) return value.url;
+        return '';
+    };
+
+    const toLocalInputValue = (dateValue) => {
+        if (!dateValue) return '';
+        const local = new Date(dateValue);
+        local.setMinutes(local.getMinutes() - local.getTimezoneOffset());
+        return local.toISOString().slice(0, 16);
+    };
 
     useEffect(() => {
         fetchFlashSales();
@@ -74,7 +89,7 @@ const AdminFlashSale = () => {
         const newProductItem = {
             product: selectedProduct._id,
             name: selectedProduct.name, // Temporary for display
-            image: selectedProduct.images[0]?.url,
+            image: getImageUrl(selectedProduct.images?.[0]) || getImageUrl(selectedProduct.image),
             originalPrice: selectedProduct.price,
             discountPrice: Number(discountPrice),
             totalQuantity: Number(totalQuantity)
@@ -117,14 +132,21 @@ const AdminFlashSale = () => {
                 }))
             };
 
-            await axios.post('/api/flash-sales', payload, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            if (editingSaleId) {
+                await axios.put(`/api/flash-sales/${editingSaleId}`, payload, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+            } else {
+                await axios.post('/api/flash-sales', payload, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+            }
 
-            toast.success('Flash Sale Created Successfully!');
+            toast.success(editingSaleId ? 'Flash Sale Updated Successfully!' : 'Flash Sale Created Successfully!');
             setShowForm(false);
             fetchFlashSales();
             setFormData({ name: '', startTime: '', endTime: '', products: [] });
+            setEditingSaleId(null);
         } catch (error) {
             console.error(error);
             toast.error(error.response?.data?.message || 'Failed to create flash sale');
@@ -146,6 +168,10 @@ const AdminFlashSale = () => {
     };
 
     const toggleStatus = async (sale) => {
+        if (new Date(sale.endTime) < new Date()) {
+            toast.error('This campaign has already ended. Update dates to reactivate.');
+            return;
+        }
         try {
             const token = localStorage.getItem('token');
             await axios.put(`/api/flash-sales/${sale._id}`, {
@@ -158,6 +184,24 @@ const AdminFlashSale = () => {
         } catch (_) {
             toast.error('Failed to update status');
         }
+    };
+
+    const handleEdit = (sale) => {
+        setEditingSaleId(sale._id);
+        setShowForm(true);
+        setFormData({
+            name: sale.name || '',
+            startTime: toLocalInputValue(sale.startTime),
+            endTime: toLocalInputValue(sale.endTime),
+            products: (sale.products || []).map((p) => ({
+                product: p.product?._id || p.product,
+                name: p.product?.name || p.name,
+                image: getImageUrl(p.product?.images?.[0]) || getImageUrl(p.image),
+                originalPrice: p.product?.price || p.originalPrice || 0,
+                discountPrice: p.discountPrice,
+                totalQuantity: p.totalQuantity,
+            })),
+        });
     };
 
     return (
@@ -320,7 +364,11 @@ const AdminFlashSale = () => {
                             <div className="flex justify-end pt-4 border-t border-slate-100">
                                 <button
                                     type="button"
-                                    onClick={() => setShowForm(false)}
+                                    onClick={() => {
+                                        setShowForm(false);
+                                        setEditingSaleId(null);
+                                        setFormData({ name: '', startTime: '', endTime: '', products: [] });
+                                    }}
                                     className="px-6 py-2 text-slate-500 font-bold hover:text-charcoal mr-2"
                                 >
                                     Cancel
@@ -329,7 +377,7 @@ const AdminFlashSale = () => {
                                     type="submit"
                                     className="bg-maroon text-white px-8 py-2 rounded-full font-bold shadow-lg hover:shadow-xl transition-all"
                                 >
-                                    Create Campaign
+                                    {editingSaleId ? 'Save Changes' : 'Create Campaign'}
                                 </button>
                             </div>
                         </form>
@@ -339,13 +387,31 @@ const AdminFlashSale = () => {
 
             {/* List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {flashSales.map(sale => (
-                    <div key={sale._id} className={`bg-white rounded-2xl p-6 border-2 ${sale.isActive ? 'border-maroon' : 'border-slate-200'} shadow-lg relative`}>
+                {flashSales.map(sale => {
+                    const now = new Date();
+                    const start = new Date(sale.startTime);
+                    const end = new Date(sale.endTime);
+                    const isExpired = end < now;
+                    const isLive = start <= now && end >= now;
+                    const statusLabel = isExpired
+                        ? 'Expired'
+                        : isLive
+                            ? (sale.isActive ? 'Active' : 'Paused')
+                            : (sale.isActive ? 'Scheduled' : 'Inactive');
+
+                    const statusClasses = isExpired
+                        ? 'bg-red-50 text-red-600'
+                        : isLive
+                            ? (sale.isActive ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700')
+                            : 'bg-slate-100 text-slate-500';
+
+                    return (
+                    <div key={sale._id} className={`bg-white rounded-2xl p-6 border-2 ${sale.isActive && !isExpired ? 'border-maroon' : 'border-slate-200'} shadow-lg relative`}>
                         <div className="flex justify-between items-start mb-4">
                             <div>
                                 <h3 className="text-xl font-bold text-charcoal">{sale.name}</h3>
-                                <span className={`text-xs font-bold px-2 py-1 rounded-full ${sale.isActive ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>
-                                    {sale.isActive ? 'Active' : 'Inactive'}
+                                <span className={`text-xs font-bold px-2 py-1 rounded-full ${statusClasses}`}>
+                                    {statusLabel}
                                 </span>
                             </div>
                             <div className="bg-maroon/10 p-2 rounded-full">
@@ -368,7 +434,7 @@ const AdminFlashSale = () => {
                             {sale.products.slice(0, 5).map((p, i) => (
                                 <img
                                     key={i}
-                                    src={p.product?.images?.[0]?.url || 'https://via.placeholder.com/50'}
+                                    src={getImageUrl(p.product?.images?.[0]) || getImageUrl(p.image) || 'https://via.placeholder.com/50'}
                                     className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover"
                                     alt=""
                                 />
@@ -384,20 +450,31 @@ const AdminFlashSale = () => {
                         <div className="flex justify-between mt-4 pt-4 border-t border-slate-100 items-center">
                             <button
                                 onClick={() => toggleStatus(sale)}
-                                className={`text-xs font-black uppercase px-3 py-1.5 rounded-lg transition-colors ${sale.isActive ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-green-50 text-green-600 hover:bg-green-100'}`}
+                                disabled={isExpired}
+                                className={`text-xs font-black uppercase px-3 py-1.5 rounded-lg transition-colors ${sale.isActive ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-green-50 text-green-600 hover:bg-green-100'} ${isExpired ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 {sale.isActive ? 'Deactivate' : 'Activate Ahora'}
                             </button>
-                            <button
-                                onClick={() => handleDelete(sale._id)}
-                                className="text-slate-400 hover:text-red-500 p-2 transition-colors"
-                                title="Delete Campaign"
-                            >
-                                <Trash2 className="w-5 h-5" />
-                            </button>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => handleEdit(sale)}
+                                    className="text-slate-400 hover:text-maroon p-2 transition-colors"
+                                    title="Edit Campaign"
+                                >
+                                    <Save className="w-5 h-5" />
+                                </button>
+                                <button
+                                    onClick={() => handleDelete(sale._id)}
+                                    className="text-slate-400 hover:text-red-500 p-2 transition-colors"
+                                    title="Delete Campaign"
+                                >
+                                    <Trash2 className="w-5 h-5" />
+                                </button>
+                            </div>
                         </div>
                     </div>
-                ))}
+                );
+                })}
             </div>
 
             {!loading && flashSales.length === 0 && (

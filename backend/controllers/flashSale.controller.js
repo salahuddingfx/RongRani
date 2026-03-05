@@ -128,6 +128,12 @@ exports.deleteFlashSale = async (req, res) => {
 // Get all flash sales (Admin)
 exports.getAllFlashSales = async (req, res) => {
     try {
+        const now = new Date();
+        await FlashSale.updateMany(
+            { isActive: true, endTime: { $lt: now } },
+            { $set: { isActive: false } }
+        );
+
         const flashSales = await FlashSale.find()
             .populate('products.product', 'name price images')
             .sort({ createdAt: -1 });

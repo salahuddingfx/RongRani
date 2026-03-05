@@ -33,6 +33,23 @@ const ProductDetail = () => {
   }), []);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [activeImage, setActiveImage] = useState(0);
+  const [isImagePaused, setIsImagePaused] = useState(false);
+
+  const imageCount = product?.images?.length || 0;
+
+  useEffect(() => {
+    setActiveImage(0);
+  }, [product?._id]);
+
+  useEffect(() => {
+    if (imageCount < 2 || isImagePaused) return undefined;
+
+    const timer = setInterval(() => {
+      setActiveImage((prev) => (prev + 1) % imageCount);
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [imageCount, isImagePaused]);
 
   const isWishlisted = product ? isInWishlist(product._id) : false;
   const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'https://rongrani.vercel.app').replace(/\/+$/, '');
@@ -310,7 +327,13 @@ const ProductDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20">
           {/* Left: Product Images */}
           <div className="space-y-6">
-            <div className="relative group aspect-square rounded-[2.5rem] overflow-hidden bg-slate-50 border-4 border-maroon/5 shadow-2xl">
+            <div
+              className="relative group aspect-square rounded-[2.5rem] overflow-hidden bg-slate-50 border-4 border-maroon/5 shadow-2xl"
+              onMouseEnter={() => setIsImagePaused(true)}
+              onMouseLeave={() => setIsImagePaused(false)}
+              onTouchStart={() => setIsImagePaused(true)}
+              onTouchEnd={() => setIsImagePaused(false)}
+            >
               {product.images && product.images.length > 0 ? (
                 <img
                   src={getImageUrl(product.images[activeImage])}
@@ -328,6 +351,27 @@ const ProductDetail = () => {
                 <div className="absolute top-8 left-8 bg-maroon text-white font-black px-6 py-2 rounded-full shadow-2xl shadow-maroon/40 transform -rotate-12 animate-bounce-short">
                   {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
                 </div>
+              )}
+
+              {imageCount > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setActiveImage((prev) => (prev - 1 + imageCount) % imageCount)}
+                    className="md:hidden absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 border border-maroon/20 rounded-full flex items-center justify-center shadow-md text-maroon"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveImage((prev) => (prev + 1) % imageCount)}
+                    className="md:hidden absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-white/90 border border-maroon/20 rounded-full flex items-center justify-center shadow-md text-maroon"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </>
               )}
             </div>
 
