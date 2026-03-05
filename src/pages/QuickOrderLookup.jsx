@@ -129,9 +129,9 @@ const QuickOrderLookup = () => {
                 }`}
               >
                 <Phone className="h-4 w-4" />
-                <span className="hidden sm:inline">Phone</span>
+                <span className="text-xs sm:text-sm">Phone</span>
               </button>
-              
+
               <button
                 type="button"
                 onClick={() => {
@@ -145,7 +145,7 @@ const QuickOrderLookup = () => {
                 }`}
               >
                 <Mail className="h-4 w-4" />
-                <span className="hidden sm:inline">Email</span>
+                <span className="text-xs sm:text-sm">Email</span>
               </button>
 
               <button
@@ -161,7 +161,7 @@ const QuickOrderLookup = () => {
                 }`}
               >
                 <Package className="h-4 w-4" />
-                <span className="hidden sm:inline">Product</span>
+                <span className="text-xs sm:text-sm">Product</span>
               </button>
 
               <button
@@ -177,7 +177,7 @@ const QuickOrderLookup = () => {
                 }`}
               >
                 <Search className="h-4 w-4" />
-                <span className="hidden sm:inline">Order ID</span>
+                <span className="text-xs sm:text-sm">Order ID</span>
               </button>
             </div>
 
@@ -284,17 +284,18 @@ const QuickOrderLookup = () => {
                         {/* Items Preview */}
                         <div className="mt-3 flex items-center gap-2">
                           {order.items.slice(0, 3).map((item, idx) => (
-                            item.image && (
-                              <img
-                                key={idx}
-                                src={item.image}
-                                alt={item.name}
-                                className="w-10 h-10 rounded-lg object-cover border border-slate-200"
-                              />
-                            )
+                            <img
+                              key={idx}
+                              src={item.image || item.product?.images?.[0] || 'https://via.placeholder.com/40x40?text=No+Image'}
+                              alt={item.name || item.product?.name || 'Product'}
+                              className="w-10 h-10 rounded-lg object-cover border border-slate-200"
+                              onError={(e) => {
+                                e.target.src = 'https://via.placeholder.com/40x40?text=No+Image';
+                              }}
+                            />
                           ))}
                           {order.items.length > 3 && (
-                            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-xs font-semibold text-slate-600">
+                            <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-xs font-semibold text-slate-600 border border-slate-200">
                               +{order.items.length - 3}
                             </div>
                           )}
@@ -324,7 +325,10 @@ const QuickOrderLookup = () => {
                       <span className="text-slate-600">
                         Click to view details
                       </span>
-                      <ArrowLeft className="h-4 w-4 text-maroon rotate-180 group-hover:translate-x-1 transition-transform" />
+                      <div className="flex items-center gap-1 text-maroon font-semibold group-hover:translate-x-1 transition-transform">
+                        <span>View Order</span>
+                        <ArrowLeft className="h-4 w-4 rotate-180" />
+                      </div>
                     </div>
                   </div>
                 ))}
