@@ -88,7 +88,7 @@ const Wishlist = () => {
             >
               {/* Image */}
               <div className="relative aspect-square overflow-hidden bg-slate-50 dark:bg-slate-700">
-                <Link to={`/product/${item._id}`}>
+                <Link to={`/product/${item.slug || item._id}`}>
                   <img
                     src={getImageUrl(item)}
                     alt={item.name}
@@ -123,7 +123,7 @@ const Wishlist = () => {
                   )}
                 </div>
 
-                <Link to={`/product/${item._id}`}>
+                <Link to={`/product/${item.slug || item._id}`}>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-maroon transition-colors line-clamp-2 leading-tight min-h-[3rem]">
                     {item.name}
                   </h3>
@@ -150,7 +150,7 @@ const Wishlist = () => {
                     <span>{item.stock > 0 ? t('add_to_cart') || 'Add to Cart' : t('out_of_stock') || 'Out of Stock'}</span>
                   </button>
                   <Link
-                    to={`/product/${item._id}`}
+                    to={`/product/${item.slug || item._id}`}
                     className="flex items-center justify-center bg-slate-50 dark:bg-slate-700 text-slate-900 dark:text-white py-3 rounded-xl font-bold text-sm hover:bg-slate-100 dark:hover:bg-slate-600 transition-all border border-slate-100 dark:border-slate-600"
                   >
                     {t('view_detail') || 'Details'}

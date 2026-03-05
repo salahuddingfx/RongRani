@@ -388,7 +388,7 @@ const OrderTracking = () => {
                       />
                     </div>
                     <div className="flex-1">
-                      <Link to={`/product/${item.product?._id || item.product}`} className="font-bold text-gray-800 hover:text-maroon transition-colors line-clamp-1 block">
+                      <Link to={`/product/${item.product?.slug || item.product?._id || item.product}`} className="font-bold text-gray-800 hover:text-maroon transition-colors line-clamp-1 block">
                         {item.product?.name || item.name}
                       </Link>
                       <p className="text-slate-400 text-sm mt-1">{t('qty_label')}: <span className="text-gray-800 font-semibold">{item.quantity}</span></p>
@@ -482,6 +482,41 @@ const OrderTracking = () => {
                 </div>
               </div>
             </div>
+
+            {/* Courier Tracking */}
+            {order.courierInfo?.trackingCode && (
+              <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
+                    <Truck className="w-4 h-4 text-blue-500" />
+                  </div>
+                  {t('courier_tracking') || 'Courier Tracking'}
+                </h2>
+                <div className="space-y-4">
+                  <div className="bg-slate-50 p-4 rounded-xl">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-semibold text-slate-600">{t('tracking_number') || 'Tracking Number'}</span>
+                      <span className="font-mono text-sm bg-white px-2 py-1 rounded border">{order.courierInfo.trackingCode}</span>
+                    </div>
+                    {order.courierInfo.consignmentId && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-semibold text-slate-600">{t('consignment_id') || 'Consignment ID'}</span>
+                        <span className="font-mono text-sm bg-white px-2 py-1 rounded border">{order.courierInfo.consignmentId}</span>
+                      </div>
+                    )}
+                  </div>
+                  <a
+                    href={`https://steadfast.com.bd/t/${order.courierInfo.trackingCode}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-maroon text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Truck className="h-5 w-5" />
+                    <span>{t('track_on_courier') || 'Track on Courier Website'}</span>
+                  </a>
+                </div>
+              </div>
+            )}
 
             {/* Payment Summary */}
             <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100 hover:shadow-xl transition-shadow duration-300">

@@ -73,6 +73,7 @@ export const CartProvider = ({ children }) => {
 
         return [...prevItems, {
           id: productId,
+          slug: product.slug,
           name: product.name,
           price: product.price,
           originalPrice: product.originalPrice,

@@ -26,7 +26,7 @@ const AdminProducts = () => {
     seoDescription: ''
   });
 
-  // Track metadata (publicId) for uploaded images
+  // Track storage metadata for uploaded images
   const [imageMetadata, setImageMetadata] = useState([]);
 
   const getImageCount = () => {
@@ -56,7 +56,7 @@ const AdminProducts = () => {
     }
 
     setIsUploading(true);
-    const loadingToast = toast.loading('Uploading image to Cloudinary...');
+    const loadingToast = toast.loading('Uploading image to MongoDB storage...');
 
     try {
       const uploadFormData = new FormData();
@@ -614,7 +614,7 @@ const AdminProducts = () => {
                     </button>
                     <div className="flex-1 flex justify-between items-center min-w-0">
                       <p className="text-[10px] text-slate-400 font-medium truncate">
-                        📌 Paste URLs OR use **Upload** to store on Cloudinary
+                        📌 Paste URLs OR use Upload to store image in MongoDB
                       </p>
                     </div>
                   </div>

@@ -28,7 +28,7 @@ const QuickViewModal = ({ product, onClose }) => {
   };
 
   const handleViewFull = () => {
-    navigate(`/product/${product._id}`);
+    navigate(`/product/${product.slug || product._id}`);
     onClose();
   };
 

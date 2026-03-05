@@ -18,6 +18,7 @@ export const addToRecentlyViewed = (product) => {
     // Add to beginning
     recent.unshift({
       _id: product._id,
+      slug: product.slug,
       name: product.name,
       price: product.price,
       images: product.images,
@@ -65,4 +66,20 @@ export const getRecentlyViewed = () => {
 export const clearRecentlyViewed = () => {
   localStorage.removeItem('recentlyViewed');
   window.dispatchEvent(new Event('recentlyViewedUpdated'));
+};
+
+/**
+ * Build product route parameter with slug fallback to id
+ */
+export const getProductRouteParam = (product) => {
+  if (!product) return '';
+  return product.slug || product._id || product.id || '';
+};
+
+/**
+ * Build product detail page path from a product-like object
+ */
+export const getProductPath = (product) => {
+  const param = getProductRouteParam(product);
+  return param ? `/product/${param}` : '/shop';
 };

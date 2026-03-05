@@ -52,7 +52,7 @@ const RecentlyViewed = ({ mode = 'widget' }) => {
           {recentProducts.map((product, index) => (
             <Link
               key={product._id || index}
-              to={`/product/${product._id}`}
+              to={`/product/${product.slug || product._id}`}
               className="card p-3 hover:shadow-lg transition-all group block"
             >
               <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
@@ -98,7 +98,7 @@ const RecentlyViewed = ({ mode = 'widget' }) => {
         {recentProducts.map((product, index) => (
           <Link
             key={product._id || index}
-            to={`/product/${product._id}`}
+            to={`/product/${product.slug || product._id}`}
             onClick={(e) => e.stopPropagation()}
             className="flex items-center gap-1.5 sm:space-x-2 hover:bg-cream p-1.5 sm:p-2 rounded-xl transition-colors group"
           >

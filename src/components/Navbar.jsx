@@ -272,7 +272,7 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
                     {suggestions.map((product) => (
                       <Link
                         key={product._id}
-                        to={`/product/${product._id}`}
+                        to={`/product/${product.slug || product._id}`}
                         className="flex items-center gap-4 p-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all rounded-2xl group"
                         onClick={() => {
                           setShowSuggestions(false);

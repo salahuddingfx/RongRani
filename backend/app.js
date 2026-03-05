@@ -98,6 +98,8 @@ app.use('/api/analytics', require('./routes/analytics.routes'));
 app.use('/api/search', require('./routes/search.routes'));
 app.use('/api/reviews', require('./routes/review.routes'));
 app.use('/api/contact', require('./routes/contact.routes'));
+app.use('/api/images', require('./routes/image.routes'));
+app.use('/share', require('./routes/share.routes'));
 app.use('/', require('./routes/sitemap.routes')); // SEO: Dynamic sitemap
 
 /* -------------------- PLACEHOLDER IMAGE -------------------- */

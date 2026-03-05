@@ -152,6 +152,6 @@ productSchema.index({ name: 'text', description: 'text', tags: 'text' });
 productSchema.index({ category: 1, subcategory: 1 });
 productSchema.index({ price: 1 });
 productSchema.index({ isActive: 1, isFeatured: 1 });
-productSchema.index({ slug: 1 });
+// Removed duplicate slug index since unique: true already creates it
 
 module.exports = mongoose.model('Product', productSchema);

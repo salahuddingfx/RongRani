@@ -13,9 +13,9 @@ const defaultProducts = [
     stock: 15,
     sku: 'SILK-SCARF-001',
     images: [
-      'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=800&q=80',
-      'https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=800&q=80',
-      'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?w=800&q=80', publicId: null }
     ],
     isFeatured: true,
     tags: ['silk', 'handwoven', 'traditional', 'scarf', 'clothing']
@@ -29,9 +29,9 @@ const defaultProducts = [
     stock: 12,
     sku: 'CLAY-POT-002',
     images: [
-      'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=80',
-      'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80',
-      'https://images.unsplash.com/photo-1565204170930-41f2c1e79971?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1565204170930-41f2c1e79971?w=800&q=80', publicId: null }
     ],
     isFeatured: true,
     tags: ['pottery', 'clay', 'handmade', 'home', 'kitchen']
@@ -45,8 +45,8 @@ const defaultProducts = [
     stock: 20,
     sku: 'BAMB-BASK-003',
     images: [
-      'https://images.unsplash.com/photo-1618672901867-2c0a3d20ac99?w=800&q=80',
-      'https://images.unsplash.com/photo-1611075810145-826d71d6e92d?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1618672901867-2c0a3d20ac99?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1611075810145-826d71d6e92d?w=800&q=80', publicId: null }
     ],
     isFeatured: false,
     tags: ['bamboo', 'basket', 'storage', 'home', 'eco-friendly']
@@ -60,9 +60,9 @@ const defaultProducts = [
     stock: 10,
     sku: 'BRASS-JEWEL-004',
     images: [
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80',
-      'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80',
-      'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&q=80', publicId: null }
     ],
     isFeatured: true,
     tags: ['brass', 'jewelry', 'traditional', 'gift', 'handmade']
@@ -76,8 +76,8 @@ const defaultProducts = [
     stock: 8,
     sku: 'WALL-ART-005',
     images: [
-      'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&q=80',
-      'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80', publicId: null }
     ],
     isFeatured: false,
     tags: ['art', 'painting', 'wall art', 'handmade', 'traditional']
@@ -91,8 +91,8 @@ const defaultProducts = [
     stock: 18,
     sku: 'TABLE-RUN-006',
     images: [
-      'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=800&q=80',
-      'https://images.unsplash.com/photo-1615529328331-f8917597711f?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1615529328331-f8917597711f?w=800&q=80', publicId: null }
     ],
     isFeatured: false,
     tags: ['embroidery', 'table runner', 'home', 'handmade', 'traditional']
@@ -106,8 +106,8 @@ const defaultProducts = [
     stock: 14,
     sku: 'WOOD-BOX-007',
     images: [
-      'https://images.unsplash.com/photo-1613575831056-0acd5da131ec?w=800&q=80',
-      'https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1613575831056-0acd5da131ec?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1595246140625-573b715d11dc?w=800&q=80', publicId: null }
     ],
     isFeatured: false,
     tags: ['wood', 'jewelry box', 'storage', 'handmade', 'carved']
@@ -121,8 +121,8 @@ const defaultProducts = [
     stock: 25,
     sku: 'TERRA-PLANT-008',
     images: [
-      'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=800&q=80',
-      'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?w=800&q=80', publicId: null }
     ],
     isFeatured: false,
     tags: ['terracotta', 'planter', 'garden', 'home', 'handmade']
@@ -136,8 +136,8 @@ const defaultProducts = [
     stock: 6,
     sku: 'SAREE-001',
     images: [
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80',
-      'https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1583391733956-6c78276477e5?w=800&q=80', publicId: null }
     ],
     isFeatured: true,
     tags: ['saree', 'cotton', 'handloom', 'clothing', 'traditional']
@@ -151,8 +151,8 @@ const defaultProducts = [
     stock: 30,
     sku: 'LEATHER-PASS-009',
     images: [
-      'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800&q=80',
-      'https://images.unsplash.com/photo-1627894483734-49e8c2f3e79a?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1627894483734-49e8c2f3e79a?w=800&q=80', publicId: null }
     ],
     isFeatured: false,
     tags: ['leather', 'passport', 'travel', 'accessories', 'handmade']
@@ -166,8 +166,8 @@ const defaultProducts = [
     stock: 40,
     sku: 'JUTE-BAG-010',
     images: [
-      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80',
-      'https://images.unsplash.com/photo-1591561954555-607968c989ab?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1591561954555-607968c989ab?w=800&q=80', publicId: null }
     ],
     isFeatured: false,
     tags: ['jute', 'bag', 'eco-friendly', 'accessories', 'handwoven']
@@ -181,8 +181,8 @@ const defaultProducts = [
     stock: 22,
     sku: 'CERAM-MUG-011',
     images: [
-      'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=800&q=80',
-      'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=800&q=80'
+      { url: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=800&q=80', publicId: null },
+      { url: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=800&q=80', publicId: null }
     ],
     isFeatured: true,
     tags: ['ceramic', 'mug', 'coffee', 'home', 'handmade']

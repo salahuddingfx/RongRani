@@ -2,8 +2,9 @@ import React from 'react';
 import { Facebook, Link as LinkIcon, Twitter, Send } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const SocialShare = ({ url, title, image, description, price }) => {
+const SocialShare = ({ url, previewUrl, title, image, description, price }) => {
     const shareUrl = url || window.location.href;
+    const socialPreviewUrl = previewUrl || shareUrl;
     const shareTitle = title || document.title;
     const shareImage = image || '';
     const shareDescription = description || '';
@@ -13,28 +14,28 @@ const SocialShare = ({ url, title, image, description, price }) => {
 
         switch (platform) {
             case 'facebook':
-                shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+                shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(socialPreviewUrl)}`;
                 break;
             case 'whatsapp': {
                 // Enhanced WhatsApp message with price and better formatting
-                const whatsappMsg = `*${shareTitle}*${price ? `\n💰 *Price:* ৳${price}` : ''}\n\n${shareDescription ? `_${shareDescription.substring(0, 100)}..._\n\n` : ''}🛒 *Shop Now:* ${shareUrl}`;
+                const whatsappMsg = `*${shareTitle}*${price ? `\n💰 *Price:* ৳${price}` : ''}\n\n${shareDescription ? `_${shareDescription.substring(0, 100)}..._\n\n` : ''}🛒 *Shop Now:* ${socialPreviewUrl}`;
                 shareLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappMsg)}`;
                 break;
             }
             case 'twitter':
-                shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTitle)}&url=${encodeURIComponent(shareUrl)}`;
+                shareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareTitle)}&url=${encodeURIComponent(socialPreviewUrl)}`;
                 break;
             case 'messenger':
-                shareLink = `fb-messenger://share/?link=${encodeURIComponent(shareUrl)}&app_id=123456789`; // Generic fallback
+                shareLink = `fb-messenger://share/?link=${encodeURIComponent(socialPreviewUrl)}&app_id=123456789`; // Generic fallback
                 // Browser fallback for messenger
                 if (!/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-                    shareLink = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(shareUrl)}&app_id=123456789&redirect_uri=${encodeURIComponent(shareUrl)}`;
+                    shareLink = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(socialPreviewUrl)}&app_id=123456789&redirect_uri=${encodeURIComponent(shareUrl)}`;
                 }
                 break;
             case 'pinterest': {
                 // Ensure image is absolute for Pinterest
                 const pinterestImage = shareImage.startsWith('http') ? shareImage : `${window.location.origin}${shareImage.startsWith('/') ? '' : '/'}${shareImage}`;
-                shareLink = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(pinterestImage)}&description=${encodeURIComponent(shareTitle)}`;
+                shareLink = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(socialPreviewUrl)}&media=${encodeURIComponent(pinterestImage)}&description=${encodeURIComponent(shareTitle)}`;
                 break;
             }
             case 'copy':

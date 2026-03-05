@@ -1,8 +1,10 @@
+const mongoose = require('mongoose');
 const Product = require('../models/Product');
 const Review = require('../models/Review');
 const Order = require('../models/Order');
 const Category = require('../models/Category');
-const cloudinary = require('../utils/cloudinaryConfig');
+const ImageAsset = require('../models/ImageAsset');
+const { deleteFromCloudinary } = require('../utils/cloudinaryConfig');
 
 const emitEvent = (req, event, payload) => {
   const io = req.app?.get('io');
@@ -247,11 +249,20 @@ const deleteProduct = async (req, res) => {
       return res.status(403).json({ message: 'Not authorized to delete this product' });
     }
 
-    // Delete images from cloudinary
+    // Delete stored image assets (MongoDB) and fallback Cloudinary assets.
     if (product.images && product.images.length > 0) {
       for (const image of product.images) {
-        if (image.publicId) {
-          await cloudinary.uploader.destroy(image.publicId);
+        if (!image?.publicId) continue;
+
+        if (mongoose.Types.ObjectId.isValid(image.publicId)) {
+          await ImageAsset.findByIdAndDelete(image.publicId);
+          continue;
+        }
+
+        try {
+          await deleteFromCloudinary(image.publicId);
+        } catch (error) {
+          console.warn(`Failed to delete cloud image ${image.publicId}:`, error.message);
         }
       }
     }
@@ -435,9 +446,19 @@ const submitReview = async (req, res) => {
 const getProductReviews = async (req, res) => {
   try {
     const { id } = req.params;
+    const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+
+    let productId = id;
+    if (!isObjectId) {
+      const product = await Product.findOne({ slug: id.toLowerCase() }).select('_id').lean();
+      if (!product) {
+        return res.json([]);
+      }
+      productId = product._id;
+    }
 
     const reviews = await Review.find({
-      product: id,
+      product: productId,
       status: 'approved',
     })
       .populate('user', 'name')
@@ -492,7 +513,7 @@ const searchProducts = async (req, res) => {
   }
 };
 
-// @desc    Upload image
+// @desc    Upload image to MongoDB storage
 // @route   POST /api/products/upload
 // @access  Private/Admin
 const uploadImage = async (req, res) => {
@@ -501,12 +522,20 @@ const uploadImage = async (req, res) => {
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    const { uploadStreamToCloudinary } = require('../utils/cloudinaryConfig');
-    const result = await uploadStreamToCloudinary(req.file.buffer, 'products');
+    const imageAsset = await ImageAsset.create({
+      data: req.file.buffer,
+      contentType: req.file.mimetype,
+      filename: req.file.originalname,
+      size: req.file.size,
+      uploadedBy: req.user?._id,
+    });
+
+    const imageUrl = `${req.protocol}://${req.get('host')}/api/images/${imageAsset._id}`;
 
     res.json({
-      url: result.url,
-      publicId: result.publicId,
+      url: imageUrl,
+      publicId: imageAsset._id.toString(),
+      storage: 'mongodb',
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

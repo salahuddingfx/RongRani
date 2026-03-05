@@ -206,7 +206,7 @@ const Reviews = () => {
                                     <div className="flex flex-col md:flex-row gap-4">
                                         {/* Product Image */}
                                         <Link
-                                            to={`/product/${review.product._id}`}
+                                            to={`/product/${review.product.slug || review.product._id}`}
                                             className="flex-shrink-0"
                                         >
                                             <img
@@ -221,7 +221,7 @@ const Reviews = () => {
                                             <div className="flex flex-col md:flex-row md:items-start justify-between gap-3 mb-3">
                                                 <div>
                                                     <Link
-                                                        to={`/product/${review.product._id}`}
+                                                        to={`/product/${review.product.slug || review.product._id}`}
                                                         className="font-bold text-slate-800 hover:text-maroon transition-colors text-sm md:text-base"
                                                     >
                                                         {review.product.name}

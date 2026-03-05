@@ -42,7 +42,7 @@ const resolveImageUrl = (baseUrl, image) => {
   return normalizeUrl(baseUrl, image);
 };
 
-const Seo = ({ title, description, keywords, path, image, noIndex = false, schema }) => {
+const Seo = ({ title, description, keywords, path, image, noIndex = false, schema, type = 'website', extraMeta = [] }) => {
   const { language } = useLanguage();
 
   const baseUrl = (import.meta?.env?.VITE_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : 'https://rongrani.vercel.app')).replace(/\/+$/, '');
@@ -69,10 +69,11 @@ const Seo = ({ title, description, keywords, path, image, noIndex = false, schem
       <meta property="og:title" content={metaTitle} />
       <meta property="og:description" content={metaDescription} />
       <meta property="og:url" content={canonical} />
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={type} />
       <meta property="og:locale" content={ogLocale} />
       <meta property="og:country-name" content="Bangladesh" />
       <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:secure_url" content={imageUrl} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={`${metaTitle} - RongRani`} />
@@ -80,6 +81,17 @@ const Seo = ({ title, description, keywords, path, image, noIndex = false, schem
       <meta name="twitter:title" content={metaTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={imageUrl} />
+      <meta name="twitter:url" content={canonical} />
+      {extraMeta.map((meta, index) => {
+        const key = `${meta.property || meta.name}-${index}`;
+        if (meta.property) {
+          return <meta key={key} property={meta.property} content={meta.content} />;
+        }
+        if (meta.name) {
+          return <meta key={key} name={meta.name} content={meta.content} />;
+        }
+        return null;
+      })}
       {schema ? (
         <script type="application/ld+json">{JSON.stringify(schema)}</script>
       ) : null}

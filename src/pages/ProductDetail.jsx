@@ -55,11 +55,17 @@ const ProductDetail = () => {
       const response = await axios.get(`/api/products/${id}`);
       setProduct(response.data);
 
+      // Keep URL canonical with slug when available
+      const canonicalParam = response.data?.slug || response.data?._id;
+      if (canonicalParam && canonicalParam !== id) {
+        navigate(`/product/${canonicalParam}`, { replace: true });
+      }
+
       // Fetch related products based on category
       if (response.data.category) {
         try {
           const relatedRes = await axios.get(`/api/products?category=${response.data.category}&limit=5`);
-          const filtered = relatedRes.data.products.filter(p => p._id !== id).slice(0, 4);
+          const filtered = relatedRes.data.products.filter((p) => p._id !== response.data._id).slice(0, 4);
           setRelatedProducts(filtered);
         } catch (err) {
           console.error('Error fetching related products:', err);
@@ -97,13 +103,14 @@ const ProductDetail = () => {
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, navigate]);
 
   // Fetch reviews for this product
   const fetchReviews = useCallback(async () => {
     try {
       setLoadingReviews(true);
-      const response = await axios.get(`/api/products/${id}/reviews`);
+      const productIdForReview = product?._id || id;
+      const response = await axios.get(`/api/products/${productIdForReview}/reviews`);
       setReviews(response.data || []);
     } catch (error) {
       console.error('Error fetching reviews:', error);
@@ -111,20 +118,21 @@ const ProductDetail = () => {
     } finally {
       setLoadingReviews(false);
     }
-  }, [id]);
+  }, [id, product?._id]);
 
   // Check if user can review
   const checkCanReview = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      const response = await axios.get(`/api/products/${id}/can-review`, config);
+      const productIdForReview = product?._id || id;
+      const response = await axios.get(`/api/products/${productIdForReview}/can-review`, config);
       setCanReview(response.data.canReview);
     } catch (error) {
       console.error('Error checking review eligibility:', error);
       setCanReview(false);
     }
-  }, [id]);
+  }, [id, product?._id]);
 
   useEffect(() => {
     fetchProduct();
@@ -160,7 +168,10 @@ const ProductDetail = () => {
     return image.url || image.secure_url || '';
   };
 
-  const pagePath = `/product/${id}`;
+  const routeParam = product?.slug || id;
+  const pagePath = `/product/${routeParam}`;
+  const backendBaseUrl = (import.meta?.env?.VITE_BACKEND_URL || import.meta?.env?.VITE_API_BASE_URL || window.location.origin).replace(/\/+$/, '');
+  const sharePreviewUrl = `${backendBaseUrl}/share/product/${routeParam}`;
   const { pageTitle, pageDescription, pageKeywords, pageImage } = useMemo(() => {
     if (!product) return {};
 
@@ -195,6 +206,16 @@ const ProductDetail = () => {
     }
     : null, [product, pageDescription, pageImage, baseUrl, pagePath]);
 
+  const socialMeta = useMemo(() => {
+    if (!product) return [];
+
+    return [
+      { property: 'product:price:amount', content: String(product.price || 0) },
+      { property: 'product:price:currency', content: 'BDT' },
+      { property: 'product:availability', content: product.stock > 0 ? 'in stock' : 'out of stock' },
+      { property: 'product:retailer_item_id', content: product._id },
+    ];
+  }, [product]);
 
   if (loading) {
     return (
@@ -232,7 +253,10 @@ const ProductDetail = () => {
     );
   }
 
-  const categoryLabel = product?.category ? product.category.toString() : '';
+  const categoryRaw = typeof product?.category === 'string'
+    ? product.category
+    : product?.category?.name || '';
+  const categoryLabel = categoryRaw.replace(/[-_]+/g, ' ').trim();
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-900">
@@ -242,20 +266,33 @@ const ProductDetail = () => {
         keywords={pageKeywords}
         path={pagePath}
         image={pageImage}
+        type="product"
+        extraMeta={socialMeta}
         schema={productSchema}
       />
       {/* Breadcrumb */}
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 sticky top-[72px] sm:top-[80px] md:top-[88px] z-40">
-        <div className="container mx-auto px-4 py-3 md:py-4">
-          <nav className="text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 overflow-x-auto scrollbar-hide">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 relative z-10">
+        <div className="container mx-auto px-4 py-3">
+          <nav className="text-sm flex items-center space-x-2 overflow-x-auto scrollbar-hide">
             <Link to="/" className="text-slate hover:text-maroon transition-colors font-medium whitespace-nowrap">{t('home')}</Link>
             <span className="text-slate/40">/</span>
             <Link to="/shop" className="text-slate hover:text-maroon transition-colors font-medium whitespace-nowrap">{t('shop')}</Link>
             {categoryLabel && (
               <>
                 <span className="text-slate/40">/</span>
-                <span className="text-maroon font-bold capitalize whitespace-nowrap">
+                <Link
+                  to={`/shop?category=${encodeURIComponent(categoryRaw)}`}
+                  className="text-slate hover:text-maroon transition-colors font-medium capitalize whitespace-nowrap"
+                >
                   {categoryLabel}
+                </Link>
+              </>
+            )}
+            {product?.name && (
+              <>
+                <span className="text-slate/40">/</span>
+                <span className="text-maroon font-bold whitespace-nowrap max-w-[40vw] sm:max-w-none truncate">
+                  {product.name}
                 </span>
               </>
             )}
@@ -573,6 +610,7 @@ const ProductDetail = () => {
             </div>
             <SocialShare
               url={window.location.href}
+              previewUrl={sharePreviewUrl}
               title={product.name}
               image={pageImage}
               description={product.description}
@@ -608,7 +646,7 @@ const ProductDetail = () => {
           {showReviewForm && (
             <div className="mb-12 animate-fade-in">
               <ReviewForm
-                productId={id}
+                productId={product?._id || id}
                 onSuccess={() => {
                   setShowReviewForm(false);
                   fetchReviews();

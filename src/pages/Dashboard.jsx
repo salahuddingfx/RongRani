@@ -164,7 +164,7 @@ const Dashboard = () => {
                         <p className="text-maroon font-semibold">৳{item.price}</p>
                         <div className="flex space-x-2 mt-3">
                           <Link
-                            to={`/product/${item.id}`}
+                            to={`/product/${item.slug || item.id}`}
                             className="bg-maroon text-white px-4 py-2 rounded hover:bg-maroon/80 transition-colors text-sm"
                           >
                             View Product

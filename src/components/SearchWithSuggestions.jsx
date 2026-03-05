@@ -98,7 +98,7 @@ const SearchWithSuggestions = ({ className = '' }) => {
         saveToRecentSearches(product.name);
         setQuery('');
         setIsOpen(false);
-        navigate(`/product/${product._id}`);
+        navigate(`/product/${product.slug || product._id}`);
     };
 
     const clearRecentSearches = () => {
