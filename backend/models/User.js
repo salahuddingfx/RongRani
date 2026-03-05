@@ -82,7 +82,7 @@ const userSchema = new mongoose.Schema({
       default: Date.now,
     },
   }],
-});
+}, { timestamps: true });
 
 // Hash password before saving
 userSchema.pre('save', async function(next) {
@@ -97,10 +97,5 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Update updatedAt on save
-userSchema.pre('save', function(next) {
-  this.updatedAt = Date.now();
-  next();
-});
 
 module.exports = mongoose.model('User', userSchema);

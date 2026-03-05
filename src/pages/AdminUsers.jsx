@@ -288,7 +288,13 @@ const AdminUsers = () => {
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-2 text-sm text-slate">
                       <Calendar className="h-4 w-4 text-maroon" />
-                      <span>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</span>
+                      <span>
+                        {user.createdAt
+                          ? new Date(user.createdAt).toLocaleDateString()
+                          : user._id
+                            ? new Date(parseInt(user._id.toString().substring(0, 8), 16) * 1000).toLocaleDateString()
+                            : 'N/A'}
+                      </span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
