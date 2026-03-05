@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
-import { Package, Truck, CheckCircle, MapPin, Calendar, DollarSign, ArrowLeft, Phone, Mail, Download } from 'lucide-react';
+import { Package, Truck, CheckCircle, MapPin, Calendar, DollarSign, ArrowLeft, Phone, Mail, Download, Search } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -270,10 +270,16 @@ const OrderTracking = () => {
         {/* Header with Animation */}
         <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-fade-in-up">
           <div>
-            <Link to="/dashboard" className="text-maroon/70 font-semibold hover:text-maroon hover:underline flex items-center space-x-2 mb-2 transition-colors">
-              <ArrowLeft className="h-4 w-4" />
-              <span>{t('back_to_orders')}</span>
-            </Link>
+            <div className="flex items-center gap-4 mb-2">
+              <Link to="/dashboard" className="text-maroon/70 font-semibold hover:text-maroon hover:underline flex items-center space-x-2 transition-colors">
+                <ArrowLeft className="h-4 w-4" />
+                <span>{t('back_to_orders')}</span>
+              </Link>
+              <Link to="/quick-track" className="text-maroon/70 font-semibold hover:text-maroon hover:underline flex items-center space-x-2 transition-colors">
+                <Search className="h-4 w-4" />
+                <span>{t('search_other_orders') || 'Search Other Orders'}</span>
+              </Link>
+            </div>
             <h1 className="text-3xl md:text-5xl font-black text-maroon tracking-tight">
               {t('order_id_label')} #{order.orderId || order._id}
             </h1>

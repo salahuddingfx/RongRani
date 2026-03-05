@@ -8,7 +8,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 const QuickOrderLookup = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
-  const [searchMethod, setSearchMethod] = useState('phone'); // 'phone' or 'email'
+  const [searchMethod, setSearchMethod] = useState('phone'); // 'phone', 'email', 'product', 'orderId'
   const [contactValue, setContactValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState([]);
@@ -18,7 +18,7 @@ const QuickOrderLookup = () => {
     e.preventDefault();
     
     if (!contactValue.trim()) {
-      toast.error('Please enter your contact information');
+      toast.error('Please enter your search information');
       return;
     }
 
@@ -26,9 +26,24 @@ const QuickOrderLookup = () => {
     setSearched(true);
     
     try {
-      const searchData = searchMethod === 'email' 
-        ? { email: contactValue.trim() }
-        : { phone: contactValue.trim() };
+      let searchData = {};
+
+      switch (searchMethod) {
+        case 'email':
+          searchData = { email: contactValue.trim() };
+          break;
+        case 'phone':
+          searchData = { phone: contactValue.trim() };
+          break;
+        case 'product':
+          searchData = { productName: contactValue.trim() };
+          break;
+        case 'orderId':
+          searchData = { orderId: contactValue.trim() };
+          break;
+        default:
+          searchData = { phone: contactValue.trim() };
+      }
 
       const response = await axios.post('/api/orders/search', searchData);
 
@@ -92,7 +107,7 @@ const QuickOrderLookup = () => {
             {t('track_your_orders') || 'Track Your Orders'}
           </h1>
           <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-            {t('quick_lookup_desc') || 'Quickly find all your orders using just your phone number or email address'}
+            {t('quick_lookup_desc') || 'Find your orders using phone number, email address, product name, or order ID'}
           </p>
         </div>
 
@@ -100,21 +115,21 @@ const QuickOrderLookup = () => {
         <div className="card mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <form onSubmit={handleSearch} className="space-y-6">
             {/* Method Selection */}
-            <div className="flex gap-4 justify-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <button
                 type="button"
                 onClick={() => {
                   setSearchMethod('phone');
                   setContactValue('');
                 }}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
+                className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all text-sm ${
                   searchMethod === 'phone'
                     ? 'bg-maroon text-white shadow-md scale-105'
                     : 'bg-white text-slate-600 border border-slate-200 hover:border-maroon/30'
                 }`}
               >
-                <Phone className="h-5 w-5" />
-                <span>{t('phone_number') || 'Phone Number'}</span>
+                <Phone className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('phone_number') || 'Phone'}</span>
               </button>
               
               <button
@@ -123,14 +138,46 @@ const QuickOrderLookup = () => {
                   setSearchMethod('email');
                   setContactValue('');
                 }}
-                className={`flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${
+                className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all text-sm ${
                   searchMethod === 'email'
                     ? 'bg-maroon text-white shadow-md scale-105'
                     : 'bg-white text-slate-600 border border-slate-200 hover:border-maroon/30'
                 }`}
               >
-                <Mail className="h-5 w-5" />
-                <span>{t('email') || 'Email'}</span>
+                <Mail className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('email') || 'Email'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchMethod('product');
+                  setContactValue('');
+                }}
+                className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all text-sm ${
+                  searchMethod === 'product'
+                    ? 'bg-maroon text-white shadow-md scale-105'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:border-maroon/30'
+                }`}
+              >
+                <Package className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('product_name') || 'Product'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchMethod('orderId');
+                  setContactValue('');
+                }}
+                className={`flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold transition-all text-sm ${
+                  searchMethod === 'orderId'
+                    ? 'bg-maroon text-white shadow-md scale-105'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:border-maroon/30'
+                }`}
+              >
+                <Search className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('order_id') || 'Order ID'}</span>
               </button>
             </div>
 
@@ -139,18 +186,26 @@ const QuickOrderLookup = () => {
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 {searchMethod === 'phone' ? (
                   <Phone className="h-5 w-5 text-slate-400" />
-                ) : (
+                ) : searchMethod === 'email' ? (
                   <Mail className="h-5 w-5 text-slate-400" />
+                ) : searchMethod === 'product' ? (
+                  <Package className="h-5 w-5 text-slate-400" />
+                ) : (
+                  <Search className="h-5 w-5 text-slate-400" />
                 )}
               </div>
               <input
-                type={searchMethod === 'email' ? 'email' : 'tel'}
+                type={searchMethod === 'email' ? 'email' : 'text'}
                 value={contactValue}
                 onChange={(e) => setContactValue(e.target.value)}
                 placeholder={
                   searchMethod === 'phone'
                     ? t('enter_phone') || 'Enter your phone number'
-                    : t('enter_email') || 'Enter your email address'
+                    : searchMethod === 'email'
+                    ? t('enter_email') || 'Enter your email address'
+                    : searchMethod === 'product'
+                    ? t('enter_product_name') || 'Enter product name'
+                    : t('enter_order_id') || 'Enter order ID'
                 }
                 className="input-field w-full pl-12 pr-4 py-4 text-lg border-2 border-slate-200 focus:border-maroon rounded-xl"
                 required
@@ -194,7 +249,14 @@ const QuickOrderLookup = () => {
                   <div
                     key={order._id}
                     className="card hover:shadow-xl transition-all cursor-pointer group"
-                    onClick={() => navigate(`/track/${order.orderId || order._id}?${searchMethod}=${contactValue}`)}
+                    onClick={() => {
+                      const params = new URLSearchParams();
+                      if (searchMethod === 'phone') params.set('phone', contactValue);
+                      if (searchMethod === 'email') params.set('email', contactValue);
+                      // For product and orderId searches, we don't need additional verification
+                      const query = params.toString();
+                      navigate(`/track/${order.orderId || order._id}${query ? `?${query}` : ''}`);
+                    }}
                   >
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       {/* Left: Order Info */}

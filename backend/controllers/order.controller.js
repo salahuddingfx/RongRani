@@ -16,24 +16,24 @@ const emitEvent = (req, event, payload) => {
 };
 
 /**
- * @desc    Search orders by phone or email (no order ID needed)
+ * @desc    Search orders by phone, email, or product name
  * @route   POST /api/orders/search
  * @access  Public
  */
 const searchOrdersByContact = async (req, res) => {
   try {
-    const { email, phone } = req.body;
+    const { email, phone, productName, orderId } = req.body;
 
-    // Validate input - at least one contact method required
-    if (!email && !phone) {
+    // Validate input - at least one search method required
+    if (!email && !phone && !productName && !orderId) {
       return res.status(400).json({
-        message: 'Please provide either email or phone number',
+        message: 'Please provide email, phone number, product name, or order ID',
       });
     }
 
     // Prepare search query
     const searchConditions = [];
-    
+
     if (email) {
       const emailLower = email.toString().trim().toLowerCase();
       searchConditions.push(
@@ -60,16 +60,39 @@ const searchOrdersByContact = async (req, res) => {
       }
     }
 
+    if (productName) {
+      // Search for orders containing products with matching names
+      const productNameLower = productName.toString().trim().toLowerCase();
+      const products = await Product.find({
+        name: { $regex: productNameLower, $options: 'i' }
+      }).select('_id');
+
+      if (products.length > 0) {
+        searchConditions.push({
+          'items.product': { $in: products.map(p => p._id) }
+        });
+      }
+    }
+
+    if (orderId) {
+      // Search by order ID or MongoDB _id
+      const orderIdClean = orderId.toString().trim();
+      searchConditions.push(
+        { orderId: orderIdClean },
+        { _id: orderIdClean }
+      );
+    }
+
     // Find orders
     const orders = await Order.find({ $or: searchConditions })
-      .populate('items.product', 'name images price')
+      .populate('items.product', 'name images price slug')
       .sort({ createdAt: -1 })
-      .limit(20)
+      .limit(50) // Increased limit for broader searches
       .select('-__v');
 
     if (orders.length === 0) {
       return res.status(404).json({
-        message: 'No orders found with this contact information',
+        message: 'No orders found matching your search criteria',
       });
     }
 

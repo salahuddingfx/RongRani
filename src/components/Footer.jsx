@@ -126,7 +126,7 @@ const Footer = () => {
               <ul className="space-y-4">
                 {[
                   { to: '/my-orders', label: t('my_orders') },
-                  { to: '/track', label: t('track_order') },
+                  { to: '/quick-track', label: t('track_order') },
                   { to: '/help', label: t('help_center') },
                   { to: '/privacy-policy', label: t('privacy_policy') }
                 ].map((link, idx) => (
