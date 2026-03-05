@@ -104,10 +104,10 @@ const QuickOrderLookup = () => {
             <Search className="h-12 w-12 text-maroon" />
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-maroon mb-4">
-            {t('track_your_orders') || 'Track Your Orders'}
+            Track Your Orders
           </h1>
           <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-            {t('quick_lookup_desc') || 'Find your orders using phone number, email address, product name, or order ID'}
+            Find your orders using phone number, email address, product name, or order ID
           </p>
         </div>
 
@@ -129,7 +129,7 @@ const QuickOrderLookup = () => {
                 }`}
               >
                 <Phone className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('phone_number') || 'Phone'}</span>
+                <span className="hidden sm:inline">Phone</span>
               </button>
               
               <button
@@ -145,7 +145,7 @@ const QuickOrderLookup = () => {
                 }`}
               >
                 <Mail className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('email') || 'Email'}</span>
+                <span className="hidden sm:inline">Email</span>
               </button>
 
               <button
@@ -161,7 +161,7 @@ const QuickOrderLookup = () => {
                 }`}
               >
                 <Package className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('product_name') || 'Product'}</span>
+                <span className="hidden sm:inline">Product</span>
               </button>
 
               <button
@@ -177,7 +177,7 @@ const QuickOrderLookup = () => {
                 }`}
               >
                 <Search className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('order_id') || 'Order ID'}</span>
+                <span className="hidden sm:inline">Order ID</span>
               </button>
             </div>
 
@@ -200,12 +200,12 @@ const QuickOrderLookup = () => {
                 onChange={(e) => setContactValue(e.target.value)}
                 placeholder={
                   searchMethod === 'phone'
-                    ? t('enter_phone') || 'Enter your phone number'
+                    ? 'Enter your phone number'
                     : searchMethod === 'email'
-                    ? t('enter_email') || 'Enter your email address'
+                    ? 'Enter your email address'
                     : searchMethod === 'product'
-                    ? t('enter_product_name') || 'Enter product name'
-                    : t('enter_order_id') || 'Enter order ID'
+                    ? 'Enter product name'
+                    : 'Enter order ID'
                 }
                 className="input-field w-full pl-12 pr-4 py-4 text-lg border-2 border-slate-200 focus:border-maroon rounded-xl"
                 required
@@ -223,12 +223,12 @@ const QuickOrderLookup = () => {
                 {loading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>{t('searching') || 'Searching...'}</span>
+                    <span>Searching...</span>
                   </>
                 ) : (
                   <>
                     <Search className="h-5 w-5" />
-                    <span>{t('find_orders') || 'Find My Orders'}</span>
+                    <span>Find My Orders</span>
                   </>
                 )}
               </button>
@@ -242,7 +242,7 @@ const QuickOrderLookup = () => {
             {orders.length > 0 ? (
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold text-maroon mb-4">
-                  {t('found_orders') || 'Your Orders'} ({orders.length})
+                  Your Orders ({orders.length})
                 </h2>
                 
                 {orders.map((order) => (
@@ -322,7 +322,7 @@ const QuickOrderLookup = () => {
                     {/* Hover Effect */}
                     <div className="mt-4 pt-4 border-t border-slate-200 flex items-center justify-between text-sm">
                       <span className="text-slate-600">
-                        {t('click_view_details') || 'Click to view details'}
+                        Click to view details
                       </span>
                       <ArrowLeft className="h-4 w-4 text-maroon rotate-180 group-hover:translate-x-1 transition-transform" />
                     </div>
@@ -333,10 +333,10 @@ const QuickOrderLookup = () => {
               <div className="card text-center py-12">
                 <Package className="h-16 w-16 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-slate-700 mb-2">
-                  {t('no_orders_found') || 'No Orders Found'}
+                  No Orders Found
                 </h3>
                 <p className="text-slate-500">
-                  {t('no_orders_desc') || 'We couldn\'t find any orders with this contact information'}
+                  We couldn't find any orders with this contact information
                 </p>
               </div>
             )}
@@ -350,7 +350,7 @@ const QuickOrderLookup = () => {
             className="inline-flex items-center gap-2 text-maroon font-semibold hover:underline transition-all"
           >
             <ArrowLeft className="h-5 w-5" />
-            <span>{t('back_to_home') || 'Back to Home'}</span>
+            <span>Back to Home</span>
           </Link>
         </div>
       </div>
