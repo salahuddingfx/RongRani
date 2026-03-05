@@ -41,6 +41,20 @@ const Checkout = () => {
     giftMessage: ''
   });
 
+  const getEtaLabel = () => {
+    if (!formData.district || !formData.city) {
+      return 'Enter address to see ETA';
+    }
+
+    const district = (formData.district || '').toLowerCase();
+    const city = (formData.city || '').toLowerCase();
+    const isLocal = district.includes('cox') || city.includes('cox');
+
+    return isLocal ? '1-2 days (Local delivery)' : '2-4 days (Nationwide)';
+  };
+
+  const paymentBadges = ['COD', 'bKash', 'Nagad', 'Rocket', 'Upay', 'SSLCommerz'];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -131,7 +145,7 @@ const Checkout = () => {
 
     try {
       // Validate required fields
-      if (!formData.name || !formData.phone || !formData.address || !formData.city || !formData.union || !formData.subDistrict) {
+      if (!formData.name || !formData.email || !formData.phone || !formData.address || !formData.city || !formData.union || !formData.subDistrict) {
         toast.error('Please fill in all required fields');
         setLoading(false);
         return;
@@ -219,6 +233,18 @@ const Checkout = () => {
       const response = await axios.post('/api/orders', orderData, config);
       const newOrder = response.data; // Assuming backend returns the created order object directly or in data property
 
+      if (formData.email) {
+        localStorage.setItem('orderContact', JSON.stringify({
+          method: 'email',
+          value: formData.email.trim(),
+        }));
+      } else if (formData.phone) {
+        localStorage.setItem('orderContact', JSON.stringify({
+          method: 'phone',
+          value: formData.phone.trim(),
+        }));
+      }
+
       // Clear cart
       clearCart();
 
@@ -254,9 +280,16 @@ const Checkout = () => {
       setTimeout(() => {
         if (isAuthenticated) {
           navigate('/orders');
-        } else {
-          navigate('/');
+          return;
         }
+
+        const contactQuery = formData.email
+          ? `?email=${encodeURIComponent(formData.email.trim())}`
+          : formData.phone
+            ? `?phone=${encodeURIComponent(formData.phone.trim())}`
+            : '';
+        const trackingId = newOrder.orderId || newOrder._id;
+        navigate(`/track/${trackingId}${contactQuery}`);
       }, 2000);
     } catch (error) {
       console.error('Failed to place order:', error);
@@ -293,6 +326,19 @@ const Checkout = () => {
         <h1 className="text-4xl font-bold text-maroon mb-2 text-center">
           {t('checkout_title')}
         </h1>
+
+        <div className="max-w-4xl mx-auto mb-8">
+          <div className="bg-white/80 border border-maroon/10 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-maroon/10 flex items-center justify-center text-maroon font-bold">
+              %
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-maroon">Limited-time deal</p>
+              <p className="text-xs text-slate-600">Use a coupon at checkout for extra savings on your order.</p>
+            </div>
+            <span className="text-xs font-bold text-green-700 bg-green-50 px-3 py-1 rounded-full">Coupons Available</span>
+          </div>
+        </div>
 
         {!isAuthenticated && (
           <div className="max-w-2xl mx-auto mb-8">
@@ -347,6 +393,14 @@ const Checkout = () => {
                 {t('order_summary')}
               </h2>
 
+              <div className="flex flex-wrap gap-2 mb-4">
+                {paymentBadges.map((badge) => (
+                  <span key={badge} className="text-xs font-semibold text-slate-600 bg-white/70 border border-slate-200 px-2.5 py-1 rounded-full">
+                    {badge}
+                  </span>
+                ))}
+              </div>
+
               <div className="space-y-3">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex justify-between items-center">
@@ -379,12 +433,12 @@ const Checkout = () => {
                   <label className="block text-sm font-bold text-maroon dark:text-pink-600">
                     {t('apply_coupon')}
                   </label>
-                  <div className="flex gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="text"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
-                      className="flex-1 bg-white border-2 border-maroon/20 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-maroon transition-all"
+                      className="w-full sm:flex-1 bg-white border-2 border-maroon/20 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-maroon transition-all"
                       placeholder="Enter code (e.g. WELCOME10)"
                       disabled={couponInfo}
                     />
@@ -392,7 +446,7 @@ const Checkout = () => {
                       type="button"
                       onClick={handleApplyCoupon}
                       disabled={couponLoading || (!couponCode.trim() && !couponInfo)}
-                      className={`px-6 py-2 rounded-xl font-bold text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${couponInfo
+                      className={`w-full sm:w-auto px-6 py-2 rounded-xl font-bold text-sm transition-all duration-300 shadow-md hover:shadow-lg active:scale-95 ${couponInfo
                         ? 'bg-red-500 hover:bg-red-600 text-white'
                         : 'bg-maroon hover:bg-maroon/90 text-white disabled:opacity-50'
                         }`}
@@ -421,6 +475,10 @@ const Checkout = () => {
                       <span className="text-xs text-slate-400 font-normal italic">{t('enter_address_calculate') || 'Enter address to calculate'}</span>
                     ) : shipping === 0 ? t('free') : `৳${shipping}`}
                   </span>
+                </div>
+                <div className="flex justify-between text-xs text-slate-500">
+                  <span>Estimated delivery</span>
+                  <span className="font-semibold text-slate-600">{getEtaLabel()}</span>
                 </div>
                 {giftWrapping && (
                   <div className="flex justify-between text-amber-600">
@@ -475,13 +533,14 @@ const Checkout = () => {
 
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
-                    {t('email_address')}
+                    {t('email_address')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    required
                     className="input-field"
                     placeholder="your.email@example.com"
                   />

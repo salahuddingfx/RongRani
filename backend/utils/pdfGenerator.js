@@ -16,6 +16,33 @@ const generateInvoice = async (order) => {
     console.error('Error generating QR code for invoice:', error.message);
   }
 
+  const frontendUrl = (process.env.FRONTEND_URL || 'https://rongrani.vercel.app').replace(/\/+$/, '');
+
+  const resolveImageUrl = (value) => {
+    if (!value) return '';
+    if (typeof value === 'object' && value.url) return resolveImageUrl(value.url);
+    if (typeof value !== 'string') return '';
+    if (value.startsWith('http://') || value.startsWith('https://')) return value;
+    if (value.startsWith('/')) return `${frontendUrl}${value}`;
+    return value;
+  };
+
+  const fetchImageBuffer = async (url) => {
+    if (!url) return null;
+    try {
+      const response = await axios.get(url, { responseType: 'arraybuffer', timeout: 8000 });
+      return Buffer.from(response.data);
+    } catch (error) {
+      console.warn('Invoice image fetch failed:', error.message);
+      return null;
+    }
+  };
+
+  const imageBuffers = await Promise.all(order.items.map(async (item) => {
+    const productImage = resolveImageUrl(item.product?.images?.[0]) || resolveImageUrl(item.image);
+    return fetchImageBuffer(productImage);
+  }));
+
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ size: 'A4', margin: 40 });
@@ -155,12 +182,13 @@ const generateInvoice = async (order) => {
       drawTableHeader(tableY);
       let currentY = tableY + 30;
 
-      order.items.forEach((item) => {
+      order.items.forEach((item, index) => {
         const productData = item.product || {};
-        const textWidth = 260;
+        const textWidth = 230;
+        const imageBuffer = imageBuffers[index];
         const mainTextHeight = doc.heightOfString(item.name, { width: textWidth, font: 'Helvetica-Bold', size: 9 });
         const descTextHeight = productData.description ? doc.heightOfString(productData.description, { width: textWidth, font: 'Helvetica', size: 7 }) : 0;
-        const rowHeight = Math.max(25, mainTextHeight + descTextHeight + 8);
+        const rowHeight = Math.max(36, mainTextHeight + descTextHeight + 8);
 
         if (currentY + rowHeight > 740) {
           drawFooter();
@@ -174,9 +202,18 @@ const generateInvoice = async (order) => {
         }
 
         doc.moveTo(40, currentY + rowHeight).lineTo(555, currentY + rowHeight).strokeColor(colors.lightGray).lineWidth(0.5).stroke();
-        doc.fillColor(colors.midnight).font('Helvetica-Bold').fontSize(9).text(item.name, 55, currentY + 4, { width: textWidth });
+
+        if (imageBuffer) {
+          try {
+            doc.image(imageBuffer, 45, currentY + 4, { width: 30, height: 30 });
+          } catch (error) {
+            console.warn('Invoice image render failed:', error.message);
+          }
+        }
+
+        doc.fillColor(colors.midnight).font('Helvetica-Bold').fontSize(9).text(item.name, 85, currentY + 4, { width: textWidth });
         if (productData.description) {
-          doc.fillColor(colors.slate).font('Helvetica').fontSize(7).text(productData.description, 55, currentY + 4 + mainTextHeight + 1, { width: textWidth });
+          doc.fillColor(colors.slate).font('Helvetica').fontSize(7).text(productData.description, 85, currentY + 4 + mainTextHeight + 1, { width: textWidth });
         }
         doc.fillColor(colors.midnight).font('Helvetica').fontSize(9);
         doc.text(item.quantity, 320, currentY + (rowHeight / 2 - 4.5), { width: 40, align: 'center' });

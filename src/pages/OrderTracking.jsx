@@ -24,6 +24,13 @@ const OrderTracking = () => {
   const [reviewingProductId, setReviewingProductId] = useState(null);
   const [downloading, setDownloading] = useState(false);
 
+  const getImageUrl = (value) => {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    if (typeof value === 'object' && value.url) return value.url;
+    return '';
+  };
+
   useEffect(() => {
     if (!socket || !order) return;
 
@@ -51,11 +58,27 @@ const OrderTracking = () => {
     const params = new URLSearchParams(location.search);
     const emailParam = params.get('email');
     const phoneParam = params.get('phone');
+    const savedContact = localStorage.getItem('orderContact');
+    let savedEmail = '';
+    let savedPhone = '';
+
+    if (savedContact) {
+      try {
+        const parsed = JSON.parse(savedContact);
+        if (parsed?.method === 'email') savedEmail = parsed.value || '';
+        if (parsed?.method === 'phone') savedPhone = parsed.value || '';
+      } catch (err) {
+        console.warn('Failed to parse saved order contact', err);
+      }
+    }
+
     if (emailParam) setContactEmail(emailParam);
     if (phoneParam) setContactPhone(phoneParam);
+    if (!emailParam && savedEmail) setContactEmail(savedEmail);
+    if (!phoneParam && savedPhone) setContactPhone(savedPhone);
 
     if (orderId) {
-      fetchOrder(orderId, emailParam, phoneParam);
+      fetchOrder(orderId, emailParam || savedEmail, phoneParam || savedPhone);
     } else {
       setLoading(false);
     }
@@ -85,6 +108,18 @@ const OrderTracking = () => {
   const handleTrack = (e) => {
     e.preventDefault();
     if (!trackingInput.trim()) return;
+
+    if (contactEmail.trim()) {
+      localStorage.setItem('orderContact', JSON.stringify({
+        method: 'email',
+        value: contactEmail.trim(),
+      }));
+    } else if (contactPhone.trim()) {
+      localStorage.setItem('orderContact', JSON.stringify({
+        method: 'phone',
+        value: contactPhone.trim(),
+      }));
+    }
 
     const params = new URLSearchParams();
     if (contactEmail.trim()) params.set('email', contactEmail.trim());
@@ -276,6 +311,8 @@ const OrderTracking = () => {
             <p className="text-slate-500 mt-1 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
               Live Tracking
+              <span className="text-slate-400">•</span>
+              <span className="font-semibold text-slate-600">Status: {order.orderStatus}</span>
             </p>
           </div>
 
@@ -378,9 +415,12 @@ const OrderTracking = () => {
                   <div key={index} className="group flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-2xl hover:bg-pink-50/50 border border-transparent hover:border-pink-100 transition-all duration-300">
                     <div className="w-20 h-20 rounded-xl overflow-hidden shadow-sm flex-shrink-0 group-hover:scale-105 transition-transform duration-300">
                       <img
-                        src={item.product?.images?.[0] || item.image || 'https://via.placeholder.com/100'}
-                        alt={item.name}
+                        src={getImageUrl(item.product?.images?.[0]) || getImageUrl(item.image) || 'https://via.placeholder.com/100'}
+                        alt={item.name || item.product?.name || 'Product'}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/100';
+                        }}
                       />
                     </div>
                     <div className="flex-1">

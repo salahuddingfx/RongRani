@@ -4,7 +4,14 @@ import toast from 'react-hot-toast';
 
 const SocialShare = ({ url, previewUrl, title, image, description, price }) => {
     const shareUrl = url || window.location.href;
-    const socialPreviewUrl = previewUrl || shareUrl;
+    const normalizeUrl = (value) => {
+        if (!value) return window.location.href;
+        if (value.startsWith('http://') || value.startsWith('https://')) return value;
+        const base = window.location.origin.replace(/\/+$/, '');
+        const suffix = value.startsWith('/') ? value : `/${value}`;
+        return `${base}${suffix}`;
+    };
+    const socialPreviewUrl = normalizeUrl(previewUrl || shareUrl);
     const shareTitle = title || document.title;
     const shareImage = image || '';
     const shareDescription = description || '';

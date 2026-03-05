@@ -184,9 +184,9 @@ const createOrder = async (req, res) => {
     const userId = req.user?._id || null;
 
     // For guest orders, require guestInfo
-    if (isGuest && (!guestInfo?.name || !guestInfo?.phone)) {
+    if (isGuest && (!guestInfo?.name || !guestInfo?.phone || !guestInfo?.email)) {
       return res.status(400).json({
-        message: 'Guest information (name and phone) is required for guest checkout',
+        message: 'Guest information (name, phone, and email) is required for guest checkout',
       });
     }
 
@@ -328,8 +328,11 @@ const createOrder = async (req, res) => {
     }
     // -----------------------
 
+    const orderId = `RR-${Date.now().toString().slice(-6)}${Math.floor(1000 + Math.random() * 9000)}`;
+
     const order = await Order.create({
       user: userId,
+      orderId,
       guestInfo: isGuest ? guestInfo : undefined,
       items: orderItems,
       shippingAddress: normalizedShippingAddress,

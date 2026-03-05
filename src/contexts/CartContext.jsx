@@ -12,11 +12,25 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
+  const getImageUrl = (imageValue) => {
+    if (!imageValue) return '';
+    if (typeof imageValue === 'string') return imageValue;
+    if (typeof imageValue === 'object' && imageValue.url) return imageValue.url;
+    return '';
+  };
+
   const [cartItems, setCartItems] = useState(() => {
     try {
       // Load cart from localStorage on mount
       const savedCart = localStorage.getItem('cart');
-      return savedCart ? JSON.parse(savedCart) : [];
+      const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+
+      return parsedCart.map((item) => {
+        const normalizedImage = typeof item.image === 'object' && item.image?.url
+          ? item.image.url
+          : item.image;
+        return { ...item, image: normalizedImage };
+      });
     } catch (e) {
       console.warn('LocalStorage not available for cart:', e);
       return [];
@@ -71,13 +85,15 @@ export const CartProvider = ({ children }) => {
           quantity = availableStock;
         }
 
+        const primaryImage = getImageUrl(product.images?.[0]) || getImageUrl(product.image);
+
         return [...prevItems, {
           id: productId,
           slug: product.slug,
           name: product.name,
           price: product.price,
           originalPrice: product.originalPrice,
-          image: product.images?.[0] || product.image || 'https://via.placeholder.com/100',
+          image: primaryImage || 'https://via.placeholder.com/100',
           category: product.category,
           quantity,
           stock: availableStock // Store stock info

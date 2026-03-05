@@ -170,8 +170,14 @@ const ProductDetail = () => {
 
   const routeParam = product?.slug || id;
   const pagePath = `/product/${routeParam}`;
-  const backendBaseUrl = (import.meta?.env?.VITE_BACKEND_URL || import.meta?.env?.VITE_API_BASE_URL || window.location.origin).replace(/\/+$/, '');
-  const sharePreviewUrl = `${backendBaseUrl}/share/product/${routeParam}`;
+  const shareBaseUrl = (
+    import.meta?.env?.VITE_SHARE_BASE_URL ||
+    import.meta?.env?.VITE_BACKEND_URL ||
+    import.meta?.env?.VITE_API_BASE_URL ||
+    import.meta?.env?.VITE_SITE_URL ||
+    window.location.origin
+  ).replace(/\/+$/, '');
+  const sharePreviewUrl = `${shareBaseUrl}/share/product/${routeParam}`;
   const { pageTitle, pageDescription, pageKeywords, pageImage } = useMemo(() => {
     if (!product) return {};
 
@@ -271,15 +277,15 @@ const ProductDetail = () => {
         schema={productSchema}
       />
       {/* Breadcrumb */}
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 relative z-10">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 relative z-10 mt-6 sm:mt-0">
         <div className="container mx-auto px-4 py-3">
           <nav className="text-sm flex items-center space-x-2 overflow-x-auto scrollbar-hide">
             <Link to="/" className="text-slate hover:text-maroon transition-colors font-medium whitespace-nowrap flex-shrink-0">Home</Link>
-            <span className="text-slate/40 flex-shrink-0">/</span>
+            <span className="text-slate/40 flex-shrink-0">&gt;</span>
             <Link to="/shop" className="text-slate hover:text-maroon transition-colors font-medium whitespace-nowrap flex-shrink-0">Shop</Link>
             {categoryLabel && (
               <>
-                <span className="text-slate/40 flex-shrink-0">/</span>
+                <span className="text-slate/40 flex-shrink-0">&gt;</span>
                 <Link
                   to={`/shop?category=${encodeURIComponent(categoryRaw)}`}
                   className="text-slate hover:text-maroon transition-colors font-medium capitalize whitespace-nowrap flex-shrink-0"
@@ -290,7 +296,7 @@ const ProductDetail = () => {
             )}
             {product?.name && (
               <>
-                <span className="text-slate/40 flex-shrink-0">/</span>
+                <span className="text-slate/40 flex-shrink-0">&gt;</span>
                 <span className="text-maroon font-bold whitespace-nowrap truncate max-w-[120px] sm:max-w-none">
                   {product.name}
                 </span>

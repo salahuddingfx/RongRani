@@ -5,6 +5,7 @@ const Order = require('../models/Order');
 const Category = require('../models/Category');
 const ImageAsset = require('../models/ImageAsset');
 const { deleteFromCloudinary } = require('../utils/cloudinaryConfig');
+const { sendLowStockAlert } = require('../services/emailService');
 
 const emitEvent = (req, event, payload) => {
   const io = req.app?.get('io');
@@ -225,6 +226,10 @@ const updateProduct = async (req, res) => {
         _id: updatedProduct._id,
         stock: updatedProduct.stock,
       });
+
+      if (updatedProduct.stock <= 5 && updatedProduct.stock < previousStock) {
+        sendLowStockAlert(updatedProduct).catch(err => console.error('Low stock alert error:', err));
+      }
     }
 
     res.json(updatedProduct);

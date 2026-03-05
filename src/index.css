@@ -264,7 +264,7 @@
   }
 
   .card:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-3px) scale(1.01);
   }
 
   .section-container {

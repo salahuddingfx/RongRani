@@ -22,10 +22,15 @@ const Cart = () => {
 
   const [giftWrapping, setGiftWrapping] = useState(false);
   const giftWrappingFee = 50;
+  const paymentBadges = ['COD', 'bKash', 'Nagad', 'Rocket', 'Upay', 'SSLCommerz'];
 
   const shipping = delivery?.charge || 0;
   const tax = 0; // No tax
   const finalTotal = totalPrice + shipping + tax + (giftWrapping ? giftWrappingFee : 0);
+
+  const etaLabel = shipping === 0
+    ? 'Free delivery applies'
+    : '1-2 days (Local delivery)';
 
   if (cartItems.length === 0) {
     return (
@@ -224,6 +229,13 @@ const Cart = () => {
             <div className="card p-4 sm:p-6 lg:sticky lg:top-24">
               <h2 className="text-xl sm:text-2xl font-bold text-maroon mb-4 sm:mb-6">{t('order_summary')}</h2>
 
+              <div className="mb-4 bg-white/70 border border-maroon/10 rounded-xl p-3 flex items-center justify-between gap-3">
+                <div className="text-xs sm:text-sm text-slate">
+                  Save more on your order with coupons at checkout.
+                </div>
+                <span className="text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-full">Promo</span>
+              </div>
+
               {/* Free Shipping Progress Bar */}
               <div className="mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                 <div className="flex justify-between items-center mb-2">
@@ -253,6 +265,10 @@ const Cart = () => {
                   <span className={`font-semibold ${shipping === 0 ? 'text-green-600' : 'text-maroon'}`}>
                     {shipping === 0 ? t('free') : `৳${shipping}`}
                   </span>
+                </div>
+                <div className="flex justify-between items-center text-xs text-slate-500">
+                  <span>Estimated delivery</span>
+                  <span className="font-semibold text-slate-600">{etaLabel}</span>
                 </div>
 
                 {/* Gift Wrapping Toggle */}
@@ -296,6 +312,14 @@ const Cart = () => {
                 <span>{t('checkout')}</span>
                 <ArrowRight className="h-4 sm:h-5 w-4 sm:w-5" />
               </Link>
+
+              <div className="flex flex-wrap gap-2 justify-center mb-3">
+                {paymentBadges.map((badge) => (
+                  <span key={badge} className="text-xs font-semibold text-slate-600 bg-white/70 border border-slate-200 px-2.5 py-1 rounded-full">
+                    {badge}
+                  </span>
+                ))}
+              </div>
 
               <Link
                 to="/shop"

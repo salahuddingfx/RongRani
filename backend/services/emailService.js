@@ -195,6 +195,16 @@ const emailBaseTemplate = (title, content, preheader = '') => {
   `;
 };
 
+const normalizeImageUrl = (value) => {
+  const frontendUrl = (process.env.FRONTEND_URL || 'https://rongrani.vercel.app').replace(/\/+$/, '');
+  if (!value) return '';
+  if (typeof value === 'object' && value.url) return normalizeImageUrl(value.url);
+  if (typeof value !== 'string') return '';
+  if (value.startsWith('http://') || value.startsWith('https://')) return value;
+  if (value.startsWith('/')) return `${frontendUrl}${value}`;
+  return value;
+};
+
 // Email templates
 const emailTemplates = {
   // Order Confirmation Email
@@ -202,7 +212,7 @@ const emailTemplates = {
     const products = order.items.map(item => `
       <tr class="product-row" style="border-bottom: 1px solid #f3f4f6;">
         <td style="padding: 15px 0; vertical-align: top; width: 60px;">
-          <img src="${item.image || 'https://via.placeholder.com/60'}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #e5e7eb;">
+          <img src="${normalizeImageUrl(item.image) || 'https://via.placeholder.com/60'}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #e5e7eb;">
         </td>
         <td style="padding: 15px 15px; vertical-align: top;">
           <div style="font-weight: 600; color: #111827; font-size: 14px;">${item.name}</div>
@@ -416,7 +426,7 @@ const emailTemplates = {
   reviewRequest: (data) => {
     const products = (data.items || []).map(item => `
       <div style="display: inline-block; width: 100px; text-align: center; margin: 10px; vertical-align: top;">
-        <img src="${item.image || 'https://via.placeholder.com/80'}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #e5e7eb;">
+        <img src="${normalizeImageUrl(item.image) || 'https://via.placeholder.com/80'}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px; border: 1px solid #e5e7eb;">
         <div style="font-size: 12px; color: #4b5563; margin-top: 8px; line-height: 1.3; overflow: hidden; height: 32px;">${item.name}</div>
       </div>
     `).join('');

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Package, Search, Phone, Mail, ArrowLeft, Truck, CheckCircle, Clock } from 'lucide-react';
 import axios from 'axios';
@@ -13,6 +13,19 @@ const QuickOrderLookup = () => {
   const [loading, setLoading] = useState(false);
   const [orders, setOrders] = useState([]);
   const [searched, setSearched] = useState(false);
+
+  useEffect(() => {
+    const savedContact = localStorage.getItem('orderContact');
+    if (!savedContact) return;
+
+    try {
+      const parsed = JSON.parse(savedContact);
+      if (parsed?.method) setSearchMethod(parsed.method);
+      if (parsed?.value) setContactValue(parsed.value);
+    } catch (err) {
+      console.warn('Failed to parse saved order contact', err);
+    }
+  }, []);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -50,6 +63,11 @@ const QuickOrderLookup = () => {
       if (response.data.success && response.data.orders.length > 0) {
         setOrders(response.data.orders);
         toast.success(`Found ${response.data.orders.length} order(s)`);
+
+        localStorage.setItem('orderContact', JSON.stringify({
+          method: searchMethod,
+          value: contactValue.trim(),
+        }));
       } else {
         setOrders([]);
         toast.error('No orders found with this information');
@@ -253,6 +271,12 @@ const QuickOrderLookup = () => {
                       const params = new URLSearchParams();
                       if (searchMethod === 'phone') params.set('phone', contactValue);
                       if (searchMethod === 'email') params.set('email', contactValue);
+                      if (searchMethod === 'phone' || searchMethod === 'email') {
+                        localStorage.setItem('orderContact', JSON.stringify({
+                          method: searchMethod,
+                          value: contactValue.trim(),
+                        }));
+                      }
                       // For product and orderId searches, we don't need additional verification
                       const query = params.toString();
                       navigate(`/track/${order.orderId || order._id}${query ? `?${query}` : ''}`);
