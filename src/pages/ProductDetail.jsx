@@ -51,6 +51,7 @@ const ProductDetail = () => {
     return () => clearInterval(timer);
   }, [imageCount, isImagePaused]);
 
+
   const isWishlisted = product ? isInWishlist(product._id) : false;
   const baseUrl = (import.meta?.env?.VITE_SITE_URL || 'https://rongrani.vercel.app').replace(/\/+$/, '');
 

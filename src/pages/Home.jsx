@@ -31,6 +31,7 @@ const Home = () => {
     fetchHotOffer();
   }, []);
 
+
   useEffect(() => {
     if (!socket) return;
     const handleUpdate = (data) => setHotOffer(data);
