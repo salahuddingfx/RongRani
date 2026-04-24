@@ -126,7 +126,7 @@ const FlashSale = () => {
                 </div>
 
                 {/* Products Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
                     {productsToDisplay.map((product) => (
                         <div key={product.id} className="bg-white dark:bg-slate-800 rounded-2xl p-3 md:p-4 shadow-sm hover:shadow-lg transition-all duration-300 border border-slate-100 dark:border-slate-700 group">
                             {/* Image & Badges */}
