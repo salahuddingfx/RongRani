@@ -1,12 +1,6 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const { sendEmail } = require('../services/emailService');
-const asyncHandler = require('../utils/asyncHandler');
-const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const env = require('../config/env');
-const speakeasy = require('speakeasy');
-const QRCode = require('qrcode');
+const bcrypt = require('bcryptjs');
 
 /**
  * Generate JWT token
@@ -115,14 +109,14 @@ const login = asyncHandler(async (req, res) => {
   );
 });
 
-// @desc    Verify 2FA login
+// @desc    Verify 2FA login (Simplified PIN)
 // @route   POST /api/auth/login/2fa
 // @access  Public
 const verifyLogin2FA = asyncHandler(async (req, res) => {
-  const { tempToken, otp } = req.body;
+  const { tempToken, otp } = req.body; // 'otp' is actually the PIN here
 
   if (!tempToken || !otp) {
-    throw new ApiError(400, "Token and OTP are required");
+    throw new ApiError(400, "Token and PIN are required");
   }
 
   try {
@@ -136,14 +130,9 @@ const verifyLogin2FA = asyncHandler(async (req, res) => {
       throw new ApiError(401, "2FA is not enabled for this user");
     }
 
-    const isValid = speakeasy.totp.verify({
-      secret: user.twoFactorSecret,
-      encoding: 'base32',
-      token: otp,
-    });
-
-    if (!isValid) {
-      throw new ApiError(401, "Invalid OTP code");
+    const isMatch = await bcrypt.compare(otp, user.twoFactorSecret);
+    if (!isMatch) {
+      throw new ApiError(401, "Invalid Security PIN");
     }
 
     const token = generateToken(user._id);
@@ -164,76 +153,41 @@ const verifyLogin2FA = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Setup 2FA
+// @desc    Setup 2FA PIN
 // @route   POST /api/auth/2fa/setup
 // @access  Private
 const setup2FA = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  
-  if (user.isTwoFactorEnabled) {
-    throw new ApiError(400, "2FA is already enabled");
+  const { pin } = req.body;
+  if (!pin || pin.length < 4) {
+    throw new ApiError(400, "Please provide a PIN (at least 4 digits)");
   }
 
-  const secret = speakeasy.generateSecret({ name: `RongRani (${user.email})` });
-  const qrCodeDataURL = await QRCode.toDataURL(secret.otpauth_url);
-
-  user.twoFactorSecret = secret.base32;
+  const user = await User.findById(req.user._id);
+  
+  const salt = await bcrypt.genSalt(10);
+  user.twoFactorSecret = await bcrypt.hash(pin, salt);
+  user.isTwoFactorEnabled = true; // Auto-enable on setup for this simple version
   await user.save();
 
   res.status(200).json(
-    new ApiResponse(200, {
-      qrCode: qrCodeDataURL,
-      secret: secret.base32, // Providing the text secret as backup
-    }, "2FA setup initiated. Please verify the code to enable.")
+    new ApiResponse(200, {}, "Security PIN set and 2FA enabled successfully")
   );
-});
-
-// @desc    Verify 2FA setup
-// @route   POST /api/auth/2fa/verify
-// @access  Private
-const verify2FA = asyncHandler(async (req, res) => {
-  const { otp } = req.body;
-  const user = await User.findById(req.user._id).select('+twoFactorSecret');
-
-  if (!user.twoFactorSecret) {
-    throw new ApiError(400, "Please setup 2FA first");
-  }
-
-  const isValid = speakeasy.totp.verify({
-    secret: user.twoFactorSecret,
-    encoding: 'base32',
-    token: otp,
-  });
-
-  if (!isValid) {
-    throw new ApiError(400, "Invalid verification code");
-  }
-
-  user.isTwoFactorEnabled = true;
-  await user.save();
-
-  res.status(200).json(new ApiResponse(200, {}, "2FA enabled successfully"));
 });
 
 // @desc    Disable 2FA
 // @route   POST /api/auth/2fa/disable
 // @access  Private
 const disable2FA = asyncHandler(async (req, res) => {
-  const { otp } = req.body;
+  const { pin } = req.body;
   const user = await User.findById(req.user._id).select('+twoFactorSecret');
 
   if (!user.isTwoFactorEnabled) {
     throw new ApiError(400, "2FA is not enabled");
   }
 
-  const isValid = speakeasy.totp.verify({
-    secret: user.twoFactorSecret,
-    encoding: 'base32',
-    token: otp,
-  });
-
-  if (!isValid) {
-    throw new ApiError(400, "Invalid verification code");
+  const isMatch = await bcrypt.compare(pin, user.twoFactorSecret);
+  if (!isMatch) {
+    throw new ApiError(400, "Invalid Security PIN");
   }
 
   user.isTwoFactorEnabled = false;
@@ -435,8 +389,7 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
-  setup2FA,
-  verify2FA,
-  disable2FA,
-  verifyLogin2FA,
+  setupSecurityPin,
+  disableSecurityPin,
+  verifyLoginSecurityPin,
 };
