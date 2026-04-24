@@ -156,7 +156,7 @@
   }
 
   .dark .bg-white {
-    @apply bg-slate-800 !important;
+    @apply bg-slate-800;
   }
 
   .dark .bg-white\/5,
