@@ -297,7 +297,7 @@ const ProductDetail = () => {
       {/* Breadcrumb */}
       <div className="bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 relative z-10 mt-6 sm:mt-0">
         <div className="container mx-auto px-4 py-3">
-          <nav className="text-sm flex items-center space-x-2 overflow-x-auto scrollbar-hide">
+          <nav className="text-sm flex items-center space-x-2 overflow-x-auto scrollbar-hide px-4 py-3 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-full border border-slate-100 dark:border-white/5 shadow-sm">
             <Link to="/" className="text-slate hover:text-maroon transition-colors font-medium whitespace-nowrap flex-shrink-0">Home</Link>
             <span className="text-slate/40 flex-shrink-0">&gt;</span>
             <Link to="/shop" className="text-slate hover:text-maroon transition-colors font-medium whitespace-nowrap flex-shrink-0">Shop</Link>
@@ -315,7 +315,7 @@ const ProductDetail = () => {
             {product?.name && (
               <>
                 <span className="text-slate/40 flex-shrink-0">&gt;</span>
-                <span className="text-maroon font-bold whitespace-nowrap truncate max-w-[120px] sm:max-w-none">
+                <span className="text-maroon dark:text-pink-400 font-bold whitespace-nowrap truncate max-w-[120px] sm:max-w-none">
                   {product.name}
                 </span>
               </>
@@ -329,7 +329,7 @@ const ProductDetail = () => {
           {/* Left: Product Images */}
           <div className="space-y-6">
             <div
-              className="relative group aspect-square rounded-[2.5rem] overflow-hidden bg-slate-50 border-4 border-maroon/5 shadow-2xl"
+              className="relative group aspect-square rounded-[2.5rem] overflow-hidden bg-slate-50 border-4 border-maroon/5 shadow-2xl premium-glow"
               onMouseEnter={() => setIsImagePaused(true)}
               onMouseLeave={() => setIsImagePaused(false)}
               onTouchStart={() => setIsImagePaused(true)}
@@ -408,7 +408,7 @@ const ProductDetail = () => {
                     <span className="text-sm font-bold">{product.rating || '4.8'}</span>
                   </div>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight mb-4 tracking-tighter">
+                <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight mb-4 tracking-tighter text-gradient-maroon">
                   {product.name}
                 </h1>
                 {product.sku && (
@@ -480,7 +480,7 @@ const ProductDetail = () => {
                 <button
                   onClick={handleBuyNow}
                   disabled={product.stock === 0}
-                  className="w-full bg-maroon text-white py-5 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 group relative overflow-hidden"
+                  className="w-full bg-maroon text-white py-5 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:shadow-2xl hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 group relative overflow-hidden shine-effect glow-pulse"
                 >
                   <Zap className="h-6 w-6 animate-pulse" />
                   <span className="relative z-10">{t('buy_now_zap')}</span>
@@ -489,7 +489,7 @@ const ProductDetail = () => {
                   href={`https://wa.me/8801851075537?text=${encodeURIComponent(`Hello RongRani! 💎 I want to order this premium product:\n\n🛍️ *Product:* ${product.name}\n💰 *Price:* ৳${product.price}\n🔗 *Link:* ${window.location.href}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:shadow-2xl hover:bg-[#128C7E] transition-all transform hover:scale-[1.02] active:scale-95"
+                  className="w-full bg-[#25D366] text-white py-4 rounded-2xl font-bold text-lg flex items-center justify-center space-x-3 hover:shadow-2xl hover:bg-[#128C7E] transition-all transform hover:scale-[1.02] active:scale-95 shine-effect"
                 >
                   <MessageCircle className="h-6 w-6" />
                   <span>{t('order_whatsapp')}</span>
@@ -536,7 +536,7 @@ const ProductDetail = () => {
           {/* 2. Info Grid (3 Columns) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Card 1: Product Specifications */}
-            <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none">
+            <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 border border-slate-100 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-none premium-card shine-effect">
               <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-maroon/10 flex items-center justify-center text-maroon">
                   <Package className="w-5 h-5" />
@@ -566,7 +566,7 @@ const ProductDetail = () => {
             </div>
 
             {/* Card 2: Delivery Info */}
-            <div className="bg-green-50/30 dark:bg-emerald-950/20 rounded-[2rem] p-8 border border-green-100 dark:border-emerald-900 shadow-xl shadow-green-100/50 dark:shadow-none">
+            <div className="bg-green-50/30 dark:bg-emerald-950/20 rounded-[2rem] p-8 border border-green-100 dark:border-emerald-900 shadow-xl shadow-green-100/50 dark:shadow-none premium-card shine-effect">
               <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center text-green-600">
                   <Truck className="w-5 h-5" />
@@ -592,15 +592,11 @@ const ProductDetail = () => {
                   <Truck className="w-5 h-5 text-slate-800" />
                   <span className="text-slate-800 font-black text-xs uppercase tracking-wider">Delivered by Steadfast Courier</span>
                 </div>
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex items-center justify-center gap-2">
-                  <Zap className="w-4 h-4 text-blue-500 animate-pulse" />
-                  <span className="text-blue-600 dark:text-blue-400 font-medium text-xs">Orders processed within 24 hours</span>
-                </div>
               </div>
             </div>
 
             {/* Card 3: Why Choose This? */}
-            <div className="bg-pink-50/30 dark:bg-pink-950/20 rounded-[2rem] p-8 border border-pink-100 dark:border-pink-900 shadow-xl shadow-pink-100/50 dark:shadow-none">
+            <div className="bg-pink-50/30 dark:bg-pink-950/20 rounded-[2rem] p-8 border border-pink-100 dark:border-pink-900 shadow-xl shadow-pink-100/50 dark:shadow-none premium-card shine-effect">
               <h3 className="text-xl font-black text-slate-900 dark:text-white mb-8 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-600">
                   <Gift className="w-5 h-5" />
@@ -721,7 +717,7 @@ const ProductDetail = () => {
           ) : reviews.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {reviews.map((review) => (
-                <div key={review._id} className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl hover:shadow-2xl transition-all group overflow-hidden relative">
+                <div key={review._id} className="bg-white/50 dark:bg-slate-800/50 p-8 rounded-[2rem] border border-slate-100 dark:border-white/5 shadow-xl hover:shadow-2xl transition-all group overflow-hidden relative premium-card shine-effect">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-maroon/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
                   <div className="relative">
                     <div className="flex items-center justify-between mb-6">
@@ -730,7 +726,7 @@ const ProductDetail = () => {
                           {review.user?.name?.charAt(0) || review.guestName?.charAt(0) || 'U'}
                         </div>
                         <div>
-                          <p className="font-black text-slate-900">{review.user?.name || review.guestName || 'Anonymous'}</p>
+                          <p className="font-black text-slate-900 dark:text-white">{review.user?.name || review.guestName || 'Anonymous'}</p>
                           <p className="text-xs text-slate/40 font-bold">{new Date(review.createdAt).toLocaleDateString()}</p>
                         </div>
                       </div>
@@ -740,7 +736,7 @@ const ProductDetail = () => {
                         ))}
                       </div>
                     </div>
-                    <p className="text-slate leading-relaxed italic">"{review.comment}"</p>
+                    <p className="text-slate dark:text-slate-300 leading-relaxed italic">"{review.comment}"</p>
                   </div>
                 </div>
               ))}
@@ -766,7 +762,7 @@ const ProductDetail = () => {
                 {t('view_all_collection')} <ChevronRight className="h-5 w-5 ml-2 group-hover:translate-x-2 transition-transform" />
               </Link>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 sm:gap-8">
               {relatedProducts.map((p) => (
                 <div key={p._id} className="animate-fade-in-up">
                   <ProductItem product={p} />
