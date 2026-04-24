@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, LogOut, Home, ChevronRight } from 'lucide-react';
+import { 
+  Menu, X, LogOut, Home, ChevronRight, 
+  BarChart3, TrendingUp, Users, Package, ShoppingBag, 
+  FolderTree, Ticket, Megaphone, Flame, Zap, 
+  Star, Truck, ClipboardList, Compass, Bot 
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import ScrollRevealManager from './ScrollRevealManager';
 
@@ -16,21 +21,21 @@ const AdminLayout = () => {
   };
 
   const adminNavItems = [
-    { path: '/admin/dashboard', label: 'Dashboard', icon: '📊' },
-    { path: '/admin/analytics', label: 'Analytics', icon: '📈' },
-    { path: '/admin/users', label: 'Users', icon: '👥' },
-    { path: '/admin/orders', label: 'Orders', icon: '📦' },
-    { path: '/admin/products', label: 'Products', icon: '🛍️' },
-    { path: '/admin/categories', label: 'Categories', icon: '📂' },
-    { path: '/admin/coupons', label: 'Coupons', icon: '🎫' },
-    { path: '/admin/banners', label: 'Banners', icon: '📢' },
-    { path: '/admin/hot-offer', label: 'Hot Offer', icon: '🔥' },
-    { path: '/admin/flash-sale', label: 'Flash Sale', icon: '⚡' },
-    { path: '/admin/reviews', label: 'Reviews', icon: '⭐' },
-    { path: '/admin/delivery-settings', label: 'Delivery', icon: '🚚' },
-    { path: '/admin/reports', label: 'Reports', icon: '📋' },
-    { path: '/admin/status', label: 'Status', icon: '🧭' },
-    { path: '/admin/ai', label: 'AI Studio', icon: '🤖' },
+    { path: '/admin/dashboard', label: 'Dashboard', icon: <BarChart3 className="w-5 h-5" /> },
+    { path: '/admin/analytics', label: 'Analytics', icon: <TrendingUp className="w-5 h-5" /> },
+    { path: '/admin/users', label: 'Users', icon: <Users className="w-5 h-5" /> },
+    { path: '/admin/orders', label: 'Orders', icon: <Package className="w-5 h-5" /> },
+    { path: '/admin/products', label: 'Products', icon: <ShoppingBag className="w-5 h-5" /> },
+    { path: '/admin/categories', label: 'Categories', icon: <FolderTree className="w-5 h-5" /> },
+    { path: '/admin/coupons', label: 'Coupons', icon: <Ticket className="w-5 h-5" /> },
+    { path: '/admin/banners', label: 'Banners', icon: <Megaphone className="w-5 h-5" /> },
+    { path: '/admin/hot-offer', label: 'Hot Offer', icon: <Flame className="w-5 h-5" /> },
+    { path: '/admin/flash-sale', label: 'Flash Sale', icon: <Zap className="w-5 h-5" /> },
+    { path: '/admin/reviews', label: 'Reviews', icon: <Star className="w-5 h-5" /> },
+    { path: '/admin/delivery-settings', label: 'Delivery', icon: <Truck className="w-5 h-5" /> },
+    { path: '/admin/reports', label: 'Reports', icon: <ClipboardList className="w-5 h-5" /> },
+    { path: '/admin/status', label: 'Status', icon: <Compass className="w-5 h-5" /> },
+    { path: '/admin/ai', label: 'AI Studio', icon: <Bot className="w-5 h-5" /> },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -147,7 +152,7 @@ const AdminLayout = () => {
                       `}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-xl">{item.icon}</span>
+                        {item.icon}
                         <span className="font-semibold text-sm md:text-base">{item.label}</span>
                       </div>
                       <ChevronRight
