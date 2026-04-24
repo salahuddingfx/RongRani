@@ -1,21 +1,23 @@
 const nodemailer = require('nodemailer');
+const logger = require('../utils/logger');
+const env = require('../config/env');
 
 // 🎨 BRAND COLORS
 const primaryColor = '#8B2635'; // RongRani Maroon
 const secondaryColor = '#C5A059'; // Gold Accent
 
 // 🏁 INITIALIZATION LOGS
-const hasBrevoKey = !!process.env.BREVO_API_KEY;
-const smtpHost = process.env.SMTP_HOST || process.env.BREVO_SMTP_HOST;
-const smtpUser = process.env.SMTP_USER || process.env.BREVO_SMTP_USER;
+const hasBrevoKey = !!env.BREVO_API_KEY;
+const smtpHost = env.SMTP_HOST || env.BREVO_SMTP_HOST;
+const smtpUser = env.SMTP_USER || env.BREVO_SMTP_USER;
 
 if (hasBrevoKey) {
-  console.log('✅ Brevo (Sendinblue) API Email Service configured');
+  logger.success('Brevo (Sendinblue) API Email Service configured');
 } else if (smtpHost && smtpUser) {
   const isGmail = smtpHost.includes('gmail.com');
-  console.log(`✅ ${isGmail ? 'Gmail' : 'SMTP'} Email Service configured`);
+  logger.success(`${isGmail ? 'Gmail' : 'SMTP'} Email Service configured`);
 } else {
-  console.log('⚠️  Email Service NOT configured (Missing environment variables)');
+  logger.warn('Email Service NOT configured (Missing environment variables)');
 }
 
 // Email transporter configuration
