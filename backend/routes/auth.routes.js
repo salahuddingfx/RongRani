@@ -16,7 +16,6 @@ router.get('/verify-email/:token', controller.verifyEmail);
 
 // 2FA Routes
 router.post('/2fa/setup', auth, controller.setup2FA);
-router.post('/2fa/verify', auth, controller.verify2FA);
 router.post('/2fa/disable', auth, controller.disable2FA);
 router.post('/login/2fa', authLimiter, controller.verifyLogin2FA);
 
