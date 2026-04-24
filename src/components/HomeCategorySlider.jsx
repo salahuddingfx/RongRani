@@ -175,12 +175,14 @@ const HomeCategorySlider = ({ category }) => {
                     className="flex overflow-x-auto space-x-4 px-4 pb-8 no-scrollbar scroll-smooth snap-x snap-mandatory"
                     style={{ WebkitOverflowScrolling: 'touch' }}
                 >
+                    {products.map((product) => (
                         <div
                             key={product._id}
                             className="flex-shrink-0 w-[170px] sm:w-[200px] md:w-[220px] lg:w-[240px] snap-start"
                         >
                             <ProductItem product={product} />
                         </div>
+                    ))}
                     ))}
                 </div>
             </div>
