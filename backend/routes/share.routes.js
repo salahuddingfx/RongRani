@@ -22,8 +22,9 @@ router.get('/product/:id', async (req, res) => {
       return res.status(404).send('Product not found');
     }
 
-    const frontendBase = (process.env.FRONTEND_URL || 'https://rongrani.vercel.app').replace(/\/+$/, '');
-    const serverBase = `${req.protocol}://${req.get('host')}`.replace(/\/+$/, '');
+    const env = require('../config/env');
+    const frontendBase = (env.FRONTEND_URL || 'https://rongrani.vercel.app').replace(/\/+$/, '');
+    const serverBase = (process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
 
     const productPath = `/product/${product.slug || product._id}`;
     const canonicalUrl = `${frontendBase}${productPath}`;
@@ -39,26 +40,47 @@ router.get('/product/:id', async (req, res) => {
       .toString()
       .replace(/\s+/g, ' ')
       .trim()
-      .slice(0, 220);
+      .slice(0, 250);
+
+    const siteTitle = `${product.name} | RongRani™`;
 
     return res.send(`<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>${product.name} | RongRani</title>
+  <title>${siteTitle}</title>
   <meta name="description" content="${description}" />
+  <meta name="theme-color" content="#C9A86A" />
+  <meta name="apple-mobile-web-app-title" content="RongRani" />
+
+  <!-- Open Graph / Facebook -->
   <meta property="og:site_name" content="RongRani" />
   <meta property="og:type" content="product" />
-  <meta property="og:title" content="${product.name}" />
+  <meta property="og:title" content="${siteTitle}" />
   <meta property="og:description" content="${description}" />
   <meta property="og:url" content="${canonicalUrl}" />
+  <meta property="og:locale" content="en_US" />
   <meta property="og:image" content="${imageUrl}" />
+  <meta property="og:image:secure_url" content="${imageUrl}" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:alt" content="${product.name} - RongRani Handmade Gifts" />
+  
+  <!-- Product Specific -->
   <meta property="product:price:amount" content="${product.price || 0}" />
   <meta property="product:price:currency" content="BDT" />
+  <meta property="product:condition" content="new" />
+  <meta property="product:availability" content="${product.stock > 0 ? 'in stock' : 'out of stock'}" />
+
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${product.name}" />
+  <meta name="twitter:site" content="@RongRani" />
+  <meta name="twitter:title" content="${siteTitle}" />
   <meta name="twitter:description" content="${description}" />
   <meta name="twitter:image" content="${imageUrl}" />
+  <meta name="twitter:image:alt" content="${product.name}" />
+
   <meta http-equiv="refresh" content="0; url=${canonicalUrl}" />
   <link rel="canonical" href="${canonicalUrl}" />
 </head>
