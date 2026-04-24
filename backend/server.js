@@ -3,7 +3,6 @@ const { Server } = require('socket.io');
 const app = require('./app');
 const env = require('./config/env');
 const connectDB = require('./config/db');
-const { connectRedis } = require('./config/redis');
 const logger = require('./utils/logger');
 const seedAdminUser = require('./utils/seedAdmin');
 
@@ -19,7 +18,6 @@ process.on('uncaughtException', (err) => {
 // 2. Connect to Databases
 const startDatabases = async () => {
   await connectDB();
-  await connectRedis();
   await seedAdminUser().catch(err => logger.error('Admin seeding failed:', err));
 };
 
