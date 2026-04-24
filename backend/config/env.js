@@ -14,12 +14,13 @@ const env = {
   FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5173',
   
   // Email Config
-  SMTP_HOST: process.env.SMTP_HOST,
-  SMTP_PORT: process.env.SMTP_PORT,
-  SMTP_USER: process.env.SMTP_USER,
-  SMTP_PASS: process.env.SMTP_PASS,
-  FROM_EMAIL: process.env.FROM_EMAIL,
-  FROM_NAME: process.env.FROM_NAME,
+  BREVO_API_KEY: process.env.BREVO_API_KEY,
+  SMTP_HOST: process.env.SMTP_HOST || process.env.BREVO_SMTP_HOST,
+  SMTP_PORT: process.env.SMTP_PORT || process.env.BREVO_SMTP_PORT || 587,
+  SMTP_USER: process.env.SMTP_USER || process.env.BREVO_SMTP_USER,
+  SMTP_PASS: process.env.SMTP_PASS || process.env.BREVO_SMTP_PASS,
+  FROM_EMAIL: process.env.FROM_EMAIL || 'info.rongrani@gmail.com',
+  FROM_NAME: process.env.FROM_NAME || 'RongRani',
   
   // Admin Config
   SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL || 'info.rongrani@gmail.com',
@@ -30,7 +31,7 @@ const env = {
   CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
   
   STEADFAST_API_KEY: process.env.STEADFAST_API_KEY,
-  STEADFAST_SECRET_KEY: process.env.STEADFAST_SECRET_KEY,
+  STEADFAST_API_SECRET: process.env.STEADFAST_API_SECRET,
   
   REDIS_URL: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
 };
