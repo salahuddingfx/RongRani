@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ArrowUp } from 'lucide-react';
 
 const ScrollToTop = () => {
+  const { pathname } = useLocation();
   const [isVisible, setIsVisible] = useState(false);
 
+  // 1. Reset scroll on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  // 2. Handle visibility of "Back to Top" button
   useEffect(() => {
     const toggleVisibility = () => {
       if (window.pageYOffset > 300) {
