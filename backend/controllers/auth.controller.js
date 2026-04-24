@@ -5,6 +5,8 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const env = require('../config/env');
+const { authenticator } = require('otplib');
+const QRCode = require('qrcode');
 
 /**
  * Generate JWT token
@@ -84,6 +86,21 @@ const login = asyncHandler(async (req, res) => {
   }
   await user.save();
 
+  // Check if 2FA is enabled
+  if (user.isTwoFactorEnabled) {
+    // Generate a temporary 2FA token
+    const tempToken = jwt.sign({ id: user._id, is2FAPending: true }, env.JWT_SECRET, {
+      expiresIn: '5m',
+    });
+
+    return res.status(200).json(
+      new ApiResponse(200, {
+        is2FARequired: true,
+        tempToken,
+      }, "2FA verification required")
+    );
+  }
+
   const token = generateToken(user._id);
 
   res.status(200).json(
@@ -93,8 +110,135 @@ const login = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       token,
+      isTwoFactorEnabled: user.isTwoFactorEnabled,
     }, "Login successful")
   );
+});
+
+// @desc    Verify 2FA login
+// @route   POST /api/auth/login/2fa
+// @access  Public
+const verifyLogin2FA = asyncHandler(async (req, res) => {
+  const { tempToken, otp } = req.body;
+
+  if (!tempToken || !otp) {
+    throw new ApiError(400, "Token and OTP are required");
+  }
+
+  try {
+    const decoded = jwt.verify(tempToken, env.JWT_SECRET);
+    if (!decoded.is2FAPending) {
+      throw new ApiError(401, "Invalid session");
+    }
+
+    const user = await User.findById(decoded.id).select('+twoFactorSecret');
+    if (!user || !user.isTwoFactorEnabled) {
+      throw new ApiError(401, "2FA is not enabled for this user");
+    }
+
+    const isValid = authenticator.verify({
+      token: otp,
+      secret: user.twoFactorSecret,
+    });
+
+    if (!isValid) {
+      throw new ApiError(401, "Invalid OTP code");
+    }
+
+    const token = generateToken(user._id);
+
+    res.status(200).json(
+      new ApiResponse(200, {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        token,
+        isTwoFactorEnabled: true,
+      }, "2FA verification successful")
+    );
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new ApiError(401, "Session expired or invalid token");
+  }
+});
+
+// @desc    Setup 2FA
+// @route   POST /api/auth/2fa/setup
+// @access  Private
+const setup2FA = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  
+  if (user.isTwoFactorEnabled) {
+    throw new ApiError(400, "2FA is already enabled");
+  }
+
+  const secret = authenticator.generateSecret();
+  const otpauth = authenticator.keyuri(user.email, 'RongRani', secret);
+  const qrCodeDataURL = await QRCode.toDataURL(otpauth);
+
+  user.twoFactorSecret = secret;
+  await user.save();
+
+  res.status(200).json(
+    new ApiResponse(200, {
+      qrCode: qrCodeDataURL,
+      secret, // Providing the text secret as backup
+    }, "2FA setup initiated. Please verify the code to enable.")
+  );
+});
+
+// @desc    Verify 2FA setup
+// @route   POST /api/auth/2fa/verify
+// @access  Private
+const verify2FA = asyncHandler(async (req, res) => {
+  const { otp } = req.body;
+  const user = await User.findById(req.user._id).select('+twoFactorSecret');
+
+  if (!user.twoFactorSecret) {
+    throw new ApiError(400, "Please setup 2FA first");
+  }
+
+  const isValid = authenticator.verify({
+    token: otp,
+    secret: user.twoFactorSecret,
+  });
+
+  if (!isValid) {
+    throw new ApiError(400, "Invalid verification code");
+  }
+
+  user.isTwoFactorEnabled = true;
+  await user.save();
+
+  res.status(200).json(new ApiResponse(200, {}, "2FA enabled successfully"));
+});
+
+// @desc    Disable 2FA
+// @route   POST /api/auth/2fa/disable
+// @access  Private
+const disable2FA = asyncHandler(async (req, res) => {
+  const { otp } = req.body;
+  const user = await User.findById(req.user._id).select('+twoFactorSecret');
+
+  if (!user.isTwoFactorEnabled) {
+    throw new ApiError(400, "2FA is not enabled");
+  }
+
+  const isValid = authenticator.verify({
+    token: otp,
+    secret: user.twoFactorSecret,
+  });
+
+  if (!isValid) {
+    throw new ApiError(400, "Invalid verification code");
+  }
+
+  user.isTwoFactorEnabled = false;
+  user.twoFactorSecret = undefined;
+  await user.save();
+
+  res.status(200).json(new ApiResponse(200, {}, "2FA disabled successfully"));
 });
 
 // @desc    Get current user
@@ -288,4 +432,8 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
+  setup2FA,
+  verify2FA,
+  disable2FA,
+  verifyLogin2FA,
 };
