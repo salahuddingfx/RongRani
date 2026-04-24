@@ -267,7 +267,8 @@ const AdminDashboard = () => {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-        </di        {/* Top Products */}
+        </div>
+        {/* Top Products */}
         <div className="card">
           <h2 className="text-xl font-bold text-maroon mb-6 flex items-center">
             <TrendingUp className="mr-2 h-6 w-6" />
@@ -339,9 +340,7 @@ const AdminDashboard = () => {
               <p className="text-2xl font-bold text-blue-600">৳{(stats.totalRevenue - stats.totalLoss).toLocaleString()}</p>
             </div>
           </div>
-        </div>
       </div>
-</div>
 
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
