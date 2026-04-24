@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Mail, Lock, User, Check, ShoppingCart } from 'lucide-react';
+import { Mail, Lock, User, ShoppingCart, ArrowRight, Check, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
+import FloatingInput from '../components/FloatingInput';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,8 +12,6 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [agreeToTerms, setAgreeToTerms] = useState(false);
@@ -43,7 +42,7 @@ const Register = () => {
     }
 
     if (!agreeToTerms) {
-      setError('Please agree to the Terms of Service and Privacy Policy');
+      setError('Please agree to the Terms and Privacy Policy');
       setLoading(false);
       return;
     }
@@ -57,233 +56,154 @@ const Register = () => {
       toast.success('Account created successfully! Welcome to RongRani');
       navigate(from === '/cart' ? '/checkout' : from);
     } catch (error) {
-      setError(error.response?.data?.message || 'Registration failed');
+      setError(error.response?.data?.message || 'Registration failed. Try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-cream relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-maroon/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-gold/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-[#FFFBFB] flex flex-col items-center justify-center relative overflow-hidden px-4 py-12">
+      {/* Decorative Elements */}
+      <div className="absolute top-[-5%] right-[-5%] w-[35%] h-[35%] bg-maroon/5 rounded-full blur-[120px]"></div>
+      <div className="absolute bottom-[-5%] left-[-5%] w-[30%] h-[30%] bg-gold/5 rounded-full blur-[100px]"></div>
 
-      {/* Logo at top */}
-      <div className="pt-8 pb-4">
-        <div className="flex justify-center">
-          <Link to="/" className="flex flex-col items-center gap-2 group">
-            <div className="w-16 h-16 flex items-center justify-center rounded-full border-2 border-maroon p-0 overflow-hidden shadow-xl group-hover:scale-110 transition-all duration-300 bg-transparent">
-              <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
+      <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-[40px] shadow-premium overflow-hidden border border-maroon/5 z-10">
+        
+        {/* Left Side: Visual/Branding */}
+        <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-maroon to-[#6A112B] text-white relative">
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/cubes.png")' }}></div>
+          
+          <div className="relative z-10">
+            <Link to="/" className="inline-flex items-center gap-3 group">
+              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center p-2 shadow-lg">
+                <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
+              </div>
+              <span className="text-3xl font-black tracking-tight text-white">Rong<span className="text-cream-light opacity-80">Rani</span></span>
+            </Link>
+            
+            <div className="mt-16 max-w-md">
+              <h1 className="text-5xl font-black leading-tight mb-6">Join the <br/> <span className="text-gold italic">Elite</span> Community</h1>
+              <p className="text-cream-light text-lg opacity-80 leading-relaxed">
+                Create an account today and unlock a world of handcrafted elegance and exclusive privileges.
+              </p>
             </div>
-            <span className="text-2xl md:text-3xl font-black text-maroon tracking-tight">
-              Rong<span className="text-slate-800">Rani</span>
-            </span>
-          </Link>
-        </div>
-      </div>
+          </div>
 
-      {/* Customer Benefits Banner */}
-      <div className="max-w-4xl mx-auto px-4 mb-6">
-        <div className="bg-maroon text-white rounded-2xl p-6 shadow-xl">
-          <h3 className="text-xl font-bold mb-3 text-center">🎁 Become a Lifetime Customer</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-            <div className="text-center">
-              <div className="text-2xl mb-1">💝</div>
-              <p className="font-semibold">Exclusive Deals</p>
-              <p className="text-cream-light text-xs">Member discounts</p>
+          <div className="relative z-10 grid grid-cols-2 gap-4">
+            <div className="bg-white/10 p-5 rounded-3xl backdrop-blur-md border border-white/10">
+               <div className="text-2xl mb-2">🎁</div>
+               <p className="font-bold text-sm">Welcome Gift</p>
+               <p className="text-xs text-cream-light opacity-70">10% OFF on first order</p>
             </div>
-            <div className="text-center">
-              <div className="text-2xl mb-1">🚚</div>
-              <p className="font-semibold">Free Shipping</p>
-              <p className="text-cream-light text-xs">Above ৳2500</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl mb-1">📦</div>
-              <p className="font-semibold">Order Tracking</p>
-              <p className="text-cream-light text-xs">Real-time updates</p>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl mb-1">⭐</div>
-              <p className="font-semibold">Priority Care</p>
-              <p className="text-cream-light text-xs">24/7 support</p>
+            <div className="bg-white/10 p-5 rounded-3xl backdrop-blur-md border border-white/10">
+               <div className="text-2xl mb-2">👑</div>
+               <p className="font-bold text-sm">VIP Status</p>
+               <p className="text-xs text-cream-light opacity-70">Lifetime membership</p>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Centered Glass Card Form */}
-      <div className="flex items-center justify-center px-4 py-8">
-        <div className="glass-card w-full max-w-md p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-maroon mb-2">Create Account</h2>
-            <p className="text-slate text-sm">Join RongRani and unlock lifetime benefits</p>
+        {/* Right Side: Register Form */}
+        <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
+          <div className="mb-8 text-center lg:text-left">
+            <h2 className="text-3xl font-black text-slate-800 mb-2">Create Account</h2>
+            <p className="text-slate-500 font-medium italic">Start your journey with us today.</p>
           </div>
 
-          {/* Message from Cart */}
           {message && (
-            <div className="bg-maroon/10 border border-maroon/30 text-maroon px-4 py-3 rounded-lg mb-6 text-sm flex items-center space-x-2">
+            <div className="bg-maroon/5 border-l-4 border-maroon text-maroon p-4 rounded-r-xl mb-6 flex items-center gap-3 animate-slide-in">
               <ShoppingCart className="h-5 w-5 flex-shrink-0" />
-              <span>{message}</span>
+              <span className="text-sm font-bold">{message}</span>
             </div>
           )}
 
-          {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
-              {error}
+            <div className="bg-red-50 border-l-4 border-red-500 text-red-600 p-4 rounded-r-xl mb-6 flex items-center gap-3 animate-shake">
+              <span className="text-sm font-bold">{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Full Name */}
-            <div>
-              <label className="block text-sm font-medium text-slate mb-2">
-                Full Name
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="input-field pl-12"
-                  placeholder="Enter your full name"
-                />
-                <User className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate" />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-1">
+            <FloatingInput
+              label="Full Name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              icon={User}
+              required
+            />
+
+            <FloatingInput
+              label="Email Address"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              icon={Mail}
+              required
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-0">
+               <FloatingInput
+                 label="Password"
+                 name="password"
+                 value={formData.password}
+                 onChange={handleChange}
+                 icon={Lock}
+                 isPassword={true}
+                 required
+               />
+               <FloatingInput
+                 label="Confirm Password"
+                 name="confirmPassword"
+                 value={formData.confirmPassword}
+                 onChange={handleChange}
+                 icon={ShieldCheck}
+                 isPassword={true}
+                 required
+               />
             </div>
 
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-slate mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="input-field pl-12"
-                  placeholder="Enter your email"
-                />
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate" />
-              </div>
+            <div className="pt-2">
+               <label className="flex items-start gap-3 cursor-pointer group">
+                  <div className="relative mt-1">
+                     <input 
+                        type="checkbox" 
+                        checked={agreeToTerms}
+                        onChange={(e) => setAgreeToTerms(e.target.checked)}
+                        className="sr-only peer" 
+                     />
+                     <div className="w-5 h-5 border-2 border-slate-200 rounded-md peer-checked:bg-maroon peer-checked:border-maroon transition-all"></div>
+                     <div className="absolute inset-0 flex items-center justify-center text-white scale-0 peer-checked:scale-100 transition-transform">✓</div>
+                  </div>
+                  <span className="text-sm text-slate-500 leading-snug">
+                     I agree to the <Link to="/terms" className="text-maroon font-bold hover:underline">Terms of Service</Link> and <Link to="/privacy" className="text-maroon font-bold hover:underline">Privacy Policy</Link>
+                  </span>
+               </label>
             </div>
 
-            {/* Password */}
-            <div>
-              <label className="block text-sm font-medium text-slate mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  minLength="6"
-                  className="input-field pl-12 pr-12"
-                  placeholder="Create a password"
-                />
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate" />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate hover:text-maroon transition-colors"
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <label className="block text-sm font-medium text-slate mb-2">
-                Confirm Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
-                  className="input-field pl-12 pr-12"
-                  placeholder="Confirm your password"
-                />
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate" />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate hover:text-maroon transition-colors"
-                >
-                  {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
-              </div>
-            </div>
-
-            {/* Terms Agreement */}
-            <div className="flex items-start space-x-3">
-              <div className="relative">
-                <input
-                  type="checkbox"
-                  checked={agreeToTerms}
-                  onChange={(e) => setAgreeToTerms(e.target.checked)}
-                  className="sr-only"
-                />
-                <div
-                  className={`w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-colors ${agreeToTerms
-                    ? 'bg-maroon border-maroon'
-                    : 'border-slate/40 hover:border-maroon'
-                    }`}
-                  onClick={() => setAgreeToTerms(!agreeToTerms)}
-                >
-                  {agreeToTerms && <Check className="h-3 w-3 text-white" />}
-                </div>
-              </div>
-              <span className="text-sm text-slate leading-relaxed">
-                I agree to the{' '}
-                <Link to="/terms" className="text-maroon hover:text-maroon-light font-medium underline">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link to="/privacy" className="text-maroon hover:text-maroon-light font-medium underline">
-                  Privacy Policy
-                </Link>
-              </span>
-            </div>
-
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary py-3 rounded-lg font-medium hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full mt-8 bg-maroon text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-maroon/20 hover:bg-[#701e2a] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-70 group"
             >
               {loading ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  <span>Creating Account...</span>
-                </div>
+                <div className="animate-spin rounded-full h-6 w-6 border-4 border-white/30 border-t-white"></div>
               ) : (
-                'Create Account'
+                <>
+                  <span>Create Account Now</span>
+                  <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+                </>
               )}
             </button>
           </form>
 
-          {/* Sign In Link */}
-          <div className="mt-8 text-center">
-            <p className="text-slate text-sm">
+          <div className="mt-10 text-center">
+            <p className="text-slate-500 font-medium">
               Already have an account?{' '}
-              <Link
-                to="/login"
-                className="text-maroon hover:text-maroon-light font-medium transition-colors"
-              >
-                Sign in
+              <Link to="/login" className="text-maroon font-black hover:underline decoration-2 underline-offset-4 ml-1">
+                Sign In
               </Link>
             </p>
           </div>

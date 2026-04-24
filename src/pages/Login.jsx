@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, EyeOff, Mail, Lock, ShoppingCart } from 'lucide-react';
+import { Mail, Lock, ShoppingCart, ArrowRight, Github, Chrome } from 'lucide-react';
+import FloatingInput from '../components/FloatingInput';
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -35,162 +35,168 @@ const Login = () => {
       await login(formData.email, formData.password);
       navigate(from === '/cart' ? '/checkout' : from);
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed');
+      setError(error.response?.data?.message || 'Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-cream relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-20 left-10 w-96 h-96 bg-maroon/10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-gold/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-[#FFFBFB] flex flex-col items-center justify-center relative overflow-hidden px-4 py-12">
+      {/* Decorative Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-maroon/5 rounded-full blur-[120px] animate-pulse"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-gold/5 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }}></div>
 
-      {/* Logo at top */}
-      <div className="pt-8 pb-4">
-        <div className="flex justify-center">
-          <Link to="/" className="flex flex-col items-center gap-2 group">
-            <div className="w-16 h-16 flex items-center justify-center rounded-full border-2 border-maroon p-0 overflow-hidden shadow-xl group-hover:scale-110 transition-all duration-300 bg-transparent">
-              <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
-            </div>
-            <span className="text-2xl md:text-3xl font-black text-maroon tracking-tight">
-              Rong<span className="text-slate-800">Rani</span>
-            </span>
-          </Link>
-        </div>
-      </div>
+      {/* Floating Background Shapes */}
+      <div className="absolute top-20 right-[15%] w-12 h-12 border-4 border-maroon/10 rounded-xl rotate-12 animate-bounce-slow"></div>
+      <div className="absolute bottom-40 left-[10%] w-8 h-8 bg-gold/10 rounded-full animate-float"></div>
 
-      {/* Customer Benefits Banner */}
-      <div className="max-w-4xl mx-auto px-3 sm:px-4 mb-6">
-        <div className="bg-maroon text-white rounded-2xl p-4 sm:p-6 shadow-xl">
-          <h3 className="text-lg sm:text-xl font-bold mb-3 text-center">🎁 Lifetime Customer Benefits</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 text-xs sm:text-sm">
-            <div className="text-center">
-              <div className="text-2xl mb-1">💝</div>
-              <p className="font-semibold">Exclusive Offers</p>
-              <p className="text-cream-light text-xs">Member-only discounts</p>
+      <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-[40px] shadow-premium overflow-hidden border border-maroon/5 z-10">
+        
+        {/* Left Side: Visual/Branding (Hidden on mobile) */}
+        <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-maroon to-[#6A112B] text-white relative overflow-hidden">
+          {/* Abstract pattern overlay */}
+          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }}></div>
+          
+          <div>
+            <Link to="/" className="inline-flex items-center gap-3 group">
+              <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center p-2 shadow-lg group-hover:rotate-12 transition-all duration-500">
+                <img src="/RongRani-Logo.png" alt="Logo" className="w-full h-full object-contain" />
+              </div>
+              <span className="text-3xl font-black tracking-tight">Rong<span className="text-cream-light opacity-80">Rani</span></span>
+            </Link>
+            
+            <div className="mt-20 max-w-sm">
+              <h1 className="text-5xl font-black leading-tight mb-6">Experience <br/> <span className="text-gold">Premium</span> Gifting</h1>
+              <p className="text-cream-light text-lg opacity-80 leading-relaxed">
+                Log in to explore our curated collections and enjoy lifetime member benefits.
+              </p>
             </div>
-            <div className="text-center">
-              <div className="text-2xl mb-1">🚚</div>
-              <p className="font-semibold">Free Shipping</p>
-              <p className="text-cream-light text-xs">On orders above ৳2500</p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="flex items-center gap-4 bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+              <div className="w-10 h-10 bg-gold/20 flex items-center justify-center rounded-xl text-gold">⭐</div>
+              <div>
+                <p className="font-bold text-sm">Priority Selection</p>
+                <p className="text-xs text-cream-light opacity-70">Early access to new collections</p>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl mb-1">⭐</div>
-              <p className="font-semibold">Priority Support</p>
-              <p className="text-cream-light text-xs">24/7 customer care</p>
+            
+            <div className="flex items-center gap-4 bg-white/10 p-4 rounded-2xl backdrop-blur-md border border-white/10">
+              <div className="w-10 h-10 bg-emerald-400/20 flex items-center justify-center rounded-xl text-emerald-400 text-lg">🚚</div>
+              <div>
+                <p className="font-bold text-sm">Swift Delivery</p>
+                <p className="text-xs text-cream-light opacity-70">Dedicated logistics for members</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Centered Glass Card Form */}
-      <div className="flex items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
-        <div className="glass-card w-full max-w-md p-6 sm:p-8 rounded-3xl">
-          <div className="text-center mb-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-maroon mb-2">Welcome Back</h2>
-            <p className="text-slate text-xs sm:text-sm">Sign in to access your lifetime benefits</p>
+        {/* Right Side: Login Form */}
+        <div className="p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
+          <div className="mb-10">
+            <h2 className="text-3xl font-black text-slate-800 mb-3">Welcome Back!</h2>
+            <p className="text-slate-500 font-medium italic">We missed you. Please enter your details.</p>
           </div>
 
           {message && (
-            <div className="bg-maroon/10 border border-maroon/30 text-maroon px-3 sm:px-4 py-3 rounded-lg mb-6 text-xs sm:text-sm flex items-center gap-2">
-              <ShoppingCart className="h-4 sm:h-5 w-4 sm:w-5 flex-shrink-0" />
-              <span>{message}</span>
+            <div className="bg-maroon/5 border-l-4 border-maroon text-maroon p-4 rounded-r-xl mb-8 flex items-center gap-3 animate-slide-in">
+              <ShoppingCart className="h-5 w-5 flex-shrink-0" />
+              <span className="text-sm font-bold">{message}</span>
             </div>
           )}
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-3 sm:px-4 py-3 rounded-lg mb-6 text-xs sm:text-sm">
-              {error}
+            <div className="bg-red-50 border-l-4 border-red-500 text-red-600 p-4 rounded-r-xl mb-8 flex items-center gap-3 animate-shake">
+              <span className="text-sm font-bold">{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-slate mb-2">
-                Email Address
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="input-field pl-12 sm:pl-14 text-sm"
-                  placeholder="Enter your email"
-                />
-                <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-slate flex-shrink-0" />
-              </div>
-            </div>
+          <form onSubmit={handleSubmit} className="space-y-2">
+            <FloatingInput
+              label="Email Address"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              icon={Mail}
+              required
+            />
 
-            <div>
-              <label className="block text-xs sm:text-sm font-medium text-slate mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
-                  className="input-field pl-12 sm:pl-14 pr-12 sm:pr-14 text-sm"
-                  placeholder="Enter your password"
-                />
-                <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-slate flex-shrink-0" />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 text-slate hover:text-maroon transition-colors p-1"
-                >
-                  {showPassword ? <EyeOff className="h-4 sm:h-5 w-4 sm:w-5" /> : <Eye className="h-4 sm:h-5 w-4 sm:w-5" />}
-                </button>
-              </div>
-            </div>
+            <FloatingInput
+              label="Password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              icon={Lock}
+              isPassword={true}
+              required
+            />
 
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="rounded border-slate text-maroon focus:ring-maroon"
-                />
-                <span className="text-xs sm:text-sm text-slate">Remember me</span>
+            <div className="flex items-center justify-between pt-2">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <div className="relative">
+                   <input type="checkbox" className="sr-only peer" />
+                   <div className="w-5 h-5 border-2 border-slate-200 rounded-md peer-checked:bg-maroon peer-checked:border-maroon transition-all"></div>
+                   <div className="absolute inset-0 flex items-center justify-center text-white scale-0 peer-checked:scale-100 transition-transform">✓</div>
+                </div>
+                <span className="text-sm text-slate-500 group-hover:text-maroon transition-colors">Remember me</span>
               </label>
-              <Link
-                to="/forgot-password"
-                className="text-xs sm:text-sm text-maroon hover:text-maroon-light font-medium transition-colors"
-              >
-                Forgot password?
+              <Link to="/forgot-password" size="sm" className="text-sm font-bold text-maroon hover:underline decoration-2 underline-offset-4">
+                Forgot Password?
               </Link>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full btn-primary py-2.5 sm:py-3 rounded-xl sm:rounded-lg font-medium hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
+              className="w-full mt-8 bg-maroon text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-maroon/20 hover:bg-[#701e2a] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-70 group"
             >
               {loading ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  <span>Signing in...</span>
-                </div>
+                <div className="animate-spin rounded-full h-6 w-6 border-4 border-white/30 border-t-white"></div>
               ) : (
-                'Sign In'
+                <>
+                  <span>Sign In to Account</span>
+                  <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+                </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 sm:mt-8 text-center">
-            <p className="text-xs sm:text-sm text-slate">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-maroon hover:text-maroon-light font-medium transition-colors">
-                Sign up
+          {/* Social Logins */}
+          <div className="mt-10">
+             <div className="relative mb-8 text-center">
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-slate-100"></div></div>
+                <span className="relative px-4 bg-white text-slate-400 text-xs font-bold uppercase tracking-widest">Or continue with</span>
+             </div>
+             
+             <div className="grid grid-cols-2 gap-4">
+                <button className="flex items-center justify-center gap-3 py-3 border-2 border-slate-50 rounded-2xl hover:bg-slate-50 transition-colors font-bold text-slate-700">
+                   <Chrome size={20} className="text-maroon" />
+                   <span>Google</span>
+                </button>
+                <button className="flex items-center justify-center gap-3 py-3 border-2 border-slate-50 rounded-2xl hover:bg-slate-50 transition-colors font-bold text-slate-700">
+                   <Github size={20} className="text-slate-900" />
+                   <span>GitHub</span>
+                </button>
+             </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <p className="text-slate-500 font-medium">
+              New to RongRani?{' '}
+              <Link to="/register" className="text-maroon font-black hover:underline decoration-2 underline-offset-4 ml-1">
+                Create an Account
               </Link>
             </p>
           </div>
         </div>
+      </div>
+      
+      {/* Small footer */}
+      <div className="mt-8 text-slate-400 text-xs font-medium">
+        &copy; {new Date().getFullYear()} RongRani. Handcrafted with ❤️ in Bangladesh.
       </div>
     </div>
   );
