@@ -1,17 +1,18 @@
 const axios = require('axios');
+const logger = require('./logger');
+const env = require('../config/env');
 
 class SteadfastService {
   constructor() {
-    this.apiKey = process.env.STEADFAST_API_KEY;
-    this.apiSecret = process.env.STEADFAST_API_SECRET;
-    this.baseURL = process.env.STEADFAST_BASE_URL || 'https://portal.packzy.com/api/v1';
+    this.apiKey = env.STEADFAST_API_KEY;
+    this.apiSecret = env.STEADFAST_API_SECRET;
+    this.baseURL = env.STEADFAST_BASE_URL || 'https://portal.packzy.com/api/v1';
     this.isConfigured = !!(this.apiKey && this.apiSecret);
 
     if (!this.isConfigured) {
-      console.log('⚠️  Steadfast Courier API not configured');
-      console.log('   To enable: Set STEADFAST_API_KEY and STEADFAST_API_SECRET in .env');
+      logger.warn('Steadfast Courier API not configured');
     } else {
-      console.log('✅ Steadfast Courier API configured');
+      logger.success('Steadfast Courier API configured');
     }
 
     this.client = axios.create({
