@@ -29,6 +29,7 @@ const {
 	deleteReview,
 } = require('../controllers/admin.controller');
 const { auth, authorize } = require('../middlewares/auth.middleware');
+const cache = require('../middlewares/cache.middleware');
 
 const router = express.Router();
 
@@ -41,8 +42,8 @@ router.get('/banners', getBanners);
 router.use(auth, authorize(['admin', 'super_admin']));
 
 // Dashboard
-router.get('/dashboard', getDashboardStats);
-router.get('/reports/summary', getReportsSummary);
+router.get('/dashboard', cache(300), getDashboardStats);
+router.get('/reports/summary', cache(300), getReportsSummary);
 
 // User management
 router.get('/users', getAllUsers);
