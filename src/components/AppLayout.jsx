@@ -41,7 +41,7 @@ const AppLayout = () => {
         <Navbar />
       </div>
 
-      <main className="flex-1 pb-20 lg:pb-0 pt-36 sm:pt-44 md:pt-52 page-content-fade-in transition-all duration-500">
+      <main className="flex-1 pb-20 lg:pb-0 pt-40 sm:pt-48 md:pt-56 page-content-fade-in transition-all duration-500">
         <Outlet />
       </main>
 

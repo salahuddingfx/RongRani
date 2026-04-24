@@ -388,7 +388,7 @@ const Navbar = () => {
     ...(user?.role === 'admin' ? [{ to: '/admin', label: 'admin_panel', icon: Crown }] : []),
   ];
 
-  const topBarClasses = `bg-maroon text-white text-[10px] md:text-xs py-2 px-3 md:px-6 transition-all duration-300 relative z-50 flex items-center justify-center overflow-hidden ${isScrolled ? 'h-0 py-0 opacity-0' : 'h-10 opacity-100'}`;
+  const topBarClasses = 'bg-maroon text-white text-[10px] md:text-xs py-2 px-3 md:px-6 relative z-50 flex items-center justify-center overflow-hidden h-10';
   
   const mainNavClasses = isScrolled
     ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-premium py-2 rounded-2xl mx-4 mt-2 border border-maroon/10'
