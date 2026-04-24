@@ -75,16 +75,23 @@ const Home = () => {
 
 
   const fetchFeaturedProducts = async () => {
+    const isMobile = window.innerWidth < 768;
+    const limit = isMobile ? 6 : 8; 
     try {
-      const isMobile = window.innerWidth < 768;
-      const limit = isMobile ? 6 : 8; // Load fewer products on mobile for faster rendering
       const response = await axios.get(`/api/products?limit=${limit}`);
-      setFeaturedProducts(response.data.products);
+      if (response.data && response.data.products) {
+        setFeaturedProducts(response.data.products);
+      } else {
+        setFeaturedProducts([]);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
-      // Fallback data...
-
-      setFeaturedProducts(FALLBACK_PRODUCTS.slice(0, isMobile ? 6 : 8));
+      // Fallback data
+      if (typeof FALLBACK_PRODUCTS !== 'undefined') {
+        setFeaturedProducts(FALLBACK_PRODUCTS.slice(0, limit));
+      } else {
+        setFeaturedProducts([]);
+      }
     } finally {
       setLoading(false);
     }
@@ -410,7 +417,7 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
-              {featuredProducts.map((product, index) => (
+              {featuredProducts?.map((product, index) => (
                 <Suspense key={product._id} fallback={<ProductCardSkeleton />}>
                   <div
                     className="animate-slide-up"
