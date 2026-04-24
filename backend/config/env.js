@@ -2,6 +2,7 @@
  * Centralized Environment Variable Management
  * Provides validation and default values for environment variables.
  */
+require('dotenv').config();
 
 const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
