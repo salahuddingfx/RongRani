@@ -520,7 +520,7 @@ const AdminOrders = () => {
                         <Square className="h-6 w-6 text-slate-300" />
                       }
                     </button>
-                    <h3 className="text-xl font-bold text-maroon">#{order._id.slice(-6).toUpperCase()}</h3>
+                    <h3 className="text-xl font-bold text-maroon">#{order._id ? order._id.slice(-6).toUpperCase() : 'N/A'}</h3>
                   </div>
                   {getFraudBadge(order.fraudRisk, order.fraudReason)}
                   <span className={`px-4 py-1 rounded-full text-sm font-semibold border-2 flex items-center space-x-2 ${getStatusColor(order.orderStatus)}`}>
