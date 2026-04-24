@@ -37,34 +37,33 @@ const updateProductReviewStats = async (productId) => {
   });
 };
 
-// @desc    Get dashboard stats
+// @desc    Get dashboard stats with detailed metrics
 // @route   GET /api/admin/dashboard
 // @access  Private/Admin
-const getDashboardStats = async (req, res) => {
-  try {
+const getDashboardStats = asyncHandler(async (req, res) => {
+    // 1. Basic Counts
     const totalUsers = await User.countDocuments();
     const totalOrders = await Order.countDocuments();
     const totalProducts = await Product.countDocuments();
+    
+    // 2. Revenue & Status Counts
     const totalRevenue = await Order.aggregate([
       { $match: { paymentStatus: 'paid' } },
       { $group: { _id: null, total: { $sum: '$total' } } },
     ]);
 
-    const recentOrders = await Order.find()
-      .populate('user', 'name email')
-      .sort({ createdAt: -1 })
-      .limit(5);
+    const orderStatusCounts = await Order.aggregate([
+      { $group: { _id: '$orderStatus', count: { $sum: 1 } } },
+    ]);
 
-    const lowStockProducts = await Product.find({ stock: { $lt: 10 }, isActive: true })
-      .select('name stock')
-      .sort({ stock: 1 })
-      .limit(10);
-
+    // 3. Activity & Trends (Last 30 Days)
+    const startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    
     const monthlyRevenue = await Order.aggregate([
       {
         $match: {
           paymentStatus: 'paid',
-          createdAt: { $gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) },
+          createdAt: { $gte: startDate },
         },
       },
       {
@@ -76,32 +75,47 @@ const getDashboardStats = async (req, res) => {
       { $sort: { _id: 1 } },
     ]);
 
-    const orderStatusCounts = await Order.aggregate([
-      { $group: { _id: '$orderStatus', count: { $sum: 1 } } },
+    const recentOrders = await Order.find()
+      .populate('user', 'name email')
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    const lowStockProducts = await Product.find({ stock: { $lt: 10 }, isActive: true })
+      .select('name stock')
+      .sort({ stock: 1 })
+      .limit(10);
+
+    // 4. Advanced Metrics (Returns, Delivered, Loss)
+    const deliveredCount = orderStatusCounts.find(c => c._id === 'delivered')?.count || 0;
+    const returnedCount = orderStatusCounts.find(c => c._id === 'returned')?.count || 0;
+    const cancelledCount = orderStatusCounts.find(c => c._id === 'cancelled')?.count || 0;
+
+    const lossData = await Order.aggregate([
+      { $match: { orderStatus: { $in: ['cancelled', 'returned'] } } },
+      { $group: { _id: null, totalLoss: { $sum: '$total' } } }
     ]);
 
-    const categoryCounts = await Product.aggregate([
-      { $match: { isActive: true } },
-      { $group: { _id: '$category', count: { $sum: 1 } } },
-      { $sort: { count: -1 } },
-      { $limit: 8 },
-    ]);
-
-    res.json({
+    res.status(200).json(new ApiResponse(200, {
       totalUsers,
       totalOrders,
       totalProducts,
       totalRevenue: totalRevenue[0]?.total || 0,
+      totalLoss: lossData[0]?.totalLoss || 0,
+      deliveredCount,
+      returnedCount,
+      cancelledCount,
       recentOrders,
       lowStockProducts,
       monthlyRevenue,
       orderStatusCounts,
-      categoryCounts,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+      categoryCounts: await Product.aggregate([
+        { $match: { isActive: true } },
+        { $group: { _id: '$category', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 8 },
+      ])
+    }));
+});
 
 // @desc    Get all users
 // @route   GET /api/admin/users
