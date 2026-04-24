@@ -46,6 +46,11 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
+  twoFactorSecret: String,
+  isTwoFactorEnabled: {
+    type: Boolean,
+    default: false
+  },
   lastLogin: Date,
   address: {
     street: String,
