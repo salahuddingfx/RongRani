@@ -424,11 +424,11 @@ const ProductDetail = () => {
               {/* Price Section */}
               <div className="flex items-end space-x-4 mb-8">
                 <span className="text-5xl font-black text-maroon tracking-tighter">
-                  ৳{product.price.toLocaleString()}
+                  ৳{(product.price || 0).toLocaleString()}
                 </span>
                 {product.originalPrice > product.price && (
                   <span className="text-2xl text-slate/40 line-through font-bold mb-1">
-                    ৳{product.originalPrice.toLocaleString()}
+                    ৳{(product.originalPrice || 0).toLocaleString()}
                   </span>
                 )}
               </div>
