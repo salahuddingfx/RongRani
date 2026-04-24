@@ -79,6 +79,15 @@ const Seo = ({ title, description, keywords, path, image, noIndex = false, schem
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:alt" content={`${metaTitle} - RongRani Handmade Gifts`} />
       
+      {/* Product Specific Tags for IG/FB/TikTok Shopping */}
+      {type === 'product' && (
+        <>
+          <meta property="product:brand" content="RongRani" />
+          <meta property="product:condition" content="new" />
+          <meta property="product:retailer_item_id" content={path?.split('/').pop()} />
+        </>
+      )}
+
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@RongRani" />
       <meta name="twitter:title" content={metaTitle} />
@@ -89,6 +98,8 @@ const Seo = ({ title, description, keywords, path, image, noIndex = false, schem
 
       <meta name="theme-color" content="#C9A86A" />
       <meta name="apple-mobile-web-app-title" content="RongRani" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       {extraMeta.map((meta, index) => {
         const key = `${meta.property || meta.name}-${index}`;
         if (meta.property) {

@@ -24,18 +24,33 @@ router.get('/product/:id', async (req, res) => {
 
     const env = require('../config/env');
     const frontendBase = (env.FRONTEND_URL || 'https://rongrani.vercel.app').replace(/\/+$/, '');
-    const serverBase = (process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
+    
+    // Improved serverBase detection
+    let serverBase = process.env.BACKEND_URL || `${req.protocol}://${req.get('host')}`;
+    // Force https if not on localhost
+    if (!serverBase.includes('localhost') && !serverBase.startsWith('https://')) {
+      serverBase = serverBase.replace('http://', 'https://');
+    }
+    serverBase = serverBase.replace(/\/+$/, '');
 
     const productPath = `/product/${product.slug || product._id}`;
     const canonicalUrl = `${frontendBase}${productPath}`;
 
-    const primaryImageRaw =
-      (Array.isArray(product.images) && product.images[0] && (product.images[0].url || product.images[0])) ||
-      product.image?.url ||
-      product.image ||
-      '/RongRani-Circle.png';
+    const getImageUrl = (img) => {
+      if (!img) return '/RongRani-Circle.png';
+      const imgPath = (img.url || img);
+      if (typeof imgPath === 'string' && (imgPath.startsWith('http') || imgPath.startsWith('data:'))) return imgPath;
+      // If it's a mongo ID or relative path, ensure it points to the API
+      const id = img?._id || img;
+      return `/api/images/${id}`;
+    };
 
-    const imageUrl = resolveAbsoluteUrl(serverBase, primaryImageRaw);
+    const primaryImageRaw =
+      (Array.isArray(product.images) && product.images[0]) ||
+      product.image ||
+      null;
+
+    const imageUrl = resolveAbsoluteUrl(serverBase, getImageUrl(primaryImageRaw));
     const description = (product.seoDescription || product.description || 'Explore handcrafted gifts from RongRani.')
       .toString()
       .replace(/\s+/g, ' ')
@@ -70,8 +85,10 @@ router.get('/product/:id', async (req, res) => {
   <!-- Product Specific -->
   <meta property="product:price:amount" content="${product.price || 0}" />
   <meta property="product:price:currency" content="BDT" />
+  <meta property="product:brand" content="RongRani" />
   <meta property="product:condition" content="new" />
   <meta property="product:availability" content="${product.stock > 0 ? 'in stock' : 'out of stock'}" />
+  <meta property="product:retailer_item_id" content="${product._id}" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -80,6 +97,10 @@ router.get('/product/:id', async (req, res) => {
   <meta name="twitter:description" content="${description}" />
   <meta name="twitter:image" content="${imageUrl}" />
   <meta name="twitter:image:alt" content="${product.name}" />
+
+  <meta name="apple-mobile-web-app-title" content="RongRani" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
 
   <meta http-equiv="refresh" content="0; url=${canonicalUrl}" />
   <link rel="canonical" href="${canonicalUrl}" />
