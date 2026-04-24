@@ -20,18 +20,26 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @access  Public
 const register = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, username } = req.body;
 
   // Check if user exists
-  const userExists = await User.findOne({ email });
+  const userExists = await User.findOne({ 
+    $or: [
+      { email },
+      { username: username?.toLowerCase() }
+    ]
+  });
+
   if (userExists) {
-    throw new ApiError(400, 'User already exists');
+    const field = userExists.email === email ? 'Email' : 'Username';
+    throw new ApiError(400, `${field} already exists`);
   }
 
   // Create user
   const user = await User.create({
     name,
     email,
+    username,
     password,
     role: email === env.SUPER_ADMIN_EMAIL ? 'admin' : 'user'
   });
@@ -67,13 +75,20 @@ const register = asyncHandler(async (req, res) => {
 // @route   POST /api/auth/login
 // @access  Public
 const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body; // 'email' can be email or username
 
   if (!email || !password) {
-    throw new ApiError(400, "Email and password are required");
+    throw new ApiError(400, "Email/Username and password are required");
   }
 
-  const user = await User.findOne({ email }).select('+password');
+  // Find user by email or username
+  const user = await User.findOne({
+    $or: [
+      { email: email.toLowerCase() },
+      { username: email.toLowerCase() }
+    ]
+  }).select('+password');
+
   if (!user || !(await user.comparePassword(password))) {
     throw new ApiError(401, 'Invalid credentials');
   }

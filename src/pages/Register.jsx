@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Mail, Lock, User, ShoppingCart, ArrowRight, Check, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, ShoppingCart, ArrowRight, Check, ShieldCheck, AtSign } from 'lucide-react';
 import toast from 'react-hot-toast';
 import FloatingInput from '../components/FloatingInput';
 
 const Register = () => {
   const [formData, setFormData] = useState({
     name: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -50,6 +51,7 @@ const Register = () => {
     try {
       await register({
         name: formData.name,
+        username: formData.username,
         email: formData.email,
         password: formData.password
       });
@@ -131,6 +133,15 @@ const Register = () => {
               value={formData.name}
               onChange={handleChange}
               icon={User}
+              required
+            />
+
+            <FloatingInput
+              label="Username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              icon={AtSign}
               required
             />
 

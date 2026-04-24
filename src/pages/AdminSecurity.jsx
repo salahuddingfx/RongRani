@@ -183,21 +183,30 @@ const AdminSecurity = () => {
         </div>
 
         <div className="space-y-6">
-              <ShieldCheck className="h-5 w-5 text-pink-300" />
+          <div className="card bg-gradient-to-br from-maroon to-[#6A112B] text-white p-8 shadow-xl rounded-[30px] relative overflow-hidden">
+            <div className="absolute top-[-20%] right-[-20%] w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+            <h4 className="font-black text-xl mb-6 flex items-center gap-3">
+              <ShieldCheck className="h-6 w-6 text-pink-300" />
               Security Tips
             </h4>
-            <ul className="space-y-4 text-sm text-pink-100 opacity-90">
-              <li className="flex gap-2">
-                <div className="w-1.5 h-1.5 bg-pink-400 rounded-full mt-1.5 shrink-0" />
-                Never share your 2FA secret or recovery codes with anyone.
+            <ul className="space-y-6">
+              <li className="flex gap-4">
+                <div className="w-1.5 h-1.5 bg-pink-400 rounded-full mt-2 shrink-0 shadow-[0_0_8px_rgba(244,114,182,0.8)]" />
+                <p className="text-sm font-medium text-pink-50 leading-relaxed opacity-90">
+                  Choose a PIN that is easy for you to remember but hard for others to guess.
+                </p>
               </li>
-              <li className="flex gap-2">
-                <div className="w-1.5 h-1.5 bg-pink-400 rounded-full mt-1.5 shrink-0" />
-                Use a trusted authenticator app like Google Authenticator or Bitwarden.
+              <li className="flex gap-4">
+                <div className="w-1.5 h-1.5 bg-pink-400 rounded-full mt-2 shrink-0 shadow-[0_0_8px_rgba(244,114,182,0.8)]" />
+                <p className="text-sm font-medium text-pink-50 leading-relaxed opacity-90">
+                  Do not use obvious sequences like "1234" or your birth date.
+                </p>
               </li>
-              <li className="flex gap-2">
-                <div className="w-1.5 h-1.5 bg-pink-400 rounded-full mt-1.5 shrink-0" />
-                If you lose your phone, you will need your backup secret to regain access.
+              <li className="flex gap-4">
+                <div className="w-1.5 h-1.5 bg-pink-400 rounded-full mt-2 shrink-0 shadow-[0_0_8px_rgba(244,114,182,0.8)]" />
+                <p className="text-sm font-medium text-pink-50 leading-relaxed opacity-90">
+                  If you ever suspect your PIN has been compromised, change it immediately here.
+                </p>
               </li>
             </ul>
           </div>

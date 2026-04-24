@@ -8,6 +8,15 @@ const userSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, 'Name cannot exceed 50 characters'],
   },
+  username: {
+    type: String,
+    unique: true,
+    sparse: true, // Allow existing users without username
+    trim: true,
+    minlength: [3, 'Username must be at least 3 characters'],
+    maxlength: [30, 'Username cannot exceed 30 characters'],
+    lowercase: true,
+  },
   email: {
     type: String,
     required: [true, 'Email is required'],

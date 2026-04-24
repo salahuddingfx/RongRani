@@ -188,40 +188,43 @@ const Login = () => {
             </form>
           ) : (
             <form onSubmit={handle2FAVerify} className="space-y-6 animate-fade-in">
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
-                <div className="w-16 h-16 bg-maroon/10 text-maroon rounded-full flex items-center justify-center mx-auto mb-4">
-                   <ShieldCheck size={32} />
+              <div className="bg-slate-50 p-8 rounded-[30px] border border-slate-100 text-center shadow-inner">
+                <div className="w-20 h-20 bg-maroon/10 text-maroon rounded-[24px] flex items-center justify-center mx-auto mb-6 rotate-3">
+                   <ShieldCheck size={40} />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">Two-Factor Authentication</h3>
-                <p className="text-sm text-slate-500 mb-6">
-                  Enter the 6-digit verification code from your authenticator app to continue.
+                <h3 className="text-2xl font-black text-slate-800 mb-3 tracking-tight">Security PIN Required</h3>
+                <p className="text-sm font-medium text-slate-500 mb-8 px-4">
+                  Please enter your personal 4-6 digit Security PIN to verify your identity.
                 </p>
                 
                 <input
-                  type="text"
-                  placeholder="000 000"
+                  type="password"
+                  placeholder="••••••"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  className="w-full text-center text-3xl font-black tracking-[0.5em] py-4 rounded-xl border-2 border-slate-200 focus:border-maroon focus:ring-0 transition-all outline-none mb-6"
+                  className="w-full text-center text-4xl font-black tracking-[0.5em] py-5 rounded-2xl border-2 border-slate-200 focus:border-maroon focus:ring-0 transition-all outline-none mb-8 bg-white"
                   autoFocus
                 />
 
                 <button
                   type="submit"
-                  disabled={loading || otp.length !== 6}
-                  className="w-full bg-maroon text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-maroon/20 hover:bg-[#701e2a] transition-all disabled:opacity-70"
+                  disabled={loading || otp.length < 4}
+                  className="w-full bg-maroon text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-maroon/20 hover:bg-[#701e2a] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-70"
                 >
                   {loading ? (
-                    <div className="animate-spin rounded-full h-6 w-6 border-4 border-white/30 border-t-white mx-auto"></div>
+                    <div className="animate-spin rounded-full h-6 w-6 border-4 border-white/30 border-t-white"></div>
                   ) : (
-                    "Verify & Login"
+                    <>
+                      <span>Verify & Access Account</span>
+                      <ArrowRight size={20} />
+                    </>
                   )}
                 </button>
                 
                 <button 
                   type="button"
                   onClick={() => setIs2FARequired(false)}
-                  className="mt-4 text-sm font-bold text-slate-400 hover:text-maroon transition-colors"
+                  className="mt-6 text-sm font-black text-slate-400 hover:text-maroon transition-colors uppercase tracking-widest"
                 >
                   Back to login
                 </button>
