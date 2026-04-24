@@ -41,24 +41,37 @@ const updateProductReviewStats = async (productId) => {
 // @route   GET /api/admin/dashboard
 // @access  Private/Admin
 const getDashboardStats = asyncHandler(async (req, res) => {
-    // 1. Basic Counts
+    const { period = '30days' } = req.query;
+
+    // 1. Calculate Date Range
+    const now = new Date();
+    let startDate;
+    switch (period) {
+        case '24hours': startDate = new Date(new Date().setHours(now.getHours() - 24)); break;
+        case '7days': startDate = new Date(new Date().setDate(now.getDate() - 7)); break;
+        case '30days': startDate = new Date(new Date().setDate(now.getDate() - 30)); break;
+        case '90days': startDate = new Date(new Date().setDate(now.getDate() - 90)); break;
+        case 'all': startDate = new Date(0); break;
+        default: startDate = new Date(new Date().setDate(now.getDate() - 30));
+    }
+
+    // 2. Basic Counts (Global)
     const totalUsers = await User.countDocuments();
-    const totalOrders = await Order.countDocuments();
     const totalProducts = await Product.countDocuments();
     
-    // 2. Revenue & Status Counts
+    // 3. Stats for Period
+    const periodOrders = await Order.countDocuments({ createdAt: { $gte: startDate } });
+    
     const totalRevenue = await Order.aggregate([
-      { $match: { paymentStatus: 'paid' } },
+      { $match: { paymentStatus: 'paid', createdAt: { $gte: startDate } } },
       { $group: { _id: null, total: { $sum: '$total' } } },
     ]);
 
     const orderStatusCounts = await Order.aggregate([
+      { $match: { createdAt: { $gte: startDate } } },
       { $group: { _id: '$orderStatus', count: { $sum: 1 } } },
     ]);
 
-    // 3. Activity & Trends (Last 30 Days)
-    const startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    
     const monthlyRevenue = await Order.aggregate([
       {
         $match: {
@@ -85,19 +98,18 @@ const getDashboardStats = asyncHandler(async (req, res) => {
       .sort({ stock: 1 })
       .limit(10);
 
-    // 4. Advanced Metrics (Returns, Delivered, Loss)
     const deliveredCount = orderStatusCounts.find(c => c._id === 'delivered')?.count || 0;
     const returnedCount = orderStatusCounts.find(c => c._id === 'returned')?.count || 0;
     const cancelledCount = orderStatusCounts.find(c => c._id === 'cancelled')?.count || 0;
 
     const lossData = await Order.aggregate([
-      { $match: { orderStatus: { $in: ['cancelled', 'returned'] } } },
+      { $match: { orderStatus: { $in: ['cancelled', 'returned'] }, createdAt: { $gte: startDate } } },
       { $group: { _id: null, totalLoss: { $sum: '$total' } } }
     ]);
 
     res.status(200).json(new ApiResponse(200, {
       totalUsers,
-      totalOrders,
+      totalOrders: periodOrders,
       totalProducts,
       totalRevenue: totalRevenue[0]?.total || 0,
       totalLoss: lossData[0]?.totalLoss || 0,
