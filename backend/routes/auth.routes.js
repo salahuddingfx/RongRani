@@ -21,6 +21,7 @@ router.post('/login/2fa', authLimiter, controller.verifyLogin2FA);
 
 // Protected routes
 router.get('/me', auth, controller.getMe);
+router.put('/profile', auth, controller.updateProfile);
 router.post('/logout', auth, controller.logout);
 router.post('/refresh-token', controller.refreshToken);
 

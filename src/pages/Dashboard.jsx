@@ -1,35 +1,66 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Package, Heart, Settings, LogOut } from 'lucide-react';
+import { User, Package, Heart, Settings, LogOut, Edit2, Save, X, Phone, MapPin, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  const [profileData, setProfileData] = useState({
+    name: user?.name || '',
+    phone: user?.phone || '',
+    address: user?.address || ''
+  });
 
-  // Mock data
-  const orders = useMemo(() => [
-    {
-      id: '1',
-      date: '2024-01-15',
-      status: 'Delivered',
-      total: 2500,
-      items: ['Saree', 'Jewelry']
+  // Update profileData when user object changes
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        name: user.name || '',
+        phone: user.phone || '',
+        address: user.address || ''
+      });
     }
-  ], []);
+  }, [user]);
 
-  const wishlist = useMemo(() => [
-    {
-      id: '1',
-      name: 'Beautiful Saree',
-      price: 1500,
-      image: '/placeholder.jpg'
+  const handleProfileUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await updateProfile(profileData);
+      toast.success('Profile updated successfully!');
+      setIsEditing(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update profile');
+    } finally {
+      setLoading(false);
     }
-  ], []);
-
-  const handleLogout = () => {
-    logout();
   };
+
+  const handleChange = (e) => {
+    setProfileData({
+      ...profileData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const ProfileField = ({ label, value, icon: Icon, full = false }) => (
+    <div className={`p-6 rounded-3xl bg-slate-50 dark:bg-slate-900/40 border border-slate-100 dark:border-slate-700/50 transition-all hover:border-maroon/20 group/field ${full ? 'w-full' : ''}`}>
+      <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">{label}</p>
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm text-slate-400 group-hover/field:text-maroon transition-colors">
+          <Icon size={16} />
+        </div>
+        <p className="font-bold text-slate-700 dark:text-slate-200 truncate">
+          {value || <span className="text-slate-300 dark:text-slate-600 italic font-medium">Not provided</span>}
+        </p>
+      </div>
+    </div>
+  );
 
   const menuItems = [
     { id: 'profile', label: 'Profile', icon: User },
@@ -38,78 +69,168 @@ const Dashboard = () => {
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-3xl p-6">
-            <div className="text-center mb-6">
-              <div className="w-20 h-20 bg-maroon rounded-full flex items-center justify-center mx-auto mb-4">
-                <User className="h-10 w-10 text-white" />
-              </div>
-              <h3 className="text-lg font-semibold">{user?.name}</h3>
-              <p className="text-gray-600 dark:text-gray-400">{user?.email}</p>
-            </div>
-
-            <nav className="space-y-2">
-              {menuItems.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                      activeTab === item.id
-                        ? 'bg-maroon text-white'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-white/20 dark:hover:bg-gray-700/20'
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span>{item.label}</span>
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={handleLogout}
-                className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors mt-4"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Logout</span>
-              </button>
-            </nav>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="lg:col-span-3">
-          <div className="bg-white/20 dark:bg-gray-800/20 backdrop-blur-md rounded-3xl p-6">
-            {activeTab === 'profile' && (
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Profile Information</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Full Name</label>
-                    <p className="text-gray-600 dark:text-gray-400">{user?.name}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Email</label>
-                    <p className="text-gray-600 dark:text-gray-400">{user?.email}</p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Phone</label>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      {user?.phone?.primary || 'Not provided'}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Role</label>
-                    <p className="text-gray-600 dark:text-gray-400 capitalize">{user?.role}</p>
-                  </div>
+    <div className="min-h-screen bg-[#FFFBFB] dark:bg-slate-900 py-12">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="bg-white dark:bg-slate-800 rounded-[35px] shadow-premium p-8 border border-maroon/5 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-maroon/5 rounded-full blur-3xl -mr-16 -mt-16 transition-transform group-hover:scale-150 duration-700"></div>
+              
+              <div className="text-center mb-10 relative z-10">
+                <div className="w-24 h-24 bg-gradient-to-br from-maroon to-[#6A112B] rounded-[30px] flex items-center justify-center mx-auto mb-6 shadow-xl rotate-3 transition-transform hover:rotate-0 duration-300">
+                  <User className="h-12 w-12 text-white" />
+                </div>
+                <h3 className="text-2xl font-black text-slate-800 dark:text-white tracking-tight">{user?.name}</h3>
+                <p className="text-slate-500 dark:text-slate-400 font-medium italic mt-1">@{user?.username || 'member'}</p>
+                
+                <div className="mt-4 flex justify-center gap-2">
+                   <span className="px-3 py-1 bg-maroon/10 text-maroon text-[10px] font-black uppercase tracking-widest rounded-full border border-maroon/20">
+                     {user?.role}
+                   </span>
+                   {user?.isTwoFactorEnabled && (
+                     <span className="px-3 py-1 bg-emerald-100 text-emerald-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-emerald-200 flex items-center gap-1">
+                       <ShieldCheck size={10} /> Verified
+                     </span>
+                   )}
                 </div>
               </div>
-            )}
+
+              <nav className="space-y-3 relative z-10">
+                {menuItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setActiveTab(item.id)}
+                      className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-black transition-all duration-300 ${
+                        activeTab === item.id
+                          ? 'bg-maroon text-white shadow-lg shadow-maroon/20 scale-[1.02]'
+                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                      }`}
+                    >
+                      <Icon className={`h-5 w-5 ${activeTab === item.id ? 'text-white' : 'text-slate-400'}`} />
+                      <span className="tracking-tight">{item.label}</span>
+                    </button>
+                  );
+                })}
+
+                <div className="pt-6 mt-6 border-t border-slate-100 dark:border-slate-700">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-red-500 font-black hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-300 group/btn"
+                  >
+                    <LogOut className="h-5 w-5 transition-transform group-hover/btn:-translate-x-1" />
+                    <span className="tracking-tight">Logout</span>
+                  </button>
+                </div>
+              </nav>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <div className="bg-white dark:bg-slate-800 rounded-[40px] shadow-premium p-10 border border-maroon/5 min-h-[600px]">
+              {activeTab === 'profile' && (
+                <div className="animate-fade-in">
+                  <div className="flex items-center justify-between mb-10">
+                    <div>
+                      <h2 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">Profile Information</h2>
+                      <p className="text-slate-500 font-medium mt-1">Manage your personal details and contact info.</p>
+                    </div>
+                    {!isEditing ? (
+                      <button 
+                        onClick={() => setIsEditing(true)}
+                        className="flex items-center gap-2 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-6 py-3 rounded-2xl font-black hover:bg-maroon hover:text-white transition-all duration-300 shadow-sm"
+                      >
+                        <Edit2 size={18} />
+                        Edit Profile
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => setIsEditing(false)}
+                        className="flex items-center gap-2 text-slate-400 hover:text-maroon font-black transition-colors"
+                      >
+                        <X size={18} />
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+
+                  {!isEditing ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <ProfileField label="Full Name" value={user?.name} icon={User} />
+                      <ProfileField label="Email Address" value={user?.email} icon={Settings} />
+                      <ProfileField label="Username" value={user?.username} icon={Settings} />
+                      <ProfileField label="Phone Number" value={user?.phone || 'Not provided'} icon={Phone} />
+                      <div className="md:col-span-2">
+                        <ProfileField label="Primary Address" value={user?.address || 'Not provided'} icon={MapPin} full />
+                      </div>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleProfileUpdate} className="space-y-8 animate-fade-in">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Full Name</label>
+                          <input
+                            type="text"
+                            name="name"
+                            value={profileData.name}
+                            onChange={handleChange}
+                            className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold"
+                            placeholder="Your Name"
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Phone Number</label>
+                          <input
+                            type="text"
+                            name="phone"
+                            value={profileData.phone}
+                            onChange={handleChange}
+                            className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold"
+                            placeholder="017XXXXXXXX"
+                          />
+                        </div>
+                        <div className="md:col-span-2 space-y-2">
+                          <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Primary Address</label>
+                          <textarea
+                            name="address"
+                            value={profileData.address}
+                            onChange={handleChange}
+                            rows="4"
+                            className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold resize-none"
+                            placeholder="Your full delivery address..."
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="flex justify-end">
+                        <button
+                          type="submit"
+                          disabled={loading}
+                          className="flex items-center gap-3 bg-maroon text-white px-10 py-4 rounded-2xl font-black text-lg shadow-xl shadow-maroon/20 hover:bg-[#701e2a] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                        >
+                          {loading ? (
+                            <div className="animate-spin rounded-full h-6 w-6 border-4 border-white/30 border-t-white"></div>
+                          ) : (
+                            <>
+                              <Save size={22} />
+                              Save Changes
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </div>
+              )}
 
             {activeTab === 'orders' && (
               <div>

@@ -99,6 +99,13 @@ export const AuthProvider = ({ children }) => {
     setRole('guest');
   };
 
+  const updateProfile = async (userData) => {
+    const response = await axios.put('/api/auth/profile', userData);
+    const updatedUser = response.data.data;
+    setUser(prev => ({ ...prev, ...updatedUser }));
+    return updatedUser;
+  };
+
   const value = {
     user,
     isAuthenticated,
@@ -108,6 +115,7 @@ export const AuthProvider = ({ children }) => {
     verify2FALogin,
     register,
     logout,
+    updateProfile,
     checkAuthStatus
   };
 
