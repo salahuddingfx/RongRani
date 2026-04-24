@@ -395,7 +395,7 @@ const AdminProducts = () => {
                   <td className="px-6 py-4 font-semibold text-charcoal">
                     <div className="flex flex-col">
                       <span>{product.name}</span>
-                      <span className="text-[10px] text-slate-500">SKU: {product.sku || '—'}</span>
+                      <span className="text-[10px] text-slate-500 font-bold">SKU: <span className="text-maroon">{product.sku || (product._id ? product._id.slice(-6).toUpperCase() : 'N/A')}</span></span>
                       <div className="flex items-center gap-1 mt-1">
                         {product.tags && product.tags.length > 0 && (
                           <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100" title={`Tags: ${product.tags.join(', ')}`}>
