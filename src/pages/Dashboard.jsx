@@ -73,6 +73,26 @@ const Dashboard = () => {
     logout();
   };
 
+  // Mock data
+  const orders = useMemo(() => [
+    {
+      id: '1',
+      date: '2024-01-15',
+      status: 'Delivered',
+      total: 2500,
+      items: ['Saree', 'Jewelry']
+    }
+  ], []);
+
+  const wishlist = useMemo(() => [
+    {
+      id: '1',
+      name: 'Beautiful Saree',
+      price: 1500,
+      image: '/placeholder.jpg'
+    }
+  ], []);
+
   return (
     <div className="min-h-screen bg-[#FFFBFB] dark:bg-slate-900 py-12">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -339,7 +359,8 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default Dashboard;
