@@ -371,7 +371,7 @@ const Shop = () => {
                     {t('showing_products').replace('{count}', products.length)}
                   </p>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 xxl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
                   {products && products.map((product, index) => (
                     <div
                       key={product._id}

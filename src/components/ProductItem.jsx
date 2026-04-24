@@ -48,7 +48,7 @@ const ProductItem = ({ product }) => {
 
     return (
         <>
-            <div className="group relative bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-slate-100 flex flex-col h-full ring-1 ring-slate-200/50 hover:ring-maroon/20">
+            <div className="group relative bg-white dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-xl hover:shadow-maroon/20 transition-all duration-500 border border-slate-100 dark:border-white/5 flex flex-col h-full premium-card premium-glow shine-effect">
                 {/* Image Container */}
                 <div className="relative aspect-square overflow-hidden bg-slate-50">
                     {!imageLoaded && (

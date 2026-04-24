@@ -141,9 +141,9 @@ const Home = () => {
             </div>
 
             {/* Main Heading with Typing Effect */}
-            <h1 className="text-2xl sm:text-4xl md:text-6xl font-black text-charcoal mb-4 tracking-tight leading-tight animate-fade-in-up stagger-1">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-black text-charcoal dark:text-white mb-4 tracking-tight leading-tight animate-fade-in-up stagger-1">
               {t('hero_title')}<br />
-              <span className="text-maroon inline-block min-h-[1.5em]">
+              <span className="text-maroon dark:text-pink-400 inline-block min-h-[1.5em] text-gradient-maroon">
                 <TypingEffect
                   texts={language === 'bn'
                     ? ['ভালোবাসা ও রোমান্স ❤️', 'বিশেষ মুহূর্ত ✨', 'হৃদয়স্পর্শী সারপ্রাইজ 🎁', 'হস্তনির্মিত অনন্য উপহার 🎨', 'প্রিয়জনের স্মৃতির পাতায় 📸', 'সেরা কোয়ালিটি গ্যারান্টি ⭐']
@@ -306,8 +306,12 @@ const Home = () => {
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
                   <div
-                    className="rounded-2xl p-6 text-left shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ring-1 ring-black/5"
-                    style={getCategoryStyle(category.color)}
+                    className="rounded-2xl p-6 text-left shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ring-1 ring-black/5 premium-glass shine-effect"
+                    style={{
+                      ...getCategoryStyle(category.color),
+                      background: `linear-gradient(135deg, ${categoryColorMap[category.color] || '#BE123C'} 0%, ${categoryColorMap[category.color] || '#BE123C'}dd 100%)`,
+                      backdropFilter: 'blur(10px)'
+                    }}
                   >
                     <div className="bg-white/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
                       <Icon className="h-6 w-6 text-white" />
@@ -444,21 +448,21 @@ const Home = () => {
                 {t('platform_connects')}
               </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
-                <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
-                  <Users className="h-12 w-12 text-maroon mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-charcoal mb-2">{t('auth_artisans')}</h3>
-                  <p className="text-charcoal-light">{t('auth_artisans_desc')}</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div className="bg-white/50 dark:bg-slate-800/50 rounded-3xl p-8 text-center border border-maroon/10 shadow-lg hover:shadow-2xl transition-all hover:scale-105 premium-card premium-glow shine-effect">
+                  <Users className="h-12 w-12 text-maroon mx-auto mb-6" />
+                  <h3 className="text-xl font-bold text-charcoal dark:text-white mb-3">{t('auth_artisans')}</h3>
+                  <p className="text-charcoal-light dark:text-gray-400 text-sm leading-relaxed">{t('auth_artisans_desc')}</p>
                 </div>
-                <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
-                  <Award className="h-12 w-12 text-maroon mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-charcoal mb-2">{t('quality_guarantee')}</h3>
-                  <p className="text-charcoal-light">{t('quality_guarantee_desc')}</p>
+                <div className="bg-white/50 dark:bg-slate-800/50 rounded-3xl p-8 text-center border border-maroon/10 shadow-lg hover:shadow-2xl transition-all hover:scale-105 premium-card premium-glow shine-effect">
+                  <Award className="h-12 w-12 text-maroon mx-auto mb-6" />
+                  <h3 className="text-xl font-bold text-charcoal dark:text-white mb-3">{t('quality_guarantee')}</h3>
+                  <p className="text-charcoal-light dark:text-gray-400 text-sm leading-relaxed">{t('quality_guarantee_desc')}</p>
                 </div>
-                <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
-                  <Sparkles className="h-12 w-12 text-maroon mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-charcoal mb-2">{t('cultural_heritage')}</h3>
-                  <p className="text-charcoal-light">{t('cultural_heritage_desc')}</p>
+                <div className="bg-white/50 dark:bg-slate-800/50 rounded-3xl p-8 text-center border border-maroon/10 shadow-lg hover:shadow-2xl transition-all hover:scale-105 premium-card premium-glow shine-effect">
+                  <Sparkles className="h-12 w-12 text-maroon mx-auto mb-6" />
+                  <h3 className="text-xl font-bold text-charcoal dark:text-white mb-3">{t('cultural_heritage')}</h3>
+                  <p className="text-charcoal-light dark:text-gray-400 text-sm leading-relaxed">{t('cultural_heritage_desc')}</p>
                 </div>
               </div>
 
