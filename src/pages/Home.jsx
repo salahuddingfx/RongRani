@@ -393,7 +393,7 @@ const Home = () => {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
               {[...Array(8)].map((_, index) => (
                 <div
                   key={index}
@@ -405,7 +405,7 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 lg:gap-5">
               {featuredProducts.map((product, index) => (
                 <Suspense key={product._id} fallback={<ProductCardSkeleton />}>
                   <div
@@ -444,7 +444,7 @@ const Home = () => {
                 {t('platform_connects')}
               </p>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
                 <div className="bg-white rounded-3xl p-6 text-center border border-maroon/10 shadow-md hover:shadow-xl transition-all hover:scale-105">
                   <Users className="h-12 w-12 text-maroon mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-charcoal mb-2">{t('auth_artisans')}</h3>
