@@ -5,7 +5,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const env = require('../config/env');
-const { authenticator } = require('otplib');
+const speakeasy = require('speakeasy');
 const QRCode = require('qrcode');
 
 /**
@@ -136,9 +136,10 @@ const verifyLogin2FA = asyncHandler(async (req, res) => {
       throw new ApiError(401, "2FA is not enabled for this user");
     }
 
-    const isValid = authenticator.verify({
-      token: otp,
+    const isValid = speakeasy.totp.verify({
       secret: user.twoFactorSecret,
+      encoding: 'base32',
+      token: otp,
     });
 
     if (!isValid) {
@@ -173,17 +174,16 @@ const setup2FA = asyncHandler(async (req, res) => {
     throw new ApiError(400, "2FA is already enabled");
   }
 
-  const secret = authenticator.generateSecret();
-  const otpauth = authenticator.keyuri(user.email, 'RongRani', secret);
-  const qrCodeDataURL = await QRCode.toDataURL(otpauth);
+  const secret = speakeasy.generateSecret({ name: `RongRani (${user.email})` });
+  const qrCodeDataURL = await QRCode.toDataURL(secret.otpauth_url);
 
-  user.twoFactorSecret = secret;
+  user.twoFactorSecret = secret.base32;
   await user.save();
 
   res.status(200).json(
     new ApiResponse(200, {
       qrCode: qrCodeDataURL,
-      secret, // Providing the text secret as backup
+      secret: secret.base32, // Providing the text secret as backup
     }, "2FA setup initiated. Please verify the code to enable.")
   );
 });
@@ -199,9 +199,10 @@ const verify2FA = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Please setup 2FA first");
   }
 
-  const isValid = authenticator.verify({
-    token: otp,
+  const isValid = speakeasy.totp.verify({
     secret: user.twoFactorSecret,
+    encoding: 'base32',
+    token: otp,
   });
 
   if (!isValid) {
@@ -225,9 +226,10 @@ const disable2FA = asyncHandler(async (req, res) => {
     throw new ApiError(400, "2FA is not enabled");
   }
 
-  const isValid = authenticator.verify({
-    token: otp,
+  const isValid = speakeasy.totp.verify({
     secret: user.twoFactorSecret,
+    encoding: 'base32',
+    token: otp,
   });
 
   if (!isValid) {
@@ -259,6 +261,7 @@ const getMe = asyncHandler(async (req, res) => {
       avatar: user.avatar,
       address: user.address,
       phone: user.phone,
+      isTwoFactorEnabled: user.isTwoFactorEnabled,
     })
   );
 });

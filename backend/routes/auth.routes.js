@@ -21,6 +21,7 @@ router.post('/2fa/disable', auth, controller.disable2FA);
 router.post('/login/2fa', authLimiter, controller.verifyLogin2FA);
 
 // Protected routes
+router.get('/me', auth, controller.getMe);
 router.post('/logout', auth, controller.logout);
 router.post('/refresh-token', controller.refreshToken);
 
