@@ -1,8 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { User, Package, Heart, Settings, LogOut, Edit2, Save, X, Phone, MapPin, ShieldCheck } from 'lucide-react';
+import { User, Package, Heart, Settings, LogOut, Edit2, Save, X, Phone, MapPin, ShieldCheck, AtSign, Building2, Map } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { BANGLADESH_LOCATIONS } from '../constants/locations';
 
 const Dashboard = () => {
   const { user, logout, updateProfile } = useAuth();
@@ -12,8 +13,16 @@ const Dashboard = () => {
   
   const [profileData, setProfileData] = useState({
     name: user?.name || '',
+    username: user?.username || '',
     phone: user?.phone || '',
-    address: user?.address || ''
+    address: {
+      street: user?.address?.street || '',
+      division: user?.address?.division || '',
+      district: user?.address?.district || '',
+      city: user?.address?.city || '',
+      subDistrict: user?.address?.subDistrict || '',
+      union: user?.address?.union || ''
+    }
   });
 
   // Update profileData when user object changes
@@ -21,8 +30,16 @@ const Dashboard = () => {
     if (user) {
       setProfileData({
         name: user.name || '',
+        username: user.username || '',
         phone: user.phone || '',
-        address: user.address?.street || (typeof user.address === 'string' ? user.address : '')
+        address: {
+          street: user.address?.street || '',
+          division: user.address?.division || '',
+          district: user.address?.district || '',
+          city: user.address?.city || '',
+          subDistrict: user.address?.subDistrict || '',
+          union: user.address?.union || ''
+        }
       });
     }
   }, [user]);
@@ -45,6 +62,20 @@ const Dashboard = () => {
     setProfileData({
       ...profileData,
       [e.target.name]: e.target.value
+    });
+  };
+
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    const newAddress = { ...profileData.address, [name]: value };
+    
+    if (name === 'division') {
+      newAddress.district = '';
+    }
+    
+    setProfileData({
+      ...profileData,
+      address: newAddress
     });
   };
 
@@ -199,8 +230,8 @@ const Dashboard = () => {
                   {!isEditing ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <ProfileField label="Full Name" value={user?.name} icon={User} />
-                      <ProfileField label="Email Address" value={user?.email} icon={Settings} />
-                      <ProfileField label="Username" value={user?.username} icon={Settings} />
+                      <ProfileField label="Email Address" value={user?.email} icon={AtSign} />
+                      <ProfileField label="Username" value={user?.username} icon={AtSign} />
                       <ProfileField label="Phone Number" value={user?.phone || 'Not provided'} icon={Phone} />
                       <div className="md:col-span-2">
                         <ProfileField label="Primary Address" value={formatAddress(user?.address)} icon={MapPin} full />
@@ -222,6 +253,17 @@ const Dashboard = () => {
                           />
                         </div>
                         <div className="space-y-2">
+                          <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Username</label>
+                          <input
+                            type="text"
+                            name="username"
+                            value={profileData.username}
+                            onChange={handleChange}
+                            className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold"
+                            placeholder="username"
+                          />
+                        </div>
+                        <div className="space-y-2">
                           <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Phone Number</label>
                           <input
                             type="text"
@@ -232,16 +274,74 @@ const Dashboard = () => {
                             placeholder="017XXXXXXXX"
                           />
                         </div>
-                        <div className="md:col-span-2 space-y-2">
-                          <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Primary Address</label>
-                          <textarea
-                            name="address"
-                            value={profileData.address}
-                            onChange={handleChange}
-                            rows="4"
-                            className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold resize-none"
-                            placeholder="Your full delivery address..."
-                          />
+
+                        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-100 dark:border-slate-700">
+                           <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Division</label>
+                            <select
+                              name="division"
+                              value={profileData.address.division}
+                              onChange={handleAddressChange}
+                              className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold"
+                            >
+                              <option value="">Select Division</option>
+                              {BANGLADESH_LOCATIONS.divisions.map(div => (
+                                <option key={div} value={div}>{div}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">District</label>
+                            <select
+                              name="district"
+                              value={profileData.address.district}
+                              onChange={handleAddressChange}
+                              disabled={!profileData.address.division}
+                              className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold disabled:opacity-50"
+                            >
+                              <option value="">Select District</option>
+                              {profileData.address.division && BANGLADESH_LOCATIONS.districts[profileData.address.division].map(dist => (
+                                <option key={dist} value={dist}>{dist}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Sub-District / Upazila</label>
+                            <input
+                              type="text"
+                              name="subDistrict"
+                              value={profileData.address.subDistrict}
+                              onChange={handleAddressChange}
+                              className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold"
+                              placeholder="e.g. Cox's Bazar Sadar"
+                            />
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Union / Ward</label>
+                            <input
+                              type="text"
+                              name="union"
+                              value={profileData.address.union}
+                              onChange={handleAddressChange}
+                              className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold"
+                              placeholder="e.g. Ward 01"
+                            />
+                          </div>
+
+                          <div className="md:col-span-2 space-y-2">
+                            <label className="text-sm font-black text-slate-700 dark:text-slate-300 uppercase tracking-wider ml-1">Street Address / House / Area</label>
+                            <textarea
+                              name="street"
+                              value={profileData.address.street}
+                              onChange={handleAddressChange}
+                              rows="3"
+                              className="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border-2 border-slate-100 dark:border-slate-700 focus:border-maroon focus:ring-0 transition-all font-bold resize-none"
+                              placeholder="House no, Street name, Area details..."
+                            />
+                          </div>
                         </div>
                       </div>
                       

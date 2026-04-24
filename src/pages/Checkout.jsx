@@ -7,6 +7,7 @@ import { CreditCard, Truck, MapPin, User } from 'lucide-react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
+import { BANGLADESH_LOCATIONS } from '../constants/locations';
 
 const Checkout = () => {
   const { cartItems, totalPrice, clearCart } = useCart();
@@ -585,28 +586,39 @@ const Checkout = () => {
                   <label className="block text-sm font-semibold text-slate mb-2">
                     {t('division')} {t('optional')}
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="division"
                     value={formData.division}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      // Clear district when division changes
+                      setFormData(prev => ({ ...prev, district: '' }));
+                    }}
                     className="input-field"
-                    placeholder="Chattogram"
-                  />
+                  >
+                    <option value="">Select Division</option>
+                    {BANGLADESH_LOCATIONS.divisions.map(div => (
+                      <option key={div} value={div}>{div}</option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-slate mb-2">
                     {t('district')} {t('optional')}
                   </label>
-                  <input
-                    type="text"
+                  <select
                     name="district"
                     value={formData.district}
                     onChange={handleChange}
-                    className="input-field"
-                    placeholder="Cox's Bazar"
-                  />
+                    disabled={!formData.division}
+                    className="input-field disabled:opacity-50"
+                  >
+                    <option value="">Select District</option>
+                    {formData.division && BANGLADESH_LOCATIONS.districts[formData.division].map(dist => (
+                      <option key={dist} value={dist}>{dist}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 

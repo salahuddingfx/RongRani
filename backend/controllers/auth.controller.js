@@ -251,6 +251,15 @@ const updateProfile = asyncHandler(async (req, res) => {
 
   if (req.body.name) user.name = req.body.name;
   if (req.body.phone) user.phone = req.body.phone;
+  
+  if (req.body.username && req.body.username !== user.username) {
+    const usernameExists = await User.findOne({ username: req.body.username });
+    if (usernameExists) {
+      throw new ApiError(400, "Username already taken");
+    }
+    user.username = req.body.username;
+  }
+
   if (req.body.address) {
     const currentAddress = user.address ? (typeof user.address.toObject === 'function' ? user.address.toObject() : user.address) : {};
     if (typeof req.body.address === 'string') {

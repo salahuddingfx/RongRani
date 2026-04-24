@@ -12,7 +12,6 @@ const seedAdminUser = async () => {
 
     // Check if admin credentials are provided
     if (!adminEmail || !adminPassword) {
-      console.log('⚠️  No admin credentials in .env - skipping admin seed');
       return;
     }
 
