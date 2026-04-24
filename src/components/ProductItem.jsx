@@ -119,11 +119,11 @@ const ProductItem = ({ product }) => {
                     <div className="mt-1 mb-2">
                         <div className="flex items-center flex-wrap gap-1.5 align-baseline">
                             <span className="text-sm font-bold text-maroon">
-                                ৳{productPrice.toLocaleString()}
+                                ৳{(Number(productPrice) || 0).toLocaleString()}
                             </span>
                             {hasDiscount && (
                                 <span className="text-[10px] text-slate-400 line-through decoration-slate-400">
-                                    ৳{product.originalPrice.toLocaleString()}
+                                    ৳{(Number(product.originalPrice) || 0).toLocaleString()}
                                 </span>
                             )}
                         </div>
