@@ -94,12 +94,14 @@ const getDashboardStats = asyncHandler(async (req, res) => {
     const recentOrders = await Order.find()
       .populate('user', 'name email')
       .sort({ createdAt: -1 })
-      .limit(10);
+      .limit(10)
+      .lean();
 
     const lowStockProducts = await Product.find({ stock: { $lt: 10 }, isActive: true })
       .select('name stock')
       .sort({ stock: 1 })
-      .limit(10);
+      .limit(10)
+      .lean();
 
     const deliveredCount = orderStatusCounts.find(c => c._id === 'delivered')?.count || 0;
     const returnedCount = orderStatusCounts.find(c => c._id === 'returned')?.count || 0;
