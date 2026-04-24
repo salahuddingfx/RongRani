@@ -63,12 +63,12 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFBFB] flex flex-col items-center justify-center relative overflow-hidden px-4 py-12">
+    <div className="min-h-screen bg-[#FFFBFB] dark:bg-slate-900 flex flex-col items-center justify-center relative overflow-hidden px-4 py-12">
       {/* Decorative Elements */}
       <div className="absolute top-[-5%] right-[-5%] w-[35%] h-[35%] bg-maroon/5 rounded-full blur-[120px]"></div>
       <div className="absolute bottom-[-5%] left-[-5%] w-[30%] h-[30%] bg-gold/5 rounded-full blur-[100px]"></div>
 
-      <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white rounded-[40px] shadow-premium overflow-hidden border border-maroon/5 z-10">
+      <div className="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 gap-0 bg-white dark:bg-slate-800/40 backdrop-blur-xl rounded-[40px] shadow-premium overflow-hidden border border-maroon/5 dark:border-white/5 z-10">
         
         {/* Left Side: Visual/Branding */}
         <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-maroon to-[#6A112B] text-white relative">

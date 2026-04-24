@@ -105,7 +105,7 @@ const Home = () => {
         path="/"
       />
       {/* Hero Section - Clean Design */}
-      <section className="relative overflow-hidden bg-white py-8 sm:py-16 md:py-24 reveal min-h-[400px]">
+      <section className="relative overflow-hidden bg-white dark:bg-slate-900 py-8 sm:py-16 md:py-24 reveal min-h-[400px]">
         <div className="section-container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             {hotOffer?.isActive && (
@@ -122,7 +122,7 @@ const Home = () => {
                       {hotOffer.title}
                     </h3>
                     {hotOffer.subtitle && (
-                      <p className="text-sm text-charcoal-light mt-1">{hotOffer.subtitle}</p>
+                      <p className="text-sm text-charcoal-light dark:text-slate-400 mt-1">{hotOffer.subtitle}</p>
                     )}
                   </div>
                   <div className="text-right">
@@ -163,7 +163,7 @@ const Home = () => {
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-charcoal-light mb-8 leading-relaxed max-w-2xl mx-auto animate-fade-in-up stagger-2">
+            <p className="text-lg md:text-xl text-charcoal-light dark:text-slate-400 mb-8 leading-relaxed max-w-2xl mx-auto animate-fade-in-up stagger-2">
               {t('hero_subtitle')}
             </p>
 
@@ -184,19 +184,19 @@ const Home = () => {
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
                   20+
                 </div>
-                <div className="text-sm text-charcoal-light font-medium">{t('products_count')}</div>
+                <div className="text-sm text-charcoal-light dark:text-slate-400 font-medium">{t('products_count')}</div>
               </div>
               <div className="text-center group cursor-pointer">
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
                   05+
                 </div>
-                <div className="text-sm text-charcoal-light font-medium">{t('artisans_count')}</div>
+                <div className="text-sm text-charcoal-light dark:text-slate-400 font-medium">{t('artisans_count')}</div>
               </div>
               <div className="text-center group cursor-pointer">
                 <div className="text-3xl md:text-4xl font-bold text-maroon mb-1 group-hover:scale-110 transition-transform duration-300">
                   4.8
                 </div>
-                <div className="text-sm text-charcoal-light flex items-center justify-center space-x-1 font-medium">
+                <div className="text-sm text-charcoal-light dark:text-slate-400 flex items-center justify-center space-x-1 font-medium">
                   <Star className="h-4 w-4 fill-current text-gold" />
                   <span>{t('rating')}</span>
                 </div>

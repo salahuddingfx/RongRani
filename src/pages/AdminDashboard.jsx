@@ -86,7 +86,7 @@ const AdminDashboard = () => {
 
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <h1 className="text-3xl font-bold text-maroon">Admin Dashboard</h1>
-        <div className="flex items-center space-x-2 bg-white p-2 rounded-xl shadow-soft border border-maroon/10">
+        <div className="flex items-center space-x-2 bg-white dark:bg-slate-800 p-2 rounded-xl shadow-soft border border-maroon/10 dark:border-white/5">
           <BarChart3 className="h-5 w-5 text-maroon" />
           <select 
             value={period} 

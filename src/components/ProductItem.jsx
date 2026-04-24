@@ -50,7 +50,7 @@ const ProductItem = ({ product }) => {
         <>
             <div className="group relative bg-white dark:bg-slate-800/40 rounded-2xl overflow-hidden shadow-xl hover:shadow-maroon/20 transition-all duration-500 border border-slate-100 dark:border-white/5 flex flex-col h-full premium-card premium-glow shine-effect">
                 {/* Image Container */}
-                <div className="relative aspect-square overflow-hidden bg-slate-50">
+                <div className="relative aspect-square overflow-hidden bg-slate-50 dark:bg-slate-900">
                     {!imageLoaded && (
                         <div className="absolute inset-0 bg-slate-100 animate-pulse" />
                     )}
@@ -87,7 +87,7 @@ const ProductItem = ({ product }) => {
                     {/* Action Buttons Overlay (Desktop Hover) */}
                     <div className="absolute top-2 right-2 flex flex-col gap-1.5 z-10">
                         <button
-                            className="p-1.5 bg-white/90 backdrop-blur-sm rounded-full text-slate-600 hover:text-maroon shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 active:scale-90 hidden sm:flex items-center justify-center"
+                            className="p-1.5 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm rounded-full text-slate-600 dark:text-slate-300 hover:text-maroon shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 active:scale-90 hidden sm:flex items-center justify-center"
                             onClick={(e) => {
                                 e.preventDefault();
                                 setShowQuickView(true);
@@ -97,7 +97,7 @@ const ProductItem = ({ product }) => {
                             <Eye className="w-3.5 h-3.5" />
                         </button>
                         <button
-                            className={`p-1.5 backdrop-blur-sm rounded-full shadow-sm sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform sm:translate-x-2 sm:group-hover:translate-x-0 delayed-100 active:scale-90 flex items-center justify-center ${isWishlisted ? 'bg-maroon text-white' : 'bg-white/90 text-slate-600 hover:text-pink-600'
+                            className={`p-1.5 backdrop-blur-sm rounded-full shadow-sm sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 transform sm:translate-x-2 sm:group-hover:translate-x-0 delayed-100 active:scale-90 flex items-center justify-center ${isWishlisted ? 'bg-maroon text-white' : 'bg-white/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 hover:text-pink-600'
                                 }`}
                             onClick={handleWishlist}
                             aria-label={t('add_to_wishlist')}
