@@ -8,6 +8,7 @@ import Seo from './Seo';
 import ScrollRevealManager from './ScrollRevealManager';
 import RecentlyViewed from './RecentlyViewed';
 import CartDrawer from './CartDrawer';
+import ScrollToTop from './ScrollToTop';
 
 const AppLayout = () => {
   const location = useLocation();
@@ -47,6 +48,7 @@ const AppLayout = () => {
 
       <RecentlyViewed />
       <CartDrawer />
+      <ScrollToTop />
 
       <Footer />
 
