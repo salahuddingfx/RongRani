@@ -1,3 +1,8 @@
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const { sendEmail } = require('../services/emailService');
+const asyncHandler = require('../utils/asyncHandler');
+const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 const env = require('../config/env');
 const bcrypt = require('bcryptjs');
@@ -389,7 +394,7 @@ module.exports = {
   forgotPassword,
   resetPassword,
   verifyEmail,
-  setupSecurityPin,
-  disableSecurityPin,
-  verifyLoginSecurityPin,
+  setup2FA,
+  disable2FA,
+  verifyLogin2FA,
 };
