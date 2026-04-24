@@ -267,9 +267,7 @@ const AdminDashboard = () => {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
-        </div>
-
-        {/* Top Products */}
+        </di        {/* Top Products */}
         <div className="card">
           <h2 className="text-xl font-bold text-maroon mb-6 flex items-center">
             <TrendingUp className="mr-2 h-6 w-6" />
@@ -284,18 +282,19 @@ const AdminDashboard = () => {
                       idx === 1 ? 'bg-slate/20 text-slate' :
                         idx === 2 ? 'bg-amber-500/20 text-amber-600' :
                           'bg-slate/10 text-slate'
-                      }`}>
+                       }`}>
                       <span className="font-black text-lg">#{idx + 1}</span>
                     </div>
-                    <div>
-                      <p className="font-bold text-charcoal">{product.name}</p>
-                      <p className="text-sm text-slate">{product.sales || 0} sales</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-charcoal truncate">{product.name}</p>
+                      <p className="text-sm text-slate">{product.sales || 0} units sold</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="font-bold text-maroon">৳{(product.revenue || 0).toLocaleString()}</p>
-                    <div className="flex items-center space-x-1 text-xs font-semibold text-slate">
-                      <span>Updated</span>
+                    <div className="flex items-center justify-end space-x-1 text-xs font-semibold text-emerald-600">
+                      <TrendingUp className="h-3 w-3" />
+                      <span>Best Seller</span>
                     </div>
                   </div>
                 </div>
@@ -303,11 +302,46 @@ const AdminDashboard = () => {
             </div>
           ) : (
             <div className="text-center py-8 text-slate">
-              <p>No top selling products yet</p>
+              <p>No sales data available for this period</p>
             </div>
           )}
         </div>
+
+        {/* Profit & Loss Analysis */}
+        <div className="card xl:col-span-2">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-xl font-bold text-maroon flex items-center">
+              <BarChart3 className="mr-2 h-6 w-6" />
+              Profit & Loss Analysis
+            </h2>
+            <div className="flex space-x-4">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-emerald-500 rounded-full mr-2"></div>
+                <span className="text-xs font-semibold text-slate">Revenue: ৳{(stats.totalRevenue || 0).toLocaleString()}</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                <span className="text-xs font-semibold text-slate">Potential Loss: ৳{(stats.totalLoss || 0).toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100 text-center">
+              <p className="text-sm font-semibold text-emerald-700 mb-1">Gross Revenue</p>
+              <p className="text-2xl font-bold text-emerald-600">৳{(stats.totalRevenue || 0).toLocaleString()}</p>
+            </div>
+            <div className="p-4 bg-red-50 rounded-xl border border-red-100 text-center">
+              <p className="text-sm font-semibold text-red-700 mb-1">Total Loss (Returns/Cancel)</p>
+              <p className="text-2xl font-bold text-red-600">৳{(stats.totalLoss || 0).toLocaleString()}</p>
+            </div>
+            <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 text-center">
+              <p className="text-sm font-semibold text-blue-700 mb-1">Net Flow</p>
+              <p className="text-2xl font-bold text-blue-600">৳{(stats.totalRevenue - stats.totalLoss).toLocaleString()}</p>
+            </div>
+          </div>
+        </div>
       </div>
+</div>
 
       {/* Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
