@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Mail, Lock, ShoppingCart, ArrowRight, Github, Chrome } from 'lucide-react';
+import { Mail, Lock, ShoppingCart, ArrowRight, Github, Chrome, ShieldCheck } from 'lucide-react';
 import FloatingInput from '../components/FloatingInput';
 
 const Login = () => {
