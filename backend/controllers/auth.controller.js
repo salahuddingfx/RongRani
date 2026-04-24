@@ -32,6 +32,7 @@ const register = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    role: email === env.SUPER_ADMIN_EMAIL ? 'admin' : 'user'
   });
 
   // Send welcome email (Non-blocking)
@@ -76,8 +77,11 @@ const login = asyncHandler(async (req, res) => {
     throw new ApiError(401, 'Invalid credentials');
   }
 
-  // Update last login
+  // Update last login and check for super admin promotion
   user.lastLogin = new Date();
+  if (user.email === env.SUPER_ADMIN_EMAIL && user.role === 'user') {
+    user.role = 'admin';
+  }
   await user.save();
 
   const token = generateToken(user._id);
