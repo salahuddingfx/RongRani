@@ -186,13 +186,28 @@ const getSalesStats = asyncHandler(async (req, res) => {
         { $group: { _id: null, total: { $sum: '$total' } } }
     ]);
 
+    const returnData = await Order.aggregate([
+        { $match: { orderStatus: 'returned', createdAt: { $gte: startDate } } },
+        { $group: { _id: null, count: { $sum: 1 }, loss: { $sum: '$total' } } }
+    ]);
+
+    const cancelledData = await Order.aggregate([
+        { $match: { orderStatus: 'cancelled', createdAt: { $gte: startDate } } },
+        { $group: { _id: null, count: { $sum: 1 }, loss: { $sum: '$total' } } }
+    ]);
+
     res.status(200).json({
         dailySales: dailySales.map(d => ({ date: d._id, revenue: d.revenue, orders: d.orders })),
         weeklySales: weeklySales[0]?.total || 0,
         monthlySales: monthlySales[0]?.total || 0,
         totalRevenue: totalRevenue[0]?.total || 0,
         totalOrders,
-        avgOrderValue: totalOrders > 0 ? (totalRevenue[0]?.total || 0) / totalOrders : 0
+        avgOrderValue: totalOrders > 0 ? (totalRevenue[0]?.total || 0) / totalOrders : 0,
+        totalReturns: returnData[0]?.count || 0,
+        returnLoss: returnData[0]?.loss || 0,
+        totalCancelled: cancelledData[0]?.count || 0,
+        cancelledLoss: cancelledData[0]?.loss || 0,
+        netRevenue: (totalRevenue[0]?.total || 0) - (returnData[0]?.loss || 0)
     });
 });
 

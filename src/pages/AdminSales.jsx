@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { BarChart3, TrendingUp, DollarSign, ShoppingBag, Users, Package, Calendar } from 'lucide-react';
+import { BarChart3, TrendingUp, DollarSign, ShoppingBag, Users, Package, Calendar, XCircle, ArrowDown } from 'lucide-react';
 import axios from 'axios';
 
 const AdminSales = () => {
@@ -121,14 +121,42 @@ const AdminSales = () => {
         <div className="card bg-purple-600 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-purple-100 opacity-90 text-sm font-semibold mb-1">Avg Order Value</p>
-              <h3 className="text-3xl font-bold">৳{(salesData.avgOrderValue || 0).toLocaleString()}</h3>
+              <p className="text-purple-100 opacity-90 text-sm font-semibold mb-1">Net Revenue</p>
+              <h3 className="text-3xl font-bold">৳{(salesData.netRevenue || 0).toLocaleString()}</h3>
               <p className="text-purple-200 text-sm mt-2 flex items-center">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                +5.2% increase
+                <ArrowDown className="h-4 w-4 mr-1" />
+                -৳{(salesData.returnLoss || 0).toLocaleString()} Returns
               </p>
             </div>
             <DollarSign className="h-12 w-12 opacity-30" />
+          </div>
+        </div>
+      </div>
+
+      {/* Returns & Cancellations Breakdown */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="card border-l-4 border-orange-500 bg-orange-50/30">
+          <div className="flex justify-between items-start">
+            <div>
+              <h4 className="text-orange-800 font-bold mb-1">Returned Orders</h4>
+              <p className="text-3xl font-black text-orange-600">{salesData.totalReturns || 0}</p>
+              <p className="text-sm text-orange-700 mt-1">Loss: ৳{(salesData.returnLoss || 0).toLocaleString()}</p>
+            </div>
+            <div className="p-3 bg-orange-100 rounded-xl text-orange-600">
+              <Package className="h-6 w-6" />
+            </div>
+          </div>
+        </div>
+        <div className="card border-l-4 border-red-500 bg-red-50/30">
+          <div className="flex justify-between items-start">
+            <div>
+              <h4 className="text-red-800 font-bold mb-1">Cancelled Orders</h4>
+              <p className="text-3xl font-black text-red-600">{salesData.totalCancelled || 0}</p>
+              <p className="text-sm text-red-700 mt-1">Loss: ৳{(salesData.cancelledLoss || 0).toLocaleString()}</p>
+            </div>
+            <div className="p-3 bg-red-100 rounded-xl text-red-600">
+              <XCircle className="h-6 w-6" />
+            </div>
           </div>
         </div>
       </div>
