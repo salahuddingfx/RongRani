@@ -122,7 +122,7 @@ const Shop = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get('/api/products/categories');
-      setCategories(response.data);
+      setCategories(Array.isArray(response.data.data) ? response.data.data : (Array.isArray(response.data) ? response.data : []));
     } catch (error) {
       console.error('Error fetching categories:', error);
       // RongRani Categories
@@ -303,7 +303,7 @@ const Shop = () => {
                   className="input-field"
                 >
                   <option value="">{t('all_categories')}</option>
-                  {categories && categories.map((category) => (
+                  {Array.isArray(categories) && categories.map((category) => (
                     <option key={category._id || category.name || category} value={typeof category === 'string' ? category : category.name}>
                       {t('cat_' + (typeof category === 'string' ? category : category.name).toLowerCase().replace(/\s+/g, '_'))}
                       {typeof category === 'object' && category.productCount ? ` (${category.productCount})` : ''}
