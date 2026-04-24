@@ -507,16 +507,16 @@ const Navbar = () => {
                   {/* Desktop Only Icons (Mobile has BottomNav) */}
                   {!isSimplifiedPage && (
                     <>
-                      <Link to="/cart" onClick={(e) => { e.preventDefault(); openCart(); }} className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group" aria-label="Cart">
+                      <Link to="/cart" onClick={(e) => { e.preventDefault(); openCart(); }} className="hidden sm:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group" aria-label="Cart">
                         <ShoppingCart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon" />
                         {totalItems > 0 && <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-bounce-short">{totalItems}</span>}
                       </Link>
-                      <Link to="/wishlist" className="hidden md:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group" aria-label="Wishlist">
+                      <Link to="/wishlist" className="hidden sm:flex relative p-1.5 sm:p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors group" aria-label="Wishlist">
                         <Heart className="w-5 h-5 text-slate-600 dark:text-slate-300 group-hover:text-maroon" />
                         {wishlist.length > 0 && <span className="absolute top-0 right-0 bg-maroon text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border border-white dark:border-slate-900 shadow-sm animate-pulse">{wishlist.length}</span>}
                       </Link>
 
-                      <div className="hidden md:block">
+                      <div className="hidden sm:block">
                         {user ? (
                           <div className="relative ml-1 user-menu-container">
                             <button onClick={() => setShowUserMenu(!showUserMenu)} className="flex items-center gap-2 group" aria-label="User menu">
