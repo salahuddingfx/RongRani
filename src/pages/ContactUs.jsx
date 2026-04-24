@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Facebook, Instagram, Twitter, Loader2, User, Globe, MessageSquare } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Facebook, Instagram, Twitter, Loader2, User, Globe, MessageSquare, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
