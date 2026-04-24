@@ -18,11 +18,8 @@ const client = createClient({
 });
 
 client.on('error', (err) => {
-    if (!isRedisConnected) {
-        // Suppress repeated logs if it never connected
-        return;
-    }
-    logger.error('Redis Error', err.message);
+    // Silently handle errors to prevent terminal flood. 
+    // The initial connection failure is already handled in connectRedis().
 });
 
 client.on('connect', () => {
