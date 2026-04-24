@@ -413,8 +413,11 @@ const AdminProducts = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="px-3 py-1 bg-maroon/10 text-maroon rounded-full text-sm font-medium">
-                      {product.category}
+                    <span className="px-3 py-1 bg-maroon/10 text-maroon rounded-full text-xs font-black uppercase tracking-widest">
+                      {typeof product.category === 'object' 
+                        ? product.category.name 
+                        : (categories.find(c => c._id === product.category || c.slug === product.category)?.name || product.category || 'General')
+                      }
                     </span>
                   </td>
                   <td className="px-6 py-4 font-bold text-maroon">৳{product.price}</td>
