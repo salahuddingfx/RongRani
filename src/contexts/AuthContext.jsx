@@ -54,6 +54,23 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const response = await axios.post('/api/auth/login', { email, password });
+    
+    // Check if 2FA is required
+    if (response.data.data.is2FARequired) {
+      return { is2FARequired: true, tempToken: response.data.data.tempToken };
+    }
+
+    const { token, ...userData } = response.data.data;
+    localStorage.setItem('token', token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    setUser(userData);
+    setIsAuthenticated(true);
+    setRole(userData.role || 'user');
+    return userData;
+  };
+
+  const verify2FALogin = async (tempToken, otp) => {
+    const response = await axios.post('/api/auth/login/2fa', { tempToken, otp });
     const { token, ...userData } = response.data.data;
     localStorage.setItem('token', token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -88,6 +105,7 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     role,
     login,
+    verify2FALogin,
     register,
     logout,
     checkAuthStatus

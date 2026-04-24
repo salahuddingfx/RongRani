@@ -4,7 +4,7 @@ import {
   Menu, X, LogOut, Home, ChevronRight, 
   BarChart3, TrendingUp, Users, Package, ShoppingBag, 
   FolderTree, Ticket, Megaphone, Flame, Zap, 
-  Star, Truck, ClipboardList, Compass, Bot 
+  Star, Truck, ClipboardList, Compass, Bot, Shield 
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import ScrollRevealManager from './ScrollRevealManager';
@@ -36,6 +36,7 @@ const AdminLayout = () => {
     { path: '/admin/reports', label: 'Reports', icon: <ClipboardList className="w-5 h-5" /> },
     { path: '/admin/status', label: 'Status', icon: <Compass className="w-5 h-5" /> },
     { path: '/admin/ai', label: 'AI Studio', icon: <Bot className="w-5 h-5" /> },
+    { path: '/admin/security', label: 'Security', icon: <Shield className="w-5 h-5" /> },
   ];
 
   const isActive = (path) => location.pathname === path;

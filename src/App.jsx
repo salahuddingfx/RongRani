@@ -66,6 +66,7 @@ const AboutUs = lazy(() => import('./pages/AboutUs'));
 const Reviews = lazy(() => import('./pages/Reviews'));
 const TermsConditions = lazy(() => import('./pages/TermsConditions'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const AdminSecurity = lazy(() => import('./pages/AdminSecurity'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 function App() {
@@ -197,6 +198,7 @@ function App() {
                               <Route path="ai" element={<AdminAI />} />
                               <Route path="flash-sale" element={<AdminFlashSale />} />
                               <Route path="analytics" element={<AdminAnalytics />} />
+                              <Route path="security" element={<AdminSecurity />} />
                             </Route>
                           </Routes>
                         </Suspense>

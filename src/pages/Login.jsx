@@ -9,10 +9,11 @@ const Login = () => {
     email: '',
     password: ''
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [is2FARequired, setIs2FARequired] = useState(false);
+  const [tempToken, setTempToken] = useState('');
+  const [otp, setOtp] = useState('');
 
-  const { login } = useAuth();
+  const { login, verify2FALogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,10 +33,31 @@ const Login = () => {
     setError('');
 
     try {
-      await login(formData.email, formData.password);
+      const result = await login(formData.email, formData.password);
+      if (result?.is2FARequired) {
+        setIs2FARequired(true);
+        setTempToken(result.tempToken);
+        setLoading(false);
+        return;
+      }
       navigate(from === '/cart' ? '/checkout' : from);
     } catch (error) {
       setError(error.response?.data?.message || 'Invalid credentials. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handle2FAVerify = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      await verify2FALogin(tempToken, otp);
+      navigate(from === '/cart' ? '/checkout' : from);
+    } catch (error) {
+      setError(error.response?.data?.message || 'Invalid OTP code. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -113,56 +135,99 @@ const Login = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-2">
-            <FloatingInput
-              label="Email Address"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              icon={Mail}
-              required
-            />
+          {!is2FARequired ? (
+            <form onSubmit={handleSubmit} className="space-y-2">
+              <FloatingInput
+                label="Email Address"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                icon={Mail}
+                required
+              />
 
-            <FloatingInput
-              label="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              icon={Lock}
-              isPassword={true}
-              required
-            />
+              <FloatingInput
+                label="Password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                icon={Lock}
+                isPassword={true}
+                required
+              />
 
-            <div className="flex items-center justify-between pt-2">
-              <label className="flex items-center gap-2 cursor-pointer group">
-                <div className="relative">
-                   <input type="checkbox" className="sr-only peer" />
-                   <div className="w-5 h-5 border-2 border-slate-200 rounded-md peer-checked:bg-maroon peer-checked:border-maroon transition-all"></div>
-                   <div className="absolute inset-0 flex items-center justify-center text-white scale-0 peer-checked:scale-100 transition-transform">✓</div>
+              <div className="flex items-center justify-between pt-2">
+                <label className="flex items-center gap-2 cursor-pointer group">
+                  <div className="relative">
+                     <input type="checkbox" className="sr-only peer" />
+                     <div className="w-5 h-5 border-2 border-slate-200 rounded-md peer-checked:bg-maroon peer-checked:border-maroon transition-all"></div>
+                     <div className="absolute inset-0 flex items-center justify-center text-white scale-0 peer-checked:scale-100 transition-transform">✓</div>
+                  </div>
+                  <span className="text-sm text-slate-500 group-hover:text-maroon transition-colors">Remember me</span>
+                </label>
+                <Link to="/forgot-password" size="sm" className="text-sm font-bold text-maroon hover:underline decoration-2 underline-offset-4">
+                  Forgot Password?
+                </Link>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-8 bg-maroon text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-maroon/20 hover:bg-[#701e2a] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-70 group"
+              >
+                {loading ? (
+                  <div className="animate-spin rounded-full h-6 w-6 border-4 border-white/30 border-t-white"></div>
+                ) : (
+                  <>
+                    <span>Sign In to Account</span>
+                    <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+                  </>
+                )}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handle2FAVerify} className="space-y-6 animate-fade-in">
+              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center">
+                <div className="w-16 h-16 bg-maroon/10 text-maroon rounded-full flex items-center justify-center mx-auto mb-4">
+                   <ShieldCheck size={32} />
                 </div>
-                <span className="text-sm text-slate-500 group-hover:text-maroon transition-colors">Remember me</span>
-              </label>
-              <Link to="/forgot-password" size="sm" className="text-sm font-bold text-maroon hover:underline decoration-2 underline-offset-4">
-                Forgot Password?
-              </Link>
-            </div>
+                <h3 className="text-xl font-bold text-slate-800 mb-2">Two-Factor Authentication</h3>
+                <p className="text-sm text-slate-500 mb-6">
+                  Enter the 6-digit verification code from your authenticator app to continue.
+                </p>
+                
+                <input
+                  type="text"
+                  placeholder="000 000"
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  className="w-full text-center text-3xl font-black tracking-[0.5em] py-4 rounded-xl border-2 border-slate-200 focus:border-maroon focus:ring-0 transition-all outline-none mb-6"
+                  autoFocus
+                />
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full mt-8 bg-maroon text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-maroon/20 hover:bg-[#701e2a] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-70 group"
-            >
-              {loading ? (
-                <div className="animate-spin rounded-full h-6 w-6 border-4 border-white/30 border-t-white"></div>
-              ) : (
-                <>
-                  <span>Sign In to Account</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-                </>
-              )}
-            </button>
-          </form>
+                <button
+                  type="submit"
+                  disabled={loading || otp.length !== 6}
+                  className="w-full bg-maroon text-white py-4 rounded-2xl font-black text-lg shadow-xl shadow-maroon/20 hover:bg-[#701e2a] transition-all disabled:opacity-70"
+                >
+                  {loading ? (
+                    <div className="animate-spin rounded-full h-6 w-6 border-4 border-white/30 border-t-white mx-auto"></div>
+                  ) : (
+                    "Verify & Login"
+                  )}
+                </button>
+                
+                <button 
+                  type="button"
+                  onClick={() => setIs2FARequired(false)}
+                  className="mt-4 text-sm font-bold text-slate-400 hover:text-maroon transition-colors"
+                >
+                  Back to login
+                </button>
+              </div>
+            </form>
+          )}
 
           {/* Social Logins */}
           <div className="mt-10">
