@@ -1,6 +1,7 @@
 const express = require('express');
 const {
 	getDashboardStats,
+	getSalesStats,
 	getReportsSummary,
 	getAllUsers,
 	updateUser,
