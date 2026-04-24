@@ -1,4 +1,4 @@
-const { client } = require('../config/redis');
+const { client, getIsRedisConnected } = require('../config/redis');
 const logger = require('../utils/logger');
 
 /**
@@ -6,8 +6,8 @@ const logger = require('../utils/logger');
  * @param {Number} duration - Cache duration in seconds
  */
 const cache = (duration) => async (req, res, next) => {
-    // Only cache GET requests
-    if (req.method !== 'GET') {
+    // Only cache GET requests and only if Redis is connected
+    if (req.method !== 'GET' || !getIsRedisConnected()) {
         return next();
     }
 
@@ -24,10 +24,10 @@ const cache = (duration) => async (req, res, next) => {
         // Intercept res.json to store the response in Redis
         const originalJson = res.json;
         res.json = (body) => {
-            // Only cache successful responses
-            if (res.statusCode >= 200 && res.statusCode < 300) {
+            // Check connection again before setting
+            if (res.statusCode >= 200 && res.statusCode < 300 && getIsRedisConnected()) {
                 client.setEx(key, duration, JSON.stringify(body))
-                    .then(() => logger.debug(`Cache Set: ${key} for ${duration}s`))
+                    .then(() => logger.debug(`Cache Set: ${key}`))
                     .catch(err => logger.error('Redis Cache Set Error', err));
             }
             return originalJson.call(res, body);
