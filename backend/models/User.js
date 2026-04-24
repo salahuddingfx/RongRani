@@ -66,7 +66,12 @@ const userSchema = new mongoose.Schema({
     city: String,
     state: String,
     zipCode: String,
-    country: String,
+    country: { type: String, default: 'Bangladesh' },
+    union: String,
+    subDistrict: String,
+    district: String,
+    division: String,
+    postalCode: String,
   },
   phone: {
     type: String,

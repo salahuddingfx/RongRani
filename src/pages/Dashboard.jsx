@@ -22,7 +22,7 @@ const Dashboard = () => {
       setProfileData({
         name: user.name || '',
         phone: user.phone || '',
-        address: user.address || ''
+        address: user.address?.street || (typeof user.address === 'string' ? user.address : '')
       });
     }
   }, [user]);
@@ -71,6 +71,20 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     logout();
+  };
+
+  const formatAddress = (addr) => {
+    if (!addr) return 'Not provided';
+    if (typeof addr === 'string') return addr;
+    const parts = [
+      addr.street,
+      addr.union,
+      addr.subDistrict,
+      addr.city,
+      addr.district,
+      addr.division
+    ].filter(Boolean);
+    return parts.length > 0 ? parts.join(', ') : 'Not provided';
   };
 
   // Mock data
@@ -189,7 +203,7 @@ const Dashboard = () => {
                       <ProfileField label="Username" value={user?.username} icon={Settings} />
                       <ProfileField label="Phone Number" value={user?.phone || 'Not provided'} icon={Phone} />
                       <div className="md:col-span-2">
-                        <ProfileField label="Primary Address" value={user?.address || 'Not provided'} icon={MapPin} full />
+                        <ProfileField label="Primary Address" value={formatAddress(user?.address)} icon={MapPin} full />
                       </div>
                     </div>
                   ) : (

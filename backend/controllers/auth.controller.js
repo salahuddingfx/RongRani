@@ -251,7 +251,14 @@ const updateProfile = asyncHandler(async (req, res) => {
 
   if (req.body.name) user.name = req.body.name;
   if (req.body.phone) user.phone = req.body.phone;
-  if (req.body.address) user.address = req.body.address;
+  if (req.body.address) {
+    const currentAddress = user.address ? (typeof user.address.toObject === 'function' ? user.address.toObject() : user.address) : {};
+    if (typeof req.body.address === 'string') {
+      user.address = { ...currentAddress, street: req.body.address };
+    } else {
+      user.address = { ...currentAddress, ...req.body.address };
+    }
+  }
 
   await user.save();
 
