@@ -1,111 +1,109 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendEmail } = require('../services/emailService');
+const asyncHandler = require('../utils/asyncHandler');
+const ApiError = require('../utils/ApiError');
+const ApiResponse = require('../utils/ApiResponse');
+const env = require('../config/env');
 
-// Generate JWT token
+/**
+ * Generate JWT token
+ */
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE || '30d',
+  return jwt.sign({ id }, env.JWT_SECRET, {
+    expiresIn: env.JWT_EXPIRE || '30d',
   });
 };
 
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
-const register = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+const register = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
 
-    // Check if user exists
-    const userExists = await User.findOne({ email });
-    if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
+  // Check if user exists
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    throw new ApiError(400, 'User already exists');
+  }
 
-    // Create user
-    const user = await User.create({
-      name,
-      email,
-      password,
-    });
+  // Create user
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
 
-    // Send welcome email
-    try {
-      console.log('📧 Attempting to send welcome email to:', email);
-      await sendEmail(email, 'Welcome to RongRani', 'welcome', { name });
+  // Send welcome email (Non-blocking)
+  sendEmail(email, 'Welcome to RongRani', 'welcome', { name })
+    .then(() => {
       console.log('✅ Welcome email sent successfully to:', email);
-
-      // Send admin notification about new user
-      console.log('📧 Sending new user notification to admin...');
-      await sendEmail(
-        process.env.SUPER_ADMIN_EMAIL || 'info.rongrani@gmail.com',
+      // Admin notification
+      return sendEmail(
+        env.SUPER_ADMIN_EMAIL,
         '🆕 New User Registered - RongRani',
         'adminNewUser',
         { userName: name, userEmail: email, registeredAt: new Date().toLocaleString() }
       );
-      console.log('✅ Admin notification sent');
-    } catch (emailError) {
-      console.error('❌ Welcome email failed:', emailError.message);
-      console.error('Full error:', emailError);
-    }
+    })
+    .catch(err => console.error('❌ Email notification failed:', err.message));
 
-    const token = generateToken(user._id);
+  const token = generateToken(user._id);
 
-    res.status(201).json({
+  res.status(201).json(
+    new ApiResponse(201, {
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
       token,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    }, "User registered successfully")
+  );
+});
 
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
-const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+const login = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).select('+password');
-    if (!user || !(await user.comparePassword(password))) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+  if (!email || !password) {
+    throw new ApiError(400, "Email and password are required");
+  }
 
-    // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+  const user = await User.findOne({ email }).select('+password');
+  if (!user || !(await user.comparePassword(password))) {
+    throw new ApiError(401, 'Invalid credentials');
+  }
 
-    const token = generateToken(user._id);
+  // Update last login
+  user.lastLogin = new Date();
+  await user.save();
 
-    console.log('🔓 User logged in:', {
-      email: user.email,
-      role: user.role,
-      token: token.substring(0, 20) + '...'
-    });
+  const token = generateToken(user._id);
 
-    res.json({
+  res.status(200).json(
+    new ApiResponse(200, {
       _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,
       token,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    }, "Login successful")
+  );
+});
 
 // @desc    Get current user
 // @route   GET /api/auth/me
 // @access  Private
-const getMe = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
-    res.json({
+const getMe = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  res.status(200).json(
+    new ApiResponse(200, {
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -113,26 +111,27 @@ const getMe = async (req, res) => {
       avatar: user.avatar,
       address: user.address,
       phone: user.phone,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    })
+  );
+});
 
 // @desc    Update user profile
 // @route   PUT /api/auth/profile
 // @access  Private
-const updateProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id);
+const updateProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
 
-    if (req.body.name) user.name = req.body.name;
-    if (req.body.phone) user.phone = req.body.phone;
-    if (req.body.address) user.address = req.body.address;
+  if (req.body.name) user.name = req.body.name;
+  if (req.body.phone) user.phone = req.body.phone;
+  if (req.body.address) user.address = req.body.address;
 
-    await user.save();
+  await user.save();
 
-    res.json({
+  res.status(200).json(
+    new ApiResponse(200, {
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -140,75 +139,70 @@ const updateProfile = async (req, res) => {
       avatar: user.avatar,
       address: user.address,
       phone: user.phone,
-    });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    }, "Profile updated successfully")
+  );
+});
 
 // @desc    Change password
 // @route   PUT /api/auth/change-password
 // @access  Private
-const changePassword = async (req, res) => {
-  try {
-    const { currentPassword, newPassword } = req.body;
-    const user = await User.findById(req.user._id).select('+password');
+const changePassword = asyncHandler(async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const user = await User.findById(req.user._id).select('+password');
 
-    if (!(await user.comparePassword(currentPassword))) {
-      return res.status(400).json({ message: 'Current password is incorrect' });
-    }
-
-    user.password = newPassword;
-    await user.save();
-
-    res.json({ message: 'Password changed successfully' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (!(await user.comparePassword(currentPassword))) {
+    throw new ApiError(400, 'Current password is incorrect');
   }
-};
+
+  user.password = newPassword;
+  await user.save();
+
+  res.status(200).json(new ApiResponse(200, {}, 'Password changed successfully'));
+});
 
 // @desc    Forgot password
 // @route   POST /api/auth/forgot-password
 // @access  Public
-const forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Generate reset token
-    const resetToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 hour
-    await user.save();
-
-    const resetLink = `${process.env.FRONTEND_URL} /reset-password/${resetToken} `;
-
-    await sendEmail(email, 'Password Reset', 'passwordReset', {
-      name: user.name,
-      resetLink,
-    });
-
-    res.json({ message: 'Password reset email sent' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  if (!user) {
+    throw new ApiError(404, 'User with this email does not exist');
   }
-};
+
+  // Generate reset token
+  const resetToken = jwt.sign({ id: user._id }, env.JWT_SECRET, {
+    expiresIn: '1h',
+  });
+
+  user.resetPasswordToken = resetToken;
+  user.resetPasswordExpire = Date.now() + 60 * 60 * 1000; // 1 hour
+  await user.save();
+
+  // FIX: Removed extra spaces in reset link
+  const resetLink = `${env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+  await sendEmail(email, 'Password Reset Request', 'passwordReset', {
+    name: user.name,
+    resetLink,
+  });
+
+  res.status(200).json(new ApiResponse(200, {}, 'Password reset email sent'));
+});
 
 // @desc    Reset password
 // @route   POST /api/auth/reset-password
 // @access  Public
-const resetPassword = async (req, res) => {
-  try {
-    const { token, newPassword } = req.body;
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token, newPassword } = req.body;
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  if (!token || !newPassword) {
+    throw new ApiError(400, "Token and new password are required");
+  }
+
+  try {
+    const decoded = jwt.verify(token, env.JWT_SECRET);
     const user = await User.findOne({
       _id: decoded.id,
       resetPasswordToken: token,
@@ -216,7 +210,7 @@ const resetPassword = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired token' });
+      throw new ApiError(400, 'Invalid or expired reset token');
     }
 
     user.password = newPassword;
@@ -224,59 +218,60 @@ const resetPassword = async (req, res) => {
     user.resetPasswordExpire = undefined;
     await user.save();
 
-    res.json({ message: 'Password reset successfully' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(200).json(new ApiResponse(200, {}, 'Password reset successfully'));
+  } catch (err) {
+    // If jwt.verify fails
+    throw new ApiError(400, 'Invalid or expired reset token');
   }
-};
+});
 
 // @desc    Logout user
 // @route   POST /api/auth/logout
 // @access  Private
-const logout = (req, res) => {
-  res.json({ message: 'Logged out successfully' });
-};
+const logout = asyncHandler(async (req, res) => {
+  res.status(200).json(new ApiResponse(200, {}, 'Logged out successfully'));
+});
 
 // @desc    Refresh token
 // @route   POST /api/auth/refresh-token
 // @access  Public
-const refreshToken = async (req, res) => {
-  try {
-    const { token } = req.body;
-    if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const newToken = generateToken(decoded.id);
-
-    res.json({ token: newToken });
-  } catch (_) {
-    res.status(401).json({ message: 'Invalid token' });
+const refreshToken = asyncHandler(async (req, res) => {
+  const { token } = req.body;
+  if (!token) {
+    throw new ApiError(401, 'No token provided');
   }
-};
+
+  try {
+    const decoded = jwt.verify(token, env.JWT_SECRET);
+    const newToken = generateToken(decoded.id);
+    res.status(200).json(new ApiResponse(200, { token: newToken }));
+  } catch (_) {
+    throw new ApiError(401, 'Invalid or expired token');
+  }
+});
 
 // @desc    Verify email
 // @route   GET /api/auth/verify-email/:token
 // @access  Public
-const verifyEmail = async (req, res) => {
+const verifyEmail = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+  
   try {
-    const { token } = req.params;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+    const decoded = jwt.verify(token, env.JWT_SECRET);
     const user = await User.findById(decoded.id);
+    
     if (!user) {
-      return res.status(400).json({ message: 'Invalid token' });
+      throw new ApiError(400, 'Invalid verification token');
     }
 
     user.isVerified = true;
     await user.save();
 
-    res.json({ message: 'Email verified successfully' });
+    res.status(200).json(new ApiResponse(200, {}, 'Email verified successfully'));
   } catch (_) {
-    res.status(400).json({ message: 'Invalid token' });
+    throw new ApiError(400, 'Invalid or expired verification token');
   }
-};
+});
 
 module.exports = {
   register,
