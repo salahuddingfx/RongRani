@@ -20,9 +20,13 @@ const HomeCategorySlider = ({ category }) => {
     const fetchCategoryProducts = async () => {
         try {
             const response = await axios.get(`/api/products?category=${encodeURIComponent(category.name)}&limit=10`);
-            setProducts(response.data.products);
+            if (response.data && response.data.products) {
+                setProducts(response.data.products);
+            } else {
+                setProducts([]);
+            }
         } catch (_) {
-            // console.error(`Error fetching products for category ${category.name}:`, error); // Removed console.error
+            setProducts([]);
         } finally {
             setLoading(false);
         }
@@ -35,7 +39,7 @@ const HomeCategorySlider = ({ category }) => {
     }, [category]);
 
     useEffect(() => {
-        if (products.length === 0 || isPaused) return undefined;
+        if (!products || products.length === 0 || isPaused) return undefined;
 
         const timer = setInterval(() => {
             if (!scrollRef.current) return;
@@ -52,7 +56,7 @@ const HomeCategorySlider = ({ category }) => {
         }, 3000);
 
         return () => clearInterval(timer);
-    }, [products.length, isPaused]);
+    }, [products?.length, isPaused]);
 
     // Real-time Updates
     useEffect(() => {
@@ -93,7 +97,7 @@ const HomeCategorySlider = ({ category }) => {
         );
     }
 
-    if (products.length === 0) return null;
+    if (!products || products.length === 0) return null;
 
     return (
         <div
@@ -175,7 +179,7 @@ const HomeCategorySlider = ({ category }) => {
                     className="flex overflow-x-auto space-x-4 px-4 pb-8 no-scrollbar scroll-smooth snap-x snap-mandatory"
                     style={{ WebkitOverflowScrolling: 'touch' }}
                 >
-                    {products.map((product) => (
+                    {products?.map((product) => (
                         <div
                             key={product._id}
                             className="flex-shrink-0 w-[170px] sm:w-[200px] md:w-[220px] lg:w-[240px] snap-start"
