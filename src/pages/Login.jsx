@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Mail, Lock, ShoppingCart, ArrowRight, Github, Chrome, ShieldCheck } from 'lucide-react';
+import { Mail, Lock, User, ShoppingCart, ArrowRight, Github, Chrome, ShieldCheck } from 'lucide-react';
 import FloatingInput from '../components/FloatingInput';
 
 const Login = () => {
@@ -12,6 +12,8 @@ const Login = () => {
   const [is2FARequired, setIs2FARequired] = useState(false);
   const [tempToken, setTempToken] = useState('');
   const [otp, setOtp] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const { login, verify2FALogin } = useAuth();
   const navigate = useNavigate();
