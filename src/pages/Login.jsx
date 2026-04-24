@@ -137,15 +137,14 @@ const Login = () => {
 
           {!is2FARequired ? (
             <form onSubmit={handleSubmit} className="space-y-2">
-              <FloatingInput
-                label="Email Address"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                icon={Mail}
-                required
-              />
+            <FloatingInput
+              label="Email or Username"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              icon={User}
+              required
+            />
 
               <FloatingInput
                 label="Password"
