@@ -43,6 +43,7 @@ router.use(auth, authorize(['admin', 'super_admin']));
 
 // Dashboard
 router.get('/dashboard', cache(300), getDashboardStats);
+router.get('/sales', getSalesStats);
 router.get('/reports/summary', cache(300), getReportsSummary);
 
 // User management

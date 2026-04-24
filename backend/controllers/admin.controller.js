@@ -110,6 +110,13 @@ const getDashboardStats = asyncHandler(async (req, res) => {
       { $group: { _id: null, totalLoss: { $sum: '$total' } } }
     ]);
 
+    const categoryCounts = await Product.aggregate([
+      { $match: { isActive: true } },
+      { $group: { _id: '$category', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 8 },
+    ]);
+
     res.status(200).json(new ApiResponse(200, {
       totalUsers,
       totalOrders: periodOrders,
@@ -123,13 +130,68 @@ const getDashboardStats = asyncHandler(async (req, res) => {
       lowStockProducts,
       monthlyRevenue,
       orderStatusCounts,
-      categoryCounts: await Product.aggregate([
-        { $match: { isActive: true } },
-        { $group: { _id: '$category', count: { $sum: 1 } } },
-        { $sort: { count: -1 } },
-        { $limit: 8 },
-      ])
+      categoryCounts
     }));
+});
+
+// @desc    Get sales stats for charts
+// @route   GET /api/admin/sales
+// @access  Private/Admin
+const getSalesStats = asyncHandler(async (req, res) => {
+    const { period = 'week' } = req.query;
+    const now = new Date();
+    let startDate;
+
+    if (period === 'month') {
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else if (period === 'year') {
+        startDate = new Date(now.getFullYear(), 0, 1);
+    } else {
+        startDate = new Date(now.setDate(now.getDate() - 7));
+    }
+
+    const totalRevenue = await Order.aggregate([
+        { $match: { paymentStatus: 'paid', createdAt: { $gte: startDate } } },
+        { $group: { _id: null, total: { $sum: '$total' } } }
+    ]);
+
+    const totalOrders = await Order.countDocuments({ createdAt: { $gte: startDate } });
+
+    const dailySales = await Order.aggregate([
+        {
+            $match: {
+                paymentStatus: 'paid',
+                createdAt: { $gte: startDate }
+            }
+        },
+        {
+            $group: {
+                _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+                revenue: { $sum: '$total' },
+                orders: { $sum: 1 }
+            }
+        },
+        { $sort: { _id: 1 } }
+    ]);
+
+    const weeklySales = await Order.aggregate([
+        { $match: { paymentStatus: 'paid', createdAt: { $gte: new Date(new Date().setDate(new Date().getDate() - 7)) } } },
+        { $group: { _id: null, total: { $sum: '$total' } } }
+    ]);
+
+    const monthlySales = await Order.aggregate([
+        { $match: { paymentStatus: 'paid', createdAt: { $gte: new Date(new Date().setDate(new Date().getDate() - 30)) } } },
+        { $group: { _id: null, total: { $sum: '$total' } } }
+    ]);
+
+    res.status(200).json({
+        dailySales: dailySales.map(d => ({ date: d._id, revenue: d.revenue, orders: d.orders })),
+        weeklySales: weeklySales[0]?.total || 0,
+        monthlySales: monthlySales[0]?.total || 0,
+        totalRevenue: totalRevenue[0]?.total || 0,
+        totalOrders,
+        avgOrderValue: totalOrders > 0 ? (totalRevenue[0]?.total || 0) / totalOrders : 0
+    });
 });
 
 // @desc    Get all users
@@ -1112,6 +1174,7 @@ const deleteReview = async (req, res) => {
 
 module.exports = {
   getDashboardStats,
+  getSalesStats,
   getReportsSummary,
   getAllUsers,
   getUserById,
