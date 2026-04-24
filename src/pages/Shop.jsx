@@ -48,9 +48,12 @@ const Shop = () => {
       params.append('limit', productsPerPage);
 
       const response = await axios.get(`/api/products?${params}`);
-      setProducts(response.data.products);
-      setTotalProducts(response.data.total);
-      setTotalPages(Math.ceil(response.data.total / productsPerPage));
+      const fetchedData = response.data.data?.products || response.data.products || (Array.isArray(response.data.data) ? response.data.data : response.data);
+      const totalCount = response.data.data?.total || response.data.total || (Array.isArray(fetchedData) ? fetchedData.length : 0);
+      
+      setProducts(Array.isArray(fetchedData) ? fetchedData : []);
+      setTotalProducts(totalCount);
+      setTotalPages(Math.ceil(totalCount / productsPerPage));
     } catch (error) {
       console.error('Error fetching products:', error);
       // RongRani Gift Products - Fallback data with client-side filtering

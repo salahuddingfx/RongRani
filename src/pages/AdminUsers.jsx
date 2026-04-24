@@ -45,7 +45,8 @@ const AdminUsers = () => {
       const response = await axios.get('/api/admin/users', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setUsers(response.data.users || response.data);
+      const fetchedData = response.data.data?.users || response.data.users || (Array.isArray(response.data.data) ? response.data.data : response.data);
+      setUsers(Array.isArray(fetchedData) ? fetchedData : []);
     } catch (error) {
       console.error('Error fetching users:', error);
       toast.error('Failed to load users');

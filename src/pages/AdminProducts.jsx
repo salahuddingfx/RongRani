@@ -99,7 +99,8 @@ const AdminProducts = () => {
       const response = await axios.get('/api/products', {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setProducts(response.data.products || response.data || []);
+      const fetchedData = response.data.data?.products || response.data.products || (Array.isArray(response.data.data) ? response.data.data : response.data);
+      setProducts(Array.isArray(fetchedData) ? fetchedData : []);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
