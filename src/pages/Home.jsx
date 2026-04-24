@@ -239,7 +239,7 @@ const Home = () => {
           {/* Inline scrollable categories for mobile, grid for desktop */}
           <div className="lg:hidden overflow-x-auto pb-4 -mx-4 px-4">
             <div className="flex space-x-4 min-w-max">
-              {categories.slice(0, 8).map((category, index) => {
+              {categories?.slice(0, 8).map((category, index) => {
                 const iconMap = {
                   'Heart': Heart,
                   'Sparkles': Sparkles,
@@ -291,7 +291,7 @@ const Home = () => {
 
           {/* Desktop grid */}
           <div className="hidden lg:grid grid-cols-4 gap-4">
-            {categories.slice(0, 7).map((category, index) => {
+            {categories?.slice(0, 7).map((category, index) => {
               const iconMap = {
                 'Heart': Heart,
                 'Sparkles': Sparkles,
@@ -380,7 +380,7 @@ const Home = () => {
 
                 return (
                   <Suspense fallback={<div className="h-64 animate-pulse bg-gray-100 dark:bg-slate-800 rounded-xl my-4" />}>
-                    {displayCategories.map((category, index) => (
+                    {displayCategories?.map((category, index) => (
                       <HomeCategorySlider key={category._id || index} category={category} />
                     ))}
                   </Suspense>
