@@ -63,7 +63,8 @@ const AdminOrders = () => {
         headers: { Authorization: `Bearer ${token}` },
         params: { status: statusFilter !== 'all' ? statusFilter : undefined }
       });
-      setOrders(response.data.orders || []);
+      const fetchedData = response.data.data?.orders || response.data.orders || (Array.isArray(response.data.data) ? response.data.data : response.data);
+      setOrders(Array.isArray(fetchedData) ? fetchedData : []);
     } catch (error) {
       console.error('Error fetching orders:', error);
       setOrders([]);
