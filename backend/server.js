@@ -1,48 +1,41 @@
-require('dotenv').config();
 const http = require('http');
 const { Server } = require('socket.io');
 const app = require('./app');
-const mongoose = require('mongoose');
+const env = require('./config/env');
+const connectDB = require('./config/db');
+const logger = require('./utils/logger');
 const seedAdminUser = require('./utils/seedAdmin');
 
-// Force restart for new routes and logging
-console.log('🔄 Server starting...');
-
-const PORT = process.env.PORT || 5000;
-
-process.on('unhandledRejection', (reason) => {
-  console.error('Unhandled Rejection:', reason);
+// 1. Handle Uncaught Exceptions
+process.on('uncaughtException', (err) => {
+  logger.error('💥 UNCAUGHT EXCEPTION! Shutting down...', err);
+  process.exit(1);
 });
 
-process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
+// 2. Connect to Database
+connectDB().then(async () => {
+  // Seed admin user from .env
+  await seedAdminUser().catch(err => logger.error('Admin seeding failed:', err));
 });
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(async () => {
-    console.log('MongoDB connected');
-    // Seed admin user from .env
-    await seedAdminUser();
-  })
-  .catch(err => console.error('MongoDB connection error:', err));
-
+// 3. Create HTTP Server
 const server = http.createServer(app);
 
+// 4. Initialize Socket.io
 const io = new Server(server, {
   cors: {
     origin: (origin, callback) => {
       const allowedOrigins = [
-        process.env.FRONTEND_URL,
+        env.FRONTEND_URL,
         'http://localhost:5173',
-        'http://localhost:3000',
         'https://rongrani.vercel.app'
       ];
 
-      if (!origin || allowedOrigins.includes(origin) || origin.includes('localhost') || (origin.endsWith('.vercel.app') && origin.includes('rongrani'))) {
+      if (!origin || allowedOrigins.includes(origin) || origin.includes('localhost')) {
         callback(null, true);
       } else {
-        console.log('Socket blocked origin:', origin);
-        callback(null, false); // Block gracefully
+        logger.warn('🚫 Socket blocked origin:', { origin });
+        callback(null, false);
       }
     },
     credentials: true,
@@ -52,7 +45,7 @@ const io = new Server(server, {
 app.set('io', io);
 
 io.on('connection', (socket) => {
-  socket.emit('socket:connected', { id: socket.id });
+  logger.info(`🔌 Socket connected: ${socket.id}`);
 
   socket.on('chat:message', (payload) => {
     io.emit('chat:message', {
@@ -60,8 +53,22 @@ io.on('connection', (socket) => {
       at: new Date().toISOString(),
     });
   });
+
+  socket.on('disconnect', () => {
+    logger.info(`🔌 Socket disconnected: ${socket.id}`);
+  });
 });
 
+// 5. Start Server
+const PORT = env.PORT || 5000;
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  logger.info(`🚀 Server running in ${env.NODE_ENV} mode on port ${PORT}`);
+});
+
+// 6. Handle Unhandled Rejections
+process.on('unhandledRejection', (err) => {
+  logger.error('💥 UNHANDLED REJECTION! Shutting down...', err);
+  server.close(() => {
+    process.exit(1);
+  });
 });
