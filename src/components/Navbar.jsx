@@ -144,11 +144,11 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
           type="text"
           placeholder={placeholder}
           aria-label={t('search_placeholder') || "Search for gifts"}
-          className={`w-full bg-slate-100/50 dark:bg-slate-800/50 backdrop-blur-sm border 
-                     border-slate-200 dark:border-slate-700/50 focus:border-maroon/50 dark:focus:border-maroon/50
-                     ${isMobile ? 'rounded-xl py-2' : 'rounded-full py-2.5'} pl-5 pr-12 
-                     focus:ring-4 focus:ring-maroon/10 focus:bg-white dark:focus:bg-slate-800 
-                     transition-all text-sm font-medium text-slate-700 dark:text-slate-200 shadow-inner`}
+          className={`w-full bg-slate-100/40 dark:bg-slate-800/40 backdrop-blur-md border 
+                     border-white/20 dark:border-slate-700/50 focus:border-maroon/30 dark:focus:border-maroon/30
+                     ${isMobile ? 'rounded-xl py-2' : 'rounded-full py-3'} pl-6 pr-12 
+                     focus:ring-8 focus:ring-maroon/5 focus:bg-white dark:focus:bg-slate-900 
+                     transition-all text-sm font-semibold text-slate-700 dark:text-slate-200 shadow-sm`}
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
@@ -388,10 +388,11 @@ const Navbar = () => {
     ...(user?.role === 'admin' ? [{ to: '/admin', label: 'admin_panel', icon: Crown }] : []),
   ];
 
-  const topBarClasses = 'bg-gradient-to-r from-maroon via-pink-900 to-maroon text-white text-[10px] md:text-xs py-2 md:py-2.5 px-3 md:px-4 block transition-all duration-300 ring-1 ring-white/20 relative z-50 mx-0 md:mx-4 mt-0 md:mt-2 rounded-none md:rounded-2xl shadow-2xl overflow-hidden';
-  const mainNavClasses = isScrolled || isOpen
-    ? 'bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl backdrop-saturate-200 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.3)] ring-1 ring-white/20 dark:ring-white/10 py-2 sm:py-3.5 rounded-none md:rounded-3xl mx-0 md:mx-4 mt-0 md:mt-3 transition-all duration-500 border-b border-white/10'
-    : 'bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl backdrop-saturate-150 shadow-xl ring-1 ring-white/10 dark:ring-white/5 py-3 sm:py-5 rounded-none md:rounded-3xl mx-0 md:mx-4 mt-0 md:mt-3 transition-all duration-500 border-b border-white/5';
+  const topBarClasses = `bg-maroon text-white text-[10px] md:text-xs py-2 px-3 md:px-6 transition-all duration-300 relative z-50 flex items-center justify-center overflow-hidden ${isScrolled ? 'h-0 py-0 opacity-0' : 'h-10 opacity-100'}`;
+  
+  const mainNavClasses = isScrolled
+    ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-premium py-2 rounded-2xl mx-4 mt-2 border border-maroon/10'
+    : 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-lg py-4 rounded-3xl mx-4 mt-3 border border-white/20';
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] flex flex-col w-full overflow-visible pointer-events-none">
@@ -465,13 +466,14 @@ const Navbar = () => {
               <div className="flex items-center gap-2 md:gap-4">
                 {!isSimplifiedPage && (
                   <>
-                    <div className="hidden lg:flex items-center space-x-6 mr-2">
+                    <div className="hidden lg:flex items-center space-x-2">
                       {menuItems.map((item) => (
-                        <Link key={item.to} to={item.to} className={`text-xs font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all duration-500 relative group overflow-hidden ${location.pathname === item.to ? 'bg-gradient-to-r from-maroon to-pink-600 text-white shadow-lg shadow-maroon/30 scale-105' : 'text-slate-600 dark:text-slate-300 hover:text-maroon dark:hover:text-pink-400'}`}>
+                        <Link 
+                          key={item.to} 
+                          to={item.to} 
+                          className={`text-[11px] font-black uppercase tracking-[0.15em] px-5 py-2.5 rounded-xl transition-all duration-300 relative group overflow-hidden ${location.pathname === item.to ? 'bg-maroon text-white shadow-lg shadow-maroon/20' : 'text-slate-600 dark:text-slate-300 hover:bg-maroon/5 dark:hover:bg-white/5'}`}
+                        >
                           <span className="relative z-10">{t(item.label)}</span>
-                          {location.pathname !== item.to && (
-                            <span className="absolute inset-0 bg-maroon/5 dark:bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                          )}
                         </Link>
                       ))}
                     </div>
@@ -542,7 +544,7 @@ const Navbar = () => {
                             )}
                           </div>
                         ) : (
-                          <Link to="/login" className="ml-2 px-8 py-3 bg-gradient-to-r from-maroon to-pink-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:from-maroon-dark hover:to-pink-700 shadow-[0_10px_25px_-5px_rgba(128,0,0,0.4)] hover:shadow-[0_15px_35px_-5px_rgba(128,0,0,0.5)] transition-all active:scale-95 shine-effect">{t('login')}</Link>
+                          <Link to="/login" className="ml-2 px-8 py-2.5 bg-maroon text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-xl hover:bg-[#701e2a] shadow-xl shadow-maroon/10 transition-all active:scale-95">{t('login')}</Link>
                         )}
                       </div>
                     </>
