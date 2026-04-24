@@ -22,6 +22,7 @@ const AdminDashboard = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [period, setPeriod] = useState('30days');
 
   const revenueData = (stats.monthlyRevenue || []).map((item) => ({
     name: item._id,
@@ -49,7 +50,7 @@ const AdminDashboard = () => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('/api/admin/dashboard', {
+        const response = await axios.get(`/api/admin/dashboard?period=${period}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setStats(response.data.data);
@@ -63,7 +64,7 @@ const AdminDashboard = () => {
     };
 
     fetchStats();
-  }, []);
+  }, [period]);
 
   if (loading) {
     return (
@@ -83,7 +84,23 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      <h1 className="text-3xl font-bold text-maroon mb-8">Admin Dashboard</h1>
+      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+        <h1 className="text-3xl font-bold text-maroon">Admin Dashboard</h1>
+        <div className="flex items-center space-x-2 bg-white p-2 rounded-xl shadow-soft border border-maroon/10">
+          <BarChart3 className="h-5 w-5 text-maroon" />
+          <select 
+            value={period} 
+            onChange={(e) => setPeriod(e.target.value)}
+            className="bg-transparent border-none focus:ring-0 text-charcoal font-bold cursor-pointer"
+          >
+            <option value="24hours">Last 24 Hours</option>
+            <option value="7days">Last 7 Days</option>
+            <option value="30days">Last 30 Days</option>
+            <option value="90days">Last 90 Days</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+      </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
