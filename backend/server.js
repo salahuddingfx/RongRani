@@ -3,8 +3,12 @@ const { Server } = require('socket.io');
 const app = require('./app');
 const env = require('./config/env');
 const connectDB = require('./config/db');
+const { connectRedis } = require('./config/redis');
 const logger = require('./utils/logger');
 const seedAdminUser = require('./utils/seedAdmin');
+
+// 0. Display Branding
+logger.brand();
 
 // 1. Handle Uncaught Exceptions
 process.on('uncaughtException', (err) => {
@@ -12,11 +16,14 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
-// 2. Connect to Database
-connectDB().then(async () => {
-  // Seed admin user from .env
+// 2. Connect to Databases
+const startDatabases = async () => {
+  await connectDB();
+  await connectRedis();
   await seedAdminUser().catch(err => logger.error('Admin seeding failed:', err));
-});
+};
+
+startDatabases();
 
 // 3. Create HTTP Server
 const server = http.createServer(app);

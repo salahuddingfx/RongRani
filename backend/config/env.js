@@ -31,6 +31,8 @@ const env = {
   
   STEADFAST_API_KEY: process.env.STEADFAST_API_KEY,
   STEADFAST_SECRET_KEY: process.env.STEADFAST_SECRET_KEY,
+  
+  REDIS_URL: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
 };
 
 // Simple validation
