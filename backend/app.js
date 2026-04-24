@@ -1,87 +1,58 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
 const compression = require('compression');
+const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+
+const env = require('./config/env');
+const securityMiddleware = require('./middlewares/security.middleware');
+const errorMiddleware = require('./middlewares/error.middleware');
+const ApiError = require('./utils/ApiError');
 
 const app = express();
-app.set('trust proxy', 1); // Trust first proxy (Render/Vercel)
 
-/* -------------------- SECURITY -------------------- */
-app.use(helmet());
+// Trust proxy for Render/Vercel
+app.set('trust proxy', 1);
 
-/* -------------------- CORS (FIXED) -------------------- */
-// allow multiple origins (local + prod)
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-  'https://rongrani.vercel.app',
-  process.env.FRONTEND_URL,
-].filter(Boolean);
+/* -------------------- SECURITY & CORS -------------------- */
+securityMiddleware(app);
+app.use(mongoSanitize()); // Prevent NoSQL injection
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // allow server-to-server / postman / no-origin
-      if (!origin) return callback(null, true);
-
-      const isAllowed = allowedOrigins.some(ao => origin.startsWith(ao));
-      const isVercel = origin.includes('vercel.app');
-
-      if (isAllowed || isVercel) {
-        callback(null, true);
-      } else {
-        console.warn(`🛡️ CORS Blocked for origin: ${origin}`);
-        callback(null, true); // Allow during debug or handle more gracefully
-      }
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  })
-);
-
-// preflight support
-app.options('*', cors());
-
-/* -------------------- RATE LIMIT -------------------- */
+/* -------------------- RATE LIMITING -------------------- */
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: process.env.NODE_ENV === 'production' ? 300 : 2000,
+  max: env.NODE_ENV === 'production' ? 100 : 1000,
+  message: 'Too many requests from this IP, please try again after 15 minutes',
 });
-app.use(limiter);
+app.use('/api', limiter);
 
 /* -------------------- CORE MIDDLEWARE -------------------- */
 app.use(compression());
-app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 /* -------------------- ROUTES -------------------- */
 app.get('/', (_req, res) => {
-  res.json({ message: 'RongRani Backend API running' });
+  res.json({ 
+    message: 'RongRani Premium Backend API',
+    version: '2.0.0',
+    status: 'healthy'
+  });
 });
 
+// Health check
 app.get('/api/health', (_req, res) => {
-  const stateMap = {
-    0: 'disconnected',
-    1: 'connected',
-    2: 'connecting',
-    3: 'disconnecting',
-  };
-
+  const mongoose = require('mongoose');
   res.json({
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
-    db: {
-      state: stateMap[mongoose.connection.readyState] || 'unknown',
-    },
+    db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
   });
 });
 
+// Load all routes
 app.use('/api/auth', require('./routes/auth.routes'));
 app.use('/api/users', require('./routes/user.routes'));
 app.use('/api/products', require('./routes/product.routes'));
@@ -99,20 +70,20 @@ app.use('/api/search', require('./routes/search.routes'));
 app.use('/api/reviews', require('./routes/review.routes'));
 app.use('/api/contact', require('./routes/contact.routes'));
 app.use('/api/images', require('./routes/image.routes'));
-app.use('/api/keepalive', require('./routes/keepalive.routes')); // Keep server alive on Render
+app.use('/api/keepalive', require('./routes/keepalive.routes'));
 app.use('/share', require('./routes/share.routes'));
-app.use('/', require('./routes/sitemap.routes')); // SEO: Dynamic sitemap
+app.use('/', require('./routes/sitemap.routes'));
 
 /* -------------------- PLACEHOLDER IMAGE -------------------- */
-app.get('/api/placeholder/:width/:height', async (req, res) => {
+app.get('/api/placeholder/:width/:height', async (req, res, next) => {
   try {
     const { width, height } = req.params;
     const sharp = require('sharp');
 
     const svg = `
       <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100%" height="100%" fill="#f3f4f6"/>
-        <text x="50%" y="50%" font-size="16" fill="#6b7280"
+        <rect width="100%" height="100%" fill="#1e293b"/>
+        <text x="50%" y="50%" font-size="16" fill="#94a3b8"
           font-family="Arial" text-anchor="middle" dy=".3em">
           ${width}×${height}
         </text>
@@ -122,24 +93,16 @@ app.get('/api/placeholder/:width/:height', async (req, res) => {
     const buffer = await sharp(Buffer.from(svg)).png().toBuffer();
     res.type('png').send(buffer);
   } catch (err) {
-    console.error('Placeholder error:', err);
-    res.status(500).send('Placeholder failed');
+    next(err);
   }
 });
 
 /* -------------------- 404 HANDLER -------------------- */
-app.use((req, res) => {
-  console.log(`🔍 404 Not Found: ${req.method} ${req.originalUrl}`);
-  res.status(404).json({
-    success: false,
-    message: `Route ${req.method} ${req.originalUrl} not found on this server`,
-  });
+app.use((req, res, next) => {
+  next(new ApiError(404, `Route ${req.method} ${req.originalUrl} not found`));
 });
 
 /* -------------------- ERROR HANDLER -------------------- */
-app.use((err, _req, res, _next) => {
-  console.error('🔥 Error:', err.message);
-  res.status(500).json({ message: err.message || 'Server error' });
-});
+app.use(errorMiddleware);
 
 module.exports = app;
