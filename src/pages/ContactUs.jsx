@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Facebook, Instagram, Twitter, Loader2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle, Facebook, Instagram, Twitter, Loader2, User, Globe, MessageSquare } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import Seo from '../components/Seo';
 import { useLanguage } from '../contexts/LanguageContext';
+import FloatingInput from '../components/FloatingInput';
 
 const ContactUs = () => {
   const { t } = useLanguage();
@@ -42,215 +43,238 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="min-h-screen bg-pink-50 py-16 px-4">
+    <div className="min-h-screen bg-[#FFFBFB] dark:bg-slate-950 py-20 px-4 relative overflow-hidden">
       <Seo
         title="Contact RongRani | Gift Shop Support in Bangladesh"
         description="Contact RongRani for gift orders, custom surprises, and support. Call, email, or visit our gift shop team in Bangladesh."
         path="/contact"
       />
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-maroon mb-6">{t('contact_title')}</h1>
-          <p className="text-xl text-slate max-w-2xl mx-auto">
+
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-maroon/5 rounded-full blur-[120px] -mr-64 -mt-64"></div>
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] -ml-48 -mb-48"></div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        {/* Header Section */}
+        <div className="text-center mb-20 animate-fade-in">
+          <div className="inline-flex items-center space-x-2 bg-maroon/5 dark:bg-maroon/10 px-4 py-2 rounded-full mb-6">
+            <Sparkles className="h-4 w-4 text-maroon" />
+            <span className="text-xs font-black uppercase tracking-widest text-maroon">{t('get_in_touch') || 'Get In Touch'}</span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-charcoal dark:text-white mb-6 tracking-tight">
+            {t('contact_title')}
+          </h1>
+          <p className="text-xl text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
             {t('contact_subtitle')}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          {/* Contact Info Cards */}
-          <div className="card bg-white/80 backdrop-blur-sm text-center hover:scale-105 transition-transform">
-            <div className="w-16 h-16 bg-maroon rounded-full flex items-center justify-center mx-auto mb-4">
-              <Phone className="h-8 w-8 text-white" />
+        {/* Contact Info Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+          {[
+            { 
+              icon: Phone, 
+              title: t('call_us'), 
+              content: (
+                <div className="space-y-1">
+                  <p className="text-sm opacity-70 mb-2">{t('mon_sat')}: 9AM - 9PM</p>
+                  <a href="tel:+8801851075537" className="block text-lg font-bold hover:text-maroon transition-colors">+880 1851-075537</a>
+                  <a href="tel:+8801570249301" className="block text-lg font-bold hover:text-maroon transition-colors">+880 1570-249301</a>
+                </div>
+              ),
+              color: 'bg-rose-500'
+            },
+            { 
+              icon: Mail, 
+              title: t('email_us'), 
+              content: (
+                <div className="space-y-1">
+                  <p className="text-sm opacity-70 mb-2">{t('reply_24_hours')}</p>
+                  <a href="mailto:info.rongrani@gmail.com" className="block text-lg font-bold hover:text-maroon transition-colors break-all">info.rongrani@gmail.com</a>
+                </div>
+              ),
+              color: 'bg-amber-500'
+            },
+            { 
+              icon: MapPin, 
+              title: t('visit_us'), 
+              content: (
+                <div className="space-y-1">
+                  <p className="text-sm opacity-70 mb-2">{t('come_see_collection')}</p>
+                  <p className="font-bold leading-relaxed">
+                    House 23, Road 5, Cox's Bazar,<br />Bangladesh-4700
+                  </p>
+                </div>
+              ),
+              color: 'bg-blue-500'
+            }
+          ].map((card, idx) => (
+            <div key={idx} className="premium-glass p-8 rounded-[2.5rem] text-center group hover:-translate-y-2 transition-all duration-500 border border-white/20 dark:border-white/5">
+              <div className={`w-16 h-16 ${card.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg rotate-3 group-hover:rotate-12 transition-transform`}>
+                <card.icon className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-black text-charcoal dark:text-white mb-4 tracking-tight">{card.title}</h3>
+              <div className="text-slate-600 dark:text-slate-400 font-medium">
+                {card.content}
+              </div>
             </div>
-            <h3 className="text-xl font-bold text-charcoal mb-2">{t('call_us')}</h3>
-            <p className="text-slate mb-3">{t('mon_sat')}: 9AM - 9PM</p>
-            <a href="tel:+8801851075537" className="text-maroon font-semibold hover:underline">
-              +880 1851-075537
-            </a>
-            <br />
-            <a href="tel:+8801570249301" className="text-maroon font-semibold hover:underline">
-              +880 1570-249301
-            </a>
-          </div>
-
-          <div className="card bg-white/80 backdrop-blur-sm text-center hover:scale-105 transition-transform">
-            <div className="w-16 h-16 bg-maroon rounded-full flex items-center justify-center mx-auto mb-4">
-              <Mail className="h-8 w-8 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-charcoal mb-2">{t('email_us')}</h3>
-            <p className="text-slate mb-3">{t('reply_24_hours')}</p>
-            <a href="mailto:info.rongrani@gmail.com" className="text-maroon font-semibold hover:underline">
-              info.rongrani@gmail.com
-            </a>
-          </div>
-
-          <div className="card bg-white/80 backdrop-blur-sm text-center hover:scale-105 transition-transform">
-            <div className="w-16 h-16 bg-maroon rounded-full flex items-center justify-center mx-auto mb-4">
-              <MapPin className="h-8 w-8 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-charcoal mb-2">{t('visit_us')}</h3>
-            <p className="text-slate mb-3">{t('come_see_collection')}</p>
-            <p className="text-charcoal font-semibold">
-              House 23, Road 5<br />
-              Cox's Bazar, Bangladesh-4700<br />
-              Bangladesh
-            </p>
-          </div>
+          ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Contact Form */}
-          <div className="card bg-white/80 backdrop-blur-sm">
-            <h2 className="text-3xl font-bold text-maroon mb-6 flex items-center">
-              <MessageCircle className="mr-3 h-8 w-8" />
-              {t('send_message')}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
+          {/* Contact Form Section */}
+          <div className="lg:col-span-3 premium-glass p-10 md:p-12 rounded-[3rem] border border-white/20 dark:border-white/5">
+            <div className="flex items-center space-x-4 mb-10">
+              <div className="w-14 h-14 bg-maroon rounded-2xl flex items-center justify-center shadow-lg">
+                <MessageSquare className="h-7 w-7 text-white" />
+              </div>
               <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">{t('full_name')} *</label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  value={formData.name}
+                <h2 className="text-3xl font-black text-charcoal dark:text-white tracking-tight">{t('send_message')}</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-sm font-medium mt-1">We typically respond within a few hours</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-2">
+              <FloatingInput
+                label={t('full_name')}
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                icon={User}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                <FloatingInput
+                  label={t('email')}
+                  name="email"
+                  type="email"
+                  value={formData.email}
                   onChange={handleChange}
-                  className="input-field w-full"
-                  placeholder={t('your_name_placeholder')}
+                  required
+                  icon={Mail}
+                />
+                <FloatingInput
+                  label={t('phone_number')}
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  icon={Phone}
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-charcoal mb-2">{t('email')} *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="input-field w-full"
-                    placeholder={t('your_email_placeholder')}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-charcoal mb-2">{t('phone_number')}</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="input-field w-full"
-                    placeholder="+880 1711-111111"
-                  />
-                </div>
-              </div>
+              <FloatingInput
+                label={t('subject_label') || 'Subject'}
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                required
+                icon={Globe}
+              />
 
-              <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">{t('subject_label') || 'Subject'} *</label>
-                <input
-                  type="text"
-                  name="subject"
-                  required
-                  value={formData.subject}
-                  onChange={handleChange}
-                  className="input-field w-full"
-                  placeholder={t('subject_placeholder') || 'How can we help you?'}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold text-charcoal mb-2">{t('message_label') || 'Message'} *</label>
-                <textarea
-                  name="message"
-                  required
-                  value={formData.message}
-                  onChange={handleChange}
-                  className="input-field w-full"
-                  rows="5"
-                  placeholder={t('message_placeholder')}
-                />
-              </div>
+              <FloatingInput
+                label={t('message_label') || 'Your Message'}
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+                isTextArea
+                rows={5}
+                icon={MessageCircle}
+              />
 
               <button
                 type="submit"
                 disabled={isSending}
-                className="btn-primary w-full flex items-center justify-center space-x-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="btn-primary w-full py-5 rounded-2xl flex items-center justify-center space-x-3 text-lg font-black shadow-xl shadow-maroon/20 hover:shadow-maroon/40 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed group overflow-hidden relative"
               >
+                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
                 {isSending ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>{t('sending_msg')}</span>
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                    <span className="relative z-10">{t('sending_msg')}</span>
                   </>
                 ) : (
                   <>
-                    <Send className="h-5 w-5" />
-                    <span>{t('send_message')}</span>
+                    <span className="relative z-10">{t('send_message')}</span>
+                    <Send className="h-6 w-6 relative z-10 group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform" />
                   </>
                 )}
               </button>
             </form>
           </div>
 
-          {/* Additional Info */}
-          <div className="space-y-6">
+          {/* Sidebar Info Section */}
+          <div className="lg:col-span-2 space-y-8">
             {/* Business Hours */}
-            <div className="card bg-white/80 backdrop-blur-sm">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-maroon rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Clock className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-charcoal mb-3">{t('business_hours')}</h3>
-                  <div className="space-y-2 text-slate">
-                    <div className="flex justify-between">
-                      <span className="font-semibold">{t('monday_friday')}:</span>
-                      <span>9:00 AM - 9:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-semibold">{t('saturday')}:</span>
-                      <span>10:00 AM - 8:00 PM</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-semibold">{t('sunday')}:</span>
-                      <span>10:00 AM - 6:00 PM</span>
-                    </div>
-                    <div className="flex justify-between pt-2 border-t border-slate/20">
-                      <span className="font-semibold text-maroon">{t('holidays')}:</span>
-                      <span className="text-maroon">{t('call_for_availability')}</span>
-                    </div>
+            <div className="premium-glass p-8 rounded-[2.5rem] border border-white/20 dark:border-white/5 relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-maroon/5 rounded-full -mr-16 -mt-16"></div>
+               <div className="flex items-center space-x-4 mb-8">
+                  <div className="w-12 h-12 bg-maroon/10 rounded-xl flex items-center justify-center">
+                    <Clock className="h-6 w-6 text-maroon" />
                   </div>
-                </div>
-              </div>
+                  <h3 className="text-2xl font-black text-charcoal dark:text-white tracking-tight">{t('business_hours')}</h3>
+               </div>
+
+               <div className="space-y-4">
+                  {[
+                    { day: t('monday_friday'), time: '9:00 AM - 9:00 PM' },
+                    { day: t('saturday'), time: '10:00 AM - 8:00 PM' },
+                    { day: t('sunday'), time: '10:00 AM - 6:00 PM' }
+                  ].map((item, idx) => (
+                    <div key={idx} className="flex justify-between items-center p-4 rounded-2xl bg-white dark:bg-slate-900 shadow-sm border border-slate-50 dark:border-slate-800">
+                      <span className="font-bold text-slate-600 dark:text-slate-400">{item.day}</span>
+                      <span className="font-black text-charcoal dark:text-white">{item.time}</span>
+                    </div>
+                  ))}
+                  <div className="p-4 rounded-2xl bg-maroon/5 border border-maroon/10 mt-6 text-center">
+                    <span className="font-bold text-maroon block mb-1">{t('holidays')}:</span>
+                    <span className="font-black text-maroon uppercase tracking-widest text-xs">{t('call_for_availability')}</span>
+                  </div>
+               </div>
             </div>
 
-            {/* Social Media */}
-            <div className="card bg-maroon text-white">
-              <h3 className="text-2xl font-bold mb-4">{t('follow_us_social')}</h3>
-              <p className="text-white/80 mb-6">
+            {/* Social Media Link Box */}
+            <div className="bg-gradient-to-br from-maroon to-[#6A112B] p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group">
+              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <h3 className="text-2xl font-black mb-4 tracking-tight">{t('follow_us_social')}</h3>
+              <p className="text-white/80 mb-8 font-medium leading-relaxed">
                 {t('stay_updated_social')}
               </p>
               <div className="flex space-x-4">
-                <a href="https://facebook.com/rongraniofficial" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
-                  <Facebook className="h-6 w-6" />
-                </a>
-                <a href="https://instagram.com/rongraniofficial" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
-                  <Instagram className="h-6 w-6" />
-                </a>
-                <a href="https://twitter.com/rongraniofficial" className="w-12 h-12 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
-                  <Twitter className="h-6 w-6" />
-                </a>
+                {[
+                  { icon: Facebook, link: 'https://facebook.com/rongraniofficial' },
+                  { icon: Instagram, link: 'https://instagram.com/rongraniofficial' },
+                  { icon: Twitter, link: 'https://twitter.com/rongraniofficial' }
+                ].map((social, idx) => (
+                  <a 
+                    key={idx}
+                    href={social.link} 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="w-14 h-14 bg-white/10 hover:bg-white text-white hover:text-maroon rounded-2xl flex items-center justify-center transition-all duration-500 transform hover:-translate-y-2 shadow-lg"
+                  >
+                    <social.icon className="h-7 w-7" />
+                  </a>
+                ))}
               </div>
             </div>
 
-            {/* Map Placeholder */}
-            <div className="card bg-white/80 backdrop-blur-sm overflow-hidden">
-              <div className="w-full h-64 bg-pink-100 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="h-16 w-16 text-maroon mx-auto mb-3" />
-                  <p className="text-charcoal font-semibold">{t('visit_showroom')}</p>
-                  <p className="text-slate text-sm">Cox's Bazar, Bangladesh</p>
+            {/* Interactive Location Preview */}
+            <div className="premium-glass rounded-[2.5rem] border border-white/20 dark:border-white/5 overflow-hidden group">
+              <div className="w-full h-56 bg-cream dark:bg-slate-900 relative flex items-center justify-center">
+                <div className="absolute inset-0 opacity-20 dark:opacity-10 grayscale group-hover:grayscale-0 transition-all duration-700" style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/stardust.png")' }}></div>
+                <div className="text-center relative z-10">
+                  <div className="w-20 h-20 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl group-hover:scale-110 transition-transform animate-pulse">
+                    <MapPin className="h-10 w-10 text-maroon" />
+                  </div>
+                  <p className="text-charcoal dark:text-white font-black text-xl tracking-tight">{t('visit_showroom')}</p>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm font-bold uppercase tracking-widest mt-1">Cox's Bazar, Bangladesh</p>
                 </div>
+              </div>
+              <div className="p-4 bg-maroon text-center">
+                 <a href="https://maps.google.com" target="_blank" rel="noreferrer" className="text-white font-black uppercase text-xs tracking-widest hover:underline">Get Directions 🗺️</a>
               </div>
             </div>
           </div>
