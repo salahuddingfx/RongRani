@@ -357,6 +357,7 @@ const AdminDashboard = () => {
               <p className="text-2xl font-bold text-blue-600">৳{(stats.totalRevenue - stats.totalLoss).toLocaleString()}</p>
             </div>
           </div>
+        </div>
       </div>
 
       {/* Recent Activity */}
