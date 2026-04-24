@@ -550,7 +550,7 @@ const ProductDetail = () => {
                 </div>
                 <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
                   <span className="text-slate-500 font-bold text-sm">{t('sku_label')}:</span>
-                  <span className="text-slate-900 dark:text-white font-black">{product.sku || product._id.slice(-6).toUpperCase()}</span>
+                  <span className="text-slate-900 dark:text-white font-black">{product.sku || (product._id ? product._id.slice(-6).toUpperCase() : 'RR-' + Math.random().toString(36).substring(7).toUpperCase())}</span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl">
                   <span className="text-slate-500 font-bold text-sm">{t('availability') || 'Availability'}:</span>
