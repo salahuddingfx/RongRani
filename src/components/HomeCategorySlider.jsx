@@ -183,7 +183,6 @@ const HomeCategorySlider = ({ category }) => {
                             <ProductItem product={product} />
                         </div>
                     ))}
-                    ))}
                 </div>
             </div>
         </div>
