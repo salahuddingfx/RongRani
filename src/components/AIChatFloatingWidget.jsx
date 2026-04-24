@@ -114,20 +114,20 @@ const AIChatFloatingWidget = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="floating-widget fixed bottom-24 lg:bottom-24 right-6 z-[1001] bg-maroon text-white rounded-full p-4 shadow-2xl hover:shadow-maroon/40 hover:scale-110 transition-all duration-300 group border-2 border-white/20"
+          className="floating-widget fixed bottom-8 right-8 z-[1001] bg-white/20 dark:bg-slate-800/20 backdrop-blur-xl text-slate-800 dark:text-white rounded-2xl p-3 shadow-xl hover:bg-maroon hover:text-white hover:scale-110 transition-all duration-500 group border border-white/20"
           aria-label="Open AI Chat"
         >
-          <Bot className="h-7 w-7 animate-pulse" />
-          <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full animate-pulse border-2 border-white"></span>
-          <div className="absolute -top-12 right-0 bg-maroon text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden sm:block">
-            Need Help? Chat with AI! 💬
+          <Bot className="h-6 w-6 group-hover:rotate-12 transition-transform" />
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+          <div className="absolute -top-12 right-0 bg-maroon text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none hidden sm:block">
+            AI Assistant 💬
           </div>
         </button>
       )}
 
       {/* Chat Widget */}
       {isOpen && (
-        <div className="floating-widget fixed bottom-24 lg:bottom-24 right-4 sm:right-6 z-[1001] w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-[400px] sm:h-[520px] max-h-[60vh] sm:max-h-[calc(100vh-6rem)] bg-white rounded-3xl shadow-2xl overflow-hidden border border-maroon/20 flex flex-col animate-slide-up">
+        <div className="floating-widget fixed bottom-8 right-4 sm:right-8 z-[1001] w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-[400px] sm:h-[520px] max-h-[60vh] sm:max-h-[calc(100vh-6rem)] bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl overflow-hidden border border-maroon/10 flex flex-col animate-slide-up">
           {/* Header */}
           <div
             className="bg-maroon text-white p-4 flex items-center justify-between relative overflow-hidden"

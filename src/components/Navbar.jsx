@@ -144,11 +144,11 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
           type="text"
           placeholder={placeholder}
           aria-label={t('search_placeholder') || "Search for gifts"}
-          className={`w-full bg-slate-100 dark:bg-slate-800 border 
-                     border-transparent focus:border-maroon/20 dark:focus:border-maroon/40
+          className={`w-full bg-slate-100/50 dark:bg-slate-800/50 backdrop-blur-sm border 
+                     border-slate-200 dark:border-slate-700/50 focus:border-maroon/50 dark:focus:border-maroon/50
                      ${isMobile ? 'rounded-xl py-2' : 'rounded-full py-2.5'} pl-5 pr-12 
-                     focus:ring-2 focus:ring-maroon/10 focus:bg-white dark:focus:bg-slate-800 
-                     transition-all text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm`}
+                     focus:ring-4 focus:ring-maroon/10 focus:bg-white dark:focus:bg-slate-800 
+                     transition-all text-sm font-medium text-slate-700 dark:text-slate-200 shadow-inner`}
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
@@ -160,11 +160,11 @@ const SearchSection = React.memo(({ isScrolled, language, t, isMobile = false, s
         />
         <button
           type="submit"
-          className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 
-                     bg-maroon hover:bg-maroon-dark text-white rounded-full 
-                     shadow-sm hover:shadow transition-all transform active:scale-95"
+          className="absolute right-1.5 top-1/2 -translate-y-1/2 p-2 
+                     bg-gradient-to-tr from-maroon to-pink-600 hover:from-maroon-dark hover:to-pink-700 
+                     text-white rounded-full shadow-lg transition-all transform active:scale-95 group/btn"
         >
-          <Search className="w-4 h-4" />
+          <Search className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
         </button>
       </form>
 
@@ -388,10 +388,10 @@ const Navbar = () => {
     ...(user?.role === 'admin' ? [{ to: '/admin', label: 'admin_panel', icon: Crown }] : []),
   ];
 
-  const topBarClasses = 'bg-maroon/90 backdrop-blur-md backdrop-saturate-150 text-white text-[10px] md:text-xs py-1.5 md:py-2 px-3 md:px-4 block transition-all duration-300 ring-1 ring-white/10 relative z-50 mx-0 md:mx-4 mt-0 md:mt-2 rounded-none md:rounded-xl shadow-lg';
+  const topBarClasses = 'bg-gradient-to-r from-maroon via-pink-900 to-maroon text-white text-[10px] md:text-xs py-2 md:py-2.5 px-3 md:px-4 block transition-all duration-300 ring-1 ring-white/20 relative z-50 mx-0 md:mx-4 mt-0 md:mt-2 rounded-none md:rounded-2xl shadow-2xl overflow-hidden';
   const mainNavClasses = isScrolled || isOpen
-    ? 'bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl backdrop-saturate-150 shadow-xl ring-1 ring-white/10 dark:ring-white/5 py-1.5 sm:py-3 rounded-none md:rounded-2xl mx-0 md:mx-4 mt-0 md:mt-3 transition-all duration-500'
-    : 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg backdrop-saturate-150 shadow-lg ring-1 ring-white/10 dark:ring-white/5 py-2 sm:py-4 rounded-none md:rounded-2xl mx-0 md:mx-4 mt-0 md:mt-3 transition-all duration-500';
+    ? 'bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl backdrop-saturate-200 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.3)] ring-1 ring-white/20 dark:ring-white/10 py-2 sm:py-3.5 rounded-none md:rounded-3xl mx-0 md:mx-4 mt-0 md:mt-3 transition-all duration-500 border-b border-white/10'
+    : 'bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl backdrop-saturate-150 shadow-xl ring-1 ring-white/10 dark:ring-white/5 py-3 sm:py-5 rounded-none md:rounded-3xl mx-0 md:mx-4 mt-0 md:mt-3 transition-all duration-500 border-b border-white/5';
 
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] flex flex-col w-full overflow-visible pointer-events-none">
@@ -467,8 +467,11 @@ const Navbar = () => {
                   <>
                     <div className="hidden lg:flex items-center space-x-6 mr-2">
                       {menuItems.map((item) => (
-                        <Link key={item.to} to={item.to} className={`text-sm font-bold uppercase tracking-wide px-4 py-2 rounded-full transition-all duration-300 relative group ${location.pathname === item.to ? 'bg-maroon text-white' : 'text-slate-600 dark:text-slate-400 hover:text-maroon dark:hover:text-pink-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}>
+                        <Link key={item.to} to={item.to} className={`text-xs font-black uppercase tracking-widest px-5 py-2.5 rounded-full transition-all duration-500 relative group overflow-hidden ${location.pathname === item.to ? 'bg-gradient-to-r from-maroon to-pink-600 text-white shadow-lg shadow-maroon/30 scale-105' : 'text-slate-600 dark:text-slate-300 hover:text-maroon dark:hover:text-pink-400'}`}>
                           <span className="relative z-10">{t(item.label)}</span>
+                          {location.pathname !== item.to && (
+                            <span className="absolute inset-0 bg-maroon/5 dark:bg-white/5 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                          )}
                         </Link>
                       ))}
                     </div>
@@ -539,7 +542,7 @@ const Navbar = () => {
                             )}
                           </div>
                         ) : (
-                          <Link to="/login" className="ml-2 px-6 py-2.5 bg-maroon text-white text-xs font-bold rounded-full hover:bg-maroon-dark shadow-lg shadow-maroon/20 hover:shadow-maroon/30 transition-all active:scale-95">{t('login')}</Link>
+                          <Link to="/login" className="ml-2 px-8 py-3 bg-gradient-to-r from-maroon to-pink-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:from-maroon-dark hover:to-pink-700 shadow-[0_10px_25px_-5px_rgba(128,0,0,0.4)] hover:shadow-[0_15px_35px_-5px_rgba(128,0,0,0.5)] transition-all active:scale-95 shine-effect">{t('login')}</Link>
                         )}
                       </div>
                     </>
