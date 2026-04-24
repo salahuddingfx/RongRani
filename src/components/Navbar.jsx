@@ -395,7 +395,7 @@ const Navbar = () => {
     : 'bg-white/60 dark:bg-slate-900/60 backdrop-blur-lg py-4 rounded-3xl mx-4 mt-3 border border-white/20';
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-[60] flex flex-col w-full overflow-visible pointer-events-none">
+    <div className="fixed top-0 left-0 right-0 z-[60] flex flex-col w-full overflow-visible pointer-events-none gap-y-2">
       <div className="pointer-events-auto">
         {!isSimplifiedPage && (
           <div className={topBarClasses}>
@@ -471,7 +471,7 @@ const Navbar = () => {
                         <Link 
                           key={item.to} 
                           to={item.to} 
-                          className={`text-[11px] font-black uppercase tracking-[0.15em] px-5 py-2.5 rounded-xl transition-all duration-300 relative group overflow-hidden ${location.pathname === item.to ? 'bg-maroon text-white shadow-lg shadow-maroon/20' : 'text-slate-600 dark:text-slate-300 hover:bg-maroon/5 dark:hover:bg-white/5'}`}
+                          className={`text-[10px] font-black uppercase tracking-[0.2em] px-6 py-2.5 rounded-xl transition-all duration-300 relative group overflow-hidden ${location.pathname === item.to ? 'bg-maroon text-white shadow-xl shadow-maroon/20' : 'text-slate-500 dark:text-slate-400 hover:text-maroon dark:hover:text-white hover:bg-maroon/5 dark:hover:bg-white/5'}`}
                         >
                           <span className="relative z-10">{t(item.label)}</span>
                         </Link>
