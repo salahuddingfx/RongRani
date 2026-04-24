@@ -10,8 +10,15 @@ const AdminDashboard = () => {
     totalOrders: 0,
     totalProducts: 0,
     totalRevenue: 0,
+    totalLoss: 0,
+    deliveredCount: 0,
+    returnedCount: 0,
+    cancelledCount: 0,
     recentOrders: [],
-    lowStockProducts: []
+    lowStockProducts: [],
+    monthlyRevenue: [],
+    categoryCounts: [],
+    orderStatusCounts: []
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -45,7 +52,7 @@ const AdminDashboard = () => {
         const response = await axios.get('/api/admin/dashboard', {
           headers: { Authorization: `Bearer ${token}` }
         });
-        setStats(response.data);
+        setStats(response.data.data);
         setError(null);
       } catch (err) {
         console.error('Dashboard error:', err);
@@ -94,38 +101,39 @@ const AdminDashboard = () => {
         <div className="card bg-emerald-600 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-emerald-100 opacity-90 text-sm font-semibold mb-1">Total Orders</p>
-              <h3 className="text-3xl sm:text-4xl font-bold">{stats.totalOrders || 0}</h3>
-              <p className="text-emerald-200 text-sm mt-2">Latest orders in pipeline</p>
+              <p className="text-emerald-100 opacity-90 text-sm font-semibold mb-1">Total Revenue</p>
+              <h3 className="text-3xl sm:text-4xl font-bold">৳{(stats.totalRevenue || 0).toLocaleString()}</h3>
+              <p className="text-emerald-200 text-sm mt-2 flex items-center">
+                <TrendingUp className="h-4 w-4 mr-1" />
+                Paid Revenue (All Time)
+              </p>
+            </div>
+            <DollarSign className="h-10 w-10 sm:h-12 sm:w-12 opacity-30" />
+          </div>
+        </div>
+
+        <div className="card bg-blue-600 text-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-blue-100 opacity-90 text-sm font-semibold mb-1">Delivered Products</p>
+              <h3 className="text-3xl sm:text-4xl font-bold">{stats.deliveredCount || 0}</h3>
+              <p className="text-blue-200 text-sm mt-2">Successful deliveries</p>
             </div>
             <ShoppingBag className="h-10 w-10 sm:h-12 sm:w-12 opacity-30" />
           </div>
         </div>
 
-        <div className="card bg-amber-600 text-white">
+        <div className="card bg-red-600 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-amber-100 opacity-90 text-sm font-semibold mb-1">Total Products</p>
-              <h3 className="text-3xl sm:text-4xl font-bold">{stats.totalProducts || 0}</h3>
-              <p className="text-amber-200 text-sm mt-2">
-                {stats.lowStockProducts?.length || 0} low stock items
+              <p className="text-red-100 opacity-90 text-sm font-semibold mb-1">Returns / Cancelled</p>
+              <h3 className="text-3xl sm:text-4xl font-bold">{stats.returnedCount + stats.cancelledCount || 0}</h3>
+              <p className="text-red-200 text-sm mt-2 flex items-center">
+                <ArrowDown className="h-4 w-4 mr-1" />
+                ৳{(stats.totalLoss || 0).toLocaleString()} Potential Loss
               </p>
             </div>
             <Package className="h-10 w-10 sm:h-12 sm:w-12 opacity-30" />
-          </div>
-        </div>
-
-        <div className="card bg-purple-600 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-purple-100 opacity-90 text-sm font-semibold mb-1">Total Revenue</p>
-              <h3 className="text-3xl sm:text-4xl font-bold">৳{(stats.totalRevenue || 0).toLocaleString()}</h3>
-              <p className="text-purple-200 text-sm mt-2 flex items-center">
-                <TrendingUp className="h-4 w-4 mr-1" />
-                Last 30 days paid revenue
-              </p>
-            </div>
-            <DollarSign className="h-10 w-10 sm:h-12 sm:w-12 opacity-30" />
           </div>
         </div>
       </div>
