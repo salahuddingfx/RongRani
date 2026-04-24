@@ -127,8 +127,8 @@ const AdminSecurity = () => {
                   <label className="block text-sm font-black text-slate-700 uppercase tracking-wider">Set New Security PIN</label>
                   <div className="flex flex-col sm:flex-row gap-4">
                     <input
-                      type="password"
-                      placeholder="••••••"
+                      type="text"
+                      placeholder="0000"
                       value={pin}
                       onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       className="input-field text-center text-3xl tracking-[0.5em] font-black max-w-[240px] py-4 rounded-2xl border-2 border-slate-200 focus:border-maroon focus:ring-0 transition-all"
@@ -161,8 +161,8 @@ const AdminSecurity = () => {
                   <label className="block text-sm font-black text-emerald-800 mb-3 uppercase tracking-wider">Enter PIN to Disable</label>
                   <div className="flex flex-col sm:flex-row gap-4 items-end">
                     <input
-                      type="password"
-                      placeholder="••••••"
+                      type="text"
+                      placeholder="0000"
                       value={pin}
                       onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                       className="input-field text-center text-2xl font-black tracking-[0.5em] max-w-[180px] py-3 rounded-xl border-2 border-emerald-200 focus:border-emerald-500 focus:ring-0 bg-white"

@@ -199,8 +199,8 @@ const Login = () => {
                 </p>
                 
                 <input
-                  type="password"
-                  placeholder="••••••"
+                  type="text"
+                  placeholder="0000"
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   className="w-full text-center text-4xl font-black tracking-[0.5em] py-5 rounded-2xl border-2 border-slate-200 focus:border-maroon focus:ring-0 transition-all outline-none mb-8 bg-white"
